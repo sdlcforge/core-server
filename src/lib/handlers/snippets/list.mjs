@@ -6,7 +6,7 @@ const parameters = []
 
 const func = ({ reporter }) => (req, res) => {
   reporter.isolate()
-  
+
   const msg = 'hello'
 
   httpSmartResponse({ msg, req, res })

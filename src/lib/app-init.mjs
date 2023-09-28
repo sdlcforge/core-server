@@ -18,7 +18,7 @@ const appInit = async({
   version = pkgVersion,
   apiSpecPath = CATALYST_API_SPEC(),
   pluginsPath = CATALYST_SERVER_PLUGINS(),
-  pluginPaths = [ myPackagePath ],
+  pluginPaths = [myPackagePath],
   defaultRegistries = [
     {
       name : 'Liquid Labs Canonical Catalyst Registry',

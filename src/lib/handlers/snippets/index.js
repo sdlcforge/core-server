@@ -1,5 +1,5 @@
 import * as listHandler from './list'
 
-const handlers = [ listHandler ]
+const handlers = [listHandler]
 
 export { handlers }
