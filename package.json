@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@liquid-labs/catalyst-defaults": "^1.0.0-alpha.1",
+    "@liquid-labs/http-smart-response": "^1.0.0-alpha.3",
     "@liquid-labs/plugable-express": "^1.0.0-alpha.27"
   }
 }

@@ -4,11 +4,12 @@ import * as fsPath from 'node:path'
 import { CATALYST_API_SPEC, CATALYST_SERVER_PLUGINS, CATALYST_HOME } from '@liquid-labs/catalyst-defaults'
 import { appInit as superInit } from '@liquid-labs/plugable-express'
 
-const packagePathProd = fsPath.resolve(__dirname, '..', 'package.json')
-const packagePathTest = fsPath.resolve(__dirname, '..', '..', 'package.json')
-const packagePath = existsSync(packagePathProd) ? packagePathProd : packagePathTest
+const packageJSONPathProd = fsPath.resolve(__dirname, '..', 'package.json')
+const packageJSONPathTest = fsPath.resolve(__dirname, '..', '..', 'package.json')
+const packageJSONPath = existsSync(packageJSONPathProd) ? packageJSONPathProd : packageJSONPathTest
+const myPackagePath = fsPath.dirname(packageJSONPath)
 
-const pkgJSON = JSON.parse(readFileSync(packagePath, { encoding : 'utf8' }))
+const pkgJSON = JSON.parse(readFileSync(packageJSONPath, { encoding : 'utf8' }))
 const { version: pkgVersion } = pkgJSON
 
 const appInit = async({
@@ -17,6 +18,7 @@ const appInit = async({
   version = pkgVersion,
   apiSpecPath = CATALYST_API_SPEC(),
   pluginsPath = CATALYST_SERVER_PLUGINS(),
+  pluginPaths = [ myPackagePath ],
   defaultRegistries = [
     {
       name : 'Liquid Labs Canonical Catalyst Registry',
@@ -34,6 +36,7 @@ const appInit = async({
       version,
       apiSpecPath,
       pluginsPath,
+      pluginPaths,
       defaultRegistries,
       serverHome,
       useDefaultSettings,
