@@ -4,7 +4,13 @@
   "description": "",
   "main": "dist/catalyst-server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "make",
+    "lint": "make lint",
+    "lint:fix": "make lint-fix",
+    "test": "make test",
+    "prepack": "make build",
+    "preversion": "make test && make lint",
+    "qa": "make qa"
   },
   "keywords": [],
   "author": "Zane Rockenbaugh <zane@liquid-labs.com>",
@@ -13,5 +19,13 @@
   "bugs": {
     "url": "https://github.com/liquid-labs/catalyst-server/issues"
   },
-  "homepage": "https://github.com/liquid-labs/catalyst-server#readme"
+  "homepage": "https://github.com/liquid-labs/catalyst-server#readme",
+  "devDependencies": {
+    "@liquid-labs/catalyst-scripts-node-project": "^1.0.0-alpha.22",
+    "supertest": "^6.3.3"
+  },
+  "dependencies": {
+    "@liquid-labs/catalyst-defaults": "^1.0.0-alpha.1",
+    "@liquid-labs/plugable-express": "file:.yalc/@liquid-labs/plugable-express"
+  }
 }

@@ -1,86 +1,107 @@
 YAML spec embedded at top of each snippet
 
-- name: selector-def
-  builder: node-file-selectors
-  snippet: 10-selector-def.mk
-  vars:
-    - JS_FILE_SELECTOR
-    - TEST_DATA_SELECTOR
+- name: makefile
+  builder: liquid-labs/makefile-setup
+  scripts:
+    - Makefile
+    - make/95-targets.mk
 - name: files-def
-  builder: node-file-finder
-  requires-vars:
-    - JS_FILE_SELECTOR
-    - TEST_DATA_SELECTOR
-  snippet: 25-files-def.mk
-  vars:
-    - ALL_JS_SRC_FILES
-    - ALL_TEST_DATA_FILES
-    - ALL_JS_TEST_FILES
+  builder: liquid-labs/node-file-finder
+  scripts: 
+    - make/25-files-def.mk
 - name: catalyst-server
-  builder: node-lib-builder
-  requires-vars:
-    - JS_FILE_SELECTOR
-  target: build
-  snippet: 50-catalyst-server.mk
-  src-path: src/lib
-  output-dir: dist
-  artifacts:
-    - catalyst-sever.js
+  builder: liquid-labs/node-lib-builder
+  requires:
+    - makefile-setup
+    - node-file-finder
+  scripts: 
+    - make/50-catalyst-server.mk
+  config:
+    src-path: src/lib
+    target: build
 - name: run-catalyst-server
-  builder: node-exec-builder
-  requires-vars:
-    - JS_FILE_SELECTOR
-  target: build
-  snippet: 50-run-catalyst-server.mk
-  src-path: src-cli
-  output-dir: dist
-  artifacts:
-    - run-catalyst-sever.js
+  builder: liquid-labs/node-exec-builder
+  requires:
+    - makfile-setup
+    - node-file-finder
+  scripts: 
+    - make/50-run-catalyst-server.mk
+  config:
+    src-path: src/cli
+    target: build
 - name: unit-test
-  builder: jester
-  requires-vars:
-    - ALL_JS_SRC_FILES
-    - ALL_JS_TEST_FILES
-  target: test
-  snippet: 50-unit-test.mk
-  output-dir: qa
-  artifacts:
-    - unit-test.txt
-    - .unit-test.passed
-    - coverage/clover.xml
-    - coverage/coverage-final.json
-    - coverage/index.html
+  builder: liquid-labs/jester
+  requires:
+    - makefile-setup
+    - node-file-finder
+  scripts: 
+    - make/50-unit-test.mk
+  config:
+    src-path: src
+    target: test
 - name: lint
-  builder: eslinter
-  requires-vars:
-    - ALL_JS_SRC_FILES
-    - ALL_JS_TEST_FILES
-  target: lint
-  snippet: 50-lint.mk
-  output-dir: qa
-  artifacts:
-    - lint.txt
-    - .lint.passed
+  builder: liquid-labs/eslinter
+  requires:
+    - liquid-labs/makefile-setup
+    - liquid-labs/node-file-finder
+  scripts: 
+    - make/50-lint.mk
+  config:
+    target: lint
 - name: lint-fix
-  builder: eslinter
-  requires-vars:
-    - ALL_JS_SRC_FILES
-    - ALL_JS_TEST_FILES
-  target: lint-fix
-  snippet: 50-lint-fix.mk
+  builder: liquid-labs/eslinter
+  requires:
+    - liquid-labs/makefile-setup
+    - liquid-labs/node-file-finder
+  scripts: 
+    - make/50-lint-fix.mk
+  config:
+    target: lint-fix
+- name: coverage-badge
+  builder: liquid-labs/coverage-badger
+  requires:
+    - liquid-labs/makefile-setup
+    - liquid-labs/node-file-finder
+  scripts:
+    - make/50-coverage-badge.mk
+  config:
+    target: coverage-badge
+- name: docs
+  builder: liquid-labs/project-documenter
+  requires:
+    - liquid-labs/makefile-setup
+    - liquid-labs/node-file-finder
+  scripts:
+    - make/50-docs.mk
+  config:
+    target: docs
 - name: qa
-  builder: combiner
-  target: qa
-  snippet: 90-qa.mk
-  phonies:
-    - test
-    - lint
+  builder: liquid-labs/combiner
+  requires:
+    - liquid-labs/makefile-setup
+  scripts: 
+    - make/90-qa.mk
+  config:
+    phonies: test, lint
+    target: qa
 - name: all
-  target: all
-  builder: combiner
-  snippet: 90-all.mk
-  phonies:
-    - build
+  builder: liquid-labs/combiner
+  requires:
+    - liquid-labs/makefile-setup
+  scripts: 
+    - make/90-all.mk
+  config:
+    phonies: build
+    target: all
+
+- name: ci-cd-unit-test
+  builder: liquid-labs/ci-cd-node-unit-tester
+  scripts:
+    - .github/workflows/ci-cd-unit-test.yaml
+  config:
+    node-versions: 18.x, 19.x, 20.x
+    oses: ubuntu-latest, macos-latest
+
 
 
 Always in the context of a project.
@@ -90,7 +111,7 @@ catalyst setup -- builder=node-project
 catalyst snippets add -- name=catalyst-server builder=node-execer
 catalyst snippets add -- builder=jester
 catalyst snippets add -- builder=eslinter
-catalyst snippets add -- name=qa builder=combiner phonies=test phonies=lint
+catalyst snippets add -- name=qa builder=combiner config="phonies=test,lint"
 
 catalyst snippets list
 
