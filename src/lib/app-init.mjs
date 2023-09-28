@@ -13,6 +13,7 @@ const { version: pkgVersion } = pkgJSON
 
 const appInit = async({
   name = 'catalyst-server',
+  cliName = 'catalyst',
   version = pkgVersion,
   apiSpecPath = CATALYST_API_SPEC(),
   pluginsPath = CATALYST_SERVER_PLUGINS(),
@@ -29,6 +30,7 @@ const appInit = async({
   const results =
     await superInit({
       name,
+      cliName,
       version,
       apiSpecPath,
       pluginsPath,
