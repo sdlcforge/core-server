@@ -25,8 +25,10 @@
     "supertest": "^6.3.3"
   },
   "dependencies": {
-    "@liquid-labs/catalyst-defaults": "^1.0.0-alpha.1",
+    "@liquid-labs/catalyst-defaults": "^1.0.0-alpha.4",
     "@liquid-labs/http-smart-response": "^1.0.0-alpha.3",
-    "@liquid-labs/plugable-express": "^1.0.0-alpha.27"
+    "@liquid-labs/liq-defaults": "^1.0.0-alpha.3",
+    "@liquid-labs/liq-plugins-lib": "file:.yalc/@liquid-labs/liq-plugins-lib",
+    "@liquid-labs/plugable-express": "file:.yalc/@liquid-labs/plugable-express"
   }
 }

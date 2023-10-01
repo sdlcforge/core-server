@@ -124,6 +124,9 @@ catalyst snippets cat -- name=XXX
 VS.
 
 catalyst node setup
-catalyst node libraries add -- name=
-catalyst node executables add -- name=
-catalyst node executables remove -- name=
+
+catalyst gh-workflows setup -- type=
+
+catalyst readme setup
+
+catalyst standards liquid-labs -- type=node
