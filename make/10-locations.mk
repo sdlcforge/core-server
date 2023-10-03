@@ -2,18 +2,7 @@
 # https://npmjs.com/package/@liquid-labs/catalyst-lib-makefiles for further
 # details
 
-.DELETE_ON_ERROR:
-
-SHELL:=bash
-
-BUILD_TARGETS:=
-
-DOC_TARGETS:=
-
-LINT_TARGETS:=
-
-TEST_TARGETS:=
-
-ifneq ($(wildcard make/*.mk),)
-include make/*.mk
-endif
+SRC:=src
+DIST:=dist
+TEST_STAGING:=test-staging
+QA:=qa
