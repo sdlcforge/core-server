@@ -5,7 +5,7 @@
 # build dist/catalyst-server.js
 #####
 
-CATALYST_CATALYST_SERVER_JS:=$(DIST)/dist/catalyst-server.js
+CATALYST_CATALYST_SERVER_JS:=$(DIST)/catalyst-server.js
 CATALYST_CATALYST_SERVER_JS_ENTRY=$(SRC)/src/lib
 BUILD_TARGETS+=$(CATALYST_CATALYST_SERVER_JS)
 
