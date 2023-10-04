@@ -1,0 +1,24 @@
+Test git rev: f3b1e6fc419537c2f6d146fb95bfc5a417333fdc
+PASS lib/test/index.test.js
+PASS lib/test/app-init.test.js
+-----------------------|---------|----------|---------|---------|-------------------
+File                   | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-----------------------|---------|----------|---------|---------|-------------------
+All files              |   77.27 |    64.44 |      80 |   77.14 |                   
+ cli                   |       0 |      100 |     100 |       0 |                   
+  index.js             |       0 |      100 |     100 |       0 | 1-8               
+ lib                   |     100 |    63.88 |     100 |     100 |                   
+  app-init.mjs         |     100 |    63.33 |     100 |     100 | 9-29              
+  index.js             |     100 |    66.66 |     100 |     100 | 1-2               
+ lib/handlers          |     100 |    66.66 |     100 |     100 |                   
+  index.js             |     100 |    66.66 |     100 |     100 | 1                 
+ lib/handlers/snippets |   61.53 |    66.66 |   33.33 |      70 |                   
+  index.js             |     100 |    66.66 |     100 |     100 | 1                 
+  list.mjs             |      50 |      100 |       0 |    62.5 | 8-12              
+-----------------------|---------|----------|---------|---------|-------------------
+
+Test Suites: 2 passed, 2 total
+Tests:       3 passed, 3 total
+Snapshots:   0 total
+Time:        0.641 s, estimated 1 s
+Ran all test suites.
