@@ -6,6 +6,10 @@
 
 SHELL:=bash
 
+default: all
+
+PHONY_TARGETS:=all default
+
 BUILD_TARGETS:=
 
 DOC_TARGETS:=

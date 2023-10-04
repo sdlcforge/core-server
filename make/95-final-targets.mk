@@ -6,9 +6,7 @@
 
 build: $(BUILD_TARGETS)
 
-default: build
-
-PHONY_TARGETS+=build default
+PHONY_TARGETS+=build
 
 all: build
 
