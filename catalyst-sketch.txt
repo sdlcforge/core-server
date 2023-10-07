@@ -106,24 +106,23 @@ YAML spec embedded at top of each snippet
 
 Always in the context of a project.
 
-catalyst setup -- builder=node-project
 
-catalyst snippets add -- name=catalyst-server builder=node-execer
-catalyst snippets add -- builder=jester
-catalyst snippets add -- builder=eslinter
-catalyst snippets add -- name=qa builder=combiner config="phonies=test,lint"
+catalyst workflows list
+catalyst workflows list -- available
 
-catalyst snippets list
+catalyst workflows github node-unit-test setup
+catalyst workflows github node-unit-test remove
+catalyst workflows github node-unit-test show
 
-catalyst snippets remove -- name=XXX
+catalyst workflows local node-project setup
+catalyst workflows local node-project libraries add
+catalyst workflows local node-project libraries remove
+catalyst workflows local node-project libraries show
+catalyst workflows local node-project executables add
 
-catalyst snippets detail -- name=XXX
+catalyst badges list
+catalyst badges list -- available
 
-catalyst snippets cat -- name=XXX
-
-VS.
-
-catalyst node setup
-catalyst node libraries add -- name=
-catalyst node executables add -- name=
-catalyst node executables remove -- name=
+catalyst badges local coverage add
+catalyst badges local coverage remove
+catalyst badges github 
