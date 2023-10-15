@@ -30,6 +30,6 @@
     "@liquid-labs/catalyst-defaults": "^1.0.0-alpha.5",
     "@liquid-labs/http-smart-response": "^1.0.0-alpha.3",
     "@liquid-labs/liq-defaults": "^1.0.0-alpha.3",
-    "@liquid-labs/plugable-express": "^1.0.0-alpha.30"
+    "@liquid-labs/plugable-express": "^1.0.0-alpha.32"
   }
 }

@@ -1,107 +1,14 @@
-YAML spec embedded at top of each snippet
-
-- name: makefile
-  builder: liquid-labs/makefile-setup
-  scripts:
-    - Makefile
-    - make/95-targets.mk
-- name: files-def
-  builder: liquid-labs/node-file-finder
-  scripts: 
-    - make/25-files-def.mk
-- name: catalyst-server
-  builder: liquid-labs/node-lib-builder
-  requires:
-    - liquid-labs/makefile-setup
-    - liquid-labs/node-file-finder
-  scripts: 
-    - make/50-catalyst-server.mk
-  config:
-    src-path: src/lib
-    target: build
-- name: run-catalyst-server
-  builder: liquid-labs/node-exec-builder
-  requires:
-    - makfile-setup
-    - node-file-finder
-  scripts: 
-    - make/50-run-catalyst-server.mk
-  config:
-    src-path: src/cli
-    target: build
-- name: unit-test
-  builder: liquid-labs/jester
-  requires:
-    - makefile-setup
-    - node-file-finder
-  scripts: 
-    - make/50-unit-test.mk
-  config:
-    src-path: src
-    target: test
-- name: lint
-  builder: liquid-labs/eslinter
-  requires:
-    - liquid-labs/makefile-setup
-    - liquid-labs/node-file-finder
-  scripts: 
-    - make/50-lint.mk
-  config:
-    target: lint
-- name: lint-fix
-  builder: liquid-labs/eslinter
-  requires:
-    - liquid-labs/makefile-setup
-    - liquid-labs/node-file-finder
-  scripts: 
-    - make/50-lint-fix.mk
-  config:
-    target: lint-fix
-- name: coverage-badge
-  builder: liquid-labs/coverage-badger
-  requires:
-    - liquid-labs/makefile-setup
-    - liquid-labs/node-file-finder
-  scripts:
-    - make/50-coverage-badge.mk
-  config:
-    target: coverage-badge
-- name: docs
-  builder: liquid-labs/project-documenter
-  requires:
-    - liquid-labs/makefile-setup
-    - liquid-labs/node-file-finder
-  scripts:
-    - make/50-docs.mk
-  config:
-    target: docs
-- name: qa
-  builder: liquid-labs/combiner
-  requires:
-    - liquid-labs/makefile-setup
-  scripts: 
-    - make/90-qa.mk
-  config:
-    phonies: test, lint
-    target: qa
-- name: all
-  builder: liquid-labs/combiner
-  requires:
-    - liquid-labs/makefile-setup
-  scripts: 
-    - make/90-all.mk
-  config:
-    phonies: build
-    target: all
-
-- name: ci-cd-unit-test
-  builder: liquid-labs/ci-cd-node-unit-tester
-  scripts:
-    - .github/workflows/ci-cd-unit-test.yaml
-  config:
-    node-versions: 18.x, 19.x, 20.x
-    oses: ubuntu-latest, macos-latest
-
+catalyst
+  --setup
+  --version
+  help
+  projects
+    documentation
+      badges
+    releases
+    workflows
+  server
+  work
 
 
 Always in the context of a project.
