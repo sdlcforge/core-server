@@ -29,6 +29,6 @@
   "dependencies": {
     "@liquid-labs/catalyst-defaults": "^1.0.0-alpha.5",
     "@liquid-labs/http-smart-response": "^1.0.0-alpha.3",
-    "@liquid-labs/plugable-express": "^1.0.0-alpha.36"
+    "@liquid-labs/plugable-express": "file:.yalc/@liquid-labs/plugable-express"
   }
 }
