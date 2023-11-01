@@ -3,6 +3,9 @@
   "version": "1.0.0-alpha.2",
   "description": "",
   "main": "dist/catalyst-server.js",
+  "bin": {
+    "catalyst-server": "dist/catalyst-server-exec.js"
+  },
   "scripts": {
     "build": "make",
     "lint": "make lint",
