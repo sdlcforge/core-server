@@ -11,7 +11,7 @@ import { Reporter } from '@liquid-labs/plugable-express'
 
 import { appInit } from '../app-init'
 
-describe('GET:/server', () => {
+describe('GET:/server/version', () => {
   let app, cache, CURR_VER, serverHome
 
   beforeAll(async() => {
@@ -39,7 +39,7 @@ describe('GET:/server', () => {
 
   test('handles GET /server', async() => {
     const { status, text, headers } = await request(app)
-      .get('/server') // it reads weird, but this MUST go first
+      .get('/server/version') // it reads weird, but this MUST go first
       .set('Accept', 'text/plain')
     expect(status).toBe(200)
     expect(headers['content-type']).toMatch(/text\/plain/)
