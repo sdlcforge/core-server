@@ -4,6 +4,6 @@ export * from './app-init'
 export * from './handlers'
 
 const name = 'snippets'
-const summary = 'Core snippet handling from catalyst-server.'
+const summary = 'Snippet handling.'
 
 export { name, summary, Reporter }

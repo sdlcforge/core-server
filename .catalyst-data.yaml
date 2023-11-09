@@ -41,13 +41,13 @@ workflows:
           - builder: '@liquid-labs/catalyst-builder-node'
             version: 1.0.0-alpha.0
             priority: 50
-            path: make/50-catalyst-server-js.mk
-            purpose: Builds the 'dist/catalyst-server.js' artifact.
+            path: make/50-comply-server-js.mk
+            purpose: Builds the 'dist/comply-server.js' artifact.
           - builder: '@liquid-labs/catalyst-builder-node'
             version: 1.0.0-alpha.0
             priority: 50
-            path: make/50-catalyst-server-exec-js.mk
-            purpose: Builds the 'dist/catalyst-server-exec.js' artifact.
+            path: make/50-comply-server-exec-js.mk
+            purpose: Builds the 'dist/comply-server-exec.js' artifact.
           - builder: '@liquid-labs/catalyst-builder-node'
             version: 1.0.0-alpha.0
             priority: 55

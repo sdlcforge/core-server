@@ -2,10 +2,10 @@
 # https://npmjs.com/package/@liquid-labs/catalyst-builder-node for further details
 
 #####
-# build dist/catalyst-server.js
+# build dist/comply-server.js
 #####
 
-CATALYST_CATALYST_SERVER_JS:=$(DIST)/catalyst-server.js
+CATALYST_CATALYST_SERVER_JS:=$(DIST)/comply-server.js
 CATALYST_CATALYST_SERVER_JS_ENTRY=$(SRC)/lib/index.js
 BUILD_TARGETS+=$(CATALYST_CATALYST_SERVER_JS)
 
@@ -15,5 +15,5 @@ $(CATALYST_CATALYST_SERVER_JS): package.json $(CATALYST_ALL_NON_TEST_JS_FILES_SR
 	  $(CATALYST_ROLLUP) --config $(CATALYST_ROLLUP_CONFIG)
 
 #####
-# end dist/catalyst-server.js
+# end dist/comply-server.js
 #####
