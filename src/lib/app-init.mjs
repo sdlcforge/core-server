@@ -13,8 +13,7 @@ const pkgJSON = JSON.parse(readFileSync(packageJSONPath, { encoding : 'utf8' }))
 const { version: pkgVersion } = pkgJSON
 
 const appInit = async({
-  name = 'catalyst-server',
-  cliName = 'catalyst',
+  name = 'comply-server',
   version = pkgVersion,
   apiSpecPath = CATALYST_API_SPEC(),
   pluginsPath = CATALYST_SERVER_PLUGINS(),
@@ -32,7 +31,6 @@ const appInit = async({
   const results =
     await superInit({
       name,
-      cliName,
       version,
       apiSpecPath,
       pluginsPath,

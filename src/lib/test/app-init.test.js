@@ -15,7 +15,7 @@ describe('GET:/server/version', () => {
   let app, cache, CURR_VER, serverHome
 
   beforeAll(async() => {
-    serverHome = fsPath.join(os.tmpdir(), 'catalyst-server-' + Math.round(Math.random() * 10000000000000000))
+    serverHome = fsPath.join(os.tmpdir(), 'comply-server-' + Math.round(Math.random() * 10000000000000000))
     process.env.CATALYST_HOME = serverHome;
 
     ({ app, cache } = await appInit({
@@ -43,6 +43,6 @@ describe('GET:/server/version', () => {
       .set('Accept', 'text/plain')
     expect(status).toBe(200)
     expect(headers['content-type']).toMatch(/text\/plain/)
-    expect(text).toMatch(new RegExp(`catalyst-server: ${CURR_VER}`))
+    expect(text).toMatch(new RegExp(`comply-server: ${CURR_VER}`))
   })
 })

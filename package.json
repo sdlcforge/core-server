@@ -1,10 +1,10 @@
 {
-  "name": "@liquid-labs/catalyst-server",
+  "name": "comply-server",
   "version": "1.0.0-alpha.2",
   "description": "",
-  "main": "dist/catalyst-server.js",
+  "main": "dist/comply-server.js",
   "bin": {
-    "catalyst-server": "dist/catalyst-server-exec.js"
+    "comply-server": "dist/comply-server-exec.js"
   },
   "scripts": {
     "build": "make",
@@ -18,11 +18,11 @@
   "keywords": [],
   "author": "Zane Rockenbaugh <zane@liquid-labs.com>",
   "license": "UNLICENSED",
-  "repository": "git+ssh://git@github.com/liquid-labs/catalyst-server.git",
+  "repository": "git+ssh://git@github.com/liquid-labs/comply-server.git",
   "bugs": {
-    "url": "https://github.com/liquid-labs/catalyst-server/issues"
+    "url": "https://github.com/liquid-labs/comply-server/issues"
   },
-  "homepage": "https://github.com/liquid-labs/catalyst-server#readme",
+  "homepage": "https://github.com/liquid-labs/comply-server#readme",
   "devDependencies": {
     "@liquid-labs/catalyst-resource-babel-and-rollup": "^1.0.0-alpha.3",
     "@liquid-labs/catalyst-resource-eslint": "^1.0.0-alpha.1",
