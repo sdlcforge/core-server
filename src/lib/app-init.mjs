@@ -21,7 +21,7 @@ const appInit = async({
   defaultRegistries = [
     {
       name : 'Liquid Labs Canonical Catalyst Registry',
-      url  : 'raw.githubusercontent.com/liquid-labs/catalyst-registry/main/registry.yaml'
+      url  : 'https://raw.githubusercontent.com/liquid-labs/liq-registry/main/registry.yaml'
     }
   ],
   serverHome = CATALYST_HOME(),
