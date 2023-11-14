@@ -1,0 +1,18 @@
+Test git rev: ec8f71c15b21c372f69c8667d3f7d74d8452c8c1
+PASS lib/test/app-init.test.js
+PASS lib/test/index.test.js
+-----------------------|---------|----------|---------|---------|-------------------
+File                   | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-----------------------|---------|----------|---------|---------|-------------------
+All files              |   83.87 |    64.28 |   66.66 |   86.95 |                   
+ lib                   |     100 |    64.28 |     100 |     100 |                   
+  app-init.mjs         |     100 |    64.28 |     100 |     100 | 9-28              
+ lib/handlers/snippets |      50 |      100 |       0 |    62.5 |                   
+  list.mjs             |      50 |      100 |       0 |    62.5 | 8-12              
+-----------------------|---------|----------|---------|---------|-------------------
+
+Test Suites: 2 passed, 2 total
+Tests:       3 passed, 3 total
+Snapshots:   0 total
+Time:        0.455 s, estimated 1 s
+Ran all test suites.
