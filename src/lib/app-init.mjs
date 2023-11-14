@@ -25,7 +25,6 @@ const appInit = async({
     }
   ],
   serverHome = CATALYST_HOME(),
-  useDefaultSettings = true,
   ...options
 }) => {
   const results =
@@ -37,7 +36,6 @@ const appInit = async({
       pluginPaths,
       defaultRegistries,
       serverHome,
-      useDefaultSettings,
       ...options
     })
 
