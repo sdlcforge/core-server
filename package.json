@@ -15,6 +15,9 @@
     "preversion": "make test && make lint",
     "qa": "make qa"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "keywords": [],
   "author": "Zane Rockenbaugh <zane@liquid-labs.com>",
   "license": "UNLICENSED",
@@ -30,9 +33,9 @@
     "supertest": "^6.3.3"
   },
   "dependencies": {
-    "@liquid-labs/catalyst-defaults": "^1.0.0-alpha.5",
+    "@liquid-labs/comply-defaults": "^1.0.0-alpha.8",
     "@liquid-labs/http-smart-response": "^1.0.0-alpha.3",
-    "@liquid-labs/plugable-express": "^1.0.0-alpha.46"
+    "@liquid-labs/plugable-express": "^1.0.0-alpha.48"
   },
   "_comply": {
     "orgKey": "@liquid-labs"
