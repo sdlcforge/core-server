@@ -5,4 +5,4 @@ import { appInit } from '../lib/app-init'
 
 const port = COMPLY_PORT()
 
-startServer(({ appInit, name: COMPLY_SERVER_CLI_NAME(), port }))
+startServer(({ appInit, name : COMPLY_SERVER_CLI_NAME(), port }))
