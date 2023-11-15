@@ -1,8 +1,8 @@
-import { CATALYST_PORT } from '@liquid-labs/catalyst-defaults'
+import { COMPLY_SERVER_CLI_NAME, COMPLY_PORT } from '@liquid-labs/comply-defaults'
 import { startServer } from '@liquid-labs/plugable-express'
 
 import { appInit } from '../lib/app-init'
 
-const port = CATALYST_PORT()
+const port = COMPLY_PORT()
 
-startServer(({ appInit, port }))
+startServer(({ appInit, name : COMPLY_SERVER_CLI_NAME(), port }))

@@ -6,7 +6,7 @@ import * as os from 'node:os'
 
 import request from 'supertest'
 
-import { CATALYST_API_SPEC } from '@liquid-labs/catalyst-defaults'
+import { COMPLY_API_SPEC_PATH } from '@liquid-labs/comply-defaults'
 import { Reporter } from '@liquid-labs/plugable-express'
 
 import { appInit } from '../app-init'
@@ -16,13 +16,12 @@ describe('GET:/server/version', () => {
 
   beforeAll(async() => {
     serverHome = fsPath.join(os.tmpdir(), 'comply-server-' + Math.round(Math.random() * 10000000000000000))
-    process.env.CATALYST_HOME = serverHome;
+    process.env.COMPLY_HOME = serverHome;
 
     ({ app, cache } = await appInit({
       serverHome,
-      skipCorePlugins    : true,
-      reporter           : new Reporter({ silent : true }),
-      useDefaultSettings : true
+      skipCorePlugins : true,
+      reporter        : new Reporter({ silent : true })
     }))
 
     const bits = await fs.readFile(fsPath.join(__dirname, '..', '..', '..', 'package.json'))
@@ -35,9 +34,9 @@ describe('GET:/server/version', () => {
     await fs.rm(serverHome, { recursive : true })
   })
 
-  test('creates api.json', () => expect(existsSync(CATALYST_API_SPEC())).toBe(true))
+  test('creates api.json', () => expect(existsSync(COMPLY_API_SPEC_PATH())).toBe(true))
 
-  test('handles GET /server', async() => {
+  test('handles GET /server/version', async() => {
     const { status, text, headers } = await request(app)
       .get('/server/version') // it reads weird, but this MUST go first
       .set('Accept', 'text/plain')
