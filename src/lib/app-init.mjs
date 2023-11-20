@@ -17,7 +17,7 @@ const myPackagePath = fsPath.dirname(packageJSONPath)
 const pkgJSON = JSON.parse(readFileSync(packageJSONPath, { encoding : 'utf8' }))
 const { version: pkgVersion } = pkgJSON
 
-const pluginsPath = fsPath.join(COMPLY_SERVER_PLUGIN_DIR(), 'handlers')
+const pluginsPath = fsPath.join(COMPLY_SERVER_PLUGIN_DIR(), 'server')
 
 const appInit = async(options) => await superInit({
   name        : COMPLY_SERVER_CLI_NAME(),
