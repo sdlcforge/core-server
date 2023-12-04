@@ -34,7 +34,7 @@ $(CATALYST_TEST_PASS_MARKER) $(CATALYST_TEST_REPORT) $(TEST_STAGING)/coverage &:
 	echo -n 'Test git rev: ' > $(CATALYST_TEST_REPORT)
 	git rev-parse HEAD >> $(CATALYST_TEST_REPORT)
 	( set -e; set -o pipefail; \
-	  ( cd $(TEST_STAGING) && $(CATALYST_JEST) \
+	  ( cd $(TEST_STAGING) && NODE_OPTIONS=--experimental-vm-modules $(CATALYST_JEST) \
 	    --config=$(CATALYST_JEST_CONFIG) \
 	    --runInBand \
 	    $(TEST) 2>&1 ) \

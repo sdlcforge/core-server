@@ -34,8 +34,8 @@
   },
   "dependencies": {
     "@liquid-labs/comply-defaults": "^1.0.0-alpha.8",
-    "@liquid-labs/http-smart-response": "^1.0.0-alpha.4",
-    "@liquid-labs/plugable-express": "^1.0.0-alpha.53"
+    "@liquid-labs/http-smart-response": "^1.0.0-alpha.6",
+    "@liquid-labs/plugable-express": "^1.0.0-alpha.54"
   },
   "_comply": {
     "orgKey": "@liquid-labs"
