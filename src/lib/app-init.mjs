@@ -12,7 +12,8 @@ import { appInit as superInit } from '@liquid-labs/plugable-express'
 const packageJSONPathProd = fsPath.resolve(__dirname, '..', 'package.json')
 const packageJSONPathTest = fsPath.resolve(__dirname, '..', '..', 'package.json')
 const packageJSONPath = existsSync(packageJSONPathProd) ? packageJSONPathProd : packageJSONPathTest
-const myPackagePath = fsPath.dirname(packageJSONPath)
+// if we add end-point handlers of our own, then we are also a plugin
+// const myPackagePath = fsPath.dirname(packageJSONPath)
 
 const pkgJSON = JSON.parse(readFileSync(packageJSONPath, { encoding : 'utf8' }))
 const { version: pkgVersion } = pkgJSON
@@ -24,7 +25,7 @@ const appInit = async(options) => await superInit({
   version     : pkgVersion,
   apiSpecPath : COMPLY_API_SPEC_PATH(),
   pluginsPath,
-  pluginPaths : [myPackagePath],
+  // pluginPaths : [myPackagePath],
   serverHome  : COMPLY_HOME(),
   ...options
 })
