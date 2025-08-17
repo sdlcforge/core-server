@@ -21,11 +21,11 @@
   "keywords": [],
   "author": "Zane Rockenbaugh <zane@liquid-labs.com>",
   "license": "UNLICENSED",
-  "repository": "git+ssh://git@github.com/liquid-labs/comply-server.git",
+  "repository": "git+ssh://git@github.com/sdlcforge/core-server.git",
   "bugs": {
-    "url": "https://github.com/liquid-labs/comply-server/issues"
+    "url": "https://github.com/sdlcforge/core-server/issues"
   },
-  "homepage": "https://github.com/liquid-labs/comply-server#readme",
+  "homepage": "https://github.com/sdlcforge/core-server#readme",
   "devDependencies": {
     "@liquid-labs/catalyst-resource-babel-and-rollup": "^1.0.0-alpha.3",
     "@liquid-labs/catalyst-resource-eslint": "^1.0.0-alpha.1",

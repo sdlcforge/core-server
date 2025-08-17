@@ -1,0 +1,17 @@
+services:
+  comply-server-test:
+    build:
+      context: ..
+      dockerfile: test/Dockerfile
+    container_name: comply-server-integration-test
+    environment:
+      - NODE_ENV=test
+      - SERVER_PORT=8080
+    volumes:
+      - ./results:/results
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge
