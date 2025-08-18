@@ -4,7 +4,7 @@ const http = require('http')
 const { spawn } = require('child_process')
 
 // Configuration
-const SERVER_PORT = process.env.SERVER_PORT || 8080
+const SERVER_PORT = process.env.SERVER_PORT || 32600
 const SERVER_HOST = 'localhost'
 const TEST_TIMEOUT = 30000 // 30 seconds
 
@@ -48,7 +48,7 @@ async function waitForServer(maxAttempts = 30) {
       const response = await makeRequest({
         hostname: SERVER_HOST,
         port: SERVER_PORT,
-        path: '/server/status',
+        path: '/heartbeat',
         method: 'GET'
       })
       
@@ -239,7 +239,7 @@ async function runTests() {
 // Start the server
 async function startServer() {
   return new Promise((resolve, reject) => {
-    const serverProcess = spawn('comply-server', ['--port', SERVER_PORT.toString()], {
+    const serverProcess = spawn('comply-server', [], {
       env: { ...process.env, NODE_ENV: 'test' },
       stdio: ['ignore', 'pipe', 'pipe']
     })
