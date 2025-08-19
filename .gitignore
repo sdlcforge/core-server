@@ -4,3 +4,6 @@
 /.yalc
 /dist
 /test-staging
+/*.log
+/*.pid
+/comply-server-*.tgz

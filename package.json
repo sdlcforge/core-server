@@ -13,7 +13,10 @@
     "test": "make test",
     "prepack": "make build",
     "preversion": "make test && make lint",
-    "qa": "make qa"
+    "qa": "make qa",
+    "start": "./scripts/start.sh",
+    "stop": "./scripts/stop.sh",
+    "test:local": "./scripts/test.sh"
   },
   "engines": {
     "node": ">=18.0.0"
