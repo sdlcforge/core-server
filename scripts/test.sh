@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Run local tests for comply-server
+# Run server integration tests locally
 
 set -e
 
@@ -13,7 +13,7 @@ PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
 cd "$PROJECT_ROOT"
 
 echo "===================================================="
-echo "Running local comply-server tests"
+echo "Running server integration tests"
 echo "===================================================="
 echo ""
 
@@ -32,6 +32,7 @@ fi
 echo ""
 echo "Step 3: Running test suite..."
 node test/test-server.js
+TEST_RESULT=$?
 
 echo ""
 echo "===================================================="

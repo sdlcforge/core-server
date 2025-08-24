@@ -1,26 +1,25 @@
 #!/bin/bash
 
-# Start the comply-server and save the PID
+# Start the local server from the dist file and save the PID
 
 # Get the directory of this script
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Get the project root directory (parent of scripts)
 PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
+EXEC_KEY="sdlcforge-server"
+SERVER_EXEC=$(cat $PROJECT_ROOT/package.json | jq -r ".bin[\"$EXEC_KEY\"]")
 
 # Change to project root
 cd "$PROJECT_ROOT"
 
-# Clear/create log file
-> local-server.log
-
 # Start the server using the dist file, redirecting output to log
-node dist/comply-server-exec.js > local-server.log 2>&1 &
+node $(SERVER_EXEC) > local-server.log 2>&1 &
 
 # Save the PID
 echo $! > start-pid
 PID=$(cat start-pid)
 
-echo "Starting comply-server with PID: $PID"
+echo "Starting $(SERVER_EXEC) with PID: $PID"
 echo "Server output is being logged to: local-server.log"
 
 function check_if_running() {

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Stop the comply-server using the saved PID
+# Stop the local server started using the PID file
 
 # Get the directory of this script
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -12,7 +12,7 @@ cd "$PROJECT_ROOT"
 
 # Check if start-pid file exists
 if [ ! -f "start-pid" ]; then
-    echo "No running comply-server found (start-pid file does not exist)"
+    echo "No running local server found (start-pid file does not exist)"
     exit 0
 fi
 
@@ -21,7 +21,7 @@ PID=$(cat start-pid)
 
 # Check if the process is running
 if ps -p $PID > /dev/null 2>&1; then
-    echo "Stopping comply-server (PID: $PID)..."
+    echo "Stopping local server (PID: $PID)..."
     kill $PID
     
     # Wait a moment for graceful shutdown
@@ -33,7 +33,7 @@ if ps -p $PID > /dev/null 2>&1; then
         kill -9 $PID
     fi
     
-    echo "comply-server stopped"
+    echo "local server stopped"
 else
     echo "Process with PID $PID is not running"
 fi

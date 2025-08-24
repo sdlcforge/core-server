@@ -6,4 +6,4 @@
 /test-staging
 /*.log
 /*.pid
-/comply-server-*.tgz
+/sdlcforge-core-server-*.tgz
