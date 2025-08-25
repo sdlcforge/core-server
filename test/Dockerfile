@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     bash \
     curl \
     git \
+    jq \
     make \
     python3 \
     ca-certificates \
@@ -36,10 +37,9 @@ RUN source $NVM_DIR/nvm.sh && \
     nvm install 22 && \
     nvm alias default 18
 
-# Copy the package tarball, package.json, and test scripts
-COPY --chown=testuser:testuser comply-server-*.tgz /home/testuser/
-COPY --chown=testuser:testuser package.json /home/testuser/
-COPY --chown=testuser:testuser test/*.js test/*.sh /home/testuser/test/
+# Copy the entire project directory (excluding dist via .dockerignore)
+# This includes .yalc directory with hard-linked dependencies
+COPY --chown=testuser:testuser . /home/testuser/
 
 # Make test scripts executable
 RUN chmod +x /home/testuser/test/*.sh

@@ -97,8 +97,20 @@ echo ""
 echo -e "${YELLOW}Step 4: Running integration tests...${NC}"
 echo ""
 
-# Run the tests
-if docker compose -f test/docker-compose.yml run --rm comply-server-test; then
+# Create test-staging directory for logs
+mkdir -p "$PROJECT_ROOT/test-staging"
+LOG_FILE="$PROJECT_ROOT/test-staging/integration-test-log.txt"
+
+# Pass TEST_SINGLE_VERSION environment variable if set
+if [ -n "$TEST_SINGLE_VERSION" ]; then
+    echo "Running tests with single Node version: $TEST_SINGLE_VERSION"
+    echo "Full log will be saved to: $LOG_FILE"
+fi
+
+# Run the tests with log capture
+if docker compose -f test/docker-compose.yml run --rm \
+    -e TEST_SINGLE_VERSION="${TEST_SINGLE_VERSION:-}" \
+    comply-server-test 2>&1 | tee "$LOG_FILE"; then
     TEST_EXIT_CODE=0
     echo -e "${GREEN}✓ All tests completed successfully${NC}"
 else

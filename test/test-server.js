@@ -2,6 +2,12 @@
 
 const http = require('http')
 const { spawn } = require('child_process')
+const fs = require('fs')
+const path = require('path')
+
+// Extract binary name from package.json
+const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'))
+const BINARY_NAME = Object.keys(packageJson.bin || {})[0] || 'sdlcforge-server'
 
 // Configuration
 const SERVER_PORT = process.env.SERVER_PORT || 32600
@@ -239,25 +245,46 @@ async function runTests() {
 // Start the server
 async function startServer() {
   return new Promise((resolve, reject) => {
-    const serverProcess = spawn('comply-server', [], {
+    const serverProcess = spawn(BINARY_NAME, [], {
       env: { ...process.env, NODE_ENV: 'test' },
       stdio: ['ignore', 'pipe', 'pipe']
     })
     
+    let serverLogs = ''
+    let serverErrors = ''
+    let hasExited = false
+    
     serverProcess.stdout.on('data', (data) => {
-      console.log(`[Server]: ${data}`)
+      const output = data.toString()
+      serverLogs += output
+      console.log(`[Server]: ${output}`)
     })
     
     serverProcess.stderr.on('data', (data) => {
-      console.error(`[Server Error]: ${data}`)
+      const output = data.toString()
+      serverErrors += output
+      console.error(`[Server Error]: ${output}`)
     })
     
     serverProcess.on('error', (error) => {
       reject(new Error(`Failed to start server: ${error.message}`))
     })
     
-    // Give server time to start, then resolve with process
-    setTimeout(() => resolve(serverProcess), 2000)
+    serverProcess.on('exit', (code, signal) => {
+      hasExited = true
+      if (code !== 0) {
+        reject(new Error(`Server exited unexpectedly with code ${code}. Last errors: ${serverErrors.slice(-500)}`))
+      }
+    })
+    
+    // Give server time to start, then check if it's still running
+    setTimeout(() => {
+      if (hasExited) {
+        reject(new Error(`Server exited during startup. Last errors: ${serverErrors.slice(-500)}`))
+      } else {
+        resolve(serverProcess)
+      }
+    }, 3000) // Increased timeout to 3 seconds
   })
 }
 
@@ -267,7 +294,7 @@ async function main() {
   
   try {
     console.log(`Starting tests with Node ${process.version}`)
-    console.log('Starting comply-server...')
+    console.log(`Starting ${BINARY_NAME}...`)
     
     serverProcess = await startServer()
     

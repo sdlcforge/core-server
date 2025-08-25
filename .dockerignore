@@ -1,0 +1,22 @@
+# Exclude build outputs (but we'll copy dist separately)
+# dist/  - NOT excluding dist as we need it for the tests
+
+# Include node_modules for testing - we want to test with exact same dependencies
+# node_modules/  - NOT excluding node_modules as we want to copy the exact setup
+
+# Exclude git directory
+.git/
+
+# Exclude logs
+*.log
+
+# Exclude test results
+test/results/
+
+# Exclude any existing tarballs
+*.tgz
+
+# Exclude Docker-related files from being copied into themselves
+.dockerignore
+test/Dockerfile
+test/docker-compose.yml

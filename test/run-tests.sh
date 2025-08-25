@@ -9,14 +9,34 @@ echo "=================================================="
 # Source nvm
 source $NVM_DIR/nvm.sh
 
-# Find the package tarball
-PACKAGE_TARBALL=$(ls /home/testuser/comply-server-*.tgz | head -n 1)
-if [ -z "$PACKAGE_TARBALL" ]; then
-    echo "Error: No package tarball found"
+# Using pre-built package from copied node_modules and dist
+echo "Using pre-built package from host..."
+cd /home/testuser
+
+# Verify that we have the built files
+echo "Verifying pre-built files..."
+ls -la dist/ node_modules/ > /dev/null
+echo "✓ Found dist/ and node_modules/ directories"
+
+# Extract binary information from package.json
+echo "Extracting binary information from package.json..."
+BINARY_NAME=$(node -e "const pkg = require('./package.json'); const bins = Object.keys(pkg.bin || {}); console.log(bins[0] || '')")
+if [ -z "$BINARY_NAME" ]; then
+    echo "Error: No binary defined in package.json"
     exit 1
 fi
+BINARY_PATH=$(node -e "const pkg = require('./package.json'); console.log(pkg.bin['$BINARY_NAME'] || '')")
+if [ -z "$BINARY_PATH" ]; then
+    echo "Error: No binary path found for $BINARY_NAME"
+    exit 1
+fi
+echo "Package binary: $BINARY_NAME -> $BINARY_PATH"
 
-echo "Found package: $PACKAGE_TARBALL"
+# Verify the binary exists
+if [ ! -f "/home/testuser/$BINARY_PATH" ]; then
+    echo "Error: Binary not found at $BINARY_PATH"
+    exit 1
+fi
 
 # Check if Node is already available (from base image)
 if command -v node &> /dev/null; then
@@ -34,11 +54,15 @@ cd /home/testuser
 node test/get-node-versions.js > /tmp/versions.json
 cat /tmp/versions.json
 
-# Parse the test versions
-TEST_VERSIONS=$(node -e "const v = require('/tmp/versions.json'); console.log(v.testVersions.join(' '))")
+# Parse the test versions or use single version if specified
+if [ -n "$TEST_SINGLE_VERSION" ]; then
+    TEST_VERSIONS="$TEST_SINGLE_VERSION"
+    echo "Testing with single Node version: $TEST_SINGLE_VERSION (set via TEST_SINGLE_VERSION)"
+else
+    TEST_VERSIONS=$(node -e "const v = require('/tmp/versions.json'); console.log(v.testVersions.join(' '))")
+    echo "Will test with Node versions: $TEST_VERSIONS"
+fi
 
-echo ""
-echo "Will test with Node versions: $TEST_VERSIONS"
 echo ""
 
 # Track overall test results
@@ -65,30 +89,18 @@ for NODE_VERSION in $TEST_VERSIONS; do
     node --version
     npm --version
     
-    # Clean up any previous installation
-    echo "Cleaning up previous installation..."
-    rm -rf /home/testuser/test-install
-    mkdir -p /home/testuser/test-install
-    cd /home/testuser/test-install
+    # Set up test environment
+    echo "Setting up test environment..."
+    cd /home/testuser
     
-    # Initialize npm project
-    echo "Initializing test project..."
-    npm init -y > /dev/null 2>&1
+    # Create a symlink to make the binary available
+    mkdir -p /tmp/test-bin
+    rm -f /tmp/test-bin/$BINARY_NAME
+    ln -s /home/testuser/$BINARY_PATH /tmp/test-bin/$BINARY_NAME
+    chmod +x /tmp/test-bin/$BINARY_NAME
     
-    # Install the package
-    echo "Installing comply-server package..."
-    npm install --global-style $PACKAGE_TARBALL
-    
-    # Verify installation
-    if [ ! -f "node_modules/.bin/comply-server" ]; then
-        echo "Error: comply-server not found in node_modules/.bin/"
-        OVERALL_FAILED=$((OVERALL_FAILED + 1))
-        FAILED_VERSIONS="$FAILED_VERSIONS $NODE_VERSION"
-        continue
-    fi
-    
-    # Make comply-server available in PATH for testing
-    export PATH="/home/testuser/test-install/node_modules/.bin:$PATH"
+    # Make binary available in PATH for testing
+    export PATH="/tmp/test-bin:$PATH"
     
     # Run the test suite
     echo "Running test suite..."
@@ -103,7 +115,7 @@ for NODE_VERSION in $TEST_VERSIONS; do
     
     # Clean up for next iteration
     cd /home/testuser
-    pkill -f comply-server || true
+    pkill -f $BINARY_NAME || true
     sleep 2
 done
 
