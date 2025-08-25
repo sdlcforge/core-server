@@ -9,9 +9,10 @@ const path = require('path')
 const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'))
 const BINARY_NAME = Object.keys(packageJson.bin || {})[0] || 'sdlcforge-server'
 
-// Configuration
+// Configuration  
 const SERVER_PORT = process.env.SERVER_PORT || 32600
 const SERVER_HOST = 'localhost'
+console.log(`Test script using SERVER_PORT: ${SERVER_PORT} (from env: ${process.env.SERVER_PORT})`)
 const TEST_TIMEOUT = 30000 // 30 seconds
 
 // Test results collector
@@ -49,6 +50,7 @@ function makeRequest(options) {
 
 // Wait for server to be ready
 async function waitForServer(maxAttempts = 30) {
+  console.log(`Waiting for server at ${SERVER_HOST}:${SERVER_PORT}/heartbeat`)
   for (let i = 0; i < maxAttempts; i++) {
     try {
       const response = await makeRequest({
@@ -62,8 +64,9 @@ async function waitForServer(maxAttempts = 30) {
         console.log('Server is ready')
         return true
       }
+      console.log(`Attempt ${i + 1}: Got status ${response.statusCode}`)
     } catch (error) {
-      // Server not ready yet
+      console.log(`Attempt ${i + 1}: Connection failed - ${error.message}`)
     }
     
     await new Promise(resolve => setTimeout(resolve, 1000))
