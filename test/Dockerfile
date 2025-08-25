@@ -37,15 +37,11 @@ RUN source $NVM_DIR/nvm.sh && \
     nvm install 22 && \
     nvm alias default 18
 
-# Copy the entire project directory (excluding dist via .dockerignore)
-# This includes .yalc directory with hard-linked dependencies
-COPY --chown=testuser:testuser . /home/testuser/
+# Create directories that will be used when volume is mounted
+RUN mkdir -p /home/testuser && chown testuser:testuser /home/testuser
 
-# Make test scripts executable
-RUN chmod +x /home/testuser/test/*.sh
-
-# Set working directory
+# Set working directory (will be overridden by volume mount)
 WORKDIR /home/testuser
 
-# The entrypoint will be our test runner script
-ENTRYPOINT ["/bin/bash", "/home/testuser/test/run-tests.sh"]
+# The entrypoint will be our test runner script from the mounted volume
+ENTRYPOINT ["/bin/bash", "/project/test/run-tests.sh"]

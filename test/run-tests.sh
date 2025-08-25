@@ -6,12 +6,23 @@ echo "=================================================="
 echo "Comply Server Integration Tests"
 echo "=================================================="
 
-# Source nvm
-source $NVM_DIR/nvm.sh
+# Source nvm - handle both container and host paths
+if [ -f "$NVM_DIR/nvm.sh" ]; then
+    source $NVM_DIR/nvm.sh
+elif [ -f "/home/testuser/.nvm/nvm.sh" ]; then
+    export NVM_DIR="/home/testuser/.nvm"
+    source $NVM_DIR/nvm.sh
+else
+    echo "Error: Could not find nvm.sh"
+    exit 1
+fi
 
-# Using pre-built package from copied node_modules and dist
+# Using pre-built package from mounted volume
 echo "Using pre-built package from host..."
-cd /home/testuser
+cd /project
+
+# Make test scripts executable (in case mount lost permissions)
+chmod +x /project/test/*.sh 2>/dev/null || true
 
 # Verify that we have the built files
 echo "Verifying pre-built files..."
@@ -33,8 +44,12 @@ fi
 echo "Package binary: $BINARY_NAME -> $BINARY_PATH"
 
 # Verify the binary exists
-if [ ! -f "/home/testuser/$BINARY_PATH" ]; then
+echo "Debug: Looking for binary at /project/$BINARY_PATH"
+ls -la /project/dist/ || echo "No dist directory found"
+if [ ! -f "/project/$BINARY_PATH" ]; then
     echo "Error: Binary not found at $BINARY_PATH"
+    echo "Contents of /project:"
+    ls -la /project/
     exit 1
 fi
 
@@ -50,7 +65,7 @@ fi
 
 # Get test versions from the Node.js script
 echo "Determining Node versions to test..."
-cd /home/testuser
+cd /project
 node test/get-node-versions.js > /tmp/versions.json
 cat /tmp/versions.json
 
@@ -91,12 +106,12 @@ for NODE_VERSION in $TEST_VERSIONS; do
     
     # Set up test environment
     echo "Setting up test environment..."
-    cd /home/testuser
+    cd /project
     
     # Create a symlink to make the binary available
     mkdir -p /tmp/test-bin
     rm -f /tmp/test-bin/$BINARY_NAME
-    ln -s /home/testuser/$BINARY_PATH /tmp/test-bin/$BINARY_NAME
+    ln -s /project/$BINARY_PATH /tmp/test-bin/$BINARY_NAME
     chmod +x /tmp/test-bin/$BINARY_NAME
     
     # Make binary available in PATH for testing
@@ -104,7 +119,7 @@ for NODE_VERSION in $TEST_VERSIONS; do
     
     # Run the test suite
     echo "Running test suite..."
-    if node /home/testuser/test/test-server.js; then
+    if node /project/test/test-server.js; then
         echo "✓ Tests PASSED for Node v$NODE_VERSION"
         OVERALL_PASSED=$((OVERALL_PASSED + 1))
     else
@@ -114,7 +129,7 @@ for NODE_VERSION in $TEST_VERSIONS; do
     fi
     
     # Clean up for next iteration
-    cd /home/testuser
+    cd /project
     pkill -f $BINARY_NAME || true
     sleep 2
 done
