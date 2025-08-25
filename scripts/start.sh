@@ -13,13 +13,13 @@ SERVER_EXEC=$(cat $PROJECT_ROOT/package.json | jq -r ".bin[\"$EXEC_KEY\"]")
 cd "$PROJECT_ROOT"
 
 # Start the server using the dist file, redirecting output to log
-node $(SERVER_EXEC) > local-server.log 2>&1 &
+node ${SERVER_EXEC} > local-server.log 2>&1 &
 
 # Save the PID
 echo $! > start-pid
 PID=$(cat start-pid)
 
-echo "Starting $(SERVER_EXEC) with PID: $PID"
+echo "Starting ${SERVER_EXEC} with PID: $PID"
 echo "Server output is being logged to: local-server.log"
 
 function check_if_running() {
