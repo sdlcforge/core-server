@@ -12,15 +12,21 @@ import { appInit as superInit } from '@liquid-labs/plugable-express'
 const packageJSONPathProd = fsPath.resolve(__dirname, '..', 'package.json')
 const packageJSONPathTest = fsPath.resolve(__dirname, '..', '..', 'package.json')
 const packageJSONPath = existsSync(packageJSONPathProd) ? packageJSONPathProd : packageJSONPathTest
-// if we add end-point handlers of our own, then we are also a plugin
-// const myPackagePath = fsPath.dirname(packageJSONPath)
+// This is the core-server package directory containing our node_modules with explicit plugins
+const myPackagePath = fsPath.dirname(packageJSONPath)
 
 const pkgJSON = JSON.parse(readFileSync(packageJSONPath, { encoding : 'utf8' }))
 const { version: pkgVersion } = pkgJSON
 
 const pluginsPath = fsPath.join(COMPLY_SERVER_PLUGIN_DIR(), 'server')
 
-const standardPackages = [
+// Helper to check SDLC_* environment variables
+const checkSdlcEnv = (suffix, converter = (x) => x) => {
+  const value = process.env[`SDLC_${suffix}`]
+  return value !== undefined ? converter(value) : undefined
+}
+
+const explicitPlugins = [
   '@liquid-labs/liq-controls',
   '@liquid-labs/liq-credentials',
   '@liquid-labs/liq-integrations',
@@ -37,13 +43,14 @@ const standardPackages = [
 ]
 
 const appInit = async(options) => await superInit({
-  name        : COMPLY_SERVER_CLI_NAME(),
-  version     : pkgVersion,
-  apiSpecPath : COMPLY_API_SPEC_PATH(),
+  name                      : COMPLY_SERVER_CLI_NAME(),
+  version                   : pkgVersion,
+  apiSpecPath               : COMPLY_API_SPEC_PATH(),
   pluginsPath,
-  standardPackages,
-  // pluginPaths : [myPackagePath],
-  serverHome  : COMPLY_HOME(),
+  explicitPlugins,
+  serverHome                : myPackagePath,
+  dynamicPluginInstallDir   : COMPLY_HOME(),
+  noAPIUpdate               : checkSdlcEnv('NO_API_UPDATE', (v) => v === 'true' || v === '1'),
   ...options
 })
 

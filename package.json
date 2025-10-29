@@ -39,7 +39,20 @@
   "dependencies": {
     "@liquid-labs/comply-defaults": "^1.0.0-alpha.8",
     "@liquid-labs/http-smart-response": "^1.0.0-alpha.6",
-    "@liquid-labs/plugable-express": "file:.yalc/@liquid-labs/plugable-express"
+    "@liquid-labs/liq-controls": "*",
+    "@liquid-labs/liq-credentials": "*",
+    "@liquid-labs/liq-integrations": "*",
+    "@liquid-labs/liq-integrations-issues-github": "*",
+    "@liquid-labs/liq-orgs": "*",
+    "@liquid-labs/liq-projects": "file:.yalc/@liquid-labs/liq-projects",
+    "@liquid-labs/liq-work": "*",
+    "@liquid-labs/plugable-express": "file:.yalc/@liquid-labs/plugable-express",
+    "@liquid-labs/plugable-projects-audit": "*",
+    "@liquid-labs/plugable-server-documentation": "*",
+    "@liquid-labs/sdlc-projects-badges-coverage": "*",
+    "@liquid-labs/sdlc-projects-badges-github-workflows": "*",
+    "@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd": "*",
+    "@liquid-labs/sdlc-projects-workflow-local-node-build": "*"
   },
   "_comply": {
     "orgKey": "@liquid-labs"

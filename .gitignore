@@ -1,9 +1,11 @@
-/qa
-/node_modules
-/yalc.lock
+/.claude
+/.vscode
 /.yalc
 /dist
+/node_modules
+/qa
 /test-staging
+/yalc.lock
 /*.log
 /*.pid
-/.claude
+

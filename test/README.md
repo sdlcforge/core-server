@@ -1,6 +1,6 @@
 # Comply Server Integration Tests
 
-This directory contains integration tests for the comply-server package. The tests verify that the server can be installed and run correctly across multiple Node.js versions, and that the standard packages integration is working properly.
+This directory contains integration tests for the comply-server package. The tests verify that the server can be installed and run correctly across multiple Node.js versions, and that the explicit plugins integration is working properly.
 
 ## Overview
 
@@ -26,7 +26,7 @@ Other key files include:
 - `run-tests.sh` - Main test runner that executes inside the Docker container
 - `test-ci.sh` - Simplified CI test that runs with current Node version only
 - `test-basic.js` - Basic functionality test for package validation
-- `test-integration-quick.js` - Quick integration test to verify standard packages
+- `test-integration-quick.js` - Quick integration test to verify explicit plugins
 
 ## Running the Tests
 
@@ -93,14 +93,14 @@ The test suite verifies:
 2. **Version Endpoint** - Server provides version information
 3. **API Documentation** - API endpoints are properly registered
 4. **Plugin System** - Plugin list endpoint works correctly
-5. **Standard Packages** - All configured standard packages are automatically loaded
+5. **Explicit Plugins** - All configured explicit plugins are automatically loaded
 6. **Next Commands** - Command suggestion system works
 7. **Error Handling** - Invalid endpoints return 404
 8. **Content Negotiation** - Server properly handles JSON requests
 
-### Standard Packages Integration
+### Explicit Plugins Integration
 
-The tests specifically verify that the following standard packages are automatically installed and loaded:
+The tests specifically verify that the following explicit plugins are automatically loaded:
 
 - `@liquid-labs/liq-controls`
 - `@liquid-labs/liq-credentials`
@@ -165,7 +165,7 @@ If certain Node versions fail:
 | `test-basic.js` | 5 seconds | Package validation, CI | Node.js only |
 | `test-integration-quick.js` | 10 seconds | Standard packages verification | comply-server installed |
 | `test-ci.sh` | 1-2 minutes | CI pipelines, quick integration | Node.js, npm |
-| `run-integration-tests.sh` | 30+ minutes | Full cross-version testing | Docker, Docker Compose |
+| `run-integration-tests.sh` | 2+ minutes | Full cross-version testing | Docker, Docker Compose |
 
 ### Recommended Testing Strategy
 

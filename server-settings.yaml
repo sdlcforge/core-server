@@ -1,0 +1,4 @@
+registries:
+  - >-
+    https://raw.githubusercontent.com/liquid-labs/plugable-registry/main/registry.yaml
+

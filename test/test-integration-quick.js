@@ -54,53 +54,53 @@ async function runQuickTest() {
         const pluginData = JSON.parse(pluginsResponse.body)
         console.log(`✓ Plugins endpoint working (${pluginData.data?.length || 0} plugins loaded)`)
         
-        // Check if our standard packages are loaded
-        const standardPackages = [
+        // Check if our explicit plugins are loaded
+        const explicitPlugins = [
           '@liquid-labs/liq-controls',
           '@liquid-labs/liq-credentials',
           '@liquid-labs/liq-integrations',
           '@liquid-labs/liq-projects'
         ]
-        
-        let foundStandardPackages = 0
+
+        let foundExplicitPlugins = 0
         if (pluginData.data) {
           for (const plugin of pluginData.data) {
-            if (standardPackages.includes(plugin.npmName)) {
-              foundStandardPackages++
+            if (explicitPlugins.includes(plugin.npmName)) {
+              foundExplicitPlugins++
             }
           }
         }
-        
-        console.log(`✓ Found ${foundStandardPackages}/${standardPackages.length} standard packages automatically loaded`)
-        
-        if (foundStandardPackages > 0) {
-          console.log('\n🎉 SUCCESS: Standard package integration is working!')
-          console.log('The server automatically loaded standard packages without manual installation.')
+
+        console.log(`✓ Found ${foundExplicitPlugins}/${explicitPlugins.length} explicit plugins automatically loaded`)
+
+        if (foundExplicitPlugins > 0) {
+          console.log('\n🎉 SUCCESS: Explicit plugin integration is working!')
+          console.log('The server automatically loaded explicit plugins without manual installation.')
         }
       } catch (parseError) {
         // Plugins response might not be JSON, let's just check if we get a response
         console.log('✓ Plugins endpoint responding (non-JSON response, likely CSV format)')
-        
-        // Check if standard packages are mentioned in the response
-        const standardPackages = [
+
+        // Check if explicit plugins are mentioned in the response
+        const explicitPlugins = [
           '@liquid-labs/liq-controls',
           '@liquid-labs/liq-credentials',
           '@liquid-labs/liq-integrations',
           '@liquid-labs/liq-projects'
         ]
-        
-        let foundStandardPackages = 0
-        for (const pkg of standardPackages) {
+
+        let foundExplicitPlugins = 0
+        for (const pkg of explicitPlugins) {
           if (pluginsResponse.body.includes(pkg)) {
-            foundStandardPackages++
+            foundExplicitPlugins++
           }
         }
-        
-        console.log(`✓ Found ${foundStandardPackages}/${standardPackages.length} standard packages in response`)
-        
-        if (foundStandardPackages > 0) {
-          console.log('\n🎉 SUCCESS: Standard package integration is working!')
-          console.log('The server automatically loaded standard packages without manual installation.')
+
+        console.log(`✓ Found ${foundExplicitPlugins}/${explicitPlugins.length} explicit plugins in response`)
+
+        if (foundExplicitPlugins > 0) {
+          console.log('\n🎉 SUCCESS: Explicit plugin integration is working!')
+          console.log('The server automatically loaded explicit plugins without manual installation.')
         }
       }
     }
@@ -109,7 +109,7 @@ async function runQuickTest() {
     console.log('Integration Test Results')
     console.log('='.repeat(50))
     console.log('✓ Server starts successfully')
-    console.log('✓ Standard packages are auto-installed')
+    console.log('✓ Explicit plugins are auto-loaded')
     console.log('✓ All API endpoints are working')
     console.log('✓ Plugin system integration complete')
     console.log('='.repeat(50))

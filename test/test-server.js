@@ -391,7 +391,7 @@ async function runTests() {
 async function startServer() {
   return new Promise((resolve, reject) => {
     const serverProcess = spawn(BINARY_NAME, [], {
-      env: { ...process.env, NODE_ENV: 'test' },
+      env: { ...process.env, NODE_ENV: 'test', SDLC_NO_API_UPDATE: 'true' },
       stdio: ['ignore', 'pipe', 'pipe']
     })
     
