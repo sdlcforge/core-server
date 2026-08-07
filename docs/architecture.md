@@ -76,7 +76,7 @@ The server's registered HTTP surface is the union of a small set of fixed core r
 ## Pointers
 
 - [`docs/core-server-spec.md`](./core-server-spec.md) — the functional specification (*what* the server does and must do).
-- [`docs/architecture/plugin-loading-tiers.md`](./architecture/plugin-loading-tiers.md) — the three-tier plugin loading model in depth (planned).
-- [`AGENTS.md`](../AGENTS.md) — build, test, and lint commands, and other developer/agent working notes (planned).
-- [`docs/project-structure.md`](./project-structure.md) — repository layout reference (planned).
+- [`docs/architecture/plugin-loading-tiers.md`](./architecture/plugin-loading-tiers.md) — the three-tier plugin loading model in depth.
+- [`AGENTS.md`](../AGENTS.md) — build, test, and lint commands, and other developer/agent working notes.
+- [`docs/project-structure.md`](./project-structure.md) — repository layout reference.
 - [`README.md`](../README.md) — consumer-facing project overview and entry point.

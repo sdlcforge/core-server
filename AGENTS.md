@@ -91,5 +91,5 @@ Debugging aids: server logs at `test-staging/integration-results/server-log-vX_X
 
 - [README.md](./README.md) — consumer-facing overview and entry point.
 - [docs/core-server-spec.md](./docs/core-server-spec.md) — the project specification: use cases, general features, and the fixed HTTP API surface.
-- [docs/architecture.md](./docs/architecture.md) — architecture overview, including the plugin system and build pipeline *(planned; not yet written)*.
-- [docs/project-structure.md](./docs/project-structure.md) — repository layout reference *(planned; not yet written)*.
+- [docs/architecture.md](./docs/architecture.md) — architecture overview, including the plugin system and build pipeline.
+- [docs/project-structure.md](./docs/project-structure.md) — repository layout reference.
