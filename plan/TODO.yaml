@@ -26,3 +26,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 3
+          slug: trivial-cleanups
+          title: Trivial Cleanups
+          path: phase-01-core-server-foundation/003-trivial-cleanups.md
+          done: false
+          tier: haiku-low
+          git:
+            branch: null
+            commit: []
+            merge: null
