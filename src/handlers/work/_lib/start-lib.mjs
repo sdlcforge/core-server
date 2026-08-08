@@ -50,12 +50,13 @@ const doStart = async({
 
   // First, let's process projects. If nothing specified, assume the current, implied project.
   if (projects === undefined) {
-    const currPkgJSON = await getPackageJSON({ pkgDir : req.get('X-CWD') })
+    const currPkgJSON = await getPackageJSON(req.get('X-CWD'))
     const currProject = currPkgJSON.name
     projects = [currProject]
   }
   // Now, make sure all project specs are valid.
   for (const project of projects) {
+    console.log('projects:', await app.ext._liqProjects.playgroundMonitor.getProjectsData())
     if (await app.ext._liqProjects.playgroundMonitor.getProjectData(project) === undefined) {
       throw createError.BadRequest(`No such local project '${project}'. Do you need to import it?`)
     }
