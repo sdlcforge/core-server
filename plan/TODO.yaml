@@ -13,6 +13,7 @@ phases:
           path: phase-01-core-server-foundation/001-golden-api-spec-characterization-test.md
           done: false
           tier: sonnet-med
+          digest: 'Added src/lib/test/golden-api-spec.test.js, a Jest+Supertest test that boots the server in-process via appInit() and snapshots GET /server/api and GET /server/plugins/list against checked-in JSON fixtures. Placed under src/lib/test/ since that''s the only location npm test actually executes. Scoped to skipCorePlugins: true since the real 13-plugin explicit set currently crashes appInit() (see flagged item) - documented in plan/resources/golden-api-spec-baseline.md along with check/regenerate commands. Verified the regression-detection mechanism by removing a route from the checked-in snapshot and confirming a clear Jest diff, then restoring it. npm test and lint on the new file are both clean.'
           git:
             branch: plan/modernization-foundation-01-001
             commit:
