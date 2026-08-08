@@ -87,7 +87,12 @@ const doCreate = async({ app, reporter, req, res }) => {
     return failures.length === 0
   }
 
-  const stagingDir = fsPath.join(app.ext.serverHome, 'tmp', 'liq-projects', 'new-project-staging', newProjectName)
+  const stagingDir = fsPath.join(
+    app.ext.serverConfigRoot,
+    'tmp',
+    'new-project-staging',
+    newProjectName
+  )
   const gitHubQualifiedName = orgGithubName + '/' + basename
 
   try {

@@ -16,7 +16,7 @@ const func = ({ app, cache, reporter }) => async(req, res) => {
     throw createError.BadRequest("Called 'project destroy' with implied work, but 'X-CWD' header not found.")
   }
 
-  const { name: projectName } = await getPackageJSON({ pkgDir : cwd })
+  const { name: projectName } = await getPackageJSON(cwd)
 
   await doDestroy({ app, cache, projectName, reporter, req, res })
 }

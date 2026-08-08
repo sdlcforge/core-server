@@ -17,7 +17,7 @@ const func = ({ app, reporter }) => async(req, res) => {
     throw createError.BadRequest("Called 'project detail' with implied work, but 'X-CWD' header not found.")
   }
 
-  const { name: projectName } = await getPackageJSON({ pkgDir : cwd })
+  const { name: projectName } = await getPackageJSON(cwd, { reporter })
 
   await doDetail({ app, projectName, req, res })
 }

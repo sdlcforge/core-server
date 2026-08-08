@@ -1,11 +1,10 @@
+import { getLatestRelease } from '@liquid-labs/github-toolkit'
 import { Octocache } from '@liquid-labs/octocache'
-
-import { determineCurrentRelease } from '@liquid-labs/github-toolkit'
-import * as version from '@liquid-labs/semver-plus'
+import * as semver from '@liquid-labs/semver-plus'
 
 import { getPackageData } from '../../_lib/get-package-data'
 
-const doRelease = async({ app, cache, mainBranch, name, projectName, releaseVersion, reporter, summary }) => {
+const doGitHubRelease = async({ app, mainBranch, name, projectName, releaseVersion, reporter, summary }) => {
   reporter.push('Creating GitHub release...')
 
   const credDB = app.ext.credentialsDB
@@ -13,16 +12,11 @@ const doRelease = async({ app, cache, mainBranch, name, projectName, releaseVers
 
   const { githubBasename, githubName, githubOrg: githubOwner } = await getPackageData({ app, projectName })
 
-  const prerelease = version.prerelease(releaseVersion) !== null
+  const prerelease = semver.prerelease(releaseVersion) !== null
 
-  let makeLatest
-  if (prerelease === true) {
-    const currentRelease = determineCurrentRelease({ authToken, githubOwner, project : githubBasename, reporter })
-    makeLatest = currentRelease === true
-  }
-  else {
-    makeLatest = true
-  }
+  const currentRelease = await getLatestRelease({ authToken, considerAll: true, githubOwner, project : githubBasename, reporter })
+  console.log(`releaseVersion: ${releaseVersion}; currentRelease:`, currentRelease) // DEBUG
+  const makeLatest = semver.gt(releaseVersion, currentRelease, { loose : true })
 
   let released = false
   const releaseTag = 'v' + releaseVersion
@@ -51,4 +45,4 @@ const doRelease = async({ app, cache, mainBranch, name, projectName, releaseVers
   return releaseMsg
 }
 
-export { doRelease }
+export { doGitHubRelease }

@@ -16,7 +16,7 @@ const func = ({ app, reporter }) => async(req, res) => {
     throw createError.BadRequest("Called 'project archive' with implied work, but 'X-CWD' header not found.")
   }
 
-  const { name: projectName } = await getPackageJSON({ pkgDir : cwd })
+  const { name: projectName } = await getPackageJSON(cwd)
 
   await doArchive({ app, projectName, reporter, res, req })
 }

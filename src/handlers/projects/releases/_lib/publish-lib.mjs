@@ -1,4 +1,5 @@
 import createError from 'http-errors'
+import * as semver from '@liquid-labs/semver-plus'
 
 import {
   determineCurrentBranch,
@@ -10,23 +11,11 @@ import {
 import { httpSmartResponse } from '@liquid-labs/http-smart-response'
 import { cleanupQAFiles, runQA, saveQAFiles } from '@liquid-labs/liq-qa-lib'
 import { tryExec } from '@liquid-labs/shell-toolkit'
-import * as semver from '@liquid-labs/semver-plus'
 
-import { doRelease } from './do-release'
+import { doGitHubRelease } from './do-github-release'
+import { doNpmPublish } from './do-npm-publish'
 import { commonProjectPathParameters } from '../../_lib/common-project-path-parameters'
 import { getPackageData } from '../../_lib/get-package-data'
-
-const doActualPublish = ({ originRemote, otp, projectName, projectPath, releaseTag, reporter }) => {
-  reporter.push(`Pushing release tag '${releaseTag}' to ${originRemote} remote...`) // TODO: doe
-  const pushTagsResult = tryExec(`cd '${projectPath}' && git push ${originRemote} ${releaseTag}`)
-  if (pushTagsResult.code !== 0) { throw createError.InternalServerError(`Failed to push version release tag ${releaseTag}: ${pushTagsResult.stderr}`) }
-
-  reporter.push('Preparing to publish...')
-  const pushCmd = `cd '${projectPath}' && npm publish${otp === undefined ? '' : ` --otp=${otp}`}`
-  const publishResult = tryExec(pushCmd, { timout : 1500 /* 1.5 sec */ })
-  if (publishResult.code !== 0) { throw createError(`Project '${projectName}' preparation succeeded, but was unable to publish to npm; perhaps you need to include the 'otp' option? Stderr: ${publishResult.stderr}`) }
-  reporter.push('  success.')
-}
 
 const doPublish = async({ app, cache, projectName, reporter, req, res }) => {
   reporter.reset()
@@ -81,11 +70,11 @@ const doPublish = async({ app, cache, projectName, reporter, req, res }) => {
   }
 
   const currVer = packageJSON.version
+  console.log('currVer', currVer) // DEBUG
 
   if (releaseOnly === true) {
-    const releaseMsg = await doRelease({
+    const releaseMsg = await doGitHubRelease({
       app,
-      cache,
       mainBranch,
       name,
       projectName,
@@ -108,8 +97,9 @@ const doPublish = async({ app, cache, projectName, reporter, req, res }) => {
     nextVer = currentBranch.replace(/^release-([0-9.]+(?:-(?:alpha|beta|rc)\.\d+)?)-.+$/, '$1')
   }
   else {
-    nextVer = semver.nextVersion({ currVer, increment })
+    nextVer = semver.nextVersion(currVer, increment)
   }
+  console.log(`doPublish: nextVer: ${nextVer}`) // DEBUG
 
   const releaseBranch = releaseBranchName({ releaseVersion : nextVer })
   const releaseTag = 'v' + nextVer
@@ -157,8 +147,9 @@ const doPublish = async({ app, cache, projectName, reporter, req, res }) => {
   }
   else reporter.push('Version already updated')
 
+  // where do we want to publish from? TODO: is there a use case where this matters? Maybe better to just remove the option
   if (publish === 'release-branch' || (publishOnPrepare === 'release-branch')) {
-    doActualPublish({ originRemote, otp, projectName, projectPath, releaseTag, reporter })
+    doNpmPublish({ nextVer, otp, projectName, projectPath, reporter })
   }
 
   reporter.push(`Merging release branch '${releaseBranch}' to '${mainBranch}'...`)
@@ -175,7 +166,7 @@ const doPublish = async({ app, cache, projectName, reporter, req, res }) => {
   if (pushResult.code !== 0) { throw createError.InternalServerError(`Failed to push merged '${mainBranch}' to remote '${originRemote}'; push manually.`) }
 
   if (publish === 'main-branch' || (publishOnPrepare === 'main-branch')) {
-    doActualPublish({ originRemote, otp, projectName, projectPath, releaseTag, reporter })
+    doNpmPublish({ nextVer,otp, projectName, projectPath, reporter })
   }
 
   /* TODO: open browser to
@@ -189,13 +180,13 @@ const doPublish = async({ app, cache, projectName, reporter, req, res }) => {
 
   const releaseMsg = noRelease === true
     ? ''
-    : await doRelease({
+    : await doGitHubRelease({
       app,
-      cache,
       mainBranch,
       name,
       projectName,
       releaseVersion : nextVer,
+
       reporter,
       summary
     })
