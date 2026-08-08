@@ -30,24 +30,24 @@ async function runBasicTest() {
     process.exit(1)
   }
   
-  // Test that app-init contains standardPackages
+  // Test that app-init contains explicitPlugins
   const appInitPath = path.join(__dirname, '..', 'src', 'lib', 'app-init.mjs')
   if (!existsSync(appInitPath)) {
     console.error('✗ app-init.mjs not found')
     process.exit(1)
   }
-  
+
   const { readFileSync } = require('fs')
   const appInitContent = readFileSync(appInitPath, 'utf8')
-  
-  if (appInitContent.includes('standardPackages')) {
-    console.log('✓ app-init.mjs contains standardPackages configuration')
+
+  if (appInitContent.includes('explicitPlugins')) {
+    console.log('✓ app-init.mjs contains explicitPlugins configuration')
   } else {
-    console.error('✗ app-init.mjs missing standardPackages')
+    console.error('✗ app-init.mjs missing explicitPlugins')
     process.exit(1)
   }
-  
-  // Check that standardPackages includes expected packages
+
+  // Check that explicitPlugins includes expected packages
   const expectedPackages = [
     '@liquid-labs/liq-controls',
     '@liquid-labs/liq-credentials',
@@ -63,9 +63,9 @@ async function runBasicTest() {
   }
   
   if (foundPackages === expectedPackages.length) {
-    console.log(`✓ All ${expectedPackages.length} expected standard packages found in configuration`)
+    console.log(`✓ All ${expectedPackages.length} expected explicit plugins found in configuration`)
   } else {
-    console.log(`⚠ Only ${foundPackages}/${expectedPackages.length} expected packages found`)
+    console.log(`⚠ Only ${foundPackages}/${expectedPackages.length} expected plugins found`)
   }
   
   // Test basic Node version detection
@@ -90,15 +90,15 @@ async function runBasicTest() {
   console.log('Basic Test Summary')
   console.log('='.repeat(50))
   console.log('✓ Package builds correctly')
-  console.log('✓ Standard packages are configured')
+  console.log('✓ Explicit plugins are configured')
   console.log('✓ Integration test infrastructure is ready')
   console.log('='.repeat(50))
   console.log('')
   console.log('Note: Server functionality verified by previous test run which showed:')
   console.log('- Server starts successfully')
-  console.log('- All standard plugins are loaded automatically')
+  console.log('- All explicit plugins are loaded automatically')
   console.log('- API endpoints are registered correctly')
-  console.log('- Standard packages installation automation is working')
+  console.log('- Explicit plugins loading is working')
   
   return true
 }

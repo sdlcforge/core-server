@@ -58,25 +58,23 @@ fi
 
 echo ""
 
-# Step 1: Build the package
-echo -e "${YELLOW}Step 1: Building comply-server package...${NC}"
+# Step 1: Ensure project is built
+echo -e "${YELLOW}Step 1: Ensuring project is built...${NC}"
 cd "$PROJECT_ROOT"
 
-# Clean up old packages
-rm -f comply-server-*.tgz
-
-# Build the package
-if npm pack; then
-    echo -e "${GREEN}✓ Package built successfully${NC}"
+# Build the project (this creates dist/ directory used by tests)
+if npm run build; then
+    echo -e "${GREEN}✓ Project built successfully${NC}"
 else
-    echo -e "${RED}✗ Failed to build package${NC}"
+    echo -e "${RED}✗ Failed to build project${NC}"
     exit 1
 fi
 
 # Step 2: Create results directory
 echo -e "${YELLOW}Step 2: Setting up test environment...${NC}"
 mkdir -p "$SCRIPT_DIR/../test-staging/integration-results"
-rm -f "$SCRIPT_DIR/../test-staging/integration-results/"*.json
+# Clear all existing test results and logs
+rm -rf "$SCRIPT_DIR/../test-staging/integration-results/"*
 
 # Step 3: Make scripts executable
 chmod +x "$SCRIPT_DIR"/*.sh
@@ -108,14 +106,29 @@ if [ -n "$TEST_SINGLE_VERSION" ]; then
 fi
 
 # Run the tests with log capture
-if docker compose -f test/docker-compose.yml run --rm \
-    -e TEST_SINGLE_VERSION="${TEST_SINGLE_VERSION:-}" \
-    comply-server-test 2>&1 | tee "$LOG_FILE"; then
-    TEST_EXIT_CODE=0
-    echo -e "${GREEN}✓ All tests completed successfully${NC}"
+# Don't use --rm flag when NO_CLEANUP is set to keep container for debugging
+if [ -n "$NO_CLEANUP" ]; then
+    echo -e "${YELLOW}Running without --rm flag to preserve container for debugging${NC}"
+    if docker compose -f test/docker-compose.yml run \
+        -e TEST_SINGLE_VERSION="${TEST_SINGLE_VERSION:-}" \
+        -e NO_CLEANUP="${NO_CLEANUP}" \
+        comply-server-test 2>&1 | tee "$LOG_FILE"; then
+        TEST_EXIT_CODE=0
+        echo -e "${GREEN}✓ All tests completed successfully${NC}"
+    else
+        TEST_EXIT_CODE=$?
+        echo -e "${RED}✗ Some tests failed${NC}"
+    fi
 else
-    TEST_EXIT_CODE=$?
-    echo -e "${RED}✗ Some tests failed${NC}"
+    if docker compose -f test/docker-compose.yml run --rm \
+        -e TEST_SINGLE_VERSION="${TEST_SINGLE_VERSION:-}" \
+        comply-server-test 2>&1 | tee "$LOG_FILE"; then
+        TEST_EXIT_CODE=0
+        echo -e "${GREEN}✓ All tests completed successfully${NC}"
+    else
+        TEST_EXIT_CODE=$?
+        echo -e "${RED}✗ Some tests failed${NC}"
+    fi
 fi
 
 # Step 5: Process results
@@ -144,10 +157,25 @@ else
 fi
 
 # Step 6: Cleanup
-echo ""
-echo -e "${YELLOW}Step 6: Cleaning up...${NC}"
-docker compose -f test/docker-compose.yml down 2>/dev/null || true
-echo -e "${GREEN}✓ Cleanup complete${NC}"
+if [ -z "$NO_CLEANUP" ]; then
+    echo ""
+    echo -e "${YELLOW}Step 6: Cleaning up...${NC}"
+    docker compose -f test/docker-compose.yml down --remove-orphans --volumes2>/dev/null || true
+    echo -e "${GREEN}✓ Cleanup complete${NC}"
+else
+    echo ""
+    echo -e "${YELLOW}Step 6: Skipping cleanup (NO_CLEANUP is set)${NC}"
+    echo -e "${YELLOW}Container is preserved for debugging.${NC}"
+    echo ""
+    echo "To access the container:"
+    echo "  docker exec -it comply-server-integration-test /bin/bash"
+    echo ""
+    echo "To view container logs:"
+    echo "  docker logs comply-server-integration-test"
+    echo ""
+    echo "To clean up manually when done:"
+    echo "  docker compose -f test/docker-compose.yml down --remove-orphans --volumes"
+fi
 
 echo ""
 echo "=================================================="

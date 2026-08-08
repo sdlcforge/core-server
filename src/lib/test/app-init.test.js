@@ -19,9 +19,9 @@ describe('GET:/server/version', () => {
     process.env.COMPLY_HOME = serverHome;
 
     ({ app, cache } = await appInit({
-      serverHome,
-      skipCorePlugins : true,
-      reporter        : new Reporter({ silent : true })
+      serverConfigRoot : serverHome,
+      skipCorePlugins  : true,
+      reporter         : new Reporter({ silent : true })
     }))
 
     const bits = await fs.readFile(fsPath.join(__dirname, '..', '..', '..', 'package.json'))

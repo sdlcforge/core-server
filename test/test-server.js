@@ -72,10 +72,18 @@ function makeRequest(options, testContext = null) {
   })
 }
 
-// Wait for server to be ready
-async function waitForServer(maxAttempts = 30) {
+// Ensure server is running and responsive
+async function ensureServerRunning(serverProcess, maxAttempts = 30) {
+  let running = true
+  serverProcess.on('exit', () => {
+    running = false
+  })
   console.log(`Waiting for server at ${SERVER_HOST}:${SERVER_PORT}/heartbeat`)
   for (let i = 0; i < maxAttempts; i++) {
+    if (!running) {
+      throw new Error('Server exited unexpectedly')
+    }
+
     try {
       const response = await makeRequest({
         hostname: SERVER_HOST,
@@ -383,7 +391,7 @@ async function runTests() {
 async function startServer() {
   return new Promise((resolve, reject) => {
     const serverProcess = spawn(BINARY_NAME, [], {
-      env: { ...process.env, NODE_ENV: 'test' },
+      env: { ...process.env, NODE_ENV: 'test', SDLC_NO_API_UPDATE: 'true' },
       stdio: ['ignore', 'pipe', 'pipe']
     })
     
@@ -404,7 +412,13 @@ async function startServer() {
       const output = data.toString()
       serverLogs += output
       console.log(`[Server]: ${output}`)
-      
+
+      // Check if server is ready to listen
+      if (output.includes('Server listening on')) {
+        console.log('Server startup detected, resolving...')
+        resolve(serverProcess)
+      }
+
       // Append to log file
       try {
         fs.appendFileSync(logFilePath, output)
@@ -436,15 +450,16 @@ async function startServer() {
         reject(new Error(`Server exited unexpectedly with code ${code}. Last errors: ${serverErrors.slice(-500)}`))
       }
     })
-    
-    // Give server time to start, then check if it's still running
+
+    // Add timeout as fallback in case "Server listening on" message is never received
     setTimeout(() => {
       if (hasExited) {
         reject(new Error(`Server exited during startup. Last errors: ${serverErrors.slice(-500)}`))
-      } else {
+      } else if (!serverProcess.killed) {
+        console.log('Warning: Server startup message not detected within timeout, but process is running')
         resolve(serverProcess)
       }
-    }, 3000) // Increased timeout to 3 seconds
+    }, 45000) // 45 second timeout
   })
 }
 
@@ -476,13 +491,24 @@ async function main() {
         }
       }
     }
-    
+
+    // Clean up any existing server configuration directory to ensure clean state
+    try {
+      const configDir = '/home/testuser/.config/comply-server'
+      if (fs.existsSync(configDir)) {
+        fs.rmSync(configDir, { recursive: true, force: true })
+        console.log('Cleaned up existing server configuration directory')
+      }
+    } catch (cleanupError) {
+      console.log(`Warning: Could not clean up existing config directory: ${cleanupError.message}`)
+    }
+
     console.log(`Starting ${BINARY_NAME}...`)
     
     serverProcess = await startServer()
     
-    console.log('Waiting for server to be ready...')
-    await waitForServer()
+    console.log('Ensuring server is ready...')
+    await ensureServerRunning(serverProcess)
     
     console.log('Running test suite...')
     const results = await runTests()
@@ -513,6 +539,17 @@ async function main() {
     // Clean up server process
     if (serverProcess) {
       serverProcess.kill('SIGTERM')
+    }
+
+    // Clean up server configuration directory to ensure clean state for next test
+    try {
+      const configDir = '/home/testuser/.config/comply-server'
+      if (fs.existsSync(configDir)) {
+        fs.rmSync(configDir, { recursive: true, force: true })
+        console.log('Cleaned up server configuration directory')
+      }
+    } catch (cleanupError) {
+      console.log(`Warning: Could not clean up config directory: ${cleanupError.message}`)
     }
   }
 }

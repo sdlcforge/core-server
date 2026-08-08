@@ -92,12 +92,16 @@ for NODE_VERSION in $TEST_VERSIONS; do
     echo "Testing with Node v$NODE_VERSION"
     echo "=================================================="
     
-    # Install the Node version
-    echo "Installing Node v$NODE_VERSION..."
-    nvm install $NODE_VERSION || {
-        echo "Warning: Could not install Node v$NODE_VERSION, skipping..."
-        continue
-    }
+    # Check if Node version is already installed, only install if missing
+    if nvm ls $NODE_VERSION &>/dev/null; then
+        echo "Using pre-installed Node v$NODE_VERSION"
+    else
+        echo "Node v$NODE_VERSION not found, installing..."
+        nvm install $NODE_VERSION || {
+            echo "Warning: Could not install Node v$NODE_VERSION, skipping..."
+            continue
+        }
+    fi
     
     # Use the installed version
     nvm use $NODE_VERSION
@@ -148,12 +152,41 @@ echo "Failed: $OVERALL_FAILED"
 
 if [ ! -z "$FAILED_VERSIONS" ]; then
     echo "Failed versions:$FAILED_VERSIONS"
+    echo ""
+
+    # Show available log files for failed versions
+    for failed_version in $FAILED_VERSIONS; do
+        version_with_underscores=$(echo "$failed_version" | sed 's/\./_/g')
+        echo "Logs for v$failed_version:"
+        ls /project/test-staging/integration-results/*-v${version_with_underscores}*.txt | sed 's|/project/||' | awk '{print "-  "$0}' 2>/dev/null || echo "  No log files found for this version"
+        echo ""
+    done
 fi
 
 echo "=================================================="
 
 # Results are now written directly to /project/test-staging/integration-results/
 # No need to copy them elsewhere
+
+# If NO_CLEANUP is set, keep container running for debugging
+if [ -n "$NO_CLEANUP" ]; then
+    echo ""
+    echo "=================================================="
+    echo "KEEPING CONTAINER ALIVE FOR DEBUGGING"
+    echo "=================================================="
+    echo "Container will stay running. To debug:"
+    echo "  - From host: docker exec -it comply-server-integration-test /bin/bash"
+    echo "  - Test files are in: /project/test/"
+    echo "  - Test results are in: /project/test-staging/integration-results/"
+    echo "=================================================="
+    echo ""
+
+    # Keep container running with a sleep loop
+    echo "Entering debug mode (container will stay alive)..."
+    while true; do
+        sleep 3600  # Sleep for 1 hour at a time
+    done
+fi
 
 # Exit with appropriate code
 if [ $OVERALL_FAILED -gt 0 ]; then
