@@ -18,4 +18,4 @@ phases:
             branch: plan/modernization-foundation-01-001
             commit:
                 - 2bb67cd
-            merge: null
+            merge: 431a6f3
