@@ -35,5 +35,6 @@ phases:
           tier: haiku-low
           git:
             branch: plan/modernization-foundation-01-003
-            commit: []
+            commit:
+                - 1da55f6
             merge: null
