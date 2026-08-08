@@ -5,6 +5,7 @@ phases:
     - number: 1
       slug: core-server-foundation
       title: Core-Server Foundation Work
+      diff_base: 2e98f6122477304686fc24303c4275d65005d488
       tasks:
         - number: 1
           slug: golden-api-spec-characterization-test
