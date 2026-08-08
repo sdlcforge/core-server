@@ -30,13 +30,3 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'npm run test:local is blocked by a pre-existing, unrelated bug: test/test-server.js hardcodes the Docker-only /project/test-staging/integration-results path, so it cannot run on a bare host checkout outside the test:integration container. Predates this task. Candidate follow-up: give test/test-server.js a host-relative fallback.'
-    - title: npm start + heartbeat validation remains bloc
-      id: 26sW
-      date: "2026-08-08"
-      tags:
-        - type:ambiguity
-        - plan/phase:core-server-foundation
-        - plan/slug:modernization-foundation
-        - priority:unspecified
-        - effort:unspecified
-      text: npm start + heartbeat validation remains blocked by the already-known, already-flagged serverHome/serverConfigRoot cross-package incompatibility in liq-credentials (and presumably liq-credentials-db, liq-integrations, liq-work) - confirmed reproduced here, no new information beyond what task 001 already flagged.
