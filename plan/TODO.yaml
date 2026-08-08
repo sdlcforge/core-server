@@ -30,7 +30,7 @@ phases:
             branch: plan/modernization-foundation-01-002
             commit:
                 - 32837cc
-            merge: null
+            merge: a382e3d
         - number: 3
           slug: trivial-cleanups
           title: Trivial Cleanups
