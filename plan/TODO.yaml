@@ -18,7 +18,7 @@ phases:
             branch: plan/modernization-foundation-01-001
             commit:
                 - f31deb9
-            merge: null
+            merge: 616e4d2
         - number: 2
           slug: consume-renamed-plugable-express
           title: Consume Renamed Plugable-Express
