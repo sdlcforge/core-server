@@ -7,7 +7,16 @@ const path = require('path')
 
 // Log tracking for failure reports
 const nodeVersionForFiles = process.version.replace(/\./g, '_')
-let logFilePath = `/project/test-staging/integration-results/server-log-${nodeVersionForFiles}.txt`
+// The Docker integration container always mounts the repo at '/project', so
+// resolving relative to this file's own directory reproduces the historical
+// '/project/test-staging/integration-results' path unchanged when run inside
+// the container, while also working on a bare host checkout (e.g. for
+// 'npm run test:local') where the repo is not mounted at '/project'.
+// INTEGRATION_RESULTS_DIR lets either environment override the location
+// explicitly if needed.
+const INTEGRATION_RESULTS_DIR = process.env.INTEGRATION_RESULTS_DIR
+  || path.join(__dirname, '..', 'test-staging', 'integration-results')
+let logFilePath = path.join(INTEGRATION_RESULTS_DIR, `server-log-${nodeVersionForFiles}.txt`)
 let initialLogLineCount = 0
 
 // Extract binary name from package.json
@@ -111,7 +120,7 @@ async function ensureServerRunning(serverProcess, maxAttempts = 30) {
 function generateFailureReport(testName, error, request = null, response = null) {
   try {
     // Create results directory
-    const resultsDir = '/project/test-staging/integration-results'
+    const resultsDir = INTEGRATION_RESULTS_DIR
     if (!fs.existsSync(resultsDir)) {
       fs.mkdirSync(resultsDir, { recursive: true })
     }
@@ -471,7 +480,7 @@ async function main() {
     console.log(`Starting tests with Node ${process.version}`)
     
     // Ensure base directories exist
-    const resultsDir = '/project/test-staging/integration-results'
+    const resultsDir = INTEGRATION_RESULTS_DIR
     if (!fs.existsSync(resultsDir)) {
       fs.mkdirSync(resultsDir, { recursive: true })
     }
