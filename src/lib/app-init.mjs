@@ -20,7 +20,7 @@ const { version: pkgVersion } = pkgJSON
 
 const pluginsPath = fsPath.join(COMPLY_SERVER_PLUGIN_DIR(), 'server')
 
-const standardPackages = [
+const explicitPlugins = [
   '@liquid-labs/liq-controls',
   '@liquid-labs/liq-credentials',
   '@liquid-labs/liq-integrations',
@@ -37,13 +37,13 @@ const standardPackages = [
 ]
 
 const appInit = async(options) => await superInit({
-  name        : COMPLY_SERVER_CLI_NAME(),
-  version     : pkgVersion,
-  apiSpecPath : COMPLY_API_SPEC_PATH(),
+  name             : COMPLY_SERVER_CLI_NAME(),
+  version          : pkgVersion,
+  apiSpecPath      : COMPLY_API_SPEC_PATH(),
   pluginsPath,
-  standardPackages,
+  explicitPlugins,
   // pluginPaths : [myPackagePath],
-  serverHome  : COMPLY_HOME(),
+  serverConfigRoot : COMPLY_HOME(),
   ...options
 })
 
