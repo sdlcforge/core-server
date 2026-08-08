@@ -31,7 +31,7 @@ phases:
           slug: trivial-cleanups
           title: Trivial Cleanups
           path: phase-01-core-server-foundation/003-trivial-cleanups.md
-          done: false
+          done: true
           tier: haiku-low
           digest: Updated stale placeholder exports in src/lib/index.js from 'snippets'/'Snippet handling.' to '@sdlcforge/core-server' and a descriptive summary. package.json required no changes — grep confirmed no 'alpah' typo present. All validation checks pass.
           git:
