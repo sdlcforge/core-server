@@ -1,0 +1,972 @@
+[
+  {
+    "npmName": "@liquid-labs/plugable-express",
+    "routablePath": "/^\\/heartbeat[/#?]?$/",
+    "help": {
+      "name": "server heartbeat",
+      "summary": "Endpoint to check that the server is up and listening."
+    },
+    "method": "GET",
+    "parameters": [],
+    "path": [
+      "heartbeat"
+    ],
+    "matcher": "^\\/heartbeat[/#?]?$"
+  },
+  {
+    "method": "GET",
+    "parameters": [
+      {
+        "name": "fields",
+        "required": false,
+        "isMultivalue": true,
+        "description": "An array or comma-separated list of field names."
+      },
+      {
+        "name": "format",
+        "required": false,
+        "isSingleValue": true,
+        "description": "Note, the REST-y way to specify format is via the accept header. However, to conform to user expectations, this parameter will override the accept header. Format may be one of csv, docx, json, markdown, md, pdf, terminal, tsv, or txt and defaults to 'json'."
+      },
+      {
+        "name": "nesting",
+        "required": false,
+        "isSingleValue": true,
+        "isInteger": true,
+        "matcher": {},
+        "description": "Used for text document formats, effectively increases the header levels by the indicated amount. Must be a counting integer (0+). A value of '0' means no change, while a value of '1' would turn titles into first-level section headers, first level section headers into second level headers, etc. This is useful for embedding documents in a larger work. The underlying handler must support this and implementor should delete the option if it is not supported."
+      },
+      {
+        "name": "noHeaders",
+        "requried": false,
+        "isBoolean": true,
+        "description": "Excludes headers row from flat table outputs if 'false'."
+      },
+      {
+        "name": "output",
+        "required": false,
+        "canBeEmpty": true,
+        "isSingleValue": true,
+        "description": "Specifies the local file path where the output it to be saved. Otherwise, prints to stdout. If used as a flag, then the report will select its own name."
+      },
+      {
+        "name": "writeFileLocally",
+        "isBoolean": true,
+        "description": "If true, then will write 'output' using 'fs' rather than sending as a result in the response."
+      }
+    ],
+    "path": [
+      "help",
+      "heartbeat"
+    ],
+    "routabblePath": "/^\\/help\\/heartbeat[/#?]?$/",
+    "npmName": "@liquid-labs/plugable-express",
+    "matcher": "^\\/help\\/heartbeat[/#?]?$"
+  },
+  {
+    "npmName": "@liquid-labs/plugable-express",
+    "routablePath": "/^\\/help[/#?]?$/",
+    "method": "GET",
+    "parameters": [
+      {
+        "name": "summaryOnly",
+        "isBoolean": true,
+        "required": false,
+        "description": "Displays the endpoint name, path, and summary only. Use this option for prose output and the `fields` parameter to achive a similar effect for data output."
+      },
+      {
+        "name": "fields",
+        "required": false,
+        "isMultivalue": true,
+        "description": "An array or comma-separated list of field names."
+      },
+      {
+        "name": "format",
+        "required": false,
+        "isSingleValue": true,
+        "description": "Note, the REST-y way to specify format is via the accept header. However, to conform to user expectations, this parameter will override the accept header. Format may be one of csv, docx, json, markdown, md, pdf, terminal, tsv, or txt and defaults to 'json'."
+      },
+      {
+        "name": "nesting",
+        "required": false,
+        "isSingleValue": true,
+        "isInteger": true,
+        "matcher": {},
+        "description": "Used for text document formats, effectively increases the header levels by the indicated amount. Must be a counting integer (0+). A value of '0' means no change, while a value of '1' would turn titles into first-level section headers, first level section headers into second level headers, etc. This is useful for embedding documents in a larger work. The underlying handler must support this and implementor should delete the option if it is not supported."
+      },
+      {
+        "name": "noHeaders",
+        "requried": false,
+        "isBoolean": true,
+        "description": "Excludes headers row from flat table outputs if 'false'."
+      },
+      {
+        "name": "output",
+        "required": false,
+        "canBeEmpty": true,
+        "isSingleValue": true,
+        "description": "Specifies the local file path where the output it to be saved. Otherwise, prints to stdout. If used as a flag, then the report will select its own name."
+      },
+      {
+        "name": "writeFileLocally",
+        "isBoolean": true,
+        "description": "If true, then will write 'output' using 'fs' rather than sending as a result in the response."
+      }
+    ],
+    "path": [
+      "help"
+    ],
+    "matcher": "^\\/help[/#?]?$"
+  },
+  {
+    "npmName": "@liquid-labs/plugable-express",
+    "routablePath": "/^\\/server\\/errors\\/([a-z0-9]{5})\\/detail[/#?]?$/",
+    "help": {
+      "name": "Detail errors",
+      "summary": "Provides detailed information on the refenced error.",
+      "description": "Error reports are stored (temporarily) by the server and this endpoint retrieves details regarding a particular error."
+    },
+    "method": "GET",
+    "parameters": [],
+    "path": [
+      "server",
+      "errors",
+      ":errorKey",
+      "detail"
+    ],
+    "matcher": "^\\/server\\/errors\\/([a-z0-9]{5})\\/detail[/#?]?$"
+  },
+  {
+    "method": "GET",
+    "parameters": [
+      {
+        "name": "fields",
+        "required": false,
+        "isMultivalue": true,
+        "description": "An array or comma-separated list of field names."
+      },
+      {
+        "name": "format",
+        "required": false,
+        "isSingleValue": true,
+        "description": "Note, the REST-y way to specify format is via the accept header. However, to conform to user expectations, this parameter will override the accept header. Format may be one of csv, docx, json, markdown, md, pdf, terminal, tsv, or txt and defaults to 'json'."
+      },
+      {
+        "name": "nesting",
+        "required": false,
+        "isSingleValue": true,
+        "isInteger": true,
+        "matcher": {},
+        "description": "Used for text document formats, effectively increases the header levels by the indicated amount. Must be a counting integer (0+). A value of '0' means no change, while a value of '1' would turn titles into first-level section headers, first level section headers into second level headers, etc. This is useful for embedding documents in a larger work. The underlying handler must support this and implementor should delete the option if it is not supported."
+      },
+      {
+        "name": "noHeaders",
+        "requried": false,
+        "isBoolean": true,
+        "description": "Excludes headers row from flat table outputs if 'false'."
+      },
+      {
+        "name": "output",
+        "required": false,
+        "canBeEmpty": true,
+        "isSingleValue": true,
+        "description": "Specifies the local file path where the output it to be saved. Otherwise, prints to stdout. If used as a flag, then the report will select its own name."
+      },
+      {
+        "name": "writeFileLocally",
+        "isBoolean": true,
+        "description": "If true, then will write 'output' using 'fs' rather than sending as a result in the response."
+      }
+    ],
+    "path": [
+      "help",
+      "server",
+      "errors",
+      ":errorKey",
+      "detail"
+    ],
+    "routabblePath": "/^\\/help\\/server\\/errors\\/-errorKey-\\/detail[/#?]?$/",
+    "npmName": "@liquid-labs/plugable-express",
+    "matcher": "^\\/help\\/server\\/errors\\/-errorKey-\\/detail[/#?]?$"
+  },
+  {
+    "npmName": "@liquid-labs/plugable-express",
+    "routablePath": "/^\\/server\\/errors(?:\\/list)?[/#?]?$/",
+    "help": {
+      "name": "List errors",
+      "summary": "Lists known errors.",
+      "description": "The system will retain information on recent errors for a time. This endpoint lists the current known errors. Older error references may not be present."
+    },
+    "method": "GET",
+    "parameters": [
+      {
+        "name": "fields",
+        "required": false,
+        "isMultivalue": true,
+        "description": "An array or comma-separated list of field names."
+      },
+      {
+        "name": "format",
+        "required": false,
+        "isSingleValue": true,
+        "description": "Note, the REST-y way to specify format is via the accept header. However, to conform to user expectations, this parameter will override the accept header. Format may be one of csv, docx, json, markdown, md, pdf, terminal, tsv, or txt and defaults to 'json'."
+      },
+      {
+        "name": "nesting",
+        "required": false,
+        "isSingleValue": true,
+        "isInteger": true,
+        "matcher": {},
+        "description": "Used for text document formats, effectively increases the header levels by the indicated amount. Must be a counting integer (0+). A value of '0' means no change, while a value of '1' would turn titles into first-level section headers, first level section headers into second level headers, etc. This is useful for embedding documents in a larger work. The underlying handler must support this and implementor should delete the option if it is not supported."
+      },
+      {
+        "name": "noHeaders",
+        "requried": false,
+        "isBoolean": true,
+        "description": "Excludes headers row from flat table outputs if 'false'."
+      },
+      {
+        "name": "output",
+        "required": false,
+        "canBeEmpty": true,
+        "isSingleValue": true,
+        "description": "Specifies the local file path where the output it to be saved. Otherwise, prints to stdout. If used as a flag, then the report will select its own name."
+      },
+      {
+        "name": "writeFileLocally",
+        "isBoolean": true,
+        "description": "If true, then will write 'output' using 'fs' rather than sending as a result in the response."
+      }
+    ],
+    "path": [
+      "server",
+      "errors",
+      "list?"
+    ],
+    "matcher": "^\\/server\\/errors(?:\\/list)?[/#?]?$"
+  },
+  {
+    "method": "GET",
+    "parameters": [
+      {
+        "name": "fields",
+        "required": false,
+        "isMultivalue": true,
+        "description": "An array or comma-separated list of field names."
+      },
+      {
+        "name": "format",
+        "required": false,
+        "isSingleValue": true,
+        "description": "Note, the REST-y way to specify format is via the accept header. However, to conform to user expectations, this parameter will override the accept header. Format may be one of csv, docx, json, markdown, md, pdf, terminal, tsv, or txt and defaults to 'json'."
+      },
+      {
+        "name": "nesting",
+        "required": false,
+        "isSingleValue": true,
+        "isInteger": true,
+        "matcher": {},
+        "description": "Used for text document formats, effectively increases the header levels by the indicated amount. Must be a counting integer (0+). A value of '0' means no change, while a value of '1' would turn titles into first-level section headers, first level section headers into second level headers, etc. This is useful for embedding documents in a larger work. The underlying handler must support this and implementor should delete the option if it is not supported."
+      },
+      {
+        "name": "noHeaders",
+        "requried": false,
+        "isBoolean": true,
+        "description": "Excludes headers row from flat table outputs if 'false'."
+      },
+      {
+        "name": "output",
+        "required": false,
+        "canBeEmpty": true,
+        "isSingleValue": true,
+        "description": "Specifies the local file path where the output it to be saved. Otherwise, prints to stdout. If used as a flag, then the report will select its own name."
+      },
+      {
+        "name": "writeFileLocally",
+        "isBoolean": true,
+        "description": "If true, then will write 'output' using 'fs' rather than sending as a result in the response."
+      }
+    ],
+    "path": [
+      "help",
+      "server",
+      "errors",
+      "list?"
+    ],
+    "routabblePath": "/^\\/help\\/server\\/errors(?:\\/list)?[/#?]?$/",
+    "npmName": "@liquid-labs/plugable-express",
+    "matcher": "^\\/help\\/server\\/errors(?:\\/list)?[/#?]?$"
+  },
+  {
+    "npmName": "@liquid-labs/plugable-express",
+    "routablePath": "/^\\/server\\/api[/#?]?$/",
+    "help": {
+      "name": "server API",
+      "summary": "Creates a representation of the current API.",
+      "description": "Creates a representation of the current API based on the core endpoints and currently loaded plugins. The resulting data structure is an array of \"handler\" entries. Each entry contains the `npmName` of the source package, the `path` (as array of path components), the `routeablePath` actually used to match paths for service, the endpoint HTTP `method`, and `parameters` data."
+    },
+    "method": "GET",
+    "parameters": [],
+    "path": [
+      "server",
+      "api"
+    ],
+    "matcher": "^\\/server\\/api[/#?]?$"
+  },
+  {
+    "method": "GET",
+    "parameters": [
+      {
+        "name": "fields",
+        "required": false,
+        "isMultivalue": true,
+        "description": "An array or comma-separated list of field names."
+      },
+      {
+        "name": "format",
+        "required": false,
+        "isSingleValue": true,
+        "description": "Note, the REST-y way to specify format is via the accept header. However, to conform to user expectations, this parameter will override the accept header. Format may be one of csv, docx, json, markdown, md, pdf, terminal, tsv, or txt and defaults to 'json'."
+      },
+      {
+        "name": "nesting",
+        "required": false,
+        "isSingleValue": true,
+        "isInteger": true,
+        "matcher": {},
+        "description": "Used for text document formats, effectively increases the header levels by the indicated amount. Must be a counting integer (0+). A value of '0' means no change, while a value of '1' would turn titles into first-level section headers, first level section headers into second level headers, etc. This is useful for embedding documents in a larger work. The underlying handler must support this and implementor should delete the option if it is not supported."
+      },
+      {
+        "name": "noHeaders",
+        "requried": false,
+        "isBoolean": true,
+        "description": "Excludes headers row from flat table outputs if 'false'."
+      },
+      {
+        "name": "output",
+        "required": false,
+        "canBeEmpty": true,
+        "isSingleValue": true,
+        "description": "Specifies the local file path where the output it to be saved. Otherwise, prints to stdout. If used as a flag, then the report will select its own name."
+      },
+      {
+        "name": "writeFileLocally",
+        "isBoolean": true,
+        "description": "If true, then will write 'output' using 'fs' rather than sending as a result in the response."
+      }
+    ],
+    "path": [
+      "help",
+      "server",
+      "api"
+    ],
+    "routabblePath": "/^\\/help\\/server\\/api[/#?]?$/",
+    "npmName": "@liquid-labs/plugable-express",
+    "matcher": "^\\/help\\/server\\/api[/#?]?$"
+  },
+  {
+    "npmName": "@liquid-labs/plugable-express",
+    "routablePath": "/^\\/server\\/next-commands[/#?]?$/",
+    "help": {
+      "name": "Next commands",
+      "summary": "Given a partial or incomplete command string, lists possible \"next commands\" to complete or follow the given partial.",
+      "description": "Given a partial or incomplete command string, lists possible \"next commands\" to complete or follow the given partial. The provided command string may be blank. This is used primarily to support the built-in shell tab-completion support, allowing the server to generate possible completions dynamically as plugins are loaded and removed."
+    },
+    "method": "GET",
+    "parameters": [
+      {
+        "name": "command",
+        "description": "The (URL) path so far and optional '--' plus options.",
+        "inQuery": true
+      }
+    ],
+    "path": [
+      "server",
+      "next-commands"
+    ],
+    "matcher": "^\\/server\\/next-commands[/#?]?$"
+  },
+  {
+    "method": "GET",
+    "parameters": [
+      {
+        "name": "fields",
+        "required": false,
+        "isMultivalue": true,
+        "description": "An array or comma-separated list of field names."
+      },
+      {
+        "name": "format",
+        "required": false,
+        "isSingleValue": true,
+        "description": "Note, the REST-y way to specify format is via the accept header. However, to conform to user expectations, this parameter will override the accept header. Format may be one of csv, docx, json, markdown, md, pdf, terminal, tsv, or txt and defaults to 'json'."
+      },
+      {
+        "name": "nesting",
+        "required": false,
+        "isSingleValue": true,
+        "isInteger": true,
+        "matcher": {},
+        "description": "Used for text document formats, effectively increases the header levels by the indicated amount. Must be a counting integer (0+). A value of '0' means no change, while a value of '1' would turn titles into first-level section headers, first level section headers into second level headers, etc. This is useful for embedding documents in a larger work. The underlying handler must support this and implementor should delete the option if it is not supported."
+      },
+      {
+        "name": "noHeaders",
+        "requried": false,
+        "isBoolean": true,
+        "description": "Excludes headers row from flat table outputs if 'false'."
+      },
+      {
+        "name": "output",
+        "required": false,
+        "canBeEmpty": true,
+        "isSingleValue": true,
+        "description": "Specifies the local file path where the output it to be saved. Otherwise, prints to stdout. If used as a flag, then the report will select its own name."
+      },
+      {
+        "name": "writeFileLocally",
+        "isBoolean": true,
+        "description": "If true, then will write 'output' using 'fs' rather than sending as a result in the response."
+      }
+    ],
+    "path": [
+      "help",
+      "server",
+      "next-commands"
+    ],
+    "routabblePath": "/^\\/help\\/server\\/next-commands[/#?]?$/",
+    "npmName": "@liquid-labs/plugable-express",
+    "matcher": "^\\/help\\/server\\/next-commands[/#?]?$"
+  },
+  {
+    "npmName": "@liquid-labs/plugable-express",
+    "routablePath": "/^\\/server\\/reload[/#?]?$/",
+    "help": {
+      "name": "Server reload",
+      "summary": "Reloads the server settings and plugins from disk.",
+      "description": "Reloads the server settings and plugins from disk. This is necessary when changes are made to the state/data files outside of the server (e.g., through manual file edits). Generally, changes made through server endpoints should be re-loaded themselves."
+    },
+    "method": "PUT",
+    "parameters": [],
+    "path": [
+      "server",
+      "reload"
+    ],
+    "matcher": "^\\/server\\/reload[/#?]?$"
+  },
+  {
+    "method": "GET",
+    "parameters": [
+      {
+        "name": "fields",
+        "required": false,
+        "isMultivalue": true,
+        "description": "An array or comma-separated list of field names."
+      },
+      {
+        "name": "format",
+        "required": false,
+        "isSingleValue": true,
+        "description": "Note, the REST-y way to specify format is via the accept header. However, to conform to user expectations, this parameter will override the accept header. Format may be one of csv, docx, json, markdown, md, pdf, terminal, tsv, or txt and defaults to 'json'."
+      },
+      {
+        "name": "nesting",
+        "required": false,
+        "isSingleValue": true,
+        "isInteger": true,
+        "matcher": {},
+        "description": "Used for text document formats, effectively increases the header levels by the indicated amount. Must be a counting integer (0+). A value of '0' means no change, while a value of '1' would turn titles into first-level section headers, first level section headers into second level headers, etc. This is useful for embedding documents in a larger work. The underlying handler must support this and implementor should delete the option if it is not supported."
+      },
+      {
+        "name": "noHeaders",
+        "requried": false,
+        "isBoolean": true,
+        "description": "Excludes headers row from flat table outputs if 'false'."
+      },
+      {
+        "name": "output",
+        "required": false,
+        "canBeEmpty": true,
+        "isSingleValue": true,
+        "description": "Specifies the local file path where the output it to be saved. Otherwise, prints to stdout. If used as a flag, then the report will select its own name."
+      },
+      {
+        "name": "writeFileLocally",
+        "isBoolean": true,
+        "description": "If true, then will write 'output' using 'fs' rather than sending as a result in the response."
+      }
+    ],
+    "path": [
+      "help",
+      "server",
+      "reload"
+    ],
+    "routabblePath": "/^\\/help\\/server\\/reload[/#?]?$/",
+    "npmName": "@liquid-labs/plugable-express",
+    "matcher": "^\\/help\\/server\\/reload[/#?]?$"
+  },
+  {
+    "npmName": "@liquid-labs/plugable-express",
+    "routablePath": "/^\\/server(?:\\/stop)?[/#?]?$/",
+    "help": {
+      "name": "Server stop",
+      "summary": "Stops or shuts down the server."
+    },
+    "method": "UNBIND",
+    "parameters": [],
+    "path": [
+      "server",
+      "stop?"
+    ],
+    "matcher": "^\\/server(?:\\/stop)?[/#?]?$"
+  },
+  {
+    "method": "GET",
+    "parameters": [
+      {
+        "name": "fields",
+        "required": false,
+        "isMultivalue": true,
+        "description": "An array or comma-separated list of field names."
+      },
+      {
+        "name": "format",
+        "required": false,
+        "isSingleValue": true,
+        "description": "Note, the REST-y way to specify format is via the accept header. However, to conform to user expectations, this parameter will override the accept header. Format may be one of csv, docx, json, markdown, md, pdf, terminal, tsv, or txt and defaults to 'json'."
+      },
+      {
+        "name": "nesting",
+        "required": false,
+        "isSingleValue": true,
+        "isInteger": true,
+        "matcher": {},
+        "description": "Used for text document formats, effectively increases the header levels by the indicated amount. Must be a counting integer (0+). A value of '0' means no change, while a value of '1' would turn titles into first-level section headers, first level section headers into second level headers, etc. This is useful for embedding documents in a larger work. The underlying handler must support this and implementor should delete the option if it is not supported."
+      },
+      {
+        "name": "noHeaders",
+        "requried": false,
+        "isBoolean": true,
+        "description": "Excludes headers row from flat table outputs if 'false'."
+      },
+      {
+        "name": "output",
+        "required": false,
+        "canBeEmpty": true,
+        "isSingleValue": true,
+        "description": "Specifies the local file path where the output it to be saved. Otherwise, prints to stdout. If used as a flag, then the report will select its own name."
+      },
+      {
+        "name": "writeFileLocally",
+        "isBoolean": true,
+        "description": "If true, then will write 'output' using 'fs' rather than sending as a result in the response."
+      }
+    ],
+    "path": [
+      "help",
+      "server",
+      "stop?"
+    ],
+    "routabblePath": "/^\\/help\\/server(?:\\/stop)?[/#?]?$/",
+    "npmName": "@liquid-labs/plugable-express",
+    "matcher": "^\\/help\\/server(?:\\/stop)?[/#?]?$"
+  },
+  {
+    "npmName": "@liquid-labs/plugable-express",
+    "routablePath": "/^\\/server\\/version[/#?]?$/",
+    "help": {
+      "name": "Server version",
+      "summary": "Provides version information for the server aand its components.",
+      "descirption": "Provides version information for the server aand its components. This includes the underlying 'plugable-server' version (which is used to determine plugin compatibility), as well as information on node and the platform where the server is running."
+    },
+    "method": "GET",
+    "parameters": [],
+    "path": [
+      "server",
+      "version"
+    ],
+    "matcher": "^\\/server\\/version[/#?]?$"
+  },
+  {
+    "method": "GET",
+    "parameters": [
+      {
+        "name": "fields",
+        "required": false,
+        "isMultivalue": true,
+        "description": "An array or comma-separated list of field names."
+      },
+      {
+        "name": "format",
+        "required": false,
+        "isSingleValue": true,
+        "description": "Note, the REST-y way to specify format is via the accept header. However, to conform to user expectations, this parameter will override the accept header. Format may be one of csv, docx, json, markdown, md, pdf, terminal, tsv, or txt and defaults to 'json'."
+      },
+      {
+        "name": "nesting",
+        "required": false,
+        "isSingleValue": true,
+        "isInteger": true,
+        "matcher": {},
+        "description": "Used for text document formats, effectively increases the header levels by the indicated amount. Must be a counting integer (0+). A value of '0' means no change, while a value of '1' would turn titles into first-level section headers, first level section headers into second level headers, etc. This is useful for embedding documents in a larger work. The underlying handler must support this and implementor should delete the option if it is not supported."
+      },
+      {
+        "name": "noHeaders",
+        "requried": false,
+        "isBoolean": true,
+        "description": "Excludes headers row from flat table outputs if 'false'."
+      },
+      {
+        "name": "output",
+        "required": false,
+        "canBeEmpty": true,
+        "isSingleValue": true,
+        "description": "Specifies the local file path where the output it to be saved. Otherwise, prints to stdout. If used as a flag, then the report will select its own name."
+      },
+      {
+        "name": "writeFileLocally",
+        "isBoolean": true,
+        "description": "If true, then will write 'output' using 'fs' rather than sending as a result in the response."
+      }
+    ],
+    "path": [
+      "help",
+      "server",
+      "version"
+    ],
+    "routabblePath": "/^\\/help\\/server\\/version[/#?]?$/",
+    "npmName": "@liquid-labs/plugable-express",
+    "matcher": "^\\/help\\/server\\/version[/#?]?$"
+  },
+  {
+    "npmName": "@liquid-labs/plugable-express",
+    "routablePath": "/^\\/server\\/plugins\\/add[/#?]?$/",
+    "help": {
+      "name": "add server plugins",
+      "summary": "Installs one or more server plugins.",
+      "description": "Installs one or more server plugins."
+    },
+    "method": "PUT",
+    "parameters": [
+      {
+        "name": "npmNames",
+        "isMultivalue": true,
+        "description": "The plugins to install, by their NPM package name. Plugins must have the 'pluggable-endpoints' keyword. Include multiple times to install multiple plugins.",
+        "inQuery": true
+      }
+    ],
+    "path": [
+      "server",
+      "plugins",
+      "add"
+    ],
+    "matcher": "^\\/server\\/plugins\\/add[/#?]?$"
+  },
+  {
+    "method": "GET",
+    "parameters": [
+      {
+        "name": "fields",
+        "required": false,
+        "isMultivalue": true,
+        "description": "An array or comma-separated list of field names."
+      },
+      {
+        "name": "format",
+        "required": false,
+        "isSingleValue": true,
+        "description": "Note, the REST-y way to specify format is via the accept header. However, to conform to user expectations, this parameter will override the accept header. Format may be one of csv, docx, json, markdown, md, pdf, terminal, tsv, or txt and defaults to 'json'."
+      },
+      {
+        "name": "nesting",
+        "required": false,
+        "isSingleValue": true,
+        "isInteger": true,
+        "matcher": {},
+        "description": "Used for text document formats, effectively increases the header levels by the indicated amount. Must be a counting integer (0+). A value of '0' means no change, while a value of '1' would turn titles into first-level section headers, first level section headers into second level headers, etc. This is useful for embedding documents in a larger work. The underlying handler must support this and implementor should delete the option if it is not supported."
+      },
+      {
+        "name": "noHeaders",
+        "requried": false,
+        "isBoolean": true,
+        "description": "Excludes headers row from flat table outputs if 'false'."
+      },
+      {
+        "name": "output",
+        "required": false,
+        "canBeEmpty": true,
+        "isSingleValue": true,
+        "description": "Specifies the local file path where the output it to be saved. Otherwise, prints to stdout. If used as a flag, then the report will select its own name."
+      },
+      {
+        "name": "writeFileLocally",
+        "isBoolean": true,
+        "description": "If true, then will write 'output' using 'fs' rather than sending as a result in the response."
+      }
+    ],
+    "path": [
+      "help",
+      "server",
+      "plugins",
+      "add"
+    ],
+    "routabblePath": "/^\\/help\\/server\\/plugins\\/add[/#?]?$/",
+    "npmName": "@liquid-labs/plugable-express",
+    "matcher": "^\\/help\\/server\\/plugins\\/add[/#?]?$"
+  },
+  {
+    "npmName": "@liquid-labs/plugable-express",
+    "routablePath": "/^\\/server\\/plugins\\/(((?:@|%40)[a-z0-9-~][a-z0-9-._~]*(?:[/]|%2f|%2F))?([a-z0-9-~][a-z0-9-._~]*))\\/details[/#?]?$/",
+    "help": {
+      "name": "server endpoint plugins details",
+      "summary": "Provides details on the named plugin.",
+      "description": "Provides details on the named plugin."
+    },
+    "method": "GET",
+    "parameters": [],
+    "path": [
+      "server",
+      "plugins",
+      ":serverPluginName",
+      "details"
+    ],
+    "matcher": "^\\/server\\/plugins\\/(((?:@|%40)[a-z0-9-~][a-z0-9-._~]*(?:[/]|%2f|%2F))?([a-z0-9-~][a-z0-9-._~]*))\\/details[/#?]?$"
+  },
+  {
+    "method": "GET",
+    "parameters": [
+      {
+        "name": "fields",
+        "required": false,
+        "isMultivalue": true,
+        "description": "An array or comma-separated list of field names."
+      },
+      {
+        "name": "format",
+        "required": false,
+        "isSingleValue": true,
+        "description": "Note, the REST-y way to specify format is via the accept header. However, to conform to user expectations, this parameter will override the accept header. Format may be one of csv, docx, json, markdown, md, pdf, terminal, tsv, or txt and defaults to 'json'."
+      },
+      {
+        "name": "nesting",
+        "required": false,
+        "isSingleValue": true,
+        "isInteger": true,
+        "matcher": {},
+        "description": "Used for text document formats, effectively increases the header levels by the indicated amount. Must be a counting integer (0+). A value of '0' means no change, while a value of '1' would turn titles into first-level section headers, first level section headers into second level headers, etc. This is useful for embedding documents in a larger work. The underlying handler must support this and implementor should delete the option if it is not supported."
+      },
+      {
+        "name": "noHeaders",
+        "requried": false,
+        "isBoolean": true,
+        "description": "Excludes headers row from flat table outputs if 'false'."
+      },
+      {
+        "name": "output",
+        "required": false,
+        "canBeEmpty": true,
+        "isSingleValue": true,
+        "description": "Specifies the local file path where the output it to be saved. Otherwise, prints to stdout. If used as a flag, then the report will select its own name."
+      },
+      {
+        "name": "writeFileLocally",
+        "isBoolean": true,
+        "description": "If true, then will write 'output' using 'fs' rather than sending as a result in the response."
+      }
+    ],
+    "path": [
+      "help",
+      "server",
+      "plugins",
+      ":serverPluginName",
+      "details"
+    ],
+    "routabblePath": "/^\\/help\\/server\\/plugins\\/-serverPluginName-\\/details[/#?]?$/",
+    "npmName": "@liquid-labs/plugable-express",
+    "matcher": "^\\/help\\/server\\/plugins\\/-serverPluginName-\\/details[/#?]?$"
+  },
+  {
+    "npmName": "@liquid-labs/plugable-express",
+    "routablePath": "/^\\/server\\/plugins\\/list[/#?]?$/",
+    "help": {
+      "name": "server endpoint plugins list",
+      "summary": "Lists the installed server endpoint plugins.",
+      "description": "Lists the installed server endpoint plugins."
+    },
+    "method": "GET",
+    "parameters": [
+      {
+        "name": "fields",
+        "required": false,
+        "isMultivalue": true,
+        "description": "An array or comma-separated list of field names.",
+        "inQuery": true
+      },
+      {
+        "name": "format",
+        "required": false,
+        "isSingleValue": true,
+        "description": "Note, the REST-y way to specify format is via the accept header. However, to conform to user expectations, this parameter will override the accept header. Format may be one of csv, docx, json, markdown, md, pdf, terminal, tsv, or txt and defaults to 'json'.",
+        "inQuery": true
+      },
+      {
+        "name": "nesting",
+        "required": false,
+        "isSingleValue": true,
+        "isInteger": true,
+        "matcher": {},
+        "description": "Used for text document formats, effectively increases the header levels by the indicated amount. Must be a counting integer (0+). A value of '0' means no change, while a value of '1' would turn titles into first-level section headers, first level section headers into second level headers, etc. This is useful for embedding documents in a larger work. The underlying handler must support this and implementor should delete the option if it is not supported.",
+        "inQuery": true
+      },
+      {
+        "name": "noHeaders",
+        "requried": false,
+        "isBoolean": true,
+        "description": "Excludes headers row from flat table outputs if 'false'.",
+        "inQuery": true
+      },
+      {
+        "name": "output",
+        "required": false,
+        "canBeEmpty": true,
+        "isSingleValue": true,
+        "description": "Specifies the local file path where the output it to be saved. Otherwise, prints to stdout. If used as a flag, then the report will select its own name.",
+        "inQuery": true
+      },
+      {
+        "name": "writeFileLocally",
+        "isBoolean": true,
+        "description": "If true, then will write 'output' using 'fs' rather than sending as a result in the response.",
+        "inQuery": true
+      }
+    ],
+    "path": [
+      "server",
+      "plugins",
+      "list"
+    ],
+    "matcher": "^\\/server\\/plugins\\/list[/#?]?$"
+  },
+  {
+    "method": "GET",
+    "parameters": [
+      {
+        "name": "fields",
+        "required": false,
+        "isMultivalue": true,
+        "description": "An array or comma-separated list of field names."
+      },
+      {
+        "name": "format",
+        "required": false,
+        "isSingleValue": true,
+        "description": "Note, the REST-y way to specify format is via the accept header. However, to conform to user expectations, this parameter will override the accept header. Format may be one of csv, docx, json, markdown, md, pdf, terminal, tsv, or txt and defaults to 'json'."
+      },
+      {
+        "name": "nesting",
+        "required": false,
+        "isSingleValue": true,
+        "isInteger": true,
+        "matcher": {},
+        "description": "Used for text document formats, effectively increases the header levels by the indicated amount. Must be a counting integer (0+). A value of '0' means no change, while a value of '1' would turn titles into first-level section headers, first level section headers into second level headers, etc. This is useful for embedding documents in a larger work. The underlying handler must support this and implementor should delete the option if it is not supported."
+      },
+      {
+        "name": "noHeaders",
+        "requried": false,
+        "isBoolean": true,
+        "description": "Excludes headers row from flat table outputs if 'false'."
+      },
+      {
+        "name": "output",
+        "required": false,
+        "canBeEmpty": true,
+        "isSingleValue": true,
+        "description": "Specifies the local file path where the output it to be saved. Otherwise, prints to stdout. If used as a flag, then the report will select its own name."
+      },
+      {
+        "name": "writeFileLocally",
+        "isBoolean": true,
+        "description": "If true, then will write 'output' using 'fs' rather than sending as a result in the response."
+      }
+    ],
+    "path": [
+      "help",
+      "server",
+      "plugins",
+      "list"
+    ],
+    "routabblePath": "/^\\/help\\/server\\/plugins\\/list[/#?]?$/",
+    "npmName": "@liquid-labs/plugable-express",
+    "matcher": "^\\/help\\/server\\/plugins\\/list[/#?]?$"
+  },
+  {
+    "npmName": "@liquid-labs/plugable-express",
+    "routablePath": "/^\\/server\\/plugins\\/(((?:@|%40)[a-z0-9-~][a-z0-9-._~]*(?:[/]|%2f|%2F))?([a-z0-9-~][a-z0-9-._~]*))\\/remove[/#?]?$/",
+    "help": {
+      "name": "remove server endpoint plugins",
+      "summary": "Removes the named plugin.",
+      "description": "Removes the named plugin."
+    },
+    "method": "DELETE",
+    "parameters": [],
+    "path": [
+      "server",
+      "plugins",
+      ":serverPluginName",
+      "remove"
+    ],
+    "matcher": "^\\/server\\/plugins\\/(((?:@|%40)[a-z0-9-~][a-z0-9-._~]*(?:[/]|%2f|%2F))?([a-z0-9-~][a-z0-9-._~]*))\\/remove[/#?]?$"
+  },
+  {
+    "method": "GET",
+    "parameters": [
+      {
+        "name": "fields",
+        "required": false,
+        "isMultivalue": true,
+        "description": "An array or comma-separated list of field names."
+      },
+      {
+        "name": "format",
+        "required": false,
+        "isSingleValue": true,
+        "description": "Note, the REST-y way to specify format is via the accept header. However, to conform to user expectations, this parameter will override the accept header. Format may be one of csv, docx, json, markdown, md, pdf, terminal, tsv, or txt and defaults to 'json'."
+      },
+      {
+        "name": "nesting",
+        "required": false,
+        "isSingleValue": true,
+        "isInteger": true,
+        "matcher": {},
+        "description": "Used for text document formats, effectively increases the header levels by the indicated amount. Must be a counting integer (0+). A value of '0' means no change, while a value of '1' would turn titles into first-level section headers, first level section headers into second level headers, etc. This is useful for embedding documents in a larger work. The underlying handler must support this and implementor should delete the option if it is not supported."
+      },
+      {
+        "name": "noHeaders",
+        "requried": false,
+        "isBoolean": true,
+        "description": "Excludes headers row from flat table outputs if 'false'."
+      },
+      {
+        "name": "output",
+        "required": false,
+        "canBeEmpty": true,
+        "isSingleValue": true,
+        "description": "Specifies the local file path where the output it to be saved. Otherwise, prints to stdout. If used as a flag, then the report will select its own name."
+      },
+      {
+        "name": "writeFileLocally",
+        "isBoolean": true,
+        "description": "If true, then will write 'output' using 'fs' rather than sending as a result in the response."
+      }
+    ],
+    "path": [
+      "help",
+      "server",
+      "plugins",
+      ":serverPluginName",
+      "remove"
+    ],
+    "routabblePath": "/^\\/help\\/server\\/plugins\\/-serverPluginName-\\/remove[/#?]?$/",
+    "npmName": "@liquid-labs/plugable-express",
+    "matcher": "^\\/help\\/server\\/plugins\\/-serverPluginName-\\/remove[/#?]?$"
+  }
+]

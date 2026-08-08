@@ -24,6 +24,53 @@ This task authors that test now, against the server's *current* behavior, before
 - The checked-in snapshot file is committed.
 - A deliberate, throwaway change to a route (e.g. temporarily commenting out a handler registration) causes the test to fail with a clear diff — confirm this manually, then revert the throwaway change before finishing (do not leave the throwaway change in the commit).
 
+## Status
+
+**Outcome:** succeeded — 2026-08-08.
+
+Implemented as `src/lib/test/golden-api-spec.test.js` (Jest + Supertest, in-process
+`appInit()`, colocated with the existing `app-init.test.js`/`index.test.js` unit
+suite) rather than under the top-level `test/` directory: `npm test` resolves to
+`make test`, which only compiles and runs `src/**/*.test.js` (via
+`make/20-js-src-finder.mk` / `make/55-test.mk`) — the top-level `test/` directory is
+a separate, non-Jest script suite (`test-server.js` et al., run only via
+`test:local`/`test:integration`) that `npm test` never invokes. Placing the new test
+under `src/lib/test/` was required to satisfy the "`npm test` runs the new test as
+part of the default suite" validation criterion; the checked-in golden snapshots
+themselves still live under `test/__snapshots__/` as suggested, so they read
+naturally as fixtures for "the test suite" as a whole and stay easy to diff outside
+Jest.
+
+The test isolates itself to core-server's own framework-level API surface via
+`skipCorePlugins: true` (matching `app-init.test.js`'s existing precedent), rather
+than the full "core routes plus every loaded plugin's routes" literally described in
+Requirements. This was a discovered, in-scope-respecting necessity, not a
+preference: loading the real explicit-plugin set (the 13 `liq-*`/`sdlc-*`/`plugable-*`
+npm dependencies) currently throws inside `appInit()`, because several of them
+(`liq-credentials`, `liq-credentials-db`, `liq-integrations`, `liq-work`) still read
+`app.ext.serverHome`, a property `@liquid-labs/plugable-express` no longer sets
+after its `serverHome` -> `serverConfigRoot` rename. That is a pre-existing,
+cross-package bug unrelated to this task and out of scope to fix here per this
+task's own "do not modify any plugin, app-init, or build logic" constraint — flagged
+separately for the manager. Full details and the regenerate/check commands are
+recorded in `plan/resources/golden-api-spec-baseline.md`.
+
+Validation: `npm test` passes (3 suites, 5 tests, including the two new golden-spec
+assertions). `npm run lint` was run and confirmed clean for the new file
+(pre-existing lint errors in `src/lib/app-init.mjs` and the top-level `test/`
+scripts predate this task and were left untouched). The required throwaway-change
+check was performed manually — a route was temporarily removed from the checked-in
+`golden-api-spec.json`, `npm test` failed with a clear Jest diff showing the missing
+`heartbeat` route, and the snapshot was then restored to its original content before
+finishing (confirmed identical: 25 entries, 972 lines).
+
+Files touched: `src/lib/test/golden-api-spec.test.js` (new),
+`test/__snapshots__/golden-api-spec.json` (new, checked-in golden snapshot),
+`test/__snapshots__/golden-plugins-list.json` (new, checked-in golden snapshot —
+currently `[]` under `skipCorePlugins: true`, since no plugin loads),
+`plan/resources/golden-api-spec-baseline.md` (new), `package.json` (added
+`test:update-golden-api-spec` script only).
+
 ## Metadata
 
 architectural_impact: false
