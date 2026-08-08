@@ -1,7 +1,2 @@
 version: 1
-plans:
-    - slug: modernization-foundation
-      status: working
-      outstandingQuestions:
-        - Merge target/timing into a consolidated sdlc-core package (with liq-work and liq-orgs) is recommended by the modernization synthesis but not yet confirmed by the user.
-        - Whether liq-projects and liq-projects-lib should be renamed to resolve their naming collision, independent of the merge decision, is unresolved.
+plans: []
