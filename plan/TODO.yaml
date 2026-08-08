@@ -5,4 +5,14 @@ phases:
     - number: 1
       slug: docs-stopgap
       title: Documentation Stopgap
-      tasks: []
+      tasks:
+        - number: 1
+          slug: write-readme-with-dependency-enumeration
+          title: Write README With Dependency Enumeration
+          path: phase-01-docs-stopgap/001-write-readme-with-dependency-enumeration.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
