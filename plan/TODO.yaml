@@ -5,6 +5,7 @@ phases:
     - number: 1
       slug: docs-stopgap
       title: Documentation Stopgap
+      diff_base: ff486741735ceb85e4df416e3fbdf654114383d1
       tasks:
         - number: 1
           slug: write-readme-with-dependency-enumeration
