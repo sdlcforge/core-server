@@ -13,6 +13,7 @@ phases:
           path: phase-01-docs-stopgap/001-write-readme-with-dependency-enumeration.md
           done: false
           tier: sonnet-med
+          digest: Wrote README.md for liq-work covering the unit-of-work domain model, the 30-route surface, the plugable-express integration shape, and a mandatory Runtime dependencies on other plugins section enumerating three undeclared app.ext dependencies (_liqProjects.playgroundMonitor unconditional/unguarded, credentialsDB, integrations guarded via supportsControls===false fallback). Filled package.json's empty description field. Every file/line reference was independently re-verified against current source, not merely transcribed from the research note. No new Flow-standard doc beyond README was created.
           git:
             branch: plan/modernization-foundation-01-001
             commit:
