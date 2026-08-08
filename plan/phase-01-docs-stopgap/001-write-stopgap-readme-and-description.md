@@ -29,3 +29,13 @@ This task writes a scope-and-routes README good enough to survive that eventual 
 ## Metadata
 
 architectural_impact: false
+
+## Status
+
+- **Outcome:** succeeded
+- **Date:** 2026-08-07
+- **Validation:** All checks passed — `README.md` created at package root; `package.json` `description` filled with a non-empty, accurate one-liner; route table spot-checked against `src/handlers/projects/index.js`, `src/handlers/projects/releases/index.js`, and each handler's `path`/`method` source (method values traced through each route's `_lib/*.mjs` helper, since `path`/`method` are not literal in the top-level handler files); README explicitly disambiguates `liq-projects` from `liq-projects-lib`; no `docs/architecture.md`, spec doc, or other new Flow-standard doc was created.
+- **Affected source files:**
+  - `README.md` (new)
+  - `package.json` (description field only)
+- **Notes:** The research note at `/tmp/flow-sdlc-modernization/liq-projects.md` stated the setup route was "POST/GET" — verified against `src/handlers/projects/_lib/setup-lib.mjs` and found it is POST-only; the README's route table reflects the verified POST-only method, not the research note's claim.
