@@ -16,3 +16,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: consume-renamed-plugable-express
+          title: Consume Renamed Plugable-Express
+          path: phase-01-core-server-foundation/002-consume-renamed-plugable-express.md
+          done: false
+          tier: sonnet-low
+          git:
+            branch: null
+            commit: []
+            merge: null
