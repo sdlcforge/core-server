@@ -11,7 +11,7 @@ phases:
           slug: write-stopgap-readme-and-description
           title: Write Stopgap README and Description
           path: phase-01-docs-stopgap/001-write-stopgap-readme-and-description.md
-          done: false
+          done: true
           tier: sonnet-low
           digest: Filled package.json's empty description field and wrote a scope-and-routes README.md for liq-projects. The README explains the three-artifact project triad, summarizes 10 route operations (verified against source, not just the research note), briefly covers the plugable-express integration shape, explicitly disambiguates from liq-projects-lib, and notes the merge-candidate status. No new Flow-standard doc beyond README was created.
           git:
