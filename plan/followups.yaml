@@ -1,15 +1,5 @@
 version: 2
 items:
-    - title: Real bug discovered, out of scope to fix in t
-      id: ynGa
-      date: "2026-08-08"
-      tags:
-        - type:ambiguity
-        - plan/phase:core-server-foundation
-        - plan/slug:modernization-foundation
-        - priority:unspecified
-        - effort:unspecified
-      text: 'Real bug discovered, out of scope to fix in this task: loading the actual explicit-plugin set (skipCorePlugins: false, the production default) throws inside appInit() - liq-credentials, liq-credentials-db, liq-integrations, and liq-work still read app.ext.serverHome, which @liquid-labs/plugable-express no longer sets after its serverHome->serverConfigRoot rename. appInit() currently cannot successfully load the real explicit-plugin set at all, in any environment - not just under test. Candidate follow-up task; until resolved, no test (and arguably no real server run) can exercise the full core-routes-plus-every-loaded-plugin surface. Full write-up in plan/resources/golden-api-spec-baseline.md.'
     - title: 'GET /server/plugins/list currently snapshots '
       id: mT02
       date: "2026-08-08"
