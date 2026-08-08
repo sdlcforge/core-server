@@ -48,7 +48,7 @@ const appInit = async(options) => await superInit({
   apiSpecPath               : COMPLY_API_SPEC_PATH(),
   pluginsPath,
   explicitPlugins,
-  serverHome                : myPackagePath,
+  serverConfigRoot          : myPackagePath,
   dynamicPluginInstallDir   : COMPLY_HOME(),
   noAPIUpdate               : checkSdlcEnv('NO_API_UPDATE', (v) => v === 'true' || v === '1'),
   ...options
