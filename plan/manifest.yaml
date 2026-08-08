@@ -1,7 +1,2 @@
 version: 1
-plans:
-    - slug: modernization-foundation
-      status: working
-      outstandingQuestions:
-        - Merge target/timing into a consolidated sdlc-core package (with liq-projects and possibly liq-orgs) is recommended by the modernization synthesis but not yet confirmed by the user.
-        - Thin test coverage (2 test files / ~3,423 LOC / 30 routes) should get route-level smoke tests before any merge lands — out of scope for Phase 0, tracked here for a later plan.
+plans: []
