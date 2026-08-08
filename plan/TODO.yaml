@@ -5,4 +5,14 @@ phases:
     - number: 1
       slug: core-server-foundation
       title: Core-Server Foundation Work
-      tasks: []
+      tasks:
+        - number: 1
+          slug: golden-api-spec-characterization-test
+          title: Golden API-Spec Characterization Test
+          path: phase-01-core-server-foundation/001-golden-api-spec-characterization-test.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
