@@ -23,7 +23,7 @@ phases:
           slug: consume-renamed-plugable-express
           title: Consume Renamed Plugable-Express
           path: phase-01-core-server-foundation/002-consume-renamed-plugable-express.md
-          done: false
+          done: true
           tier: sonnet-low
           digest: Pulled the freshly published @liquid-labs/plugable-express@1.0.0-alpha.57 into the worktree via yalc add, replacing the stale 1.0.0-alpha.55 snapshot; package.json needed no change. npm install produced a lockfile diff hand-scoped to only the plugable-express entry. Re-running task 001's golden API-spec test initially failed on one expected content difference (help-text 'plugable-server'->'pluggable-server', an old pre-existing Oct-2025 framework typo unrelated to this rename, inherited only because alpha.55 was itself a year-stale build predating that unrelated change) - manager independently verified this via git archaeology in the pluggable-express repo before accepting, confirming it is not a regression. Resolved via the project's sanctioned snapshot-regeneration path. npm test now passes in full.
           git:
