@@ -15,5 +15,6 @@ phases:
           tier: sonnet-low
           git:
             branch: plan/modernization-foundation-01-001
-            commit: []
+            commit:
+                - 2bb67cd
             merge: null
