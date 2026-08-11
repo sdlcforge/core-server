@@ -108,3 +108,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: update-contributor-and-consumer-docs
+          title: Update Contributor And Consumer Docs
+          path: phase-04-doc-updates/002-update-contributor-and-consumer-docs.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
