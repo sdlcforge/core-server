@@ -30,3 +30,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: src/lib/test/app-init.test.js mutates process.env.COMPLY_HOME process-wide in beforeAll. Currently masked by Jest's per-file worker isolation; surfaced during bun-conversion research when two copies of the test tree were discovered together and raced on the shared env var. Pre-existing, unrelated to Bun — worth hardening test isolation regardless of runtime.
+    - title: 'make lint-fix surfaces 231 pre-existing lint '
+      id: b3hk
+      date: "2026-08-11"
+      tags:
+        - type:ambiguity
+        - plan/phase:bun-package-management
+        - plan/slug:bun-conversion
+        - priority:unspecified
+        - effort:unspecified
+      text: make lint-fix surfaces 231 pre-existing lint violations confined to test/*.js (unrelated to this task, matching the plan's own WIP-branch-triage finding that they're stale/regenerable). Not touched here since test/ is out of this task's scope; noted in case a future phase wants to clean them up deliberately.
