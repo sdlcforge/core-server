@@ -49,7 +49,17 @@ phases:
     - number: 2
       slug: bun-build-and-test-toolchain
       title: Bun Build And Test Toolchain
-      tasks: []
+      tasks:
+        - number: 1
+          slug: verify-build-and-lint-under-bun
+          title: Verify Build And Lint Under Bun
+          path: phase-02-bun-build-and-test-toolchain/001-verify-build-and-lint-under-bun.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 3
       slug: bun-runtime-and-integration
       title: Bun Runtime And Integration Tests
