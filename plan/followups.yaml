@@ -40,3 +40,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: make lint-fix surfaces 231 pre-existing lint violations confined to test/*.js (unrelated to this task, matching the plan's own WIP-branch-triage finding that they're stale/regenerable). Not touched here since test/ is out of this task's scope; noted in case a future phase wants to clean them up deliberately.
+    - title: provision-local-deps.sh misses 2 .yalc deps
+      id: 0qOH
+      date: "2026-08-11"
+      tags:
+        - type:security
+        - plan/phase:bun-package-management
+        - plan/slug:bun-conversion
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Phase 1 security review (phase-review, bun-conversion): scripts/provision-local-deps.sh''s presence check and failure message only account for @liquid-labs/plugable-express and @liquid-labs/liq-projects, but bun.lock actually resolves two more file:.yalc/... deps transitively: @liquid-labs/github-toolkit (via liq-work) and @liquid-labs/http-smart-response (via plugable-projects-audit). A checkout with only the two documented packages under .yalc/ will still fail bun install deep in resolution, with no actionable guidance. AGENTS.md''s new CI policy statement ("CI does not attempt to resolve file:.yalc/... links") is also not achievable as stated for liq-work/plugable-projects-audit at their pinned versions. Root fix may be requesting upstream republish of those two packages with proper registry-resolvable deps, or extending the script''s coverage — needs a decision, not a mechanical fix.'
