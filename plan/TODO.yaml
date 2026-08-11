@@ -11,7 +11,7 @@ phases:
           slug: pin-dependencies-and-adopt-bun-lockfile
           title: Pin Dependencies And Adopt Bun Lockfile
           path: phase-01-bun-package-management/001-pin-dependencies-and-adopt-bun-lockfile.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: Re-derived explicit ^1.0.0-alpha.N pins for all 12 previously-wildcarded dependency specifiers in package.json. Ran bun install to generate bun.lock and git rm'd package-lock.json; clean-state reinstall confirmed deterministic resolution. Verified equivalence with make build, make test, make lint. Diff scoped exactly to package.json, bun.lock, and the package-lock.json deletion.
           git:
