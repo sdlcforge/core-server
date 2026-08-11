@@ -78,7 +78,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/bun-conversion-02-002
-            commit: []
+            commit:
+                - b4b9573
             merge: null
     - number: 3
       slug: bun-runtime-and-integration
