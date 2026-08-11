@@ -90,3 +90,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Phase 1 architecture review (phase-review, bun-conversion), minor: docs/architecture.md''s "Core initialization" component description doesn''t cover app-init.mjs''s new config-file-provisioning responsibility (seedServerSettings: existsSync check, recursive mkdir, copyFile, swallowed-error logging) added by task 004. Separately (pre-existing, not introduced by this diff, but touching the same block): the doc says appInit is passed "serverHome" — that key has never existed in app-init.mjs, in either the pre- or post-task-004 revision; the closest key both before and after is serverConfigRoot. Convenient to fix both while phase 4 task 001 is in docs/architecture.md for the XDG decision (see companion followup).'
+    - title: Tech Stack section omits package manager
+      id: zhgI
+      date: "2026-08-11"
+      tags:
+        - type:conflict
+        - plan/phase:bun-package-management
+        - plan/slug:bun-conversion
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Phase 1 architecture review (phase-review, bun-conversion), suggestion: docs/architecture.md''s Tech Stack section has no "package manager" line, before or after the npm-to-Bun conversion (task 001), so nothing is directly contradicted, but this may be worth adding — or explicitly noting it belongs in AGENTS.md instead, per the doc''s own stated scope of excluding build/test/lint commands. Low-severity completeness item for phase 4 task 001/002 to consider.'
