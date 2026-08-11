@@ -37,6 +37,7 @@ phases:
           path: phase-01-bun-package-management/003-add-server-config-root-accessor-to-comply-defaults.md
           done: false
           tier: sonnet-high
+          digest: Added COMPLY_SERVER_CONFIG_ROOT() to comply-defaults' src/locations.mjs, resolving ${XDG_DATA_HOME:-<home>/.local/share}/sdlcforge-core per the XDG Base Directory spec, with a guarded home-directory resolver (os.homedir() fallback, then a named ComplyConfigResolutionError as last resort). Extended the same guard to the pre-existing unguarded configDir used by COMPLY_HOME(); verified no behavior change for any environment where HOME is set. Merged to comply-defaults main at 29fd3d5. Published as 1.0.0-alpha.9, confirmed via npm view @liquid-labs/comply-defaults versions --json. Task 004 can now consume this via core-server's existing ^1.0.0-alpha.8 range with no package.json edit needed.
           git:
             branch: task/add-server-config-root-accesso
             commit:
