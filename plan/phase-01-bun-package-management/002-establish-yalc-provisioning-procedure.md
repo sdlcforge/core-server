@@ -67,3 +67,25 @@ No standard skill covers this; follow the procedure below.
 
 - After `scripts/provision-local-deps.sh` is written and passes the throwaway-worktree test.
 - After the `AGENTS.md` yalc section is rewritten.
+
+## Status
+
+**Outcome:** succeeded. Implemented 2026-08-11.
+
+Added `scripts/provision-local-deps.sh` (executable, `#!/usr/bin/env bash`, `set -e`) and rewrote the yalc-related prose in `AGENTS.md` (the `## Conventions` bullet and `## Common tasks` step 3).
+
+**Validation summary:**
+- `bash -n scripts/provision-local-deps.sh` parses cleanly; `test -x` confirms the executable bit — passed.
+- End-to-end throwaway-worktree proof: created a detached `git worktree` of this repo under the scratchpad directory at commit `547d4ed`; confirmed `.yalc/` absent and `bun install` failed (exit 1, `FileNotFound` on both `file:` specs); ran `scripts/provision-local-deps.sh`, which copied `.yalc/` from the main checkout and `bun install` succeeded (exit 0); confirmed `node_modules/@liquid-labs/plugable-express` is a real directory (`test -d` true, not a symlink). Removed the throwaway worktree afterward (`git worktree remove --force`) — passed.
+- Re-ran the script in the same throwaway worktree a second time: succeeded, `.yalc/` content unchanged (compared via a sorted per-file `md5` digest before/after) — passed.
+- `scripts/provision-local-deps.sh --refresh-lock`: removed `bun.lock`, `bun install` re-resolved (Bun logged "Resolving dependencies" / "Saved lockfile"), and a regenerated `bun.lock` was left behind — passed.
+- Ran the script against a synthetic empty git repo (no `.yalc/` locally or in its own "main checkout", since it has no linked worktree) — exited 1 with the actionable message naming both packages and the `yalc push` step, no fallthrough to a `bun install` failure — passed.
+- `grep -n 'npm install' AGENTS.md` — the only two remaining hits are both inside `## Troubleshooting`, which Requirement 5 explicitly puts out of scope for this task; no hit inside the `## Conventions` yalc bullet or the `## Common tasks` yalc steps — passed.
+- `git diff` against the pre-task commit touches exactly `scripts/provision-local-deps.sh` and `AGENTS.md` (plus this task document, updated per the standard task-agent report-back convention) — passed.
+
+**Affected files:**
+- `scripts/provision-local-deps.sh` (new)
+- `AGENTS.md`
+- `plan/phase-01-bun-package-management/002-establish-yalc-provisioning-procedure.md` (this file)
+
+**Assumptions relied on (per `## Assumptions`):** task 001 had already landed on this branch, so `bun.lock` existed and a plain `bun install` resolved the registry dependencies before this task started (confirmed directly: `bun install` succeeded cleanly in this worktree once `.yalc/` — already present per the plan's pre-conditions — was in place). This worktree's own dependency installation was performed by this task agent (`bun install`), matching the note that every task worktree in this plan needs the same manual provisioning.
