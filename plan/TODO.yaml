@@ -16,6 +16,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: establish-yalc-provisioning-procedure
+          title: Establish Yalc Provisioning Procedure
+          path: phase-01-bun-package-management/002-establish-yalc-provisioning-procedure.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 2
       slug: bun-build-and-test-toolchain
       title: Bun Build And Test Toolchain
