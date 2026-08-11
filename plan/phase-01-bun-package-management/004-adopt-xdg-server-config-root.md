@@ -69,3 +69,32 @@ architectural_impact: true
 - After the accessor is consumed and `bun install` picks up the new comply-defaults release.
 - After the seeding mechanism is implemented and its first-run behavior is verified.
 - After `make test` and `make build` pass.
+
+## Status
+
+**Outcome:** succeeded. Date: 2026-08-11.
+
+`src/lib/app-init.mjs` now imports `COMPLY_SERVER_CONFIG_ROOT` alongside the existing `@liquid-labs/comply-defaults` accessors and uses it for `serverConfigRoot`, replacing `myPackagePath`. `myPackagePath` is retained (per requirement 2's carve-out) because the new `seedServerSettings` helper needs it to locate the packaged `server-settings.yaml`; its comment was retargeted to describe that actual purpose. `seedServerSettings` is a first-run-only, non-fatal seed of the packaged `server-settings.yaml` defaults into the effective `serverConfigRoot`, invoked only when the caller did not supply its own `serverConfigRoot` (keyed off `options?.serverConfigRoot === undefined`, before the `...options` spread that lets a caller-supplied value win). No materially simpler mechanism (e.g. a `plugable-express` defaults-merging hook) was found, so the recommended seed-file approach from the task doc was implemented as described.
+
+`bun install` initially resolved `@liquid-labs/comply-defaults` at `1.0.0-alpha.8` because the existing `bun.lock` entry already satisfied `^1.0.0-alpha.8` and a bare `bun install` does not re-resolve to a newer satisfying version when the lockfile already has one. `bun update @liquid-labs/comply-defaults` was used instead to bump the lockfile to the newly published `1.0.0-alpha.9` (confirmed against `node_modules/@liquid-labs/comply-defaults/package.json`); `bun update` also rewrote `package.json`'s specifier to `^1.0.0-alpha.9` as a side effect, which was reverted back to `^1.0.0-alpha.8` per the task doc's requirement 4 (no specifier edit needed) and re-verified with a follow-up `bun install` that the resolved version stays `1.0.0-alpha.9` under the original range.
+
+`make lint-fix` (run once, per the Node Developer role's autofixer-first responsibility) also reformatted four pre-existing, unrelated `test/*.js` files (stale ESLint/Catalyst-style issues, consistent with the `WIP branch triage` note's finding that these are regenerable and unrelated to this task); those four files were reverted with `git checkout --` since the task doc explicitly excludes `test/` from scope, leaving `git diff` scoped to exactly `src/lib/app-init.mjs` and `bun.lock`.
+
+**Validation summary:**
+- `grep -n 'myPackagePath'` / `grep -n 'COMPLY_SERVER_CONFIG_ROOT'` in `src/lib/app-init.mjs`: passed (binding is used, not dead; import and use both present).
+- `grep -n 'process.env.XDG' src/lib/app-init.mjs`: passed (no match).
+- `bun install` / `bun update`: passed; `node_modules/@liquid-labs/comply-defaults/package.json` reports `1.0.0-alpha.9`; `bun.lock` updated accordingly (`git diff --staged bun.lock` shows only the version/hash bump plus one duplicated-resolution entry from a transitive requirer).
+- `make test`: passed — 3 suites, 5 tests; `test/__snapshots__/golden-api-spec.json` and `golden-plugins-list.json` unchanged in `git status`.
+- Seeding behavior, verified directly via a scratch `node` harness invoking the built `dist/sdlcforge-server.js`'s `appInit()` with no `serverConfigRoot`:
+  - First run with scratch `XDG_DATA_HOME` created `$XDG_DATA_HOME/sdlcforge-core/server-settings.yaml` containing the repository's `registries:` entry, not `{}`.
+  - Second run did not overwrite a hand-edited file at that path.
+  - With `XDG_DATA_HOME` unset and `HOME` pointed at a scratch directory, the root resolved to `$HOME/.local/share/sdlcforge-core/server-settings.yaml`.
+- `make build`: passed — both `dist/` artifacts produced, unchanged shape; `dist/sdlcforge-server-exec.js` still begins `#!/usr/bin/env -S node --enable-source-maps`.
+- `make lint`: passed for scope — no violations reported against `src/lib/app-init.mjs` (confirmed after `make lint-fix` normalized key-spacing in the new `superInit` call block); the 231 remaining repo-wide lint errors are all in `test/*.js`, pre-existing, and out of this task's scope.
+- `git diff` scope: passed — touches only `src/lib/app-init.mjs` and `bun.lock`. No new support file was needed; seeding is implemented entirely within `app-init.mjs`.
+
+**Assumptions applied:** task 003's `COMPLY_SERVER_CONFIG_ROOT()` accessor was resolvable from `node_modules` after `bun install`, so no halt was needed. Neither unit test was perturbed by the seeding logic, confirming the "both unit tests pass `serverConfigRoot` explicitly" assumption held.
+
+Affected source files:
+- `src/lib/app-init.mjs`
+- `bun.lock`
