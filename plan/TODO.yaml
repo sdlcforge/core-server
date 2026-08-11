@@ -30,7 +30,7 @@ phases:
             branch: plan/bun-conversion-01-002
             commit:
                 - da8acb7
-            merge: null
+            merge: aed9fc11d937cb2d81a834723350ee1ea11a9c92
         - number: 3
           slug: add-server-config-root-accessor-to-comply-defaults
           title: Add Server Config Root Accessor To Comply Defaults
