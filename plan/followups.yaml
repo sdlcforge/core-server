@@ -10,3 +10,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'GET /server/plugins/list currently snapshots to [] under the skipCorePlugins: true scoping (no plugins loaded) - valid but low-signal until the plugin-loading bug above is fixed.'
+    - title: bun-if-available launcher
+      id: AFcz
+      date: "2026-08-10"
+      tags:
+        - type:enhancement
+        - plan/phase:bun-runtime-and-integration
+        - plan/slug:bun-conversion
+        - priority:unspecified
+        - effort:unspecified
+      text: 'dist/sdlcforge-server-exec.js keeps a plain `node` shebang for this plan (per user decision during bun-conversion planning: no consumer-facing runtime requirement change). Follow-up: introduce a launcher script that detects and prefers `bun` at runtime when available, falling back to `node` otherwise. Deferred out of the bun-conversion plan''s scope.'
