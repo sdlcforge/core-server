@@ -5,7 +5,17 @@ phases:
     - number: 1
       slug: bun-package-management
       title: Bun Package Management Baseline
-      tasks: []
+      tasks:
+        - number: 1
+          slug: pin-dependencies-and-adopt-bun-lockfile
+          title: Pin Dependencies And Adopt Bun Lockfile
+          path: phase-01-bun-package-management/001-pin-dependencies-and-adopt-bun-lockfile.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 2
       slug: bun-build-and-test-toolchain
       title: Bun Build And Test Toolchain
