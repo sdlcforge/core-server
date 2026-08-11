@@ -81,7 +81,7 @@ phases:
             branch: plan/bun-conversion-02-002
             commit:
                 - b4b9573
-            merge: null
+            merge: c00291a7b2698a0ae6b2121d411ccbb5a65f17c8
     - number: 3
       slug: bun-runtime-and-integration
       title: Bun Runtime And Integration Tests
