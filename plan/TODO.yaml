@@ -27,7 +27,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/bun-conversion-01-002
-            commit: []
+            commit:
+                - da8acb7
             merge: null
         - number: 3
           slug: add-server-config-root-accessor-to-comply-defaults
