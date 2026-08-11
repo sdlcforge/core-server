@@ -23,7 +23,7 @@ No standard skill covers this; follow the procedure below.
 
    Also confirm the `node_modules` shape the research predicted: those package directories are real directories rather than symlinks into a global Bun cache, and `node_modules/.bin/*` entries are ordinary relative symlinks (`babel -> ../@babel/cli/bin/babel.js`).
 
-3. **Run `make build` and verify both artifacts.** `dist/sdlcforge-server.js` (from `src/lib/index.js`) and `dist/sdlcforge-server-exec.js` (from `src/cli/index.js`) must both be produced, each a 9-line externals-only bundle whose dependency references are bare `require()` calls, each with a `.js.map` sibling, and the executable carrying `#!/usr/bin/env -S node --enable-source-maps` and the executable bit.
+3. **Run `make build` and verify both artifacts.** `dist/sdlcforge-server.js` (from `src/lib/index.js`) and `dist/sdlcforge-server-exec.js` (from `src/cli/index.js`) must both be produced, each a 12-line externals-only bundle whose dependency references are bare `require()` calls, each with a `.js.map` sibling, and the executable carrying `#!/usr/bin/env -S node --enable-source-maps` and the executable bit. (Corrected from the originally-planned 9 lines: the `catalyst-bun-compatibility.md` research spike's 9-line figure predates phase 1 task 004's XDG `serverConfigRoot`/`seedServerSettings` change, which legitimately added functional code to `src/lib/app-init.mjs` — verified by task 2/001's own dispatch to still be externals-only in substance, `grep -c shelljs` returning 0.)
 
 4. **Run `make lint` and `make qa`.** `make lint` must run ESLint to completion and write `qa/lint.txt`. It reports pre-existing style violations; that is known lint debt, not a Bun regression, and its presence is the expected baseline. `make qa` chains `test` and `lint`.
 
@@ -39,7 +39,7 @@ No standard skill covers this; follow the procedure below.
 - `git status` shows no modification to any file under `make/`, and `git diff --stat` for the task is empty apart from any plan/task-doc updates.
 - `bun install` from clean exits 0 with no `failed to resolve` output.
 - Each of the three `npm explore … -- pwd` invocations exits 0 and prints a path under this repository's `node_modules/`; the four `CATALYST_*_CONFIG` files those paths imply all exist.
-- `make build` exits 0. `wc -l dist/sdlcforge-server.js dist/sdlcforge-server-exec.js` reports 9 lines each; `head -1 dist/sdlcforge-server-exec.js` is the `node` shebang; `test -x dist/sdlcforge-server-exec.js` passes; `dist/sdlcforge-server.js.map` and `dist/sdlcforge-server-exec.js.map` exist.
+- `make build` exits 0. `wc -l dist/sdlcforge-server.js dist/sdlcforge-server-exec.js` reports 12 lines each (see Requirement 3's note on why this figure was corrected from 9); `head -1 dist/sdlcforge-server-exec.js` is the `node` shebang; `test -x dist/sdlcforge-server-exec.js` passes; `dist/sdlcforge-server.js.map` and `dist/sdlcforge-server-exec.js.map` exist.
 - `grep -c shelljs dist/sdlcforge-server-exec.js` returns `0` — the bundle is still externals-only.
 - `make lint` runs to completion and `qa/lint.txt` exists and begins with a `Test git rev:` line.
 - `make qa` exits according to its constituent targets, with no error attributable to tool resolution.
