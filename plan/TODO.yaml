@@ -66,6 +66,7 @@ phases:
           path: phase-02-bun-build-and-test-toolchain/001-verify-build-and-lint-under-bun.md
           done: false
           tier: sonnet-med
+          digest: Re-ran the full verification from a genuinely clean state (895 packages installed, exit 0). All three npm explore config-path lookups resolve correctly, node_modules shape matches prediction. make build produces both dist bundles at exactly 12 lines each (the corrected figure, reflecting phase 1 task 004's legitimate XDG serverConfigRoot/seedServerSettings addition) - still externals-only in substance (grep shelljs = 0). make lint and make qa both surface the same pre-existing lint debt rather than any Bun-specific regression; unit-test tier passed cleanly. No make/*.mk file touched.
           git:
             branch: plan/bun-conversion-02-001-2
             commit:
