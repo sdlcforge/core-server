@@ -2,35 +2,34 @@
 
 ## Goals
 
-Settle what runtime the server actually runs on, then bring the two integration test tiers and the operational scripts into line with that answer.
+Confirm the runtime target and bring the two integration tiers and the operational scripts into line with it.
 
-The governing decision is the executable shebang. `make/50-sdlcforge-server-exec-js.mk` currently emits `#!/usr/bin/env -S node --enable-source-maps`; the author's stale local build output carries `#!/usr/bin/env -S bun`. This is the plan's one genuinely consumer-facing choice — `@sdlcforge/core-server` is published to npm, so a `bun` shebang makes Bun a hard install-time requirement for every consumer and drops `--enable-source-maps` (Bun enables source maps natively, but the flag's removal should be deliberate rather than incidental). It also governs whether `engines.node >= 18.0.0` stays, is replaced by an `engines.bun` constraint, or both are declared.
+The governing decision is settled and is a **no-change**: `dist/sdlcforge-server-exec.js` keeps `#!/usr/bin/env -S node --enable-source-maps`, `engines.node` stays `>=18.0.0`, and the Docker Node 18–24 matrix remains the meaningful compatibility contract. `@sdlcforge/core-server` is published to npm, and a `bun` shebang would make Bun a hard install-time requirement for every consumer; the [runtime-target decision](../notes/runtime-target-decision.md) declines that and defers a bun-if-available-else-node launcher to a followup outside this plan.
 
-The Docker multi-version matrix resolves as a **consequence** of that answer rather than as an independent decision. `test/Dockerfile` provisions nvm with Node 18–24, and `docs/architecture.md` records that this tier exists primarily to catch explicit-plugin loading regressions across Node versions. If the shebang stays `node`, that matrix remains the meaningful compatibility contract and is preserved as-is. If the shebang becomes `bun`, testing plugin loading across seven Node versions largely stops describing how the artifact is run, and the matrix should gain — or be replaced by — a Bun dimension. Either way the tier itself survives; the three-tier structure is a stated constraint.
+That reframes this phase. It is not "settle the runtime, then propagate the answer" — the answer is known, and the work is to *verify* that the built artifact, `engines`, and the Docker matrix are genuinely untouched, and to convert the npm invocations that surround them:
 
-Three scripts hardcode Node or npm and need updating to match:
+- `scripts/start.sh` runs `node ${SERVER_EXEC}` directly, bypassing the shebang. That stays `node`, consistent with the decision — but the surrounding `npm run stop` guidance it prints does not.
+- `scripts/test.sh` calls `npm run build` and `node test/test-server.js`. The build invocation becomes Bun-driven; the `node` invocation stays.
+- `test/run-integration-tests.sh` calls `npm run build` as its Step 1 host-side build.
+- `test/test-ci.sh` uses `npm pack` and `npm install -g` to validate the *published npm package*. That is npm's own packaging contract being exercised deliberately, not an artifact of the package manager used for development, and it stays npm.
 
-- `scripts/start.sh` runs `node ${SERVER_EXEC}` directly, bypassing the shebang entirely.
-- `scripts/test.sh` calls `npm run build` and `node test/test-server.js`.
-- `test/setup-local-deps.sh` parses `package.json` for `file:` dependencies and copies them into the container using `node -e`. It is the container-side counterpart to Phase 1's yalc-provisioning problem and must stay consistent with whatever Phase 1 established.
-
-This phase also resolves the **`serverConfigRoot`** question. If the user selects the HOME-based root, it is added as a `@liquid-labs/comply-defaults` accessor rather than inlined in `app-init.mjs` — `AGENTS.md` names comply-defaults as the project's centralized configuration mechanism — and it must be guarded, since the WIP branch's unguarded `process.env.HOME` yields a `TypeError` from `fsPath.join` wherever `HOME` is undefined. If the user selects `main`'s existing `myPackagePath`, no source change is made and the WIP branch's value is dropped.
+The Docker tier needs **no provisioning work of its own**. `docker-compose.yml` bind-mounts the whole project read-write (`..:/project:rw`) and `run-tests.sh` only verifies that `dist/` and `node_modules/` already exist from the host-side build — the container never installs dependencies. The host's `.yalc/`-derived `node_modules` is therefore transparently visible inside it. Preserving that bind-mount architecture is the requirement; the only related change is deleting `test/setup-local-deps.sh`, which is unreferenced by any script or doc in the current pipeline and was orphaned by the very commit that introduced the directory mount.
 
 The golden-api-spec characterization test is the regression oracle throughout: the server's HTTP API surface must be unchanged by anything in this phase.
 
 ## Inputs
 
-- Phase 2's working build and unit-test toolchain.
-- The user's answer on the executable shebang and runtime target.
-- The user's answer on `serverConfigRoot`.
-- Phase 1's dependency-provisioning procedure, which the Docker tier must reuse.
+- Phase 2's verified build and unit-test toolchain.
+- The answered [runtime-target decision](../notes/runtime-target-decision.md).
+- Phase 1's `serverConfigRoot` change, whose effect on a *running* server (as opposed to the unit tests, which override `serverConfigRoot` explicitly) is first exercised here.
+- The [yalc-provisioning research](../notes/bun-yalc-provisioning.md)'s findings on the Docker tier and on `test/setup-local-deps.sh`.
 - `docs/core-server-spec.md`'s stated runtime requirements, which constrain what may be promised.
 
 ## Outputs
 
-- A settled runtime: the shebang emitted by `make/50-sdlcforge-server-exec-js.mk`, and a matching `engines` declaration in `package.json`.
+- Verified-unchanged runtime surface: the `node` shebang emitted by `make/50-sdlcforge-server-exec-js.mk`, `engines.node >=18.0.0`, and the Node 18–24 Docker matrix.
 - Updated `scripts/start.sh` and `scripts/test.sh`.
-- Updated `test/Dockerfile`, `test/docker-compose.yml`, `test/run-integration-tests.sh`, and `test/setup-local-deps.sh` as the runtime answer requires.
-- A resolved `serverConfigRoot`, implemented through comply-defaults and guarded if the HOME-based root is adopted.
-- All three test tiers passing: `make test`, `npm run test:local`, `npm run test:integration`.
-- Working `npm start` and `npm stop` against the chosen runtime.
+- Updated `test/run-integration-tests.sh`, with `test/Dockerfile` and `test/docker-compose.yml` confirmed to need no change.
+- `test/setup-local-deps.sh` deleted.
+- All three test tiers passing: `make test`, `bun run test:local`, `bun run test:integration`.
+- Working `bun run start` and `bun run stop` against the Node runtime and the new XDG configuration root.
