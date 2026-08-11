@@ -74,7 +74,7 @@ phases:
           slug: verify-unit-test-tier
           title: Verify Unit Test Tier
           path: phase-02-bun-build-and-test-toolchain/002-verify-unit-test-tier.md
-          done: false
+          done: true
           tier: sonnet-med
           digest: 'Ran make test in the Bun-provisioned worktree (895 packages via bun install) and confirmed the full pipeline works unchanged: Babel test-staging transpile, then Jest under Node, producing 3 passed suites / 5 passed tests. Golden snapshots byte-identical. qa/coverage/ carries the full Istanbul directory shape that sdlc-projects-badges-coverage depends on downstream. No file under make/, src/, or test/ touched - only the task document''s Status section, recording observed counts/coverage (66.66% stmts / 57.89% branch / 50% funcs / 70% lines) and the four runner-decision statements. Confirmed but did not touch the latent process.env.COMPLY_HOME mutation in src/lib/test/app-init.test.js per requirement 5 (surface, don''t fix) - this duplicates the existing followup zNBA, no new followup needed.'
           git:
