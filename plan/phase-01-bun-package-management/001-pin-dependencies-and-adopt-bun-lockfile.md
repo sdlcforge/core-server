@@ -61,3 +61,32 @@ No standard skill covers this; follow the procedure below.
 - After deriving and recording the full pin table, before editing `package.json`.
 - After `package.json` is edited and `bun install` first succeeds.
 - After `package-lock.json` is removed and `bun.lock` is staged.
+
+## Status
+
+**Outcome:** succeeded — 2026-08-10.
+
+All 12 wildcard specifiers were re-derived from `npm view <pkg> versions --json` (ascending-order output; highest published version taken) and pinned to `^1.0.0-alpha.N`. None had a stable (non-prerelease) published version, so no deviation from the `^1.0.0-alpha.N` pattern was needed. Final pin table:
+
+| Package | Pin |
+|---|---|
+| `@liquid-labs/liq-controls` | `^1.0.0-alpha.9` |
+| `@liquid-labs/liq-credentials` | `^1.0.0-alpha.3` |
+| `@liquid-labs/liq-integrations` | `^1.0.0-alpha.2` |
+| `@liquid-labs/liq-integrations-issues-github` | `^1.0.0-alpha.3` |
+| `@liquid-labs/liq-orgs` | `^1.0.0-alpha.6` |
+| `@liquid-labs/liq-work` | `^1.0.0-alpha.9` |
+| `@liquid-labs/plugable-projects-audit` | `^1.0.0-alpha.2` |
+| `@liquid-labs/plugable-server-documentation` | `^1.0.0-alpha.0` |
+| `@liquid-labs/sdlc-projects-badges-coverage` | `^1.0.0-alpha.2` |
+| `@liquid-labs/sdlc-projects-badges-github-workflows` | `^1.0.0-alpha.2` |
+| `@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd` | `^1.0.0-alpha.2` |
+| `@liquid-labs/sdlc-projects-workflow-local-node-build` | `^1.0.0-alpha.7` |
+
+These match the verified sample recorded in [WIP branch triage](../notes/wip-branch-triage.md) for the six packages it sampled, confirming no drift since that note was written. The `alpah` typo was not transcribed (guarded by the `grep -c 'alpah'` validation check, which returns `0`).
+
+`bun install` (not `--frozen-lockfile`) generated `bun.lock`; `package-lock.json` was removed via `git rm`. A clean-state reinstall (`rm -rf node_modules bun.lock && bun install`) reproduced a byte-identical `bun.lock`, confirming deterministic resolution. `.gitignore` and `.dockerignore` needed no changes, as anticipated by the task doc.
+
+**Validation summary:** all checks passed. `make build` produced both 9-line externals-only bundles with the correct shebang and `require()` preamble. `make test` passed 3 suites / 5 tests including both golden-api-spec assertions, with the snapshot files untouched in `git status`. `make lint` ran to completion and produced `qa/lint.txt`; it reports pre-existing style violations (237 problems in `test/test-server.js`), which is the expected, unrelated lint debt the task doc calls out — ESLint itself resolved and executed successfully. `git diff` against the task's start commit touches only `package.json`, `bun.lock`, and the `package-lock.json` deletion.
+
+**Affected files:** `package.json`, `bun.lock`, `package-lock.json` (deleted).
