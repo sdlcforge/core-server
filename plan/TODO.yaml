@@ -87,6 +87,7 @@ phases:
     - number: 3
       slug: bun-runtime-and-integration
       title: Bun Runtime And Integration Tests
+      diff_base: d800058b00459c9ccfe2caeb9d96fff3ea0b3da6
       tasks:
         - number: 1
           slug: convert-local-integration-tier
