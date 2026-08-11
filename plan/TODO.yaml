@@ -39,7 +39,8 @@ phases:
           tier: sonnet-high
           git:
             branch: task/add-server-config-root-accesso
-            commit: []
+            commit:
+                - 283c72c
             merge: null
         - number: 4
           slug: adopt-xdg-server-config-root
