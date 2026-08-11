@@ -60,6 +60,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: verify-unit-test-tier
+          title: Verify Unit Test Tier
+          path: phase-02-bun-build-and-test-toolchain/002-verify-unit-test-tier.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 3
       slug: bun-runtime-and-integration
       title: Bun Runtime And Integration Tests
