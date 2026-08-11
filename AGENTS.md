@@ -52,7 +52,14 @@ On startup the server loads its plugin set — core plugins built into `@liquid-
 - ES6+ module source, transpiled to CommonJS via Babel; source maps enabled for debugging.
 - The codebase is intentionally minimal and delegates almost all behavior to `@liquid-labs/plugable-express`; new capability is generally added as a plugin rather than as core-server code.
 - Configuration is centralized through `@liquid-labs/comply-defaults` rather than scattered across the codebase — see [Environment variables and configuration](#environment-variables-and-configuration).
-- Local development against an unreleased `@liquid-labs/plugable-express` uses **yalc**: a local copy lives in `.yalc/@liquid-labs/plugable-express/`, allowing parallel development of `core-server` and `plugable-express`. Run `npm install` after any yalc push to ensure transitive dependencies stay in sync.
+- Local development against an unreleased `@liquid-labs/plugable-express` uses **yalc**: a local copy lives in `.yalc/@liquid-labs/plugable-express/`, allowing parallel development of `core-server` and `plugable-express`. Under Bun, a bare `bun install` re-copies the linked package's **content** but does not re-resolve its **own dependency list** once `bun.lock` holds a resolved entry for the `file:` spec. `--force`, `--no-cache`, and a version bump are all equally ineffective. A newly-added transitive dependency simply never materializes, while `bun install` reports success. After any `yalc push` that changed the linked package's own `dependencies`, run `rm -f bun.lock && bun install` (or `./scripts/provision-local-deps.sh --refresh-lock`). Bun always *copies* a `file:` dependency and never symlinks it, regardless of `--backend`, so edits made directly under `.yalc/…` are invisible until the next install.
+- **CI policy:** yalc is a strictly local-development mechanism. CI, when introduced, installs against published versions and does not attempt to resolve `file:.yalc/…` links; it does not check out the upstream `plugable-express` / `liq-projects` repositories. A CI runner has neither those repos nor the developer's global yalc store, so `.yalc/` cannot be regenerated there from nothing.
+- **Task worktree provisioning:** a Flow task worktree must be created with dependency installation suppressed and then provisioned separately, since `.yalc/` is gitignored and absent from every fresh worktree:
+
+  ```bash
+  create-worktree.sh --no-install-deps …
+  cd "$WORKTREE_PATH" && /path/to/main-checkout/scripts/provision-local-deps.sh
+  ```
 
 ## Environment variables and configuration
 
@@ -74,7 +81,7 @@ Configuration is resolved through `@liquid-labs/comply-defaults`:
 
 1. Update the package in the local yalc repo.
 2. Run `yalc push` from `plugable-express`.
-3. Run `npm install` in `core-server` to pick up the pushed changes and update transitive deps.
+3. Run `rm -f bun.lock && bun install` in `core-server` (or `./scripts/provision-local-deps.sh --refresh-lock`) to pick up the pushed changes and update transitive deps. A bare `bun install` is **not** sufficient here: under Bun, once `bun.lock` holds a resolved entry for the `file:` spec, a bare `bun install` re-copies the linked package's content but does not re-resolve its own dependency list — `--force`, `--no-cache`, and a version bump are all equally ineffective, and a newly-added transitive dependency simply never materializes while `bun install` reports success.
 4. Rebuild: `npm run build`.
 
 ## Troubleshooting
