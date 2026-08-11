@@ -60,3 +60,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Phase 1 security review (phase-review, bun-conversion), low confidence/suggestion: src/lib/app-init.mjs''s seedServerSettings() checks existsSync(destPath) then copyFile with no exclusive-create flag; a dangling symlink at the destination would have its target overwritten. Requires attacker to already have write access to the parent dir (normally single-user $HOME/.local/share) — not new remote attack surface, mirrors plugable-express''s own existing write-if-absent pattern. If hardening is desired: use fs.constants.COPYFILE_EXCL and treat failure as a normal non-fatal seed failure.'
+    - title: Symlink hardening in provision-local-deps.sh
+      id: PAof
+      date: "2026-08-11"
+      tags:
+        - type:security
+        - plan/phase:bun-package-management
+        - plan/slug:bun-conversion
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Phase 1 security review (phase-review, bun-conversion), low confidence/suggestion: scripts/provision-local-deps.sh''s `cp -R "$MAIN_CHECKOUT/.yalc" "$CURRENT_DIR/.yalc"` preserves symlinks rather than dereferencing. If the main checkout''s gitignored .yalc/ ever contained a symlink pointing outside the intended tree, this script propagates it into every new task worktree. Requires attacker to already have write access to the developer''s local .yalc/ — pre-existing local-compromise-level trust, not new remote attack surface. If hardening is desired: use `cp -RL` or add a post-copy symlink rejection check.'
