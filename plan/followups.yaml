@@ -130,3 +130,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Pre-existing, blocking defect (not introduced by this task): explicit-plugin loading crashes at server startup because yalc-linked plugable-express never initializes app.ext.pathResolvers, which liq-credentials (and likely liq-integrations/liq-orgs/liq-work/liq-projects) requires. Blocks both this task''s Docker integration tier and phase-03 task-001''s local integration tier, since both start the real server with the full explicit-plugin set. Same defect category as followups ynGa/26sW (about app.ext.serverHome/serverConfigRoot) but manifests as app.ext.pathResolvers - may be related-but-distinct, worth re-verifying against current plugable-express. Needs a fix inside plugable-express (yalc-linked external package) and/or affected liq-* plugins before Docker/local integration tiers can pass.'
+    - title: Requirement 4/Validation's literal repo-wide-
+      id: KzUv
+      date: "2026-08-11"
+      tags:
+        - type:ambiguity
+        - plan/phase:bun-runtime-and-integration
+        - plan/slug:bun-conversion
+        - priority:unspecified
+        - effort:unspecified
+      text: Requirement 4/Validation's literal repo-wide-grep-zero-hits framing for setup-local-deps does not account for this task's worktree carrying the full plan/ tree (branched from plan worktree) - the plan's own description of the deletion will always self-match. Worth tightening the check's wording in future task-doc authoring.
