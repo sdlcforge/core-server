@@ -30,3 +30,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: src/lib/test/app-init.test.js mutates process.env.COMPLY_HOME process-wide in beforeAll. Currently masked by Jest's per-file worker isolation; surfaced during bun-conversion research when two copies of the test tree were discovered together and raced on the shared env var. Pre-existing, unrelated to Bun — worth hardening test isolation regardless of runtime.
+    - title: Publish blocked on invalid/expired npm creden
+      id: HHis
+      date: "2026-08-11"
+      tags:
+        - type:ambiguity
+        - plan/phase:bun-package-management
+        - plan/slug:bun-conversion
+        - priority:unspecified
+        - effort:unspecified
+      text: Publish blocked on invalid/expired npm credentials (npm whoami -> 401 against registry.npmjs.org, despite a token present in ~/.npmrc). Someone with valid @liquid-labs-scope npm publish credentials needs to check out branch task/add-server-config-root-accesso (commit 283c72c) in /Users/zane/playground/liquid-labs/comply-defaults and run the release path (npm version prerelease --preid=alpha, then npm publish) to produce 1.0.0-alpha.9 or later, then report the resulting version string. Task 004 in core-server cannot proceed without it.
