@@ -54,7 +54,7 @@ phases:
             branch: plan/bun-conversion-01-004
             commit:
                 - ea35dbd
-            merge: null
+            merge: 7afdf770e22e8a066167aa6cdfc94af27b1ff723
     - number: 2
       slug: bun-build-and-test-toolchain
       title: Bun Build And Test Toolchain
