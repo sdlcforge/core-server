@@ -6,3 +6,7 @@ phases:
       slug: bun-package-management
       title: Bun Package Management Baseline
       tasks: []
+    - number: 2
+      slug: bun-build-and-test-toolchain
+      title: Bun Build And Test Toolchain
+      tasks: []
