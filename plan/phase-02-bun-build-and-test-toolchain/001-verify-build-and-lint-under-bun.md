@@ -62,3 +62,21 @@ No standard skill covers this; follow the procedure below.
 - After the clean `bun install` and the config-path resolution checks.
 - After `make build` and the artifact-shape verification.
 - After `make lint` and `make qa`.
+
+## Status
+
+**Outcome:** succeeded (2026-08-11, retry of the halted dispatch — task doc's Requirement 3/Validation 12-line correction confirmed and re-verified from a genuinely clean start).
+
+**Toolchain versions observed:** Bun 1.3.14, Node v26.5.0, npm 11.17.0.
+
+**Requirement 1 — clean start.** `rm -rf node_modules dist qa test-staging`; `.yalc/` was already provisioned in this worktree, so `scripts/provision-local-deps.sh` left it as-is and ran `bun install`, which exited 0 with **895 packages installed**, no `failed to resolve` output.
+
+**Requirement 2 — config-path resolution.** All three `npm explore … -- pwd` invocations exited 0 and resolved under this worktree's `node_modules/`. All four `CATALYST_*_CONFIG` files they imply exist on disk: `.../catalyst-resource-babel-and-rollup/dist/babel/babel.config.cjs`, `.../dist/rollup/rollup.config.mjs`, `.../catalyst-resource-jest/dist/jest.config.js`, `.../catalyst-resource-eslint/dist/eslint.config.js`. `node_modules/@liquid-labs/catalyst-resource-babel-and-rollup` is a real directory (not a symlink into a global Bun cache), and `node_modules/.bin/{babel,rollup,jest,eslint}` are ordinary relative symlinks (e.g. `babel -> ../@babel/cli/bin/babel.js`).
+
+**Requirement 3 — `make build` and artifact shape.** `make build` exited 0. `dist/sdlcforge-server.js` and `dist/sdlcforge-server-exec.js` were both produced, **12 lines each** (confirming the task doc's corrected figure — the extra 3 lines over the original 9-line research-spike figure are the XDG `serverConfigRoot`/`seedServerSettings` seeding logic from phase 1 task 004's legitimate change to `src/lib/app-init.mjs`). Both bundles' dependency references are bare `require()` calls (`@liquid-labs/comply-defaults`, `@liquid-labs/plugable-express`, `node:fs`, `node:fs/promises`, `node:path`) — externals-only in substance, confirmed by `grep -c shelljs dist/sdlcforge-server-exec.js` returning `0`. Both carry a `.js.map` sibling; `dist/sdlcforge-server-exec.js` starts with `#!/usr/bin/env -S node --enable-source-maps` and is executable (`test -x` passes).
+
+**Requirement 4 — `make lint` and `make qa`.** `make lint` ran ESLint to completion and wrote `qa/lint.txt`, beginning with a `Test git rev:` line; it exits non-zero (231 pre-existing style violations across several files) — this is the expected, already-documented lint debt baseline, not a Bun regression. `make qa` chained `test` then `lint`: the unit-test tier passed cleanly (3 suites, 5 tests, coverage generated to `qa/coverage/`), and the lint tier reproduced the same pre-existing violations, so `make qa` exits non-zero for the same known reason — no error was attributable to tool resolution anywhere in either target.
+
+**Requirement 5 — determinations recorded** (see also `outcome_digest`/`decisions_made` in the structured report): no `make/*.mk` file needed or received any modification; `npx` was not converted to `bunx`; Node and the `npm` binary remain required toolchain prerequisites (every Catalyst tool is a Node-targeted CLI with a `#!/usr/bin/env node` shebang, and `npm explore` needs `npm` on `PATH`), with `require.resolve('<pkg>/package.json')` (trailing `/package.json` stripped) recorded as the documented, verified-equivalent escape hatch should `npm` ever need to leave the toolchain — not implemented.
+
+**Validation:** all checks in `## Validation` passed as specified, including the corrected 12-line bundle-size check. `git status`/`git diff --stat` showed no modification to any file under `make/`, and no other tracked file, throughout the task (`dist/`, `qa/`, `test-staging/` are gitignored).
