@@ -47,7 +47,7 @@ phases:
           slug: adopt-xdg-server-config-root
           title: Adopt XDG Server Config Root
           path: phase-01-bun-package-management/004-adopt-xdg-server-config-root.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: Implemented the XDG-based serverConfigRoot switch in src/lib/app-init.mjs, consuming COMPLY_SERVER_CONFIG_ROOT() from @liquid-labs/comply-defaults@1.0.0-alpha.9, and adding a first-run-only, non-fatal seedServerSettings helper that copies the packaged server-settings.yaml into the new config root. Seeding is skipped when a caller supplies its own serverConfigRoot, keeping both existing unit tests unaffected. bun.lock refreshed via bun update; package.json specifier left at ^1.0.0-alpha.8. All in-scope validation passed; diff confined to src/lib/app-init.mjs and bun.lock. This completes Phase 1 of the bun-conversion plan.
           git:
