@@ -51,7 +51,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/bun-conversion-01-004
-            commit: []
+            commit:
+                - ea35dbd
             merge: null
     - number: 2
       slug: bun-build-and-test-toolchain
