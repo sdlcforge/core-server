@@ -18,7 +18,7 @@ phases:
             branch: plan/bun-conversion-01-001
             commit:
                 - 27404f7
-            merge: null
+            merge: 58d99f2654685e9dc3d0c94b86849e8ae1f30cde
         - number: 2
           slug: establish-yalc-provisioning-procedure
           title: Establish Yalc Provisioning Procedure
