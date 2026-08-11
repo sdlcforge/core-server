@@ -73,4 +73,14 @@ phases:
     - number: 3
       slug: bun-runtime-and-integration
       title: Bun Runtime And Integration Tests
-      tasks: []
+      tasks:
+        - number: 1
+          slug: convert-local-integration-tier
+          title: Convert Local Integration Tier
+          path: phase-03-bun-runtime-and-integration/001-convert-local-integration-tier.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
