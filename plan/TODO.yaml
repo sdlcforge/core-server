@@ -58,6 +58,7 @@ phases:
     - number: 2
       slug: bun-build-and-test-toolchain
       title: Bun Build And Test Toolchain
+      diff_base: 836bd941722cad8a7ea1940863975dc78c589729
       tasks:
         - number: 1
           slug: verify-build-and-lint-under-bun
