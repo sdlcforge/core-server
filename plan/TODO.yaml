@@ -26,6 +26,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 3
+          slug: add-server-config-root-accessor-to-comply-defaults
+          title: Add Server Config Root Accessor To Comply Defaults
+          path: phase-01-bun-package-management/003-add-server-config-root-accessor-to-comply-defaults.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 2
       slug: bun-build-and-test-toolchain
       title: Bun Build And Test Toolchain
