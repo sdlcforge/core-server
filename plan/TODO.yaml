@@ -84,3 +84,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: convert-docker-integration-tier
+          title: Convert Docker Integration Tier
+          path: phase-03-bun-runtime-and-integration/002-convert-docker-integration-tier.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
