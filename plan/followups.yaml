@@ -80,3 +80,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Phase 1 architecture review (phase-review, bun-conversion), major: docs/architecture.md''s Key decisions section has no entry for task 004''s specific decision — moving serverConfigRoot from package-relative to an XDG-based path via COMPLY_SERVER_CONFIG_ROOT(), plus the new seedServerSettings first-run mechanism that copies packaged server-settings.yaml into the new root. The general "config centralized through comply-defaults" principle is recorded, but not this specific, non-obvious design choice, which the task''s own architectural_impact:true flag calls out. Expected to be picked up by phase 4 task 001 (update-architecture-docs) — not a code defect, does not block phase 1/2/3 progress.'
+    - title: 'architecture.md: init desc + serverHome typo'
+      id: Ks4P
+      date: "2026-08-11"
+      tags:
+        - type:conflict
+        - plan/phase:bun-package-management
+        - plan/slug:bun-conversion
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Phase 1 architecture review (phase-review, bun-conversion), minor: docs/architecture.md''s "Core initialization" component description doesn''t cover app-init.mjs''s new config-file-provisioning responsibility (seedServerSettings: existsSync check, recursive mkdir, copyFile, swallowed-error logging) added by task 004. Separately (pre-existing, not introduced by this diff, but touching the same block): the doc says appInit is passed "serverHome" — that key has never existed in app-init.mjs, in either the pre- or post-task-004 revision; the closest key both before and after is serverConfigRoot. Convenient to fix both while phase 4 task 001 is in docs/architecture.md for the XDG decision (see companion followup).'
