@@ -10,3 +10,7 @@ phases:
       slug: bun-build-and-test-toolchain
       title: Bun Build And Test Toolchain
       tasks: []
+    - number: 3
+      slug: bun-runtime-and-integration
+      title: Bun Runtime And Integration Tests
+      tasks: []
