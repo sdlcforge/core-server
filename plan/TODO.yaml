@@ -23,7 +23,7 @@ phases:
           slug: establish-yalc-provisioning-procedure
           title: Establish Yalc Provisioning Procedure
           path: phase-01-bun-package-management/002-establish-yalc-provisioning-procedure.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: Added scripts/provision-local-deps.sh, an idempotent set -e Bash script that resolves the main checkout via git rev-parse --git-common-dir, copies .yalc/+yalc.lock in from there when absent locally, fails with an actionable message when .yalc/ is absent everywhere, supports --refresh-lock, and finishes by running bun install with exit status propagated. Corrected the post-yalc-push instruction in AGENTS.md at both locations, explaining why a bare bun install is insufficient, and recorded the CI policy and worktree provisioning procedure. Validated end-to-end via a throwaway git worktree exercising failure path, happy path, idempotent re-run, and --refresh-lock, all passing.
           git:
