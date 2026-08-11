@@ -100,3 +100,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Phase 1 architecture review (phase-review, bun-conversion), suggestion: docs/architecture.md''s Tech Stack section has no "package manager" line, before or after the npm-to-Bun conversion (task 001), so nothing is directly contradicted, but this may be worth adding — or explicitly noting it belongs in AGENTS.md instead, per the doc''s own stated scope of excluding build/test/lint commands. Low-severity completeness item for phase 4 task 001/002 to consider.'
+    - title: 'Primary blocker: liq-credentials@^1.0.0-alpha'
+      id: XpNW
+      date: "2026-08-11"
+      tags:
+        - type:ambiguity
+        - plan/phase:bun-runtime-and-integration
+        - plan/slug:bun-conversion
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Primary blocker: liq-credentials@^1.0.0-alpha.3 is incompatible with the yalc''d plugable-express@1.0.0-alpha.57 - ext.pathResolvers never initialized. Blocks any real server start until pin revisited or plugable-express fixed.'
