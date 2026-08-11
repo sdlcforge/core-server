@@ -71,7 +71,7 @@ phases:
             branch: plan/bun-conversion-02-001-2
             commit:
                 - 8aca822
-            merge: null
+            merge: 7ae922b2b33a7975638859748da2e064907fcc0c
         - number: 2
           slug: verify-unit-test-tier
           title: Verify Unit Test Tier
