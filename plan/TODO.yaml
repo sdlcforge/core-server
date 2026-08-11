@@ -15,7 +15,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/bun-conversion-01-001
-            commit: []
+            commit:
+                - 27404f7
             merge: null
         - number: 2
           slug: establish-yalc-provisioning-procedure
