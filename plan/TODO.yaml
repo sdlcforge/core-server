@@ -5,6 +5,7 @@ phases:
     - number: 1
       slug: bun-package-management
       title: Bun Package Management Baseline
+      diff_base: f927e66ceb3d206bda2b4d5d23d83a3418ec7783
       tasks:
         - number: 1
           slug: pin-dependencies-and-adopt-bun-lockfile
