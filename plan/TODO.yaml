@@ -1,0 +1,8 @@
+slug: bun-conversion
+version: 1
+title: ""
+phases:
+    - number: 1
+      slug: bun-package-management
+      title: Bun Package Management Baseline
+      tasks: []
