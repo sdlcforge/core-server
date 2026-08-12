@@ -18,7 +18,7 @@ echo "===================================================="
 echo ""
 
 echo "Step 1: Building the project..."
-npm run build
+bun run build
 
 echo ""
 echo "Step 2: Checking local server status..."
@@ -26,7 +26,7 @@ if [ ! -f start-pid ]; then
     echo "No local server running. Proceeding..."
 else
     echo "Local server is running. Stopping it..."
-    npm run stop
+    bun run stop
 fi
 
 echo ""

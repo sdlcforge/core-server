@@ -43,7 +43,7 @@ while true; do
         echo ""
         echo "Server is ready!"
         echo "Server started successfully. Logs are in local-server.log"
-        echo "Use 'npm run stop' to stop the server."
+        echo "Use 'bun run stop' to stop the server."
         break
     fi
     
