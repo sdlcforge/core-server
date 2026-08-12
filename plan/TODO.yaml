@@ -138,5 +138,6 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/bun-conversion-04-002
-            commit: []
+            commit:
+                - 62e7480
             merge: null
