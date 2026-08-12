@@ -48,16 +48,16 @@ const parseBool = (value) => {
   throw new Error(`Could not parse value '${value}' as boolean. Try 'true' or 'false'.`)
 }
 
-const func = ({ app, model, reporter }) => {
+const func = ({ app, model, reporter, registerPathVar }) => {
   /* Already set in parameters-detail... we really need to approach this a different way
-  app.ext.pathResolvers['parameterKey'] = {
+  registerPathVar('parameterKey', {
     optionsFetcher: ({ orgKey }) => {
       const org = model.orgs[orgKey]
       const parameters = listParameters(org)
       return parameters.map((p) => p.name)
     },
-    bitReString: '(?:[.][_a-zA-Z][_a-zA-Z0-9-]*)+'
-  } */
+    validationRe: '(?:[.][_a-zA-Z][_a-zA-Z0-9-]*)+'
+  }) */
 
   return (req, res) => {
     const org = getOrgFromKey({ model, params : req.vars, res })
