@@ -10,34 +10,34 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Building
 ```bash
-npm run build           # Build via Make (creates dist/sdlcforge-server.js and dist/sdlcforge-server-exec.js)
+bun run build           # Build via Make (creates dist/sdlcforge-server.js and dist/sdlcforge-server-exec.js)
 make                    # Direct build
 ```
 
 ### Testing
 ```bash
-npm test                          # Unit tests (Jest)
-npm run test:integration          # Full Docker-based multi-version tests (18-24)
-TEST_SINGLE_VERSION=22 npm run test:integration  # Test single Node version
-npm run test:local                # Quick local integration test
+bun run test                      # Unit tests (Jest)
+bun run test:integration          # Full Docker-based multi-version tests (18-24)
+TEST_SINGLE_VERSION=22 bun run test:integration  # Test single Node version
+bun run test:local                # Quick local integration test
 ./test/test-ci.sh                 # CI-style test
 ```
 
 ### Linting
 ```bash
-npm run lint            # Run ESLint
-npm run lint:fix        # Auto-fix linting issues
+bun run lint            # Run ESLint
+bun run lint:fix        # Auto-fix linting issues
 ```
 
 ### Quality Assurance
 ```bash
-npm run qa              # Full QA suite (tests + lint)
+bun run qa              # Full QA suite (tests + lint)
 ```
 
 ### Local Development
 ```bash
-npm start               # Start server locally (via scripts/start.sh)
-npm stop                # Stop server (via scripts/stop.sh)
+bun run start            # Start server locally (via scripts/start.sh)
+bun run stop             # Stop server (via scripts/stop.sh)
 ```
 
 ## Architecture
@@ -64,7 +64,7 @@ Uses **Makefile-based builds** with the Catalyst framework:
 The project uses **yalc** for local development of `@liquid-labs/plugable-express`:
 - Local copy in `.yalc/@liquid-labs/plugable-express/`
 - Allows parallel development of core-server and plugable-express
-- Run `npm install` to ensure transitive dependencies are installed
+- Under Bun, a bare `bun install` does not re-resolve a linked package's own dependency list once `bun.lock` holds a resolved `file:` entry — it re-copies the linked package's content but silently skips re-resolving new transitive dependencies. After any `yalc push`, run `rm -f bun.lock && bun install` (or `./scripts/provision-local-deps.sh --refresh-lock`) instead of a bare `bun install`
 
 ### Configuration Pattern
 Configuration via `@liquid-labs/comply-defaults`:
@@ -73,6 +73,7 @@ Configuration via `@liquid-labs/comply-defaults`:
 - `COMPLY_API_SPEC_PATH()` - API spec output location
 - `COMPLY_SERVER_PLUGIN_DIR()` - Plugin directory path
 - `COMPLY_HOME()` - Server home directory
+- `COMPLY_SERVER_CONFIG_ROOT()` - Server configuration root: `${XDG_DATA_HOME:-$HOME/.local/share}/sdlcforge-core` (packaged `server-settings.yaml` defaults seeded here on first run)
 
 ## Testing Infrastructure
 
@@ -86,7 +87,7 @@ Configuration via `@liquid-labs/comply-defaults`:
 2. **Local Integration Tests** (`test/test-server.js`)
    - Quick validation on current Node version
    - Tests 7 endpoints: /heartbeat, /server/version, /server/api, /server/plugins/list, etc.
-   - Run with `npm run test:local`
+   - Run with `bun run test:local`
 
 3. **Docker Multi-Version Tests** (`test/run-integration-tests.sh`)
    - **Primary Purpose**: Verify that explicitPlugins are automatically loaded on first server startup
@@ -110,17 +111,17 @@ Configuration via `@liquid-labs/comply-defaults`:
 ## Important Development Notes
 
 ### Integration Test Issues
-If integration tests hang during "Loading explicit plugins", the server is likely stuck fetching package metadata from GitHub or running npm install. Common causes:
+If integration tests hang during "Loading explicit plugins", the server is likely stuck fetching package metadata from GitHub or running `bun install`. Common causes:
 - Network issues in Docker container
-- Missing transitive dependencies (run `npm install` on host)
+- Missing transitive dependencies (run `bun install` on host; use `rm -f bun.lock && bun install` if a `file:.yalc/…` dependency's own dependencies changed since the lockfile was last regenerated)
 - Explicit plugins being loaded in test environment (consider skipping for tests)
 
 ### Dependency Updates
 When updating `@liquid-labs/plugable-express`:
 1. Update in local yalc repo
 2. Run `yalc push` from plugable-express
-3. Run `npm install` in core-server to update transitive deps
-4. Rebuild: `npm run build`
+3. Run `rm -f bun.lock && bun install` in core-server to update transitive deps (a bare `bun install` will not pick up a new transitive dependency once `bun.lock` holds a resolved `file:` entry)
+4. Rebuild: `bun run build`
 
 ### Build Artifacts
 Two distribution files generated:
