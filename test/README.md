@@ -6,7 +6,7 @@ This directory contains integration tests for the comply-server package. The tes
 
 The integration test suite:
 1. Builds the comply-server package locally
-2. Creates a Docker container with Alpine Linux and nvm
+2. Creates a Docker container with Ubuntu and nvm (a glibc-based image, since Node requires glibc)
 3. Dynamically determines which Node.js versions to test based on the minimum version in package.json
 4. For each Node version:
    - Installs the package
@@ -33,7 +33,7 @@ Other key files include:
 ### Prerequisites
 
 - Docker and Docker Compose installed (auto-starts on macOS if not running)
-- Node.js installed on the host (for building the package)
+- Node.js and Bun installed on the host (for building the package — `run-integration-tests.sh` runs `bun run build` before starting the containers)
 - `jq` command-line tool (optional, for pretty output)
 
 ### Running Tests
@@ -133,7 +133,7 @@ Test results are saved to `test-staging/integration-results/` directory as JSON 
 If the Docker build fails, ensure:
 - Docker daemon is running
 - You have sufficient disk space
-- Network connectivity for downloading Alpine packages
+- Network connectivity for downloading Ubuntu packages and installing nvm/Node versions
 
 ### Tests Fail to Start
 
