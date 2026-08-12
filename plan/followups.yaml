@@ -140,13 +140,3 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Pre-existing bootstrap gap unrelated to this task: a genuinely fresh developer machine (or fresh $HOME) hitting bun run start for the first time crashes with ENOENT writing api.json via COMPLY_HOME()/COMPLY_API_SPEC_PATH() in @liquid-labs/comply-defaults, because the parent directory isn''t created first. Needs a fix in comply-defaults, out of this task''s scope.'
-    - title: architecture.md wrongly says Alpine container
-      id: vBRp
-      date: "2026-08-12"
-      tags:
-        - type:documentation
-        - plan/phase:bun-runtime-and-integration
-        - plan/slug:bun-conversion
-        - priority:unspecified
-        - effort:unspecified
-      text: 'Phase 3 architecture review (phase-review, bun-conversion), suggestion: docs/architecture.md''s Test infrastructure section describes the Docker integration container as "Alpine + nvm", but task 002''s own confirmed findings (and test/README.md) establish it''s actually Ubuntu-based. Pre-existing staleness, not introduced by phase 3''s diff. Worth folding into phase 4''s doc pass alongside the XDG serverConfigRoot update, since both land in the same Test infrastructure section.'
