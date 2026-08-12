@@ -129,7 +129,7 @@ phases:
             branch: plan/bun-conversion-04-001
             commit:
                 - e53e939
-            merge: null
+            merge: 9333496f49c96db7e165a3212f05987712e2e891
         - number: 2
           slug: update-contributor-and-consumer-docs
           title: Update Contributor And Consumer Docs
