@@ -87,7 +87,7 @@ Configuration is resolved through `@liquid-labs/comply-defaults`:
 1. Update the package in the local yalc repo.
 2. Run `yalc push` from `plugable-express`.
 3. Run `rm -f bun.lock && bun install` in `core-server` (or `./scripts/provision-local-deps.sh --refresh-lock`) to pick up the pushed changes and update transitive deps. A bare `bun install` is **not** sufficient here: under Bun, once `bun.lock` holds a resolved entry for the `file:` spec, a bare `bun install` re-copies the linked package's content but does not re-resolve its own dependency list — `--force`, `--no-cache`, and a version bump are all equally ineffective, and a newly-added transitive dependency simply never materializes while `bun install` reports success.
-4. Rebuild: `npm run build`.
+4. Rebuild: `bun run build`.
 
 ## Troubleshooting
 
