@@ -110,7 +110,7 @@ phases:
             branch: plan/bun-conversion-03-002-2
             commit:
                 - 25364ef
-            merge: null
+            merge: f78660a6b5c6e08ce0e41cc0b951e7c30e9deb17
     - number: 4
       slug: doc-updates
       title: Documentation Updates
