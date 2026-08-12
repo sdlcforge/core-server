@@ -42,20 +42,21 @@ This document is the repository layout reference for `@sdlcforge/core-server`: w
 │   ├── 55-test.mk
 │   └── 95-final-targets.mk
 ├── scripts/                 # Operational scripts run outside the Make build
-│   ├── start.sh              #   `npm start`
-│   ├── stop.sh               #   `npm stop`
-│   ├── test.sh               #   `npm run test:local`
-│   └── test-for-platform-binaries.sh
+│   ├── start.sh              #   `bun run start`
+│   ├── stop.sh               #   `bun run stop`
+│   ├── test.sh               #   `bun run test:local`
+│   ├── test-for-platform-binaries.sh
+│   └── provision-local-deps.sh  # Copies .yalc/ from the main checkout (if needed) and runs `bun install`
 ├── docs/                    # Project documentation (this file, the spec, architecture)
 │   └── core-server-spec.md
 ├── .readme-assets/          # Static assets referenced from README.md
 │   └── coverage.svg
 ├── dist/                    # (generated, gitignored) build output — library + executable bundles
-├── qa/                      # (generated, gitignored) coverage output from `make test` / `npm run qa`
+├── qa/                      # (generated, gitignored) coverage output from `make test` / `bun run qa`
 ├── test-staging/            # (generated, gitignored) Docker integration test results and server logs
 ├── Makefile
 ├── package.json
-├── package-lock.json
+├── bun.lock
 ├── server-settings.yaml
 ├── .catalyst-data.yaml
 ├── .gitignore
@@ -63,7 +64,7 @@ This document is the repository layout reference for `@sdlcforge/core-server`: w
 └── README.md
 ```
 
-`node_modules/` and `.yalc/` (a local yalc-linked copy of `@liquid-labs/plugable-express`, used for parallel local development) are also generated and gitignored; both are omitted from the tree above as build/dependency noise.
+`node_modules/` and `.yalc/` (a local yalc-linked copy of `@liquid-labs/plugable-express` and `@liquid-labs/liq-projects`, used for parallel local development) are also generated and gitignored; both are omitted from the tree above as build/dependency noise. Unlike `node_modules/`, `.yalc/` is **not** reproducible from a clean clone — a fresh checkout has no `.yalc/` at all, and `bun install` fails on its two `file:.yalc/…` dependencies until it is populated by copying it from a checkout that already has it (`scripts/provision-local-deps.sh` automates this).
 
 ## `src/`
 
@@ -79,7 +80,7 @@ Modular, priority-numbered Makefile includes generated and maintained by the Cat
 
 ## `scripts/`
 
-Small operational shell scripts invoked via `npm` scripts rather than through the Make build: `start.sh`/`stop.sh` run and stop the server locally, `test.sh` drives the quick local integration pass, and `test-for-platform-binaries.sh` supports platform-binary verification.
+Small operational shell scripts invoked via `bun run` scripts rather than through the Make build: `start.sh`/`stop.sh` run and stop the server locally, `test.sh` drives the quick local integration pass, `test-for-platform-binaries.sh` supports platform-binary verification, and `provision-local-deps.sh` copies `.yalc/` in from the main checkout (when the current directory doesn't already have it) and runs `bun install`, making a fresh clone or Flow task worktree installable.
 
 ## `docs/`
 
@@ -94,8 +95,8 @@ Static assets referenced from `README.md` — currently the coverage badge SVG s
 | File | Purpose |
 |------|---------|
 | `Makefile` | Entry point for the Catalyst-based build; includes every `make/*.mk` module in priority order. |
-| `package.json` | npm manifest — scripts (`build`, `test`, `lint`, `start`/`stop`, `qa`), the three-tier plugin dependency list, and `prepack`/`preversion` publish hooks. |
-| `package-lock.json` | Pinned dependency graph for reproducible installs. |
+| `package.json` | Package manifest — scripts (`build`, `test`, `lint`, `start`/`stop`, `qa`), the three-tier plugin dependency list, and `prepack`/`preversion` publish hooks. Installed with `bun install`; still published to and installable from the npm registry. |
+| `bun.lock` | Pinned dependency graph for reproducible installs. |
 | `.catalyst-data.yaml` | Catalyst framework configuration declaring the project's build workflow — which `make/*.mk` builders run, at what priority, and their purpose. |
 | `.gitignore` | Excludes generated and local-only directories (`dist`, `node_modules`, `qa`, `test-staging`, `.yalc`, etc.) from version control. |
 | `.dockerignore` | Controls what's copied into the integration-test Docker build context; deliberately *includes* `dist` and `node_modules` since the Docker tests need the exact built output and dependency set. |
