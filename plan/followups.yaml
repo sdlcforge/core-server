@@ -70,16 +70,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Phase 1 security review (phase-review, bun-conversion), low confidence/suggestion: scripts/provision-local-deps.sh''s `cp -R "$MAIN_CHECKOUT/.yalc" "$CURRENT_DIR/.yalc"` preserves symlinks rather than dereferencing. If the main checkout''s gitignored .yalc/ ever contained a symlink pointing outside the intended tree, this script propagates it into every new task worktree. Requires attacker to already have write access to the developer''s local .yalc/ — pre-existing local-compromise-level trust, not new remote attack surface. If hardening is desired: use `cp -RL` or add a post-copy symlink rejection check.'
-    - title: 'architecture.md: init desc + serverHome typo'
-      id: Ks4P
-      date: "2026-08-11"
-      tags:
-        - type:conflict
-        - plan/phase:bun-package-management
-        - plan/slug:bun-conversion
-        - priority:unspecified
-        - effort:unspecified
-      text: 'Phase 1 architecture review (phase-review, bun-conversion), minor: docs/architecture.md''s "Core initialization" component description doesn''t cover app-init.mjs''s new config-file-provisioning responsibility (seedServerSettings: existsSync check, recursive mkdir, copyFile, swallowed-error logging) added by task 004. Separately (pre-existing, not introduced by this diff, but touching the same block): the doc says appInit is passed "serverHome" — that key has never existed in app-init.mjs, in either the pre- or post-task-004 revision; the closest key both before and after is serverConfigRoot. Convenient to fix both while phase 4 task 001 is in docs/architecture.md for the XDG decision (see companion followup).'
     - title: Tech Stack section omits package manager
       id: zhgI
       date: "2026-08-11"
