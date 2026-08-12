@@ -160,3 +160,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Observed: launching bun run test:local twice back-to-back can race on port 32600 (EADDRINUSE) because the prior run''s server process isn''t always fully torn down. Unrelated to this task''s script changes; noting in case it surfaces in CI-style rapid-fire runs.'
+    - title: 'Pre-existing bootstrap gap unrelated to this '
+      id: KWnu
+      date: "2026-08-12"
+      tags:
+        - type:ambiguity
+        - plan/phase:bun-runtime-and-integration
+        - plan/slug:bun-conversion
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Pre-existing bootstrap gap unrelated to this task: a genuinely fresh developer machine (or fresh $HOME) hitting bun run start for the first time crashes with ENOENT writing api.json via COMPLY_HOME()/COMPLY_API_SPEC_PATH() in @liquid-labs/comply-defaults, because the parent directory isn''t created first. Needs a fix in comply-defaults, out of this task''s scope.'
