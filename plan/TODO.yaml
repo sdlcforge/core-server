@@ -96,7 +96,7 @@ phases:
           done: false
           tier: sonnet-med
           git:
-            branch: null
+            branch: plan/bun-conversion-03-001-2
             commit: []
             merge: null
         - number: 2
