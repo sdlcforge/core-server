@@ -107,7 +107,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/bun-conversion-03-002-2
-            commit: []
+            commit:
+                - 25364ef
             merge: null
     - number: 4
       slug: doc-updates
