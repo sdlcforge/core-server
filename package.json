@@ -1,6 +1,6 @@
 {
   "name": "@liquid-labs/liq-projects",
-  "version": "1.0.0-alpha.14",
+  "version": "1.0.0-alpha.15",
   "description": "Plugable-express plugin for core-server managing the liq project lifecycle: the NPM package, playground clone, and GitHub repository triad.",
   "main": "dist/liq-projects.js",
   "scripts": {
