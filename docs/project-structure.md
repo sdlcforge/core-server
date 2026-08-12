@@ -72,7 +72,7 @@ The server's own source, intentionally minimal since nearly all behavior is dele
 
 ## `test/`
 
-Integration test infrastructure, distinct from the unit tests colocated under `src/lib/test/`. Contains a quick local test path (`test-server.js`, invoked via `scripts/test.sh`) and the Docker-based multi-version suite (`run-integration-tests.sh`, `Dockerfile`, `docker-compose.yml`, `get-node-versions.js`) that verifies explicit-plugin loading across every supported Node.js version. `test/README.md` documents this directory's own files and usage in detail; `test-staging/` (generated, gitignored) is where the Docker suite writes its per-version JSON results and server logs.
+Integration test infrastructure, distinct from the unit tests colocated under `src/lib/test/`. Contains a quick local test path (`test-server.js`, invoked via `scripts/test.sh`) and the Docker-based multi-version suite (`run-integration-tests.sh`, `Dockerfile`, `docker-compose.yml`, `get-node-versions.js`) that verifies explicit-plugin loading across every supported Node.js version. [`test/README.md`](../test/README.md) documents this directory's own files and usage in detail; `test-staging/` (generated, gitignored) is where the Docker suite writes its per-version JSON results and server logs.
 
 ## `make/`
 
