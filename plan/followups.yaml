@@ -150,3 +150,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Stale global ~/.bun/bin/sdlcforge-server symlink (dated Aug 6, points at main checkout not any worktree) will shadow test/test-server.js's bare-name spawn() for future bun run test:local invocations that don't override PATH. Outside this worktree's scope; worth refreshing/removing the global link.
+    - title: 'Observed: launching bun run test:local twice '
+      id: uXoI
+      date: "2026-08-12"
+      tags:
+        - type:ambiguity
+        - plan/phase:bun-runtime-and-integration
+        - plan/slug:bun-conversion
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Observed: launching bun run test:local twice back-to-back can race on port 32600 (EADDRINUSE) because the prior run''s server process isn''t always fully torn down. Unrelated to this task''s script changes; noting in case it surfaces in CI-style rapid-fire runs.'
