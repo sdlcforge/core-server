@@ -100,7 +100,7 @@ phases:
             branch: plan/bun-conversion-03-001-2
             commit:
                 - 19893de
-            merge: null
+            merge: 0f4729658ea3da7b05cde1fd964ad6fce4c109c3
         - number: 2
           slug: convert-docker-integration-tier
           title: Convert Docker Integration Tier
