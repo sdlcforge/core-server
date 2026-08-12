@@ -124,6 +124,7 @@ phases:
           path: phase-04-doc-updates/001-update-architecture-docs.md
           done: false
           tier: sonnet-high
+          digest: 'Updated docs/architecture.md, docs/core-server-spec.md, and docs/architecture/plugin-loading-tiers.md to reflect the bun-conversion plan: Tech stack gained a Package management bullet; Configuration bullet names the new accessor; Core initialization rewritten for serverConfigRoot/XDG resolution and server-settings.yaml seeding; Build pipeline records makefiles were deliberately left untouched; Test/Test infrastructure corrected Alpine->Ubuntu; Key decisions'' yalc bullet gained the bun.lock non-refresh trap. core-server-spec.md''s build/test commands converted to Bun forms. plugin-loading-tiers.md''s stale code sample corrected. All three stale-doc followups (serverHome naming, Alpine description, Tech Stack gap) addressed.'
           git:
             branch: plan/bun-conversion-04-001
             commit:
