@@ -2,7 +2,7 @@ import { DependencyRunner } from '@liquid-labs/dependency-runner'
 
 import { Organization } from './resources/organization'
 
-const setup = ({ app, reporter }) => {
+const setup = ({ app, reporter, registerPathVar }) => {
   app.ext.setupMethods.push({
     name : 'prepare org dependencies',
     deps : ['!'],
@@ -18,7 +18,7 @@ const setup = ({ app, reporter }) => {
     func : processOrgSetup
   })
 
-  setupPathResolvers({ app })
+  setupPathResolvers({ app, registerPathVar })
 }
 
 const loadOrgs = async({ app, reporter }) => {
@@ -55,16 +55,16 @@ const processOrgSetup = async({ app, cache, reporter }) => {
 
 const orgNameREString = '(?:@|%40)[a-z][a-zA-Z0-9-]*'
 
-const setupPathResolvers = ({ app }) => {
-  app.ext.pathResolvers.newOrgKey = {
-    bitReString    : orgNameREString,
+const setupPathResolvers = ({ app, registerPathVar }) => {
+  registerPathVar('newOrgKey', {
+    validationRe   : orgNameREString,
     optionsFetcher : ({ currToken, newOrgKey }) => newOrgKey ? [newOrgKey] : []
-  }
+  })
 
-  app.ext.pathResolvers.orgKey = {
-    bitReString    : orgNameREString,
+  registerPathVar('orgKey', {
+    validationRe   : orgNameREString,
     optionsFetcher : ({ app }) => Object.keys(app.ext._liqOrgs.orgs)
-  }
+  })
 }
 
 export { setup }

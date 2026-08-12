@@ -6,15 +6,15 @@ const method = 'get'
 const path = ['orgs', ':orgKey', 'parameters', ':parameterKey', 'detail']
 const parameters = []
 
-const func = ({ app, model, reporter }) => {
-  app.ext.pathResolvers.parameterKey = {
+const func = ({ app, model, reporter, registerPathVar }) => {
+  registerPathVar('parameterKey', {
     optionsFetcher : ({ orgKey }) => {
       const org = model.orgs[orgKey]
       const parameters = listParameters(org)
       return parameters.map((p) => p.name)
     },
-    bitReString : '(?:[.][_a-zA-Z][_a-zA-Z0-9-]*)+'
-  }
+    validationRe : '(?:[.][_a-zA-Z][_a-zA-Z0-9-]*)+'
+  })
 
   return (req, res) => {
     const org = getOrgFromKey({ model, params : req.vars, res })
