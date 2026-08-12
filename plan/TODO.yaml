@@ -97,7 +97,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/bun-conversion-03-001-2
-            commit: []
+            commit:
+                - 19893de
             merge: null
         - number: 2
           slug: convert-docker-integration-tier
