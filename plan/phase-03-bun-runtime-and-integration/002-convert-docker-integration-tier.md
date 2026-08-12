@@ -66,3 +66,23 @@ architectural_impact: true
 - After `test/run-integration-tests.sh` is converted and the container-unchanged confirmations are recorded.
 - After `test/setup-local-deps.sh` is deleted and the grep sweep is clean.
 - After the integration run completes.
+
+## Status
+
+**Outcome:** succeeded (retry, 2026-08-11/12). The prior dispatch completed requirements 1-5 but failed requirement 6 because the real server crashed on explicit-plugin setup: `liq-credentials`, `liq-orgs`, `liq-integrations`, `liq-work`, and `liq-projects` all called the dead `app.ext.pathResolvers.<name> = {...}` API, which the yalc'd `plugable-express@1.0.0-alpha.57` had replaced with an injected `registerPathVar(name, {validationRe, optionsFetcher})` function. All five plugins were fixed and published (`liq-credentials@1.0.0-alpha.4`, `liq-orgs@1.0.0-alpha.7`, `liq-integrations@1.0.0-alpha.3`, `liq-work@1.0.0-alpha.10`, `liq-projects@1.0.0-alpha.15` via yalc push) before this retry.
+
+**Requirement 1 (host-side build conversion):** `test/run-integration-tests.sh`'s Step 1 `npm run build` → `bun run build`. Same-diff self-fix: a pre-existing typo (`--volumes2>/dev/null`, missing a space) in the cleanup step's `docker compose down` invocation, which silently no-opped behind `|| true`, corrected to `--volumes 2>/dev/null`.
+
+**Requirement 2 (container-unchanged confirmations):** Confirmed via `git diff --stat` against the phase-3 base — zero changes to `test/Dockerfile`, `test/docker-compose.yml`, `test/run-tests.sh`, `test/get-node-versions.js`, `test/test-ci.sh`, or `.dockerignore`.
+
+**Requirement 3 (Node matrix intact):** Unchanged; not touched.
+
+**Requirement 4 (dead code deletion):** `test/setup-local-deps.sh` deleted. Repo-wide grep sweep (`--exclude-dir={node_modules,.yalc,worktrees,.git,plan}`) for `setup-local-deps` returns zero hits outside `plan/`'s own description of this deletion.
+
+**Requirement 5 (test-ci.sh left on npm):** Unchanged, as required.
+
+**Requirement 6 (full Docker tier run):** `bun run test:integration` ran the **full nine-version matrix** (Node 18.20.8, 19.9.0, 20.20.2, 21.7.3, 22.23.2, 23.11.1, 24.19.0, 25.9.0, 26.7.0 — the current `engines.node >=18.0.0`-derived set) — not just the single-version minimum. Every version reports `"failed": 0"` across all 7 endpoint checks (heartbeat, version, API docs, plugin list, next-commands, 404 handling, JSON acceptance) in `test-staging/integration-results/test-results-node-*.json`. Explicit-plugin loading is confirmed exercised (not skipped) — the crash this tier exists to catch would have reproduced here had the pathResolvers fix not landed.
+
+**`make test`:** still passes, golden snapshots unchanged (re-confirmed as part of this retry's clean state).
+
+**bun.lock:** refreshed via `scripts/provision-local-deps.sh --refresh-lock` to pick up the five plugin fixes; committed alongside the source changes.

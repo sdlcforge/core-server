@@ -63,7 +63,7 @@ echo -e "${YELLOW}Step 1: Ensuring project is built...${NC}"
 cd "$PROJECT_ROOT"
 
 # Build the project (this creates dist/ directory used by tests)
-if npm run build; then
+if bun run build; then
     echo -e "${GREEN}✓ Project built successfully${NC}"
 else
     echo -e "${RED}✗ Failed to build project${NC}"
@@ -160,7 +160,7 @@ fi
 if [ -z "$NO_CLEANUP" ]; then
     echo ""
     echo -e "${YELLOW}Step 6: Cleaning up...${NC}"
-    docker compose -f test/docker-compose.yml down --remove-orphans --volumes2>/dev/null || true
+    docker compose -f test/docker-compose.yml down --remove-orphans --volumes 2>/dev/null || true
     echo -e "${GREEN}✓ Cleanup complete${NC}"
 else
     echo ""
