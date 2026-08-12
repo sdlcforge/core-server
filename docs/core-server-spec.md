@@ -48,14 +48,14 @@ It covers the server's use cases, cross-cutting behavioral requirements, and ext
 
 ### Build and publish the package
 
-- **Actor:** a maintainer, via `npm run build` / `make` (and `prepack`/`preversion` hooks on publish).
+- **Actor:** a maintainer, via `bun run build` / `make` (and `prepack`/`preversion` hooks on publish).
 - **Action:** runs the Makefile-driven build.
 - **Outcome:** the build transpiles the ES6+ source to CommonJS via Babel and bundles two Rollup artifacts — an importable library (`dist/sdlcforge-server.js`) and a standalone executable (`dist/sdlcforge-server-exec.js`) — each with a source map, ready for npm publication.
 
 ### Verify server correctness across supported Node.js versions
 
 - **Actor:** a developer or CI system.
-- **Action:** runs the project's test suites (`npm test` for unit tests; `npm run test:local` for a quick local integration pass; `npm run test:integration` for the full Docker-based multi-version pass).
+- **Action:** runs the project's test suites (`bun run test` for unit tests; `bun run test:local` for a quick local integration pass; `bun run test:integration` for the full Docker-based multi-version pass).
 - **Outcome:** unit tests validate app initialization and library exports; local integration tests validate the running server's endpoints on the current Node version; Docker multi-version tests validate — primarily — that explicit plugins load correctly on first server startup across every supported Node version (18 through 24).
 
 ## General features
@@ -63,7 +63,7 @@ It covers the server's use cases, cross-cutting behavioral requirements, and ext
 - **All capability is plugin-delivered.** The core codebase is intentionally minimal and delegates initialization and request handling to `@liquid-labs/plugable-express`; `core-server`'s own responsibility is to assemble configuration and the explicit-plugin list and hand off to that library.
 - **Three-tier plugin loading, in a fixed order.** Core plugins (built into `@liquid-labs/plugable-express`) load first, explicit npm-dependency plugins declared by `core-server` load second, and user-supplied plugins from `${COMPLY_HOME}/plugins/server/` load third. A plugin in a later tier can extend or override capability without requiring a change to an earlier tier.
 - **The server is self-describing.** `/server/version`, `/server/api`, `/server/plugins/list`, and `/server/next-commands` let a client (principally the companion CLI) discover the server's version, its full registered API surface (including plugin-contributed routes), which plugins are loaded, and what commands are currently available — without the client hardcoding server internals.
-- **Configuration is centralized.** Server name, port, API spec output path, plugin directory, and home directory are all resolved through `@liquid-labs/comply-defaults` (`COMPLY_SERVER_CLI_NAME`, `COMPLY_PORT`, `COMPLY_API_SPEC_PATH`, `COMPLY_SERVER_PLUGIN_DIR`, `COMPLY_HOME`) rather than scattered across the codebase.
+- **Configuration is centralized.** Server name, port, API spec output path, plugin directory, server configuration root, and home directory are all resolved through `@liquid-labs/comply-defaults` (`COMPLY_SERVER_CLI_NAME`, `COMPLY_PORT`, `COMPLY_API_SPEC_PATH`, `COMPLY_SERVER_PLUGIN_DIR`, `COMPLY_SERVER_CONFIG_ROOT`, `COMPLY_HOME`) rather than scattered across the codebase. The server configuration root — where `server-settings.yaml` and other server-managed configuration state are kept — resolves to `${XDG_DATA_HOME}/sdlcforge-core/` (defaulting `XDG_DATA_HOME` to `${HOME}/.local/share`), a user-level data location rather than a path inside the installed package; the packaged `server-settings.yaml` defaults are seeded there on first run so they are not silently lost by that location choice.
 - **Every unregistered route returns 404.** Requests to paths not registered by any loaded plugin or the core server receive a 404 response rather than falling through silently.
 - **Dual build artifacts from one source tree.** The same source produces both a library export and a standalone executable, keeping ES6+ module authoring while shipping CommonJS-compatible artifacts for both consumption modes.
 
