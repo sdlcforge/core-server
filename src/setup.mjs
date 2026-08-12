@@ -5,10 +5,10 @@ import * as fsPath from 'node:path'
 import { PlaygroundMonitor } from '@liquid-labs/playground-monitor'
 import { setupCredentials } from '@liquid-labs/credentials-db-plugin-github'
 
-const setup = async({ app, reporter }) => {
+const setup = async({ app, reporter, registerPathVar }) => {
   setupCredentials({ credentialsDB : app.ext.credentialsDB })
   await setupPlayground({ app })
-  setupPathResolvers({ app })
+  setupPathResolvers({ app, registerPathVar })
   // installProjectPlugins({ app, model, reporter })
 }
 
@@ -51,16 +51,16 @@ const installProjectPlugins = ({ app, model, reporter }) => {
 
 const projectNameReString = '(?:(?:@|%40)[a-zA-Z][a-zA-Z0-9-]*(?:[/]|%2F|%2f))?[a-zA-Z][a-zA-Z0-9-]*'
 
-const setupPathResolvers = ({ app }) => {
-  app.ext.pathResolvers.newProjectName = {
-    bitReString    : projectNameReString,
+const setupPathResolvers = ({ app, registerPathVar }) => {
+  registerPathVar('newProjectName', {
+    validationRe   : projectNameReString,
     optionsFetcher : () => []
-  }
+  })
 
-  app.ext.pathResolvers.projectName = {
-    bitReString    : projectNameReString,
+  registerPathVar('projectName', {
+    validationRe   : projectNameReString,
     optionsFetcher : ({ app }) => app.ext._liqProjects.playgroundMonitor.listProjects()
-  }
+  })
 }
 
 const setupPlayground = async({ app }) => {
