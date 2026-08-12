@@ -1,6 +1,6 @@
 {
   "name": "@liquid-labs/liq-work",
-  "version": "1.0.0-alpha.9",
+  "version": "1.0.0-alpha.10",
   "description": "Owns the \"unit of work\" concept: a cross-repo, git-branch-scoped bundle of effort tying together GitHub issues and projects/repos through a lifecycle from creation to submission/merge. Orchestrates issues (GitHub) and projects (liq-projects) rather than defining either itself.",
   "main": "dist/liq-work.js",
   "scripts": {
