@@ -136,6 +136,7 @@ phases:
           path: phase-04-doc-updates/002-update-contributor-and-consumer-docs.md
           done: false
           tier: sonnet-med
+          digest: Converted every build/test/lint/run command in AGENTS.md and CLAUDE.md to Bun form, added toolchain-prerequisite explanation and getting-started line, added COMPLY_SERVER_CONFIG_ROOT() to both docs, corrected Troubleshooting to rm -f bun.lock && bun install remedy. docs/project-structure.md shows bun.lock instead of package-lock.json, lists provision-local-deps.sh. test/README.md's stale Alpine description corrected to Ubuntu. AGENTS.md yalc section left byte-for-byte untouched.
           git:
             branch: plan/bun-conversion-04-002
             commit:
