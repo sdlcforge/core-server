@@ -126,7 +126,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/bun-conversion-04-001
-            commit: []
+            commit:
+                - e53e939
             merge: null
         - number: 2
           slug: update-contributor-and-consumer-docs
