@@ -150,3 +150,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: CLAUDE.md is not linked from README.md's Additional documentation list - pre-existing, predates this task. Uncertain whether this is a deliberate convention (CLAUDE.md as agent-tooling metadata, common to exclude from user-facing doc index) or a genuine link-chain gap - needs a judgment call, not a mechanical fix.
+    - title: plugin-loading-tiers.md sample shape stale
+      id: w67o
+      date: "2026-08-12"
+      tags:
+        - type:documentation
+        - plan/phase:doc-updates
+        - plan/slug:bun-conversion
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Phase 4 correctness review (phase-review, bun-conversion), informational/pre-existing: docs/architecture/plugin-loading-tiers.md''s Configuration surface code sample still shows appInit as a single-expression arrow function, while the actual src/lib/app-init.mjs has had a block body wrapping a conditional seedServerSettings() call since before this plan''s diff_base. This task correctly renamed serverHome->serverConfigRoot in the sample and added prose pointing to the accurate description elsewhere, but didn''t update the sample''s function-shape. Pre-existing drift, not introduced or worsened by this plan; low-priority doc-maintenance item.'
