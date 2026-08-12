@@ -103,7 +103,7 @@ phases:
           slug: convert-docker-integration-tier
           title: Convert Docker Integration Tier
           path: phase-03-bun-runtime-and-integration/002-convert-docker-integration-tier.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: Converted test/run-integration-tests.sh's host-side build to bun run build; deleted dead test/setup-local-deps.sh; confirmed container needs no changes. bun run test:integration ran the full nine-version Node matrix, every version reporting failed:0 across all 7 endpoint checks, confirming the pathResolvers fix resolved the crash that blocked this task's prior attempt. bun.lock refreshed. make test still passes.
           git:
