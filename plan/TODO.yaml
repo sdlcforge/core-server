@@ -95,6 +95,7 @@ phases:
           path: phase-03-bun-runtime-and-integration/001-convert-local-integration-tier.md
           done: false
           tier: sonnet-med
+          digest: 'Converted scripts/test.sh (npm run build/stop -> bun run build/stop) and scripts/start.sh''s stop-instruction text; confirmed scripts/stop.sh needs no change; reconfirmed the runtime-target no-change decision. Verified the real server starts and writes server-settings.yaml with the packaged registries: entry under both scratch XDG_DATA_HOME and unset-XDG_DATA_HOME/scratch-HOME fallback, stops cleanly in both - first time a running server exercises phase 1 task 004''s XDG config-root change. bun run test:local passed 7/7. make test still passes.'
           git:
             branch: plan/bun-conversion-03-001-2
             commit:
