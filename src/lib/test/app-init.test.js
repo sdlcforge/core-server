@@ -13,9 +13,11 @@ import { appInit } from '../app-init'
 
 describe('GET:/server/version', () => {
   let app, cache, CURR_VER, serverHome
+  let origComplyHome
 
   beforeAll(async() => {
     serverHome = fsPath.join(os.tmpdir(), 'comply-server-' + Math.round(Math.random() * 10000000000000000))
+    origComplyHome = process.env.COMPLY_HOME
     process.env.COMPLY_HOME = serverHome;
 
     ({ app, cache } = await appInit({
@@ -32,6 +34,12 @@ describe('GET:/server/version', () => {
   afterAll(async() => {
     cache?.release()
     await fs.rm(serverHome, { recursive : true })
+    if (origComplyHome === undefined) {
+      delete process.env.COMPLY_HOME
+    }
+    else {
+      process.env.COMPLY_HOME = origComplyHome
+    }
   })
 
   test('creates api.json', () => expect(existsSync(COMPLY_API_SPEC_PATH())).toBe(true))
