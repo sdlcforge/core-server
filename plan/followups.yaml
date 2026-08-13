@@ -20,16 +20,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'dist/sdlcforge-server-exec.js keeps a plain `node` shebang for this plan (per user decision during bun-conversion planning: no consumer-facing runtime requirement change). Follow-up: introduce a launcher script that detects and prefers `bun` at runtime when available, falling back to `node` otherwise. Deferred out of the bun-conversion plan''s scope.'
-    - title: Test env-var isolation fragility
-      id: zNBA
-      date: "2026-08-10"
-      tags:
-        - type:bug
-        - plan/phase:bun-build-and-test-toolchain
-        - plan/slug:bun-conversion
-        - priority:unspecified
-        - effort:unspecified
-      text: src/lib/test/app-init.test.js mutates process.env.COMPLY_HOME process-wide in beforeAll. Currently masked by Jest's per-file worker isolation; surfaced during bun-conversion research when two copies of the test tree were discovered together and raced on the shared env var. Pre-existing, unrelated to Bun — worth hardening test isolation regardless of runtime.
     - title: 'make lint-fix surfaces 231 pre-existing lint '
       id: b3hk
       date: "2026-08-11"
