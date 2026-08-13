@@ -95,17 +95,23 @@ This is the mechanism behind the `${COMPLY_HOME}/plugins/server/` path named thr
 Everything `core-server` itself controls about plugin loading is expressed as one call in `src/lib/app-init.mjs` — preceded by a first-run step that seeds the packaged `server-settings.yaml` defaults into the resolved configuration root, detailed in [`docs/architecture.md`](../architecture.md#core-initialization):
 
 ```js
-const appInit = async(options) => await superInit({
-  name                    : COMPLY_SERVER_CLI_NAME(),
-  version                 : pkgVersion,
-  apiSpecPath             : COMPLY_API_SPEC_PATH(),
-  pluginsPath,
-  explicitPlugins,
-  serverConfigRoot        : COMPLY_SERVER_CONFIG_ROOT(),
-  dynamicPluginInstallDir : COMPLY_HOME(),
-  noAPIUpdate             : checkSdlcEnv('NO_API_UPDATE', (v) => v === 'true' || v === '1'),
-  ...options
-})
+const appInit = async(options) => {
+  if (options?.serverConfigRoot === undefined) {
+    await seedServerSettings(COMPLY_SERVER_CONFIG_ROOT())
+  }
+
+  return await superInit({
+    name                    : COMPLY_SERVER_CLI_NAME(),
+    version                 : pkgVersion,
+    apiSpecPath             : COMPLY_API_SPEC_PATH(),
+    pluginsPath,
+    explicitPlugins,
+    serverConfigRoot        : COMPLY_SERVER_CONFIG_ROOT(),
+    dynamicPluginInstallDir : COMPLY_HOME(),
+    noAPIUpdate             : checkSdlcEnv('NO_API_UPDATE', (v) => v === 'true' || v === '1'),
+    ...options
+  })
+}
 ```
 
 `explicitPlugins` and `pluginsPath` are, respectively, the tier-2 list and the tier-3 discovery directory documented above. `serverConfigRoot` resolves through `@liquid-labs/comply-defaults`'s `COMPLY_SERVER_CONFIG_ROOT()` accessor to `${XDG_DATA_HOME}/sdlcforge-core/` — a user-level data location, distinct from `core-server`'s own installed-package directory that this value pointed at before the configuration-root relocation — and is where `@liquid-labs/plugable-express` now finds and writes server configuration state. `...options` lets a caller of `appInit` override any of the above — `src/cli/index.js` does not currently exercise this, but a consumer embedding `core-server` as a library (via `src/lib/index.js`) can.
