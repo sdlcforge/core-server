@@ -1,15 +1,5 @@
 version: 2
 items:
-    - title: 'GET /server/plugins/list currently snapshots '
-      id: mT02
-      date: "2026-08-08"
-      tags:
-        - type:ambiguity
-        - plan/phase:core-server-foundation
-        - plan/slug:modernization-foundation
-        - priority:unspecified
-        - effort:unspecified
-      text: 'GET /server/plugins/list currently snapshots to [] under the skipCorePlugins: true scoping (no plugins loaded) - valid but low-signal until the plugin-loading bug above is fixed.'
     - title: bun-if-available launcher
       id: AFcz
       date: "2026-08-10"
