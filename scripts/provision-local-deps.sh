@@ -3,10 +3,12 @@
 # Make the current checkout installable under Bun.
 #
 # .yalc/ and yalc.lock are gitignored, so a freshly created checkout or git worktree has
-# neither, and `bun install` fails hard on the two file:.yalc/... dependencies
-# (@liquid-labs/plugable-express, @liquid-labs/liq-projects). This script copies .yalc/ in
-# from the main checkout when the current directory doesn't already have it, then runs
-# `bun install`.
+# neither, and `bun install` fails hard on the file:.yalc/... dependencies bun.lock resolves
+# (two direct: @liquid-labs/plugable-express, @liquid-labs/liq-projects; plus one transitive:
+# @liquid-labs/http-smart-response, pulled in via @liquid-labs/plugable-projects-audit's own
+# dependency on it). This script copies .yalc/ in from the main checkout when the current
+# directory doesn't already have it, verifies every required package is actually present
+# under .yalc/, then runs `bun install`.
 #
 # Usage:
 #   scripts/provision-local-deps.sh [--refresh-lock]
@@ -18,9 +20,19 @@
 #                     section for the full explanation).
 #
 # Safe to re-run: if .yalc/ is already present in the current directory, it is left as-is
-# and only `bun install` runs.
+# and only the presence check and `bun install` run.
 
 set -e
+
+# Packages bun.lock currently resolves via file:.yalc/... — kept in sync with bun.lock by
+# hand; re-check with `grep -n 'file:\.yalc' bun.lock` whenever a dependency changes, since
+# the set can shift as pinned versions move (a package may start or stop needing a local
+# link).
+REQUIRED_YALC_PACKAGES=(
+    "@liquid-labs/plugable-express"
+    "@liquid-labs/liq-projects"
+    "@liquid-labs/http-smart-response"
+)
 
 REFRESH_LOCK=0
 for arg in "$@"; do
@@ -63,15 +75,43 @@ else
     cat >&2 <<EOF
 provision-local-deps.sh: no .yalc/ directory found here or in the main checkout ($MAIN_CHECKOUT).
 
-This project depends on two locally-linked packages via yalc:
+This project depends on the following packages via yalc (two direct, one transitive via
+@liquid-labs/plugable-projects-audit):
   - @liquid-labs/plugable-express
   - @liquid-labs/liq-projects
+  - @liquid-labs/http-smart-response
 
 To populate .yalc/, run \`yalc push\` from each of those packages' own checkouts (yalc is a
 globally-installed developer tool, not a project dependency of this repo, so it is not
 installed automatically and this script will not attempt to run it). Once .yalc/ exists in
 the main checkout, re-run this script.
 EOF
+    exit 1
+fi
+
+# .yalc/ existing (either already present or just copied) doesn't guarantee every package
+# bun.lock needs is actually in it — a stale or partially-populated .yalc/ would otherwise
+# only surface as an opaque failure deep inside `bun install`'s resolution. Check each
+# required package explicitly and fail fast with an actionable message.
+MISSING_PACKAGES=()
+for pkg in "${REQUIRED_YALC_PACKAGES[@]}"; do
+    if [ ! -d "$CURRENT_DIR/.yalc/$pkg" ]; then
+        MISSING_PACKAGES+=("$pkg")
+    fi
+done
+
+if [ "${#MISSING_PACKAGES[@]}" -gt 0 ]; then
+    {
+        echo "provision-local-deps.sh: .yalc/ in $CURRENT_DIR is missing the following package(s) that bun.lock resolves via file:.yalc/...:"
+        for pkg in "${MISSING_PACKAGES[@]}"; do
+            echo "  - $pkg"
+        done
+        echo
+        echo "To populate them, run \`yalc push\` from each missing package's own checkout (yalc is a"
+        echo "globally-installed developer tool, not a project dependency of this repo, so it is not"
+        echo "installed automatically and this script will not attempt to run it). Once .yalc/ in the"
+        echo "main checkout ($MAIN_CHECKOUT) has every required package, re-run this script."
+    } >&2
     exit 1
 fi
 
