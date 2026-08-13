@@ -20,16 +20,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: make lint-fix surfaces 231 pre-existing lint violations confined to test/*.js (unrelated to this task, matching the plan's own WIP-branch-triage finding that they're stale/regenerable). Not touched here since test/ is out of this task's scope; noted in case a future phase wants to clean them up deliberately.
-    - title: 'Observed: launching bun run test:local twice '
-      id: uXoI
-      date: "2026-08-12"
-      tags:
-        - type:ambiguity
-        - plan/phase:bun-runtime-and-integration
-        - plan/slug:bun-conversion
-        - priority:unspecified
-        - effort:unspecified
-      text: 'Observed: launching bun run test:local twice back-to-back can race on port 32600 (EADDRINUSE) because the prior run''s server process isn''t always fully torn down. Unrelated to this task''s script changes; noting in case it surfaces in CI-style rapid-fire runs.'
     - title: Task dispatch env cwd mismatch observed
       id: WvMQ
       date: "2026-08-13"
