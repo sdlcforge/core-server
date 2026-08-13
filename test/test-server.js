@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const http = require('http')
+const net = require('net')
 const { spawn } = require('child_process')
 const fs = require('fs')
 const path = require('path')
@@ -396,6 +397,85 @@ async function runTests() {
   return testResults
 }
 
+// Terminate the server process and wait for it to actually exit (escalating to
+// SIGKILL if it doesn't exit within a grace period) rather than firing-and-forgetting
+// a SIGTERM. Without this wait, this script's process can exit while the server is
+// still shutting down, so a back-to-back 'test:local' invocation can race on the OS
+// not yet having released the listening port (EADDRINUSE).
+function stopServerAndWait(serverProcess, { graceMs = 10000 } = {}) {
+  return new Promise((resolve) => {
+    if (serverProcess.exitCode !== null || serverProcess.signalCode !== null) {
+      // Already exited
+      resolve()
+      return
+    }
+
+    let settled = false
+    const finish = () => {
+      if (settled) return
+      settled = true
+      clearTimeout(killTimer)
+      clearTimeout(giveUpTimer)
+      resolve()
+    }
+
+    serverProcess.once('exit', finish)
+
+    console.log(`Stopping server (PID: ${serverProcess.pid})...`)
+    serverProcess.kill('SIGTERM')
+
+    // Escalate to SIGKILL if the process hasn't exited within the grace period
+    const killTimer = setTimeout(() => {
+      if (settled) return
+      console.log('Server did not exit within grace period; sending SIGKILL')
+      try {
+        serverProcess.kill('SIGKILL')
+      } catch (error) {
+        // Process may have exited between the check above and this call
+      }
+    }, graceMs)
+
+    // Absolute upper bound so cleanup can never hang indefinitely
+    const giveUpTimer = setTimeout(() => {
+      console.log('Warning: server process did not report exit after SIGKILL; proceeding anyway')
+      finish()
+    }, graceMs + 5000)
+  })
+}
+
+// Poll until the given port can be bound (i.e. is actually free), or until the
+// timeout elapses. This is a belt-and-suspenders check on top of waiting for the
+// server process to exit, since it directly verifies the condition that causes the
+// race (EADDRINUSE) rather than only inferring it from process lifecycle.
+function waitForPortFree(port, host, { timeoutMs = 5000, intervalMs = 200 } = {}) {
+  const deadline = Date.now() + timeoutMs
+
+  return new Promise((resolve) => {
+    const attempt = () => {
+      const tester = net.createServer()
+      tester.once('error', (error) => {
+        if (error.code === 'EADDRINUSE') {
+          if (Date.now() >= deadline) {
+            console.log(`Warning: port ${port} still in use after waiting ${timeoutMs}ms`)
+            resolve(false)
+            return
+          }
+          setTimeout(attempt, intervalMs)
+        } else {
+          // Unexpected error probing the port; don't block cleanup on it
+          resolve(true)
+        }
+      })
+      tester.once('listening', () => {
+        tester.close(() => resolve(true))
+      })
+      tester.listen(port, host)
+    }
+
+    attempt()
+  })
+}
+
 // Start the server
 async function startServer() {
   return new Promise((resolve, reject) => {
@@ -475,7 +555,13 @@ async function startServer() {
 // Main test runner
 async function main() {
   let serverProcess = null
-  
+  // Exit code is captured here rather than exited immediately from inside the try/catch
+  // below, so that the 'finally' block's server teardown always runs first — calling
+  // 'process.exit()' from inside a try block skips pending 'finally' handlers, which was
+  // silently orphaning the running server process on every successful run and causing a
+  // back-to-back 'test:local' invocation to race on the port (EADDRINUSE).
+  let exitCode = 0
+
   try {
     console.log(`Starting tests with Node ${process.version}`)
     
@@ -537,17 +623,21 @@ async function main() {
     }
     fs.writeFileSync(resultsFile, JSON.stringify(results, null, 2))
     console.log(`Results written to ${resultsFile}`)
-    
-    // Exit with appropriate code
-    process.exit(results.failed > 0 ? 1 : 0)
-    
+
+    // Record the exit code; actually exiting happens after 'finally' below runs.
+    exitCode = results.failed > 0 ? 1 : 0
+
   } catch (error) {
     console.error('Test suite failed:', error)
-    process.exit(1)
+    exitCode = 1
   } finally {
-    // Clean up server process
+    // Clean up server process, waiting for it to fully exit (and for the port to be
+    // released) before this script returns, so a back-to-back 'test:local' invocation
+    // doesn't race on the OS not yet having freed the port (EADDRINUSE).
     if (serverProcess) {
-      serverProcess.kill('SIGTERM')
+      await stopServerAndWait(serverProcess)
+      console.log('Server stopped')
+      await waitForPortFree(SERVER_PORT, SERVER_HOST)
     }
 
     // Clean up server configuration directory to ensure clean state for next test
@@ -561,6 +651,9 @@ async function main() {
       console.log(`Warning: Could not clean up config directory: ${cleanupError.message}`)
     }
   }
+
+  // Exit only after server teardown (in 'finally' above) has completed.
+  process.exit(exitCode)
 }
 
 // Run if executed directly
