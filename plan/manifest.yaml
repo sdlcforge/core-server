@@ -7,3 +7,6 @@ plans:
             phase: TBD
             task: TBD
             note: Depends on pluggable-express's own rename landing before core-server's .yalc local link can be refreshed and its dependency spec/refs repointed.
+      wave:
+        slug: sdlcforge-modernization
+        leadProject: core-server
