@@ -5,4 +5,14 @@ phases:
     - number: 2
       slug: verification-sweep
       title: Verification Sweep
-      tasks: []
+      tasks:
+        - number: 1
+          slug: verify-no-double-g-references
+          title: Verify No Double-G References Remain
+          path: phase-02-verification-sweep/001-verify-no-double-g-references.md
+          done: false
+          tier: sonnet-low
+          git:
+            branch: null
+            commit: []
+            merge: null
