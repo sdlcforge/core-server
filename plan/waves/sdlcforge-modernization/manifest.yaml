@@ -1,0 +1,4 @@
+version: 1
+name: SDLCForge Platform Modernization
+leadProject: core-server
+waves: []
