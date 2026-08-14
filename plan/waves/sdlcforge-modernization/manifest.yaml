@@ -11,5 +11,12 @@ waves:
             core-server: PLACEHOLDER
             plugable-express-cli: PLACEHOLDER
             pluggable-express: PLACEHOLDER
+        - name: Rename pluggable-defaults to plugable-defaults
+          slug: pluggable-defaults-rename
+          description: 'Newly discovered second double-g-misspelled repo (not part of the original request, found during investigation). Directory, package.json name/main/repository/bugs/homepage, and the GitHub repo itself (liquid-labs/pluggable-defaults) are all still double-g - has not had even the npm-name-level fix pluggable-express already got. Carries a live latent bug: liq-work and sdlcpilot-cli already depend on the single-g spec @liquid-labs/plugable-defaults, which does not exist in the registry yet. Independent of the pluggable-express rename; can run in parallel.'
+          plans:
+            liq-work: PLACEHOLDER
+            pluggable-defaults: PLACEHOLDER
+            sdlcpilot-cli: PLACEHOLDER
     - name: Plugin Consolidation — Framework and Dev-Core
       planGroups: []
