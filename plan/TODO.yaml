@@ -5,6 +5,7 @@ phases:
     - number: 2
       slug: verification-sweep
       title: Verification Sweep
+      diff_base: c3410dfc0e170f4e5e419d75bfea5eec4f3d2c88
       tasks:
         - number: 1
           slug: verify-no-double-g-references
