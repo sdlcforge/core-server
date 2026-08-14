@@ -46,3 +46,8 @@ waves:
             liq-projects-lib: PLACEHOLDER
             liq-work: PLACEHOLDER
             plugable-projects-audit: PLACEHOLDER
+        - name: Rename sdlcpilot-cli to sdlcforge/sdlc-cli
+          slug: sdlcpilot-cli-rename
+          description: Rename @liquid-labs/sdlcpilot-cli to @sdlcforge/sdlc-cli, matching the sdlcforge product-naming convention core-server already uses (core-server's own README already refers to this target name). Separate from the CLI/server binary-unification question raised for a later wave - this is just the rename/relocation.
+          plans:
+            sdlcpilot-cli: PLACEHOLDER
