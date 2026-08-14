@@ -66,4 +66,9 @@ waves:
           plans:
             core-server: PLACEHOLDER
     - name: Unified CLI and MCP Binaries
-      planGroups: []
+      planGroups:
+        - name: Merge core-server and dev-core into sdlc-core
+          slug: sdlc-core-unification
+          description: 'Tentative (user''s own framing: "probably"/"I think"). Fold core-server (by now absorbing liq-controls/liq-credentials, and consuming the compile-time manifest framework) and dev-core (liq-projects+liq-work+liq-orgs+plugable-projects-audit, created in Wave 2) together into a single sdlcforge/sdlc-core package - the shared logic basis everything else generates from. Architecture must allow for a future localhost/browser-based GUI product in addition to CLI/MCP, though the GUI itself is out of scope for this wave. Participant list only carries core-server for now since dev-core does not exist as an indexed project yet at wave-authoring time (created by Wave 2''s dev-core-consolidation) - add it as a real participant once it exists, consistent with how Wave 2''s own dev-core-consolidation plan-group was authored against dev-core''s source repos rather than an unresolvable slug.'
+          plans:
+            core-server: PLACEHOLDER
