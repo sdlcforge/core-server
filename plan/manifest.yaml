@@ -4,9 +4,9 @@ plans:
       status: working
       dependencies:
         /Users/zane/playground/liquid-labs/pluggable-defaults:
-            phase: TBD
-            task: TBD
-            note: liq-work depends on @liquid-labs/plugable-defaults@^1.0.0-alpha.4, which resolves fine today (published Nov 2023, no live bug). Depends on pluggable-defaults's own naming fix and any decision to publish newer (currently unpublished) content under the corrected single-g name, so this project's lockfile can pick up the latest code once available.
+            phase: 1 (framework-naming-cleanup)
+            task: 002-rename-github-repo-and-package-urls, 003-fix-locations-double-g-identifiers, 004-fix-package-name-and-main-field
+            note: liq-work depends on @liquid-labs/plugable-defaults@^1.0.0-alpha.4, which resolves fine today (published Nov 2023, no live bug); this project's own phase 2 verification task depends on pluggable-defaults's phase 1 naming-fix tasks landing first.
       wave:
         slug: sdlcforge-modernization
         leadProject: core-server
