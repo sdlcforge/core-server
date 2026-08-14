@@ -53,3 +53,5 @@ waves:
             sdlcpilot-cli: PLACEHOLDER
     - name: Compile-Time Plugin Manifest
       planGroups: []
+    - name: Unified CLI and MCP Binaries
+      planGroups: []
