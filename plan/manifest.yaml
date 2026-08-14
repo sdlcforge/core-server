@@ -2,3 +2,8 @@ version: 1
 plans:
     - slug: pluggable-express-rename
       status: working
+      dependencies:
+        /Users/zane/playground/liquid-labs/pluggable-express:
+            phase: TBD
+            task: TBD
+            note: Depends on pluggable-express's own rename landing before core-server's .yalc local link can be refreshed and its dependency spec/refs repointed.
