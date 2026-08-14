@@ -51,3 +51,5 @@ waves:
           description: Rename @liquid-labs/sdlcpilot-cli to @sdlcforge/sdlc-cli, matching the sdlcforge product-naming convention core-server already uses (core-server's own README already refers to this target name). Separate from the CLI/server binary-unification question raised for a later wave - this is just the rename/relocation.
           plans:
             sdlcpilot-cli: PLACEHOLDER
+    - name: Compile-Time Plugin Manifest
+      planGroups: []
