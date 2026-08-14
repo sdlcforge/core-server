@@ -5,4 +5,14 @@ phases:
     - number: 3
       slug: yalc-dependency-refresh
       title: Yalc Dependency Refresh
-      tasks: []
+      tasks:
+        - number: 1
+          slug: refresh-plugable-express-yalc-snapshot
+          title: Refresh Plugable-Express Yalc Snapshot
+          path: phase-03-yalc-dependency-refresh/001-refresh-plugable-express-yalc-snapshot.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
