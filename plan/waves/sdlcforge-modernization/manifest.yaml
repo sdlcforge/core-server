@@ -19,4 +19,13 @@ waves:
             pluggable-defaults: PLACEHOLDER
             sdlcpilot-cli: PLACEHOLDER
     - name: Plugin Consolidation — Framework and Dev-Core
-      planGroups: []
+      planGroups:
+        - name: Fold documentation and integrations mechanism into plugable-express
+          slug: framework-consolidation
+          description: Fold @liquid-labs/plugable-server-documentation (generic server self-documentation, zero SDLC coupling) and @liquid-labs/liq-integrations (generic hook-registry/provider-resolution mechanism, built on the shared liq-plugins-lib also used by unrelated liq-policy/liq-roles, zero SDLC coupling) into @liquid-labs/plugable-express itself, eliminating both as separate packages. liq-integrations-issues-github (the concrete GitHub provider, real business logic, depends on liq-projects-lib) is explicitly NOT part of this fold - it stays product-level, tracked in core-server-domain-consolidation.
+          dependencies:
+            - pluggable-express-rename
+          plans:
+            liq-integrations: PLACEHOLDER
+            plugable-server-documentation: PLACEHOLDER
+            pluggable-express: PLACEHOLDER
