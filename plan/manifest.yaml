@@ -1,2 +1,4 @@
 version: 1
-plans: []
+plans:
+    - slug: pluggable-defaults-rename
+      status: working
