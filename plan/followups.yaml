@@ -28,3 +28,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: During ad-hoc followup remediation (2026-08-13), a task agent dispatched with worktree /Users/zane/playground/sdlcforge/core-server/worktrees/task/refresh-deps-for-serverhome-fi reported that its harness-provided <env> block's stated working directory pointed to a different, unrelated worktree (worktrees/task/fix-test-env-var-isolation) than the one specified in its own task instructions. The agent correctly used the task-instruction-specified path throughout and never touched the mismatched one, so no harm resulted, but the discrepancy itself (dispatch pipeline's env/cwd header vs. the intended worktree) may be worth investigating if it recurs or causes an agent to act in the wrong worktree in a future dispatch.
+    - title: yalc push propagated stale build once
+      id: CJ9P
+      date: "2026-08-14"
+      tags:
+        - type:ambiguity
+        - plan/phase:yalc-dependency-refresh
+        - plan/slug:pluggable-express-rename
+        - priority:unspecified
+        - effort:unspecified
+      text: 'During phase-3 (yalc-dependency-refresh) task execution, the manager''s pre-dispatch `yalc push` from plugable-express propagated a dist build that was stale relative to plugable-express''s own current main branch (missing a registerPathVar plugin-setup parameter that liq-credentials needs to start up), which briefly broke core-server''s local server startup. The dispatched task agent resolved it (forced rebuild + re-push from plugable-express, source untouched, per the task doc''s own re-push contingency) and re-verified. Root cause not investigated further: worth checking whether plugable-express''s prepack/make build has an mtime-gating or lifecycle-script issue that could cause a stale dist/ to be packed on a future yalc push.'
