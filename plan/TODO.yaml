@@ -1,0 +1,8 @@
+slug: pluggable-defaults-rename
+version: 1
+title: ""
+phases:
+    - number: 2
+      slug: verification-sweep
+      title: Verification Sweep
+      tasks: []
