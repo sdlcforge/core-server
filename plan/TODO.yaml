@@ -1,0 +1,8 @@
+slug: pluggable-express-rename
+version: 1
+title: ""
+phases:
+    - number: 3
+      slug: yalc-dependency-refresh
+      title: Yalc Dependency Refresh
+      tasks: []
