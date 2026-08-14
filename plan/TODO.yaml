@@ -14,5 +14,6 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/pluggable-express-rename-03-001
-            commit: []
+            commit:
+                - b3384f3
             merge: null
