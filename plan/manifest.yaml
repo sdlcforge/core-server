@@ -1,12 +1,2 @@
 version: 1
-plans:
-    - slug: pluggable-defaults-rename
-      status: working
-      dependencies:
-        /Users/zane/playground/liquid-labs/pluggable-defaults:
-            phase: 1 (framework-naming-cleanup)
-            task: 002-rename-github-repo-and-package-urls, 003-fix-locations-double-g-identifiers, 004-fix-package-name-and-main-field
-            note: liq-work depends on @liquid-labs/plugable-defaults@^1.0.0-alpha.4, which resolves fine today (published Nov 2023, no live bug); this project's own phase 2 verification task depends on pluggable-defaults's phase 1 naming-fix tasks landing first.
-      wave:
-        slug: sdlcforge-modernization
-        leadProject: core-server
+plans: []
