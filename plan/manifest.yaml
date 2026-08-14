@@ -4,8 +4,8 @@ plans:
       status: working
       dependencies:
         /Users/zane/playground/liquid-labs/pluggable-express:
-            phase: TBD
-            task: TBD
+            phase: 1 (framework-naming-cleanup)
+            task: 002-rename-github-repo-and-package-urls, 004-fix-makefile-fragment-and-main-field
             note: Depends on pluggable-express's own rename landing before core-server's .yalc local link can be refreshed and its dependency spec/refs repointed.
       wave:
         slug: sdlcforge-modernization
