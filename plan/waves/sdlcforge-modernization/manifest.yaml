@@ -4,3 +4,5 @@ leadProject: core-server
 waves:
     - name: Framework Naming Cleanup
       planGroups: []
+    - name: Plugin Consolidation — Framework &amp; Dev-Core
+      planGroups: []
