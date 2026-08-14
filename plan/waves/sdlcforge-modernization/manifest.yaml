@@ -52,6 +52,11 @@ waves:
           plans:
             sdlcpilot-cli: PLACEHOLDER
     - name: Compile-Time Plugin Manifest
-      planGroups: []
+      planGroups:
+        - name: Implement compile-time plugin manifest framework
+          slug: compile-time-manifest-framework
+          description: In plugable-express, replace today's runtime/reflective plugin composition (undeclared app.ext service coupling) with a compile-time plugin manifest framework. Recovered synthesis fragments describe this as a plugable.yaml declaring provides/requires/optional per plugin. This is the mechanism-level fix for the class of bug that includes ynGa (appInit() crash from the serverHome to serverConfigRoot rename because liq-credentials/liq-credentials-db/liq-integrations/liq-work still read the old key) and the GITHUB_API credential-registration-order risk flagged in Wave 2 - both are instances of undeclared runtime app.ext coupling this framework should make declared and checkable. Assumes the plugable-express rename (Wave 1) has landed; the participant slug here may need updating post-rename if the project index key changes.
+          plans:
+            pluggable-express: PLACEHOLDER
     - name: Unified CLI and MCP Binaries
       planGroups: []
