@@ -3,6 +3,13 @@ name: SDLCForge Platform Modernization
 leadProject: core-server
 waves:
     - name: Framework Naming Cleanup
-      planGroups: []
+      planGroups:
+        - name: Rename pluggable-express to plugable-express
+          slug: pluggable-express-rename
+          description: 'Correct the double-g misspelling. npm package name is already single-g and all consumers already depend on it correctly - remaining scope: directory rename, GitHub repo rename (liquid-labs/pluggable-express, requires gh CLI auth), main/Makefile build-artifact refs still pointing at dist/pluggable-express.js (open followup in that repo; original code-generator provenance unrecoverable, needs manual fix), package.json repository/bugs/homepage URLs, README/AGENTS.md/REVIEW.md refs, in-repo comments, and refresh of core-server''s .yalc local link afterward.'
+          plans:
+            core-server: PLACEHOLDER
+            plugable-express-cli: PLACEHOLDER
+            pluggable-express: PLACEHOLDER
     - name: Plugin Consolidation — Framework and Dev-Core
       planGroups: []
