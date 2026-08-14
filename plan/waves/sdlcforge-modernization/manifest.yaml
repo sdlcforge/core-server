@@ -1,4 +1,6 @@
 version: 1
 name: SDLCForge Platform Modernization
 leadProject: core-server
-waves: []
+waves:
+    - name: Framework Naming Cleanup
+      planGroups: []
