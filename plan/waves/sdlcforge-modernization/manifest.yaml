@@ -72,3 +72,10 @@ waves:
           description: 'Tentative (user''s own framing: "probably"/"I think"). Fold core-server (by now absorbing liq-controls/liq-credentials, and consuming the compile-time manifest framework) and dev-core (liq-projects+liq-work+liq-orgs+plugable-projects-audit, created in Wave 2) together into a single sdlcforge/sdlc-core package - the shared logic basis everything else generates from. Architecture must allow for a future localhost/browser-based GUI product in addition to CLI/MCP, though the GUI itself is out of scope for this wave. Participant list only carries core-server for now since dev-core does not exist as an indexed project yet at wave-authoring time (created by Wave 2''s dev-core-consolidation) - add it as a real participant once it exists, consistent with how Wave 2''s own dev-core-consolidation plan-group was authored against dev-core''s source repos rather than an unresolvable slug.'
           plans:
             core-server: PLACEHOLDER
+        - name: Generate installable CLI and MCP encapsulations from sdlc-core
+          slug: cli-mcp-binary-generation
+          description: Once sdlc-core exists (sdlc-core-unification), generate sdlcforge/sdlc-cli and sdlcforge/sdlc-mcp as installable encapsulations of the logic embedded in sdlc-core. sdlc-cli is the already-renamed CLI product (Wave 2's sdlcpilot-cli-rename) rebuilt on the sdlc-core basis; sdlc-mcp is a new MCP-frontend package. Builds on the Bun single-binary packaging already validated by the sdlcpilot-cli Phase 0 spike (bun build --compile confirmed viable for the git/gh/npm shell-out pattern; shelljs found incompatible with any bundled Bun output - recommend replacing it with raw node:child_process in liq-projects/dev-core beforehand, per followup hwbY). Architecture should also allow for a future localhost/browser-based GUI product atop sdlc-core, though the GUI itself is out of scope here. sdlc-mcp is not a participant yet since it does not exist as an indexed project at authoring time.
+          dependencies:
+            - sdlc-core-unification
+          plans:
+            sdlcpilot-cli: PLACEHOLDER
