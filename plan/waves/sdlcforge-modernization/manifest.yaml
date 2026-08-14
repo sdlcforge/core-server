@@ -48,9 +48,9 @@ waves:
             plugable-projects-audit: PLACEHOLDER
         - name: Rename sdlcpilot-cli to sdlcforge/sdlc-cli
           slug: sdlcpilot-cli-rename
-          description: Rename @liquid-labs/sdlcpilot-cli to @sdlcforge/sdlc-cli, matching the sdlcforge product-naming convention core-server already uses (core-server's own README already refers to this target name). Separate from the CLI/server binary-unification question raised for a later wave - this is just the rename/relocation.
+          description: 'Rename @liquid-labs/sdlcpilot-cli to @sdlcforge/sdlc-cli, matching the sdlcforge product-naming convention core-server already uses. UPDATE 2026-08-14 (scope clarified with user before planning): this is not a rename-in-place — it is also a GitHub-org and npm-scope ownership move (liquid-labs -> sdlcforge), covering repo transfer/rename, npm publish under the new scope, package.json/URL updates, directory relocation to sdlcforge/sdlc-cli, and in-repo self-references. User owns both orgs/scopes; several steps (gh repo transfer, npm publish) are expected to run out-of-channel by the user per prior sibling-rename sessions. Separate from the CLI/server binary-unification question raised for a later wave - this is just the rename/relocation.'
           plans:
-            sdlcpilot-cli: PLACEHOLDER
+            sdlcpilot-cli: sdlcpilot-cli-rename
     - name: Compile-Time Plugin Manifest
       planGroups:
         - name: Implement compile-time plugin manifest framework
