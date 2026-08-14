@@ -6,11 +6,11 @@ waves:
       planGroups:
         - name: Rename pluggable-express to plugable-express
           slug: pluggable-express-rename
-          description: 'Correct the double-g misspelling. npm package name is already single-g and all consumers already depend on it correctly - remaining scope: directory rename, GitHub repo rename (liquid-labs/pluggable-express, requires gh CLI auth), main/Makefile build-artifact refs still pointing at dist/pluggable-express.js (open followup in that repo; original code-generator provenance unrecoverable, needs manual fix), package.json repository/bugs/homepage URLs, README/AGENTS.md/REVIEW.md refs, in-repo comments, and refresh of core-server''s .yalc local link afterward.'
+          description: 'Correct the double-g misspelling. npm package name is already single-g and all consumers already depend on it correctly — remaining scope: directory rename, GitHub repo rename (liquid-labs/pluggable-express, via authenticated gh CLI), main/Makefile build-artifact refs still pointing at dist/pluggable-express.js (open followup in that repo), package.json repository/bugs/homepage URLs, README/AGENTS.md/REVIEW.md refs, in-repo comments, and refresh of core-server''s .yalc local link afterward.'
           plans:
-            core-server: PLACEHOLDER
-            plugable-express-cli: PLACEHOLDER
-            pluggable-express: PLACEHOLDER
+            core-server: pluggable-express-rename
+            plugable-express-cli: pluggable-express-rename
+            pluggable-express: pluggable-express-rename
         - name: Rename pluggable-defaults to plugable-defaults
           slug: pluggable-defaults-rename
           description: 'Newly discovered second double-g-misspelled repo (not part of the original request, found during investigation). Directory, package.json name/main/repository/bugs/homepage, and the GitHub repo itself (liquid-labs/pluggable-defaults) are all still double-g - has not had even the npm-name-level fix pluggable-express already got. Carries a live latent bug: liq-work and sdlcpilot-cli already depend on the single-g spec @liquid-labs/plugable-defaults, which does not exist in the registry yet. Independent of the pluggable-express rename; can run in parallel.'
