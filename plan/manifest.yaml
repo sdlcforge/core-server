@@ -6,7 +6,7 @@ plans:
         /Users/zane/playground/liquid-labs/pluggable-defaults:
             phase: TBD
             task: TBD
-            note: liq-work already depends on the single-g npm spec @liquid-labs/plugable-defaults, which does not exist in the registry yet (live latent bug). Depends on pluggable-defaults's own rename/republish under the single-g name landing before this dependency actually resolves.
+            note: liq-work depends on @liquid-labs/plugable-defaults@^1.0.0-alpha.4, which resolves fine today (published Nov 2023, no live bug). Depends on pluggable-defaults's own naming fix and any decision to publish newer (currently unpublished) content under the corrected single-g name, so this project's lockfile can pick up the latest code once available.
       wave:
         slug: sdlcforge-modernization
         leadProject: core-server
