@@ -7,3 +7,6 @@ plans:
             phase: TBD
             task: TBD
             note: liq-work already depends on the single-g npm spec @liquid-labs/plugable-defaults, which does not exist in the registry yet (live latent bug). Depends on pluggable-defaults's own rename/republish under the single-g name landing before this dependency actually resolves.
+      wave:
+        slug: sdlcforge-modernization
+        leadProject: core-server
