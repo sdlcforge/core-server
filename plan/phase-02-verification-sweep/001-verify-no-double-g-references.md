@@ -47,3 +47,28 @@ This task re-runs that sweep as a definitive, point-of-execution check — not a
 - [double-g-sweep.md](../notes/double-g-sweep.md) — the planning-time investigation this task re-verifies.
 - `plan/manifest.yaml` (project root) — plan-group bookkeeping.
 - `package.json` — the `@liquid-labs/plugable-defaults` dependency spec (`^1.0.0-alpha.4`).
+
+## Findings
+
+Re-swept on 2026-08-14, no genuine double-g references or naming mismatches found, consistent with the planning-time investigation.
+
+**Step 1 — repo-wide grep sweep.** Ran all four commands from Requirements step 1. Every match is a bookkeeping artifact:
+
+- `plan/TODO.yaml:1`, `plan/overview.md` (multiple lines), `plan/notes/double-g-sweep.md` (multiple lines), and this task document itself — the plan-group's own slug/prose describing the double-g rename it exists to verify.
+- `plan/plan-summary-modernization-foundation.md:5` — the already-merged historical sentence referencing the separate, unrelated `@liquid-labs/pluggable-express` package.
+- No hardcoded `https://github.com/liquid-labs/pluggable-defaults` (or any `liquid-labs/pluggable*`) link exists anywhere.
+- The env-var grep (`PLUG(G)?ABLE_(CLI_SETTINGS_PATH|PLAYGROUND)`) matched only: correct single-g `PLUGABLE_PLAYGROUND` usage in `src/handlers/work/resume.mjs`, `src/handlers/work/projects/_lib/remove-lib.mjs`, `src/handlers/work/_lib/pause-lib.mjs`, `src/handlers/work/_lib/work-db.mjs`; and prose in `plan/overview.md` describing the *upstream* `pluggable-defaults` project's own regression (`PLUGGABLE_CLI_SETTINGS_PATH`/`PLUGGABLE_PLAYGROUND`), not any usage in this repo's own code. No double-g `PLUGGABLE_*` identifier appears in this repo's own source, `README.md`, `Makefile`, or `package.json`.
+
+**Step 2 — naming-mismatch check.** `liq-work`'s `src/**` imports exactly one export, `PLUGABLE_PLAYGROUND` (single-g), at the four expected call sites (`src/handlers/work/resume.mjs:7,34`; `src/handlers/work/projects/_lib/remove-lib.mjs:7,30`; `src/handlers/work/_lib/pause-lib.mjs:7,32`; `src/handlers/work/_lib/work-db.mjs:15,29`). `package.json`'s dependency spec is unchanged (`^1.0.0-alpha.4`). The installed `node_modules/@liquid-labs/plugable-defaults` is `1.0.0-alpha.4` (matching `package-lock.json`'s locked resolution), exporting `PLUGABLE_CLI_SETTINGS_PATH`, `PLUGABLE_PLAYGROUND`, and `PLUGABLE_REGISTRY`, all single-g — `liq-work`'s import name matches the installed package's actual export name. Note (observation, not a defect): the npm registry now also lists a `1.0.0-alpha.7` (dist-tag `latest`), the sibling project's post-rename republish, but this worktree's lockfile has not been updated to it and `package.json`'s spec was not bumped, so this is outside the "spec has been bumped" trigger in Requirements step 2 — no action taken. Since `1.0.0-alpha.4` already exported the correct single-g names (per the planning-time investigation), this does not change the naming-mismatch verdict.
+
+**Step 3 — env-var/config-path check.** No `PLUGABLE_*`/`PLUGGABLE_*` environment variable is read or written directly in this repo's own source (only the imported accessor function is called); no config-directory path segment is hardcoded in source, `README.md`, `Makefile`, or `package.json` beyond the dependency spec itself.
+
+**Step 4 — classification.** All matches fall under the "bookkeeping artifact" bucket per Requirements step 4. No genuine content reference, hardcoded double-g GitHub link, or import/export naming mismatch was found. `git status --short` shows no unexpected changes beyond this task document's own edit.
+
+## Status
+
+- Outcome: succeeded (verification-only, no-op as expected).
+- Date: 2026-08-14.
+- Validation summary: all four Requirements-step-1 grep invocations, the step-2 import/export naming-mismatch check, and the step-3 env-var/config-path check were re-run at execution time; every match classified as an expected bookkeeping artifact; zero genuine double-g content references, hardcoded double-g links, or naming mismatches found. No source, doc, or config files were modified; only this task document was edited.
+- Affected files: `plan/phase-02-verification-sweep/001-verify-no-double-g-references.md` (this document, `## Findings` and `## Status` added).
+- Assumptions relied on: the `## Assumptions` section's expectation that the planning-time investigation still holds, and that `node_modules/` would be present for the step-2 check — both confirmed true.
