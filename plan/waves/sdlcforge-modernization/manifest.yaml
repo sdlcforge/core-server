@@ -22,13 +22,13 @@ waves:
       planGroups:
         - name: Fold documentation and integrations mechanism into plugable-express
           slug: framework-consolidation
-          description: Fold @liquid-labs/plugable-server-documentation (generic server self-documentation, zero SDLC coupling) and @liquid-labs/liq-integrations (generic hook-registry/provider-resolution mechanism, built on the shared liq-plugins-lib also used by unrelated liq-policy/liq-roles, zero SDLC coupling) into @liquid-labs/plugable-express itself, eliminating both as separate packages. liq-integrations-issues-github (the concrete GitHub provider, real business logic, depends on liq-projects-lib) is explicitly NOT part of this fold - it stays product-level, tracked in core-server-domain-consolidation.
+          description: 'Fold @liquid-labs/plugable-server-documentation (server self-documentation) and @liquid-labs/liq-integrations (hook-registry/provider-resolution mechanism) into @liquid-labs/plugable-express as built-in framework capability, eliminating both as separate packages. liq-integrations-issues-github stays product-level, tracked in core-server-domain-consolidation. Plan authored 2026-08-15: 4 phases across the 3 participants (plugable-express phases 1-2: absorb + doc-updates, 6+1 tasks; liq-integrations phase 3: retire, 4 tasks; plugable-server-documentation phase 4: retire, 4 tasks). plugable-express is the fold-in target and must land (Phase 1) before the other two projects'' retirement phases execute.'
           dependencies:
             - pluggable-express-rename
           plans:
-            liq-integrations: PLACEHOLDER
-            plugable-server-documentation: PLACEHOLDER
-            pluggable-express: PLACEHOLDER
+            liq-integrations: framework-consolidation
+            plugable-express: framework-consolidation
+            plugable-server-documentation: framework-consolidation
         - name: Fold domain-specific plugins into core-server
           slug: core-server-domain-consolidation
           description: Fold @liquid-labs/liq-controls (SDLC compliance/audit "controls" system, tightly coupled to liq-orgs/liq-projects via app.ext, only consumer is core-server - no generic policy concept exists in the framework to fold into instead) and @liquid-labs/liq-credentials (generic key/type credential registry, already appropriately generic, no plugable-express coupling, safe as-is) into @sdlcforge/core-server directly. liq-integrations-issues-github stays a separate product-level plugin (real GitHub business logic, depends on liq-projects-lib) rather than folding in here, but is tracked as a participant because this plan must also harden the currently-implicit, undeclared, load-order-dependent contract where it calls credentialsDB.getToken('GITHUB_API') trusting liq-projects (via credentials-db-plugin-github) already registered that key - no schema or startup-time check exists today.
