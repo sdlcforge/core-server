@@ -38,3 +38,12 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'During phase-3 (yalc-dependency-refresh) task execution, the manager''s pre-dispatch `yalc push` from plugable-express propagated a dist build that was stale relative to plugable-express''s own current main branch (missing a registerPathVar plugin-setup parameter that liq-credentials needs to start up), which briefly broke core-server''s local server startup. The dispatched task agent resolved it (forced rebuild + re-push from plugable-express, source untouched, per the task doc''s own re-push contingency) and re-verified. Root cause not investigated further: worth checking whether plugable-express''s prepack/make build has an mtime-gating or lifecycle-script issue that could cause a stale dist/ to be packed on a future yalc push.'
+    - title: Drop folded-in plugin deps
+      id: FmTZ
+      date: "2026-08-15"
+      tags:
+        - type:enhancement
+        - priority:low
+        - plan/slug:framework-consolidation
+        - effort:unspecified
+      text: 'Once the framework-consolidation plan-group (plugable-express, liq-integrations, plugable-server-documentation) lands and plugable-express publishes with both mechanisms built in, core-server''s own dependency on the two donor packages becomes dead weight (plugable-express''s loader-supersession task keeps it working meanwhile, so this isn''t a blocker, just cleanup). Touch points found by the donor projects'' own planning agents: package.json `dependencies` entries for both packages; `src/lib/app-init.mjs`''s `explicitPlugins` array (liq-integrations at least; verify plugable-server-documentation''s presence too — it may only ever have been in explicitPlugins since its package.json declares no pluggable-endpoints keyword); `test/test-basic.js:54` and `test/test-integration-quick.js:61,88` (liq-integrations plugin-list assertions); `test/README.md:113` and `docs/architecture/plugin-loading-tiers.md:61` (plugable-server-documentation references); and `bun.lock`. Requires a `yalc push` from plugable-express (consumed here via `file:.yalc/@liquid-labs/plugable-express`) plus `rm -f bun.lock && bun install` per this project''s own yalc-refresh convention. Best done as one pass covering both packages together since they retire on the same plan-group.'
