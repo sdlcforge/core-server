@@ -51,7 +51,6 @@ async function runBasicTest() {
   const expectedPackages = [
     '@liquid-labs/liq-controls',
     '@liquid-labs/liq-credentials',
-    '@liquid-labs/liq-integrations',
     '@liquid-labs/liq-projects'
   ]
   

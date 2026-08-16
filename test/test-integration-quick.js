@@ -58,7 +58,6 @@ async function runQuickTest() {
         const explicitPlugins = [
           '@liquid-labs/liq-controls',
           '@liquid-labs/liq-credentials',
-          '@liquid-labs/liq-integrations',
           '@liquid-labs/liq-projects'
         ]
 
@@ -85,7 +84,6 @@ async function runQuickTest() {
         const explicitPlugins = [
           '@liquid-labs/liq-controls',
           '@liquid-labs/liq-credentials',
-          '@liquid-labs/liq-integrations',
           '@liquid-labs/liq-projects'
         ]
 
