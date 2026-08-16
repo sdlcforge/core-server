@@ -46,3 +46,11 @@ items:
         - priority:low
         - effort:unspecified
       text: '`bun run test` has 1 pre-existing failure: src/lib/test/golden-api-spec.test.js ("GET /server/api matches the golden snapshot"). Caused by the plugable-express 1.0.0-alpha.58 yalc upgrade already linked into this repo (new core routes — e.g. the absorbed /server/plugins/integrations/* endpoints — are now registered directly by plugable-express), not by the liq-integrations/plugable-server-documentation dependency-removal task. Confirmed via git stash that the failure exists identically on the unmodified worktree. Regenerating the checked-in golden snapshot (test/__snapshots__/golden-api-spec.json, and likely golden-plugins-list.json) via `npm run test:update-golden-api-spec` is a deliberate opt-in step per plan/resources/golden-api-spec-baseline.md — should be reviewed and accepted rather than auto-regenerated.'
+    - title: Stale liq-integrations doc row
+      id: 63CF
+      date: "2026-08-16"
+      tags:
+        - type:documentation
+        - priority:low
+        - effort:unspecified
+      text: docs/architecture/plugin-loading-tiers.md's tier-3 row for @liquid-labs/liq-integrations describes it as "the general integrations framework" — a still-separate, active package — but its functionality has actually been folded into @liquid-labs/plugable-express (framework-consolidation plan). Left untouched by the dependency-removal task (only the plugable-server-documentation row, tier 9, was the named touch point); this row's prose should be corrected or the row removed to match, as a separate, deliberate documentation decision.
