@@ -33,13 +33,11 @@ const checkSdlcEnv = (suffix, converter = (x) => x) => {
 const explicitPlugins = [
   '@liquid-labs/liq-controls',
   '@liquid-labs/liq-credentials',
-  '@liquid-labs/liq-integrations',
   '@liquid-labs/liq-integrations-issues-github',
   '@liquid-labs/liq-orgs',
   '@liquid-labs/liq-projects',
   '@liquid-labs/liq-work',
   '@liquid-labs/plugable-projects-audit',
-  '@liquid-labs/plugable-server-documentation',
   '@liquid-labs/sdlc-projects-badges-coverage',
   '@liquid-labs/sdlc-projects-badges-github-workflows',
   '@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd',

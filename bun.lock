@@ -9,14 +9,12 @@
         "@liquid-labs/http-smart-response": "^1.0.0-alpha.6",
         "@liquid-labs/liq-controls": "^1.0.0-alpha.9",
         "@liquid-labs/liq-credentials": "^1.0.0-alpha.3",
-        "@liquid-labs/liq-integrations": "^1.0.0-alpha.2",
         "@liquid-labs/liq-integrations-issues-github": "^1.0.0-alpha.3",
         "@liquid-labs/liq-orgs": "^1.0.0-alpha.6",
         "@liquid-labs/liq-projects": "file:.yalc/@liquid-labs/liq-projects",
         "@liquid-labs/liq-work": "^1.0.0-alpha.9",
         "@liquid-labs/plugable-express": "file:.yalc/@liquid-labs/plugable-express",
         "@liquid-labs/plugable-projects-audit": "^1.0.0-alpha.2",
-        "@liquid-labs/plugable-server-documentation": "^1.0.0-alpha.0",
         "@liquid-labs/sdlc-projects-badges-coverage": "^1.0.0-alpha.2",
         "@liquid-labs/sdlc-projects-badges-github-workflows": "^1.0.0-alpha.2",
         "@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd": "^1.0.0-alpha.2",
@@ -347,8 +345,6 @@
 
     "@liquid-labs/liq-handlers-lib": ["@liquid-labs/liq-handlers-lib@1.0.0-alpha.17", "", { "dependencies": { "@liquid-labs/md2x": "^1.0.0-alpha.3", "js-convert-case": "^4.2.0", "markdown-link-extractor": "^4.0.1", "shelljs": "^0.8.5" } }, "sha512-jN7QQys25v8ZTVo3+vYM4pmTD4ZYW6uyQ1BGzAMwRdwx5i660JY2FbElZvzPcL/WQCvhsvZLGlH9fYiJqiTrww=="],
 
-    "@liquid-labs/liq-integrations": ["@liquid-labs/liq-integrations@1.0.0-alpha.3", "", { "dependencies": { "@liquid-labs/liq-plugins-lib": "^1.0.0-alpha.11", "@liquid-labs/regex-repo": "^1.1.2", "find-plugins": "^1.1.7" } }, "sha512-ykTNRJONgs2UcMEPdAl9hQaMoye0nc2czMrArEct8vz3Ke9S1gwhWo/y8ECZKRuP77VHdnGRzzOjJuu2JNOuDw=="],
-
     "@liquid-labs/liq-integrations-issues-github": ["@liquid-labs/liq-integrations-issues-github@1.0.0-alpha.3", "", { "dependencies": { "@liquid-labs/git-toolkit": "^1.0.0-alpha.15", "@liquid-labs/github-toolkit": "^1.0.0-alpha.16", "@liquid-labs/liq-projects-lib": "^1.0.0-alpha.11", "@liquid-labs/liq-qa-lib": "^1.0.0-alpha.8", "@liquid-labs/shell-toolkit": "^1.0.0-alpha.7" } }, "sha512-D09QRlrdaLI9pSO4bTmSN8tGgoQJp1z+3OZn8fWumAscY3nPYQPaC/YDwoHnnJrEYcbrKdVBoA7D7vblXdRH4Q=="],
 
     "@liquid-labs/liq-orgs": ["@liquid-labs/liq-orgs@1.0.0-alpha.7", "", { "dependencies": { "@liquid-labs/dependency-runner": "^1.0.0-alpha.8", "@liquid-labs/liq-handlers-lib": "^1.0.0-alpha.17", "@liquid-labs/resource-model": "^1.0.0-alpha.10", "js-yaml": "^4.1.0" } }, "sha512-GJ/Y94aygMbVhF0BcuTbdfUiRlWcW/sA/qpvl2FpWzJ5ziC72PlIppI+OwxFujFEP+/taOSfonrhrOXMQqDG+w=="],
@@ -371,13 +367,11 @@
 
     "@liquid-labs/playground-monitor": ["@liquid-labs/playground-monitor@1.0.0-beta.4", "", { "dependencies": { "find-plus": "^1.1.1" } }, "sha512-czQMvWaAO2bs/T09pKY/ayIpaRTIiYN/HFnczOamPiCjhnnzNfFLVnxOzWd2g3HJHh7vqVztRGbDcABtqhJQmQ=="],
 
-    "@liquid-labs/plugable-defaults": ["@liquid-labs/plugable-defaults@1.0.0-alpha.4", "", {}, "sha512-DALBwlltBTyRcGvFCu2y3WK3kb9Lk0HJwqDFKo9SwStAqjnkt8aYp0sKO6BmFoxVqzHof9JcV5xJJITs5/IEMw=="],
+    "@liquid-labs/plugable-defaults": ["@liquid-labs/plugable-defaults@1.0.0-alpha.7", "", {}, "sha512-7QBVed9+qIIFjnx4ZHI4FNSGVsR5cOTmniqK6DrWfFxknJRuBdMvfbpmVud41yFg0bwa7vFQKtcwTkfADaPY+A=="],
 
-    "@liquid-labs/plugable-express": ["@liquid-labs/plugable-express@file:.yalc/@liquid-labs/plugable-express", { "dependencies": { "@liquid-labs/dependency-runner": "^1.0.0-alpha.8", "@liquid-labs/http-smart-response": "^1.0.0-alpha.6", "@liquid-labs/liq-handlers-lib": "^1.0.0-alpha.15", "@liquid-labs/npm-toolkit": "^1.0.0-alpha.19", "@liquid-labs/semver-plus": "^1.0.0-alpha.11", "@liquid-labs/shell-toolkit": "^1.0.0-alpha.10", "express": "^5.0.0-beta.1", "express-fileupload": "^1.2.1", "find-plugins": "^1.1.7", "find-root": "^1.1.0", "js-yaml": "^4.1.0", "lodash": "^4.17.21" } }],
+    "@liquid-labs/plugable-express": ["@liquid-labs/plugable-express@file:.yalc/@liquid-labs/plugable-express", { "dependencies": { "@liquid-labs/dependency-runner": "^1.0.0-alpha.8", "@liquid-labs/http-smart-response": "^1.0.0-alpha.6", "@liquid-labs/liq-handlers-lib": "^1.0.0-alpha.15", "@liquid-labs/liq-plugins-lib": "^1.0.0-alpha.11", "@liquid-labs/npm-toolkit": "^1.0.0-alpha.19", "@liquid-labs/regex-repo": "^1.1.2", "@liquid-labs/semver-plus": "^1.0.0-alpha.11", "@liquid-labs/shell-toolkit": "^1.0.0-alpha.10", "express": "^5.0.0-beta.1", "express-fileupload": "^1.2.1", "find-plugins": "^1.1.7", "find-root": "^1.1.0", "http-errors": "^2.0.0", "js-yaml": "^4.1.0", "lodash": "^4.17.21" } }],
 
     "@liquid-labs/plugable-projects-audit": ["@liquid-labs/plugable-projects-audit@1.0.0-alpha.2", "", { "dependencies": { "@liquid-labs/http-smart-response": "file:.yalc/@liquid-labs/http-smart-response", "@liquid-labs/npm-toolkit": "^1.0.0-alpha.17", "http-errors": "^2.0.0", "npm-check-plus": "^1.0.0-alpha.5" } }, "sha512-QkZAmmYRB9TNAjQ7mRyBQy+yxBYSOcJf9St0g5FQoS0R5BzkiFZXzkzEcFxFf/CkoaUric0QmOr/ll8RrTbxkg=="],
-
-    "@liquid-labs/plugable-server-documentation": ["@liquid-labs/plugable-server-documentation@1.0.0-alpha.0", "", { "dependencies": { "@liquid-labs/http-smart-response": "^1.0.0-alpha.3", "http-errors": "^2.0.0" } }, "sha512-reFGPI1hjUlCwmWETuAFxIyPEXt5+3cPkoqeWk9w25UXbzfdf7y669RcWVcyNoBYtz+35kuPP+Z+KPSZW/EWeQ=="],
 
     "@liquid-labs/regex-repo": ["@liquid-labs/regex-repo@1.1.2", "", {}, "sha512-+W3JcotGxD5Z56DQzgpCzEnhHUQ1S5K70NfaaHYK2Fksh2sbQRHYd50AWNVsY5R9YR8KITtl4jPjV0URIAANuw=="],
 
@@ -853,7 +847,7 @@
 
     "ee-first": ["ee-first@1.1.1", "", {}, "sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow=="],
 
-    "electron-to-chromium": ["electron-to-chromium@1.5.406", "", {}, "sha512-hWH5ORBi3d0IipnMh7BN5GDTaAmrSSSWmznwt2zltdiRNEWoEQyTwF0FFSBxzHO7hLSRT6loQu3IQGV0wg/Tvg=="],
+    "electron-to-chromium": ["electron-to-chromium@1.5.407", "", {}, "sha512-4R8XgQOdfxexCd/u63lRm6wCHjECwI45MV9wxAs2ggtfWe2hwlo1ql97jKsju2IcJ+jFSTwBssyYoiWhh7mauQ=="],
 
     "emittery": ["emittery@0.13.1", "", {}, "sha512-DeWwawk6r5yR9jFgnDKYt4sLS0LmHJJi3ZOnb5/JdbYwj3nW+FxQnHIjhBKz8YLC7oRNPVM9NQ47I3CVx34eqQ=="],
 
