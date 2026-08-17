@@ -5,7 +5,17 @@ phases:
     - number: 1
       slug: dev-core-package-foundation
       title: Dev-Core Package Foundation
-      tasks: []
+      tasks:
+        - number: 1
+          slug: author-consolidation-contract
+          title: Author Consolidation Contract
+          path: phase-01-dev-core-package-foundation/001-author-consolidation-contract.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 2
       slug: liq-projects-migration
       title: Liq-Projects Migration
