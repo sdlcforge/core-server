@@ -45,6 +45,8 @@ Author `docs/consumer-migration.md` covering:
 
 ## Assumptions
 
+- **Cross-repository commit mechanics.** The task's own worktree is a `liq-projects` worktree, but the edits land in the dev-core checkout. Do the work on a dedicated branch in dev-core (e.g. `task/<this-task-slug>`) rather than committing to dev-core's `main`, and report the dev-core branch and commit SHA — merging that branch is a manager/user step. If a git operation there is refused by the environment's agent-scope guard, halt and report the exact command rather than working around it. The precedent for this pattern is core-server's completed `bun-conversion` task `003`, whose commit landed in the `comply-defaults` repository on its own `task/...` branch with the merge left unrecorded in the plan.
+
 - Phase 1 task 001 has landed, so dev-core's contract document exists and this document can cite it rather than restating the whole contract.
 - This task may run in parallel with phase 2 task 002 (they touch disjoint files), but they operate in the same repository, so they need separate task worktrees. If task 002 has already landed, prefer describing the swap in the present tense for `projects` and future tense for the other three submodules.
 - `core-server`'s `core-server-domain-consolidation` plan-group is the owner of the actual edits. This task neither schedules nor performs them.

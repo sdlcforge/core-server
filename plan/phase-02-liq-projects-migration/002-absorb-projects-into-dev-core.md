@@ -44,6 +44,8 @@ architectural_impact: true
 
 ## Assumptions
 
+- **Cross-repository commit mechanics.** The task's own worktree is a `liq-projects` worktree, but the edits land in the dev-core checkout. Do the work on a dedicated branch in dev-core (e.g. `task/<this-task-slug>`) rather than committing to dev-core's `main`, and report the dev-core branch and commit SHA — merging that branch is a manager/user step. If a git operation there is refused by the environment's agent-scope guard, halt and report the exact command rather than working around it. The precedent for this pattern is core-server's completed `bun-conversion` task `003`, whose commit landed in the `comply-defaults` repository on its own `task/...` branch with the merge left unrecorded in the plan.
+
 - Phase 1 (both tasks) and phase 2 task 001 have landed and been merged to their repositories' working branches. This task reads `liq-projects/main` (or whatever branch the manager names), not a task branch.
 - `liq-projects`'s post-restructure file census and handler count were recorded by task 001 and are available; if they are not, derive them from `liq-projects` directly before merging so the parity checks have a baseline.
 - The dev-core checkout can `npm install` from the registry for the 16 runtime dependencies. `@liquid-labs/playground-monitor` is at a `beta` range and the rest at `alpha` ranges; all resolve today for liq-projects, so a resolution failure here is an environment problem to report, not a range to "fix".

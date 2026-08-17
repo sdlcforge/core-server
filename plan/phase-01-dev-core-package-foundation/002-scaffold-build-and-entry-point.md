@@ -52,6 +52,8 @@ architectural_impact: true
 
 ## Assumptions
 
+- **Cross-repository commit mechanics.** The task's own worktree is a `liq-projects` worktree, but the edits land in the dev-core checkout. Do the work on a dedicated branch in dev-core (e.g. `task/<this-task-slug>`) rather than committing to dev-core's `main`, and report the dev-core branch and commit SHA — merging that branch is a manager/user step. If a git operation there is refused by the environment's agent-scope guard, halt and report the exact command rather than working around it. The precedent for this pattern is core-server's completed `bun-conversion` task `003`, whose commit landed in the `comply-defaults` repository on its own `task/...` branch with the merge left unrecorded in the plan.
+
 - Task 001 has landed, so `docs/dev-core-consolidation-contract.md` exists in dev-core and is the specification this task implements. If the two disagree, the contract wins and the discrepancy is reported.
 - `npm install` in dev-core can reach the registry for the three `@liquid-labs/sdlc-resource-*` devDependencies. If it cannot, halt and report rather than vendoring or stubbing them — the toolchain choice is settled and a workaround would silently diverge from the source packages.
 - `make` targets shell out to `npm explore @liquid-labs/sdlc-resource-*` to locate Babel/Rollup/Jest/ESLint configs (see `make/10-resources.mk`), so they only work after a successful install.

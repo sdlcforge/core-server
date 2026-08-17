@@ -48,6 +48,8 @@ architectural_impact: true
 
 ## Assumptions
 
+- **Cross-repository commit mechanics.** The task's own worktree is a `liq-projects` worktree, but the edits land in the dev-core checkout. Do the work on a dedicated branch in dev-core (e.g. `task/<this-task-slug>`) rather than committing to dev-core's `main`, and report the dev-core branch and commit SHA — merging that branch is a manager/user step. If a git operation there is refused by the environment's agent-scope guard, halt and report the exact command rather than working around it. The precedent for this pattern is core-server's completed `bun-conversion` task `003`, whose commit landed in the `comply-defaults` repository on its own `task/...` branch with the merge left unrecorded in the plan.
+
 - The dev-core checkout is at `/Users/zane/playground/sdlcforge/dev-core`, is clean, and is on `main` at commit `07d7f0e` with `package.json` as its only tracked file. If it has diverged (extra files, other branches), report the difference rather than working around it.
 - dev-core has no `node_modules` and no lockfile; nothing in this task needs either.
 - dev-core is not itself a Flow-managed project with its own `plan/` directory, and this task must not create one there.
