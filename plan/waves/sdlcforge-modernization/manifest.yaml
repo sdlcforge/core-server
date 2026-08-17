@@ -39,13 +39,13 @@ waves:
             liq-integrations-issues-github: PLACEHOLDER
         - name: Create sdlcforge/dev-core
           slug: dev-core-consolidation
-          description: 'Merge liq-projects, liq-work, liq-orgs, and plugable-projects-audit into a new sdlcforge/dev-core package. Re liq-projects-lib: investigation found no function in it is actually used by liq-projects (contrary to initial recollection) - the two real, single-consumer usages are crossLinkDevProjects (liq-work only) and determineCurrentMilestone (liq-integrations-issues-github only, tracked under core-server-domain-consolidation). No usage was found shared across 2+ consumers, so nothing currently qualifies as "genuinely shared." Applying the leave-shared/move-single-use rule to the real usage found: crossLinkDevProjects moves into dev-core with liq-work; determineCurrentMilestone inlines into liq-integrations-issues-github (see core-server-domain-consolidation). liq-projects-lib is retired once both are absorbed, unless further investigation surfaces a real shared use. Flag to user: this substitutes the actual-usage finding for the original "used only by liq-projects" framing, since liq-projects was found not to depend on this lib at all - confirm this matches intent.'
+          description: 'Merge liq-projects, liq-work, liq-orgs, and plugable-projects-audit into a new sdlcforge/dev-core package. liq-projects-lib retires once liq-work absorbs its sole surviving single-consumer usage (crossLinkDevProjects); determineCurrentMilestone inlines into liq-integrations-issues-github separately under core-server-domain-consolidation. Lead-project-for-this-slice: liq-projects (most central of the four functional participants; liq-work explicitly orchestrates atop it).'
           plans:
-            liq-orgs: PLACEHOLDER
-            liq-projects: PLACEHOLDER
-            liq-projects-lib: PLACEHOLDER
-            liq-work: PLACEHOLDER
-            plugable-projects-audit: PLACEHOLDER
+            liq-orgs: dev-core-consolidation
+            liq-projects: dev-core-consolidation
+            liq-projects-lib: dev-core-consolidation
+            liq-work: dev-core-consolidation
+            plugable-projects-audit: dev-core-consolidation
         - name: Rename sdlcpilot-cli to sdlcforge/core-cli
           slug: sdlcpilot-cli-rename
           description: 'Rename @liquid-labs/sdlcpilot-cli to @sdlcforge/core-cli (GitHub org transfer + npm scope move, corrected mid-planning from an originally-assumed sdlc-cli target to the already-live core-cli name, confirmed by the user). UPDATE 2026-08-15: COMPLETE. All 5 phase-1 tasks landed (GitHub identity verified, package.json/bun.lock identity updated, build artifacts and self-references renamed including a manager-approved fix for an unrelated pre-existing @liquid-labs/plugable-defaults PLUGABLE_REGISTRY export removal, version bumped to 1.0.0-alpha.11, directory relocated to sdlcforge/core-cli), phase-review gate passed (one trivial minor finding fixed via follow-up dispatch), plan finalized and merged to main. The project-index slug for this participant changed from sdlcpilot-cli to core-cli as a result; the plans map key below was updated to match. Remaining open item (tracked in this project''s own plan/followups.yaml, not blocking): npm publish --access public --tag alpha for @sdlcforge/core-cli@1.0.0-alpha.11 still needs to be run manually by the user - blocked in this environment by the Claude Code permission classifier and an npm registry 401 credential issue, matching the sibling pluggable-defaults-rename plan''s own precedent. Separate from the CLI/server binary-unification question raised for a later wave - this was just the rename/relocation.'
