@@ -38,11 +38,3 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'During phase-3 (yalc-dependency-refresh) task execution, the manager''s pre-dispatch `yalc push` from plugable-express propagated a dist build that was stale relative to plugable-express''s own current main branch (missing a registerPathVar plugin-setup parameter that liq-credentials needs to start up), which briefly broke core-server''s local server startup. The dispatched task agent resolved it (forced rebuild + re-push from plugable-express, source untouched, per the task doc''s own re-push contingency) and re-verified. Root cause not investigated further: worth checking whether plugable-express''s prepack/make build has an mtime-gating or lifecycle-script issue that could cause a stale dist/ to be packed on a future yalc push.'
-    - title: Stale liq-integrations doc row
-      id: 63CF
-      date: "2026-08-16"
-      tags:
-        - type:documentation
-        - priority:low
-        - effort:unspecified
-      text: docs/architecture/plugin-loading-tiers.md's tier-3 row for @liquid-labs/liq-integrations describes it as "the general integrations framework" — a still-separate, active package — but its functionality has actually been folded into @liquid-labs/plugable-express (framework-consolidation plan). Left untouched by the dependency-removal task (only the plugable-server-documentation row, tier 9, was the named touch point); this row's prose should be corrected or the row removed to match, as a separate, deliberate documentation decision.
