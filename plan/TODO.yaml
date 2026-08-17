@@ -16,6 +16,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: scaffold-build-and-entry-point
+          title: Scaffold Build And Entry Point
+          path: phase-01-dev-core-package-foundation/002-scaffold-build-and-entry-point.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 2
       slug: liq-projects-migration
       title: Liq-Projects Migration
