@@ -40,6 +40,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: absorb-projects-into-dev-core
+          title: Absorb Projects Into Dev-Core
+          path: phase-02-liq-projects-migration/002-absorb-projects-into-dev-core.md
+          done: false
+          tier: opus-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 3
       slug: retire-liq-projects
       title: Retire Liq-Projects
