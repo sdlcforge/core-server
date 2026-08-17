@@ -1,0 +1,8 @@
+slug: dev-core-consolidation
+version: 1
+title: ""
+phases:
+    - number: 1
+      slug: dev-core-package-foundation
+      title: Dev-Core Package Foundation
+      tasks: []
