@@ -50,6 +50,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 3
+          slug: author-consumer-migration-handoff
+          title: Author Consumer Migration Handoff
+          path: phase-02-liq-projects-migration/003-author-consumer-migration-handoff.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 3
       slug: retire-liq-projects
       title: Retire Liq-Projects
