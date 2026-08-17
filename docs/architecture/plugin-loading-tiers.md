@@ -17,7 +17,7 @@
 
 `src/lib/app-init.mjs` is where `core-server` assembles configuration and hands off to `@liquid-labs/plugable-express`'s `appInit`. The three tiers always load in the same fixed order:
 
-<!-- For AI agents and non-visual readers: this diagram shows the fixed load order — core plugins first, then the 12 explicit npm-dependency plugins declared in app-init.mjs, then any user-supplied plugins discovered under ${COMPLY_HOME}/plugins/server/ — with each tier's routes merging into one aggregated API surface. -->
+<!-- For AI agents and non-visual readers: this diagram shows the fixed load order — core plugins first, then the 11 explicit npm-dependency plugins declared in app-init.mjs, then any user-supplied plugins discovered under ${COMPLY_HOME}/plugins/server/ — with each tier's routes merging into one aggregated API surface. -->
 
 ```mermaid
 flowchart LR
@@ -27,7 +27,7 @@ flowchart LR
     end
     subgraph T2["Tier 2: explicit"]
         direction TB
-        B["12 npm-dependency packages<br/>declared in app-init.mjs"]
+        B["11 npm-dependency packages<br/>declared in app-init.mjs"]
     end
     subgraph T3["Tier 3: user-supplied"]
         direction TB
@@ -46,26 +46,25 @@ Core plugins are built directly into `@liquid-labs/plugable-express` and load au
 
 ## Tier 2: explicit npm-dependency plugins
 
-The explicit tier is a static, ordered array literal, `explicitPlugins`, declared directly in `src/lib/app-init.mjs` and passed straight through to `appInit`. Every entry is also a regular `dependencies` entry in `package.json`, so the tier's full package set installs alongside `core-server` itself rather than being fetched dynamically at startup. As of this writing the array holds exactly 12 packages, in this order:
+The explicit tier is a static, ordered array literal, `explicitPlugins`, declared directly in `src/lib/app-init.mjs` and passed straight through to `appInit`. Every entry is also a regular `dependencies` entry in `package.json`, so the tier's full package set installs alongside `core-server` itself rather than being fetched dynamically at startup. As of this writing the array holds exactly 11 packages, in this order:
 
 | # | Package | What it contributes |
 |---|---------|----------------------|
 | 1 | `@liquid-labs/liq-controls` | Policy controls for a `plugable-express` server — the package's own description states it "enables and manages policy controls." |
 | 2 | `@liquid-labs/liq-credentials` | Credential storage and retrieval for third-party integrations, keeping secret-handling logic out of `core-server`'s own minimal codebase (per [`docs/architecture.md`](../architecture.md#security-model)). |
-| 3 | `@liquid-labs/liq-integrations` | The general integrations framework — the package's own description states it "enables integrations plugins for a `plugable-express` server," providing the extension point sibling integration packages (like the next entry) build on. |
-| 4 | `@liquid-labs/liq-integrations-issues-github` | A GitHub issue-tracking integration adapter built on the `liq-integrations` framework — e.g. resolving pull-request URLs by head branch and creating or updating pull requests against GitHub issues. |
-| 5 | `@liquid-labs/liq-orgs` | Organization management — creating and managing the organization entities the rest of the SDLC tooling operates within. |
-| 6 | `@liquid-labs/liq-projects` | Project management — project detail, listing, and release/publish operations for projects managed through the server. |
-| 7 | `@liquid-labs/liq-work` | Unit-of-work management — associating projects with units of work and driving QA operations across them. |
-| 8 | `@liquid-labs/plugable-projects-audit` | Project auditing — auditing a project and applying fixes for audit issues found. |
-| 9 | `@liquid-labs/sdlc-projects-badges-coverage` | Generates coverage badges from a project's local `clover.xml` results (per the package's own description). |
-| 10 | `@liquid-labs/sdlc-projects-badges-github-workflows` | Adds GitHub Workflow status badges to a project's `README.md` (per the package's own description). |
-| 11 | `@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd` | Generates GitHub Workflows CI/CD configuration for Node.js/Jest unit testing (per the package's own description). |
-| 12 | `@liquid-labs/sdlc-projects-workflow-local-node-build` | Installs and manages the local Node.js build workflow for a project — the local-build counterpart to the CI/CD workflow packages above. |
+| 3 | `@liquid-labs/liq-integrations-issues-github` | A GitHub issue-tracking integration adapter that registers with `@liquid-labs/plugable-express`'s built-in integrations registry (`app.ext.integrations` / `IntegrationsManager`) — providing capabilities like resolving pull-request URLs by head branch and creating or updating pull requests against GitHub issues. |
+| 4 | `@liquid-labs/liq-orgs` | Organization management — creating and managing the organization entities the rest of the SDLC tooling operates within. |
+| 5 | `@liquid-labs/liq-projects` | Project management — project detail, listing, and release/publish operations for projects managed through the server. |
+| 6 | `@liquid-labs/liq-work` | Unit-of-work management — associating projects with units of work and driving QA operations across them. |
+| 7 | `@liquid-labs/plugable-projects-audit` | Project auditing — auditing a project and applying fixes for audit issues found. |
+| 8 | `@liquid-labs/sdlc-projects-badges-coverage` | Generates coverage badges from a project's local `clover.xml` results (per the package's own description). |
+| 9 | `@liquid-labs/sdlc-projects-badges-github-workflows` | Adds GitHub Workflow status badges to a project's `README.md` (per the package's own description). |
+| 10 | `@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd` | Generates GitHub Workflows CI/CD configuration for Node.js/Jest unit testing (per the package's own description). |
+| 11 | `@liquid-labs/sdlc-projects-workflow-local-node-build` | Installs and manages the local Node.js build workflow for a project — the local-build counterpart to the CI/CD workflow packages above. |
 
-Packages 9–12 are the `sdlc-projects-workflow-*`/`sdlc-projects-badges-*` family referenced in [`docs/core-server-spec.md`](../core-server-spec.md#key-use-cases) as the mechanism behind "install optimized lint/test/build/CI-CD scripts into a project" — they are what actually write that tooling into a target project when invoked through the companion CLI.
+Packages 8–11 are the `sdlc-projects-workflow-*`/`sdlc-projects-badges-*` family referenced in [`docs/core-server-spec.md`](../core-server-spec.md#key-use-cases) as the mechanism behind "install optimized lint/test/build/CI-CD scripts into a project" — they are what actually write that tooling into a target project when invoked through the companion CLI.
 
-Because every explicit-tier package is a declared npm dependency rather than a dynamically-fetched one, the [Docker multi-version test suite](../architecture.md#test-infrastructure) exists primarily to catch loading regressions across this specific 12-package set on a fresh `npm install`, across every supported Node.js version — not to re-verify per-package internal correctness, which is each package's own responsibility.
+Because every explicit-tier package is a declared npm dependency rather than a dynamically-fetched one, the [Docker multi-version test suite](../architecture.md#test-infrastructure) exists primarily to catch loading regressions across this specific 11-package set on a fresh `npm install`, across every supported Node.js version — not to re-verify per-package internal correctness, which is each package's own responsibility.
 
 ## Tier 3: user-supplied plugins
 
