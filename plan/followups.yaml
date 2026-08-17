@@ -38,14 +38,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'During phase-3 (yalc-dependency-refresh) task execution, the manager''s pre-dispatch `yalc push` from plugable-express propagated a dist build that was stale relative to plugable-express''s own current main branch (missing a registerPathVar plugin-setup parameter that liq-credentials needs to start up), which briefly broke core-server''s local server startup. The dispatched task agent resolved it (forced rebuild + re-push from plugable-express, source untouched, per the task doc''s own re-push contingency) and re-verified. Root cause not investigated further: worth checking whether plugable-express''s prepack/make build has an mtime-gating or lifecycle-script issue that could cause a stale dist/ to be packed on a future yalc push.'
-    - title: golden-api-spec snapshot stale
-      id: dpuY
-      date: "2026-08-16"
-      tags:
-        - type:bug
-        - priority:low
-        - effort:unspecified
-      text: '`bun run test` has 1 pre-existing failure: src/lib/test/golden-api-spec.test.js ("GET /server/api matches the golden snapshot"). Caused by the plugable-express 1.0.0-alpha.58 yalc upgrade already linked into this repo (new core routes — e.g. the absorbed /server/plugins/integrations/* endpoints — are now registered directly by plugable-express), not by the liq-integrations/plugable-server-documentation dependency-removal task. Confirmed via git stash that the failure exists identically on the unmodified worktree. Regenerating the checked-in golden snapshot (test/__snapshots__/golden-api-spec.json, and likely golden-plugins-list.json) via `npm run test:update-golden-api-spec` is a deliberate opt-in step per plan/resources/golden-api-spec-baseline.md — should be reviewed and accepted rather than auto-regenerated.'
     - title: Stale liq-integrations doc row
       id: 63CF
       date: "2026-08-16"
