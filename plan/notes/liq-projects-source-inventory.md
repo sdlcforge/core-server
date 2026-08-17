@@ -9,7 +9,7 @@ Everything here was read from source, not from the README. Where the README and 
 ## Package facts
 
 - Name `@liquid-labs/liq-projects`, version `1.0.0-alpha.15`, `main: dist/liq-projects.js`, `license: UNLICENSED`, `engines.node >=18.0.0`.
-- 58 git-tracked files under `src/` (including 7 test-fixture data files), 32 git-tracked generated HTML files under `docs/`, plus `Makefile`, `make/*.mk` (8 files), `README.md`, `.gitignore`, `.sdlc-data.yaml`, `.catalyst-data.yaml`, `package.json`, `package-lock.json`.
+- 59 git-tracked files under `src/` — 1 root `index.js`, 1 `setup.mjs`, 2 `index.js` aggregators, 17 top-level handler modules, 14 `_lib/` modules, 9 files under `_lib/test/` (2 tests + 7 data fixtures), 9 under `test/`, and 6 under `releases/` — plus 32 git-tracked generated HTML files under `docs/`, plus `Makefile`, `make/*.mk` (8 files), `README.md`, `.gitignore`, `.sdlc-data.yaml`, `.catalyst-data.yaml`, `package.json`, `package-lock.json`.
 - 16 runtime dependencies, 3 devDependencies (`@liquid-labs/sdlc-resource-{babel-and-rollup,eslint,jest}`).
 - Runtime dependencies to union into dev-core ([D4](./dev-core-target-shape.md#d4--absorption-mechanic-history-preserving-per-donor-conflict-free) step 3): `@liquid-labs/credentials-db-plugin-github ^1.0.0-alpha.5`, `@liquid-labs/federated-json ^1.0.0-alpha.34`, `@liquid-labs/git-toolkit ^1.0.0-alpha.16`, `@liquid-labs/github-toolkit ^1.0.0-alpha.20`, `@liquid-labs/http-smart-response ^1.0.0-alpha.6`, `@liquid-labs/liq-credentials-db ^1.0.0-alpha.7`, `@liquid-labs/liq-qa-lib ^1.0.0-alpha.9`, `@liquid-labs/npm-toolkit ^1.0.0-alpha.21`, `@liquid-labs/octocache ^1.0.0-alpha.4`, `@liquid-labs/playground-monitor ^1.0.0-beta.4`, `@liquid-labs/semver-plus ^1.0.0-alpha.11`, `@liquid-labs/shell-toolkit ^1.0.0-alpha.10`, `highlight.js ^11.9.0`, `http-errors ^2.0.0`, `natural-sort ^1.0.0`, `shelljs ^0.8.5`.
 - `package.json` also carries a `liq` block (`orgBase`, `packageType: "node|server|lib"`, `tags: [plugin:liq-core, type:plugin:liq-core, implements:documentation]`). A playground-wide grep found no code reading `liq.orgBase`, `liq.packageType`, or `liq.tags` in `plugable-express`, `liq-plugins-lib`, `core-server`, or any donor — with one live exception in the *data* direction: `liq-orgs`' `loadOrgs` reads `packageJSON.liq?.packageType === 'org'` from **scanned playground projects**, not from a plugin's own manifest. The block is therefore vestigial for this package and is not carried into dev-core.
@@ -49,7 +49,7 @@ Route paths come from each module's `path` array (e.g. `['projects', ':projectNa
 | *(new file)* | `src/projects/index.mjs` — exports `{ handlers, setup }` |
 | `src/handlers/projects/index.js` | `src/projects/handlers/index.js` |
 | `src/handlers/projects/<handler>.mjs` (17 files, incl. `document.js`) | `src/projects/handlers/<handler>.mjs` |
-| `src/handlers/projects/_lib/**` (13 modules) | `src/projects/handlers/_lib/**` |
+| `src/handlers/projects/_lib/**` (14 modules) | `src/projects/handlers/_lib/**` |
 | `src/handlers/projects/_lib/test/**` (2 tests + 7 data files) | `src/projects/handlers/_lib/test/**` |
 | `src/handlers/projects/test/**` (6 `.test.mjs`, 1 stray `.mjs`, 2 `test/lib/` helpers) | `src/projects/handlers/test/**` |
 | `src/handlers/projects/releases/**` (2 handlers, `index.js`, 3 `_lib` modules) | `src/projects/handlers/releases/**` |
