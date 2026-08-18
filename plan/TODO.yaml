@@ -34,6 +34,7 @@ phases:
     - number: 8
       slug: liq-work-migration
       title: liq-work Migration Into dev-core
+      diff_base: b37ed4db14ef07225487162abf2be864941f0438
       tasks:
         - number: 1
           slug: restructure-src-into-dev-core-layout
