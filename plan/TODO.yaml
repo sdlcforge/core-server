@@ -45,7 +45,7 @@ phases:
             branch: plan/dev-core-consolidation-02-001
             commit:
                 - d4a3741
-            merge: null
+            merge: beda6fba0651fc42e7fca6e7ae5b79c4ce963067
         - number: 2
           slug: absorb-projects-into-dev-core
           title: Absorb Projects Into Dev-Core
