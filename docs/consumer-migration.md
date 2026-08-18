@@ -6,7 +6,7 @@ This document specifies, for each of the four `@liquid-labs/plugable-express` pl
 
 The [Dev-Core Consolidation Contract](./dev-core-consolidation-contract.md) governs the separate, earlier step of absorbing a package's source into `dev-core`. This document governs the later, independent step of repointing the consumer once an absorption has landed — the two are not the same operation and do not share a timeline.
 
-One section per absorbed package, keyed by submodule short name (`liq-projects`, `liq-orgs`, `liq-work`, `projects-audit`), each added independently as its own handoff is authored. Only the `liq-work` and `liq-projects` sections exist as of this writing.
+One section per absorbed package, keyed by submodule short name (`liq-projects`, `liq-orgs`, `liq-work`, `projects-audit`), each added independently as its own handoff is authored. Only the `liq-work`, `liq-projects`, and `liq-orgs` sections exist as of this writing.
 
 ## Table of contents
 
@@ -26,6 +26,12 @@ One section per absorbed package, keyed by submodule short name (`liq-projects`,
    - [What does not change](#what-does-not-change-1)
    - [Corrections and disclosures](#corrections-and-disclosures-1)
    - [Verification checklist](#verification-checklist)
+4. [liq-orgs](#liq-orgs)
+   - [Edits required in core-server](#edits-required-in-core-server-2)
+   - [Atomicity requirement](#atomicity-requirement-2)
+   - [Provenance change](#provenance-change-2)
+   - [What does not change](#what-does-not-change-2)
+   - [Corrections and disclosures](#corrections-and-disclosures-2)
 
 ## Overview
 
@@ -172,3 +178,74 @@ A consumer's own task can confirm the swap landed cleanly with:
 3. The plugin list (the server's generated API spec, or `GET /server/plugins/list`) reports `@sdlcforge/dev-core` for the `/projects` routes, not `@liquid-labs/liq-projects`.
 4. The `GITHUB_API` credential resolves — `credentialsDB.getToken('GITHUB_API')` succeeds, confirming `dev-core`'s composite `setup` registered the credential type in `liq-projects`'s place.
 5. `core-server`'s three test tiers pass: the unit suite (`make test` / `npm test`, which also exercises the golden-API-spec snapshot), the local integration smoke test (`npm run test:local`, `scripts/test.sh`), and the Docker-based multi-Node-version integration suite (`npm run test:integration`, `test/run-integration-tests.sh`).
+
+## liq-orgs
+
+`liq-orgs` (the `orgs` submodule) has already landed in `dev-core` as of this writing — the second of the four absorptions to land, after `liq-projects`. That makes this the second swap `core-server`'s own plan-group can actually execute today: `core-server`'s own `package.json` and `explicitPlugins` array still carry `@liquid-labs/liq-orgs`, `@liquid-labs/liq-projects`, and `@liquid-labs/liq-work` unswapped as of this writing (re-verified below), so neither this swap nor `liq-projects`'s has landed in `core-server` yet. Whichever of the two executes first performs the one-time `@sdlcforge/dev-core` addition the [Overview](#overview) describes; whichever executes second only removes its own donor entry, exactly as the [liq-projects](#liq-projects) section states for its own case.
+
+### Edits required in core-server
+
+Re-verified directly against `core-server`'s `main` (commit `54b06d0`, 2026-08-17) while writing this section; every line below matched exactly, with no drift from the original plan reading.
+
+| File | Line | Current | Required edit |
+|---|---|---|---|
+| `package.json` | 46 | `"@liquid-labs/liq-orgs": "^1.0.0-alpha.6",` | **Remove.** This is a registry version range, not a `file:.yalc/…` link — unlike `@liquid-labs/liq-projects`, nothing needs `yalc` unlinking; the entry is simply deleted. Add `"@sdlcforge/dev-core": "file:.yalc/@sdlcforge/dev-core"` once, shared with whichever other donor's swap lands in the same commit — do not add it a second time if it is already present. The [liq-projects](#edits-required-in-core-server-1) section's own table has the full `yalc publish`/`yalc add`/`provision-local-deps.sh` walkthrough for this shared addition; it is not repeated here. |
+| `src/lib/app-init.mjs` | 37 | `'@liquid-labs/liq-orgs',` inside the `explicitPlugins` array (lines 33–44) | **Remove.** Add `'@sdlcforge/dev-core'` once, shared with the other donors' entries — do not add it a second time if it is already present. |
+| `docs/architecture.md` | 51 | Prose naming `liq-orgs` among the explicit-tier package examples: `` e.g. `liq-controls`, `liq-credentials`, `liq-integrations`, `liq-integrations-issues-github`, `liq-orgs`, `liq-projects`, `liq-work`, plus several `sdlc-projects-*` workflow and `plugable-*` packages `` | **Update** — drop `liq-orgs` from the example list. |
+| `docs/architecture/plugin-loading-tiers.md` | 56 | Row 4 of the explicit-plugin table: `\| 4 \| @liquid-labs/liq-orgs \| Organization management — creating and managing the organization entities the rest of the SDLC tooling operates within. \|` | **Update** — remove the row. Do not add a parallel `dev-core` row per donor; once all four donors have swapped, the table needs a single `dev-core` row replacing all four, a decision for whichever swap lands last (per the [liq-work](#edits-required-in-core-server) section's identical note). |
+| `test/README.md` | 108 | `- \`@liquid-labs/liq-orgs\`` in the expected-plugin list | **Update** — remove the line. |
+
+**No `core-server` test fixture names `liq-orgs`.** A search of `core-server`'s `test/` tree for `liq-orgs` returns only the `test/README.md` line above; `test/test-basic.js` and `test/test-integration-quick.js` list only `@liquid-labs/liq-controls`, `@liquid-labs/liq-credentials`, and `@liquid-labs/liq-projects` — the same three-fixture set the `liq-projects` section already documents, unchanged by this swap.
+
+Also note, without prescribing action: `explicitPlugins` currently holds **11** entries and does **not** include `@liquid-labs/liq-integrations` (which `plugable-express` lists in its `supersededPlugins` set and skips — `load-plugins.js:10-13`). Some project documentation still describes a 13-entry list including it; the source above is authoritative.
+
+### Atomicity requirement
+
+Remove the `@liquid-labs/liq-orgs` entry and add the `@sdlcforge/dev-core` entry in the same commit — see [How an unsynchronized swap fails](#how-an-unsynchronized-swap-fails) for why no intermediate state is viable in general. For `liq-orgs` specifically, loading both packages at once produces, first and loudest:
+
+```text
+Path variable 'newOrgKey' is already registered.
+```
+
+thrown from `plugable-express/src/lib/path-var-registry.mjs:28-34`. It fires before any handler-level error, because plugin `setup` runs eagerly (`load-plugins.js:29`) while handler registration is deferred into `app.ext.pendingHandlers` (see [How an unsynchronized swap fails](#how-an-unsynchronized-swap-fails)). `orgs`' submodule `setup` (`src/orgs/setup.mjs`) registers `newOrgKey` and `orgKey` synchronously, before returning — separately from the three `app.ext.setupMethods` entries it also queues (`prepare org dependencies` / `load orgs` / `process org setup`, which run later and do not register path vars). `orgKey` would produce the same error if `newOrgKey` were somehow skipped. Had it not fired, the next error would have been:
+
+```text
+Non-unique command path: orgs/create/:newOrgKey
+```
+
+(or one of the other four `/orgs` paths — `orgs/list`, `orgs/:orgKey/parameters/list`, `orgs/:orgKey/parameters/:parameterKey/detail`, `orgs/:orgKey/parameters/:parameterKey/set`), thrown from `plugable-express/src/lib/register-handlers.js:129-131`'s `processCommandPath`.
+
+Both strings are named here verbatim so the failure is recognizable — and greppable — on sight. This is a **loud** failure, not a silent one; it happens at server startup, before the server ever accepts a request.
+
+### Provenance change
+
+Every `/orgs` endpoint's recorded `npmName` becomes `@sdlcforge/dev-core` instead of `@liquid-labs/liq-orgs`. Harmless at runtime, but **visible** in the server's generated API spec (`<serverConfigRoot>/core-api.json`) and in `help` output. `core-server`'s golden characterization snapshots — `test/__snapshots__/golden-api-spec.json` and `golden-plugins-list.json` — should be re-verified after the swap rather than assumed unchanged, though both are currently degenerate (`golden-plugins-list.json` is literally `[]`, and `golden-api-spec.json` carries no `/orgs` entries), so the swap is unlikely to actually move them.
+
+### What does not change
+
+- `app.ext._liqOrgs` keeps its exact name and both of its keys. `orgs` (a key→`Organization` map) is **read** by `liq-controls` at `src/lib/resources/load-controls.mjs:6`, `src/lib/integrations/get-question-controls.mjs:38`, and `src/lib/handlers/orgs/controls/_lib/list-lib.mjs:43` (plus its test fixture, `src/lib/handlers/orgs/controls/_lib/test/list-lib.test.mjs:18`). `orgSetupMethods` is **written** by `liq-policy` at `src/liq-policy/setup.mjs:30,38`. **Neither consumer needs any change.**
+- The three `app.ext.setupMethods` entries `liq-orgs`' submodule registers keep their names, order, and `deps` markers — `['!']` on `prepare org dependencies`, none on `load orgs`, `['*']` on `process org setup` — so server startup ordering is unchanged.
+- The path vars `orgKey`, `newOrgKey`, and `parameterKey` keep their names and validation regexes. `:orgKey` appears in handler paths owned by `liq-controls` (`src/lib/handlers/orgs/controls/list.mjs`) and `plugable-express` itself (`src/handlers/server/next-commands.mjs`), both live, and by the dormant `liq-policy` (e.g. `src/liq-policy/setup.mjs`, `src/liq-policy/handlers/orgs/policies/*`) and `liq-roles` (e.g. `src/setup.mjs`, `src/handlers/orgs/roles/*`). All keep working.
+- All 5 `/orgs` routes keep their exact paths and methods: `orgs/list?`, `orgs/create/:newOrgKey`, `orgs/:orgKey/parameters/list?`, `orgs/:orgKey/parameters/:parameterKey/detail`, and `orgs/:orgKey/parameters/:parameterKey/set`.
+
+### Corrections and disclosures
+
+#### Disclosure: the migrated `/orgs` endpoints do not work
+
+A reasonable post-swap smoke test is `GET /orgs/list`. It will fail, and it failed identically before the swap — this is a pre-existing defect, not something the swap introduces or should be blamed for:
+
+- `list`, `parameters-detail`, `parameters-list`, and `parameters-set` throw `TypeError: Cannot read properties of undefined (reading 'orgs')` on first request, because they read a `model` argument `plugable-express` no longer passes to plugin handlers (`load-plugins.js:36` omits it from the `registerHandlers` call) — the data these handlers actually need lives at `app.ext._liqOrgs.orgs`, not `model.orgs`. `dev-core`'s own `src/orgs/handlers/list.mjs` carries an inline `KNOWN BROKEN` comment documenting exactly this, migrated as-is from the retired `liq-orgs` package.
+- `POST /orgs/create/:newOrgKey` never sends a response and hangs — it creates the local directory (`fs.mkdir`) and then falls through with no `res` call, also carried over as-is and marked `KNOWN BROKEN` in `dev-core`'s `src/orgs/handlers/create.mjs`.
+
+Use this positive check instead: the plugin loads without error, all 5 `/orgs` routes appear in the generated API spec under `@sdlcforge/dev-core`, and `app.ext._liqOrgs.orgs` is populated — observable indirectly through `liq-controls` continuing to work, since `load-controls.mjs` reads that same map on every request.
+
+#### Correction: the consumer inventory beyond core-server is real for `liq-orgs` (C2)
+
+The [Dev-Core Consolidation Contract](./dev-core-consolidation-contract.md#source-package-retirement-policy) states that "the only npm dependent of any source package is `@sdlcforge/core-server`." That is true for `liq-projects` and **false for `liq-orgs`.** Beyond `core-server`, `@liquid-labs/liq-orgs` is declared in `package.json` by:
+
+- `@liquid-labs/liq-roles` (`^1.0.0-alpha.1`) — dormant, last commit 2023-11-26; also shells out to `npm explore @liquid-labs/liq-orgs -- pwd` in two test files, `src/handlers/orgs/jobs/test/list.test.js:12` and `src/handlers/orgs/jobs/test/detail.test.js:12`.
+- `@liquid-labs/liq-test-lib` (`^1.0.0-alpha.2`) — **already broken independently of this plan:** `src/org-setup.mjs` imports `appInit`/`initModel`/`Reporter` from the retired `@liquid-labs/liq-core` and loads the likewise-retired `@liquid-labs/liq-playground` and `@liquid-labs/liq-staff`.
+
+Neither is loaded by the running server, neither is a wave participant, and **neither is this plan-group's to fix** — but both would break on an `npm deprecate`/unpublish of `@liquid-labs/liq-orgs`, so this is recorded here rather than left for a later reader to trust the inherited "only core-server" claim.
+
+Also recorded, as dead metadata needing no action: `liq-controls/plugable-express.yaml` declares `dependencies: ['@liquid-labs/liq-projects', '@liquid-labs/liq-orgs']`, but **no code anywhere reads that file** (verified by grep across all `.js`/`.mjs` outside `node_modules` in the `liquid-labs` checkouts). And `plugable-registry/registry.yaml` catalogs `@liquid-labs/liq-orgs` (lines 18, 40, and 50); updating a registry catalog is outside this plan-group.
