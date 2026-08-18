@@ -127,3 +127,20 @@ architectural_impact: true
 - After all moves and the `src/handlers/index.js` deletion, with `git diff --cached -M --stat` showing pure renames.
 - After the `setup.mjs` import rewrite, `src/work/index.mjs`, and the reduced root `src/index.js`, with `make build` green.
 - After the route-parity diff, the `setup`-shape assertion, `make lint`, and the `make test` failure-set comparison, with the census recorded.
+
+## Status
+
+**Outcome: succeeded.** Implemented 2026-08-18.
+
+- Phase 7 verification (requirement 1) passed: no `160000` gitlinks under `src`, `.../proj1/package.json` tracked, `cross-link-dev-projects.mjs` and its test present, zero `liq-projects-lib` references.
+- Pre-move baseline measured (not derived): `git ls-files src` = 72 (68 under `src/handlers/work/`, plus `src/handlers/index.js`, `src/docs/Issues.md`, `src/index.js`, `src/setup.mjs`). Matches the plan document's own derivation exactly.
+- Relocated the tree with `git mv` in one commit (`74e58fb`): `src/handlers/work/**` (68 files) → `src/work/handlers/**`; `src/setup.mjs` → `src/work/setup.mjs`; `src/docs/Issues.md` → `src/work/docs/Issues.md`. All 70 moves recorded as 100%-similarity renames (`git diff --cached -M --stat`: "71 files changed, 1 deletion(-)" with zero content hunks at that stage). `src/handlers/index.js` deleted in the same commit.
+- Made the single required import rewrite in `src/work/setup.mjs` line 3 (`./handlers/work/_lib/work-db` → `./handlers/_lib/work-db`), added `src/work/index.mjs` (exports exactly `handlers`, `setup`), and reduced `src/index.js` to `export * from './work'` plus the inert `name`/`summary` re-exports. Committed separately (`0125279`).
+- Confirmed `src/work/handlers/index.js` still composes with a plain array literal and spreads (`[...issueHandlers, ...projectHandlers]`) — no `handlers.push(...)` side-effect style, so it composes cleanly into a fresh aggregator array with nothing to fix in the next task.
+- Post-restructure census: `git ls-files src | wc -l` = **72** (count-neutral: one delete offset by one create). `git ls-files src/handlers` and `find src -path 'src/handlers/*'` both empty. `git ls-files src/docs` empty; `src/work/docs/Issues.md` tracked. Full listing recorded in the structured report.
+- Content-drift check against the pre-move baseline (`git diff 6f7637e --cached -M --numstat`): exactly `0 1` for `src/handlers/index.js` (delete), `1 2` for `src/index.js` (reduced), `4 0` for `src/work/index.mjs` (new), `1 1` for `src/work/setup.mjs` (the one import line) — every other of the 73 changed paths shows `0 0`.
+- Build/route parity: `make build` produced `dist/liq-work.js` at 82,698 bytes, byte-identical to the pre-move build (no size difference). Loaded with the `SlowBuffer` preload shim (measurement aid only, never committed): `handlers.length === 30`, `typeof setup === 'function'`, `name === 'core-work'`, `summary === 'Manages SDLC workflow as units of work.'`; the sorted `(method, path)` list diffed empty against the pre-move capture.
+- `setup`-shape assertion passed against a stub app: `WORK_DB_PATH` set to `/tmp/x/work/work-db.yaml`; exactly one path var registered, name `workKey`, `validationRe` `work-[^/]+(?:/|%2[Ff])[^/]+(?:/|%2[Ff])[0-9]+`.
+- `make lint` clean (zero findings). `make test`: 3 suites / 1 failed / 2 passed, 7 tests passing — identical failure set to the measured pre-move baseline (`work-db.test.js` fails to load with the pre-existing Node 26 `SlowBuffer` `TypeError`; no new failures). Depth-agnostic test discovery confirmed: `test-staging/work/handlers/_lib/test/determine-projects.test.js` and `test-staging/work/handlers/_lib/test/data/playground/orgA/proj1/package.json` both exist post-build.
+- `git status --porcelain` clean; `package.json`, `package-lock.json`, `Makefile`, `README.md` all byte-identical to `HEAD` prior to this task's commits.
+- Affected source files: `src/work/setup.mjs` (moved + one-line import edit), `src/work/index.mjs` (new), `src/index.js` (reduced), `src/handlers/index.js` (deleted), plus 68 files relocated under `src/work/handlers/**` and `src/work/docs/Issues.md` (pure renames, no content change).
