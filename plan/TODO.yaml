@@ -5,7 +5,17 @@ phases:
     - number: 5
       slug: liq-orgs-migration
       title: liq-orgs Migration
-      tasks: []
+      tasks:
+        - number: 1
+          slug: restructure-src-into-dev-core-layout
+          title: Restructure Src Into Dev-Core Layout
+          path: phase-05-liq-orgs-migration/001-restructure-src-into-dev-core-layout.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 6
       slug: retire-liq-orgs
       title: Retire liq-orgs
