@@ -25,6 +25,7 @@ phases:
           path: phase-07-liq-work-pre-migration-remediation/002-inline-cross-link-dev-projects.md
           done: false
           tier: sonnet-high
+          digest: 'Inlined crossLinkDevProjects verbatim from liq-projects-lib into liq-work as a new sibling module (src/handlers/work/_lib/cross-link-dev-projects.mjs), rewired work-db.mjs''s import to the relative path, ported the function''s only test and fixture into test/data/cross-link/, and removed the @liquid-labs/liq-projects-lib dependency. All validation passed: byte-identical copy, one-line work-db.mjs diff, make test shows 1 failed/2 passed/3 total (same known SlowBuffer failure, no regression), make build/lint clean, bundle no longer references liq-projects-lib but does bundle the function body, 30-route plugin contract byte-for-byte unchanged. liq-projects-lib untouched (read-only).'
           git:
             branch: plan/dev-core-consolidation-07-002
             commit:
