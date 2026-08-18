@@ -32,7 +32,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/dev-core-consolidation-12-001
-            commit: []
+            commit:
+                - ca2817e
             merge: null
         - number: 2
           slug: absorb-projects-audit-into-dev-core
