@@ -1,5 +1,4 @@
-export * from './handlers'
-export * from './setup'
+export * from './work'
 
 const name = 'core-work'
 const summary = 'Manages SDLC workflow as units of work.'
