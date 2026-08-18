@@ -11,7 +11,7 @@ phases:
           slug: make-test-fixture-reproducible
           title: Make Test Fixture Reproducible From Git
           path: phase-07-liq-work-pre-migration-remediation/001-make-test-fixture-reproducible.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: The orgA/proj1 fixture's gitlink (mode 160000, no .gitmodules entry) was untracked and its real content (package.json, byte-identical) committed as an ordinary tracked file. determine-projects.test.js now carries an idempotent beforeAll that git init -q -b 'orgA/proj1/1's the fixture directory under gitignored test-staging/, commits package.json with per-command git identity, and asserts via determineCurrentBranch that the resulting branch is exactly orgA/proj1/1 before test.each rows run. Verified via fresh clone (npm install + make test) and a .git-removal re-run; confirmed the new assertion fails legibly on divergence. Build, lint, and the pre-existing work-db.test.js SlowBuffer failure signature are all unchanged (1 failed/1 passed suite, 6 tests passing).
           git:
