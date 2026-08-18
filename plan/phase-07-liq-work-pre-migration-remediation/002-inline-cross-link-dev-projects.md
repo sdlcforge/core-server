@@ -95,3 +95,25 @@ architectural_impact: true
 - After the function is copied and `work-db.mjs`'s import is rewritten, with the `diff` against the origin clean and `make build` green.
 - After the test and fixture are ported and `make test` shows 3 suites with the known single failure.
 - After the dependency removal and `npm install`, with the `grep -c "liq-projects-lib" dist/liq-work.js` → 0 check and the 30-route parity diff recorded.
+
+## Status
+
+**Outcome: succeeded.** Date: 2026-08-18.
+
+- Requirement 1 re-verification matched the task doc's stated premise exactly: `grep -rn "liq-projects-lib" src/` returned exactly one line (`work-db.mjs:13`); `grep -rn "crossLinkDevProjects" src/` returned exactly two lines (`work-db.mjs:13` and `:90`); `package.json` had `@liquid-labs/liq-projects-lib` at `^1.0.0-alpha.12` in `dependencies` and nowhere else in the manifest.
+- `src/handlers/work/_lib/cross-link-dev-projects.mjs` was copied byte-for-byte from `/Users/zane/playground/liquid-labs/liq-projects-lib/src/cross-link-dev-projects.mjs` (`diff` reports no differences — no lint-forced deviation was needed).
+- `work-db.mjs`'s import was rewritten to `import { crossLinkDevProjects } from './cross-link-dev-projects'`, placed in the relative-import block after `./constants` (alphabetical-by-path, matching the file's existing convention), and moved out of the alphabetized `@liquid-labs/*` external block. The call site at line 90 is unchanged. `git diff` on the file shows exactly the expected one-line move (a delete+add pair for the same import).
+- Test and fixture ported to `src/handlers/work/_lib/test/cross-link-dev-projects.test.js` and `src/handlers/work/_lib/test/data/cross-link/orgA/proj1/package.json` (byte-identical to the origin fixture), with only the import specifier and fixture path adjusted per the task doc.
+- `@liquid-labs/liq-projects-lib` removed from `package.json` `dependencies` (exactly one line removed, nothing else touched) and `package-lock.json` refreshed via `npm install`. `@liquid-labs/federated-json` (`^1.0.0-alpha.33`) and `@liquid-labs/shell-toolkit` (`^1.0.0-alpha.3`) were confirmed already present and untouched.
+- Validation: `grep -rn "liq-projects-lib" src/` and `grep -n "liq-projects-lib" package.json` both return nothing; `npm ls @liquid-labs/liq-projects-lib` reports it absent (empty tree, non-zero exit as expected for an absent package). `make build` produces `dist/liq-work.js`; `grep -c "liq-projects-lib" dist/liq-work.js` → 0; `grep -c "Was asked to cross-link" dist/liq-work.js` → 1 (function body is bundled). `make test`: `Test Suites: 1 failed, 2 passed, 3 total` — `determine-projects.test.js` and the new `cross-link-dev-projects.test.js` pass; `work-db.test.js` fails with the pre-existing `TypeError: Cannot read properties of undefined (reading 'prototype')`, matching the known failure set. `make lint` is clean (empty report) including both new files.
+- Plugin contract parity: built a scratch pre-task bundle from commit `ca63582` (the worktree's provisioning base) in an isolated git worktree, loaded both bundles under the required `SlowBuffer` Node v26.5.0 preload shim, and confirmed `handlers.length === 30` and `typeof setup === 'function'` in both, with an exact `diff` match (no differences) between the pre- and post-task 30-entry `path` arrays. The scratch worktree was removed afterward; the shim was never committed or referenced from the repo.
+- `/Users/zane/playground/liquid-labs/liq-projects-lib` was read/copied from only — `git status --porcelain` there shows two pre-existing untracked entries (`.flow/`, `worktrees/`) with mtimes from Aug 17–18 predating this task's work, unrelated to this task and not created or touched by it; no commit or branch was made in that repository.
+- Assumption confirmed: `liq-projects-lib`'s built `dist/liq-projects-lib.js` (resolving `1.0.0-alpha.13`) and its `src/cross-link-dev-projects.mjs` do not differ in substance — the minified `dist` bundle carries the same error string, structure, and logic as the copied `src` file.
+
+Affected source files (repo-relative):
+- `src/handlers/work/_lib/cross-link-dev-projects.mjs` (new)
+- `src/handlers/work/_lib/work-db.mjs` (import rewrite only)
+- `src/handlers/work/_lib/test/cross-link-dev-projects.test.js` (new)
+- `src/handlers/work/_lib/test/data/cross-link/orgA/proj1/package.json` (new)
+- `package.json` (dependency removal)
+- `package-lock.json` (refreshed)
