@@ -10,3 +10,7 @@ phases:
       slug: projects-audit-migration
       title: projects-audit Migration Into dev-core
       tasks: []
+    - number: 13
+      slug: retire-plugable-projects-audit
+      title: Retire plugable-projects-audit
+      tasks: []
