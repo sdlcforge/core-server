@@ -22,7 +22,7 @@ phases:
           slug: scaffold-build-and-entry-point
           title: Scaffold Build And Entry Point
           path: phase-01-dev-core-package-foundation/002-scaffold-build-and-entry-point.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: 'Scaffolded dev-core''s build tooling and plugin entry point per the landed consolidation contract: authored package.json''s description/engines/scripts/devDependencies (preserving protected fields byte-for-byte), seeded .gitignore, Makefile, and make/*.mk from liq-projects (renaming the JS-build fragment to make/50-dev-core-js.mk targeting dist/dev-core.js from src/index.mjs), and updated .sdlc-data.yaml. Wrote src/index.mjs as a documented, currently-empty aggregator (fresh handlers array, ordered submoduleSetups list awaited by async setup) designed for two-line-per-absorption extension, plus a smoke test. Confirmed .mjs Rollup entry works with no deviation. npm install, make build, make test, make lint, make qa all ran clean. Committed on task/scaffold-build-and-entry-point (8df3144) in dev-core (left checked out on main afterward, per corrected instructions).'
           git:
