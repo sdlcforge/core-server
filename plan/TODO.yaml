@@ -47,7 +47,7 @@ phases:
             branch: plan/dev-core-consolidation-08-001
             commit:
                 - 9bbadb6
-            merge: null
+            merge: 0a16d2be872a1bc4ab8f3c65b235bdc931fdad89
         - number: 2
           slug: absorb-work-into-dev-core
           title: Absorb Work Into Dev-Core
