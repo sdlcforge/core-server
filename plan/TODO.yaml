@@ -18,7 +18,7 @@ phases:
             branch: plan/dev-core-consolidation-11-001
             commit:
                 - 95c28d8
-            merge: null
+            merge: ad967a95f84443b8b5abf01cfa840f28c2c9162c
     - number: 12
       slug: projects-audit-migration
       title: projects-audit Migration Into dev-core
