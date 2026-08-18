@@ -7,6 +7,9 @@ import { handlers, setup } from '../index'
 import { handlers as projectsHandlers } from '../projects'
 import { handlers as orgsHandlers } from '../orgs'
 import { handlers as workHandlers } from '../work'
+import * as projectsAuditModule from '../projects-audit'
+
+const { handlers : projectsAuditHandlers } = projectsAuditModule
 
 describe('dev-core plugin entry point', () => {
   test('handlers is an array', () => {
@@ -21,10 +24,39 @@ describe('dev-core plugin entry point', () => {
     // Update this expectation as each further submodule is wired in. The aggregator must build
     // a fresh array rather than alias a submodule's own, or two submodules pushing into a
     // shared array would corrupt each other.
-    expect(handlers).toEqual([...projectsHandlers, ...orgsHandlers, ...workHandlers])
+    expect(handlers).toEqual([
+      ...projectsHandlers, ...orgsHandlers, ...workHandlers, ...projectsAuditHandlers
+    ])
     expect(handlers).not.toBe(projectsHandlers)
     expect(handlers).not.toBe(orgsHandlers)
     expect(handlers).not.toBe(workHandlers)
+    expect(handlers).not.toBe(projectsAuditHandlers)
+  })
+
+  test('projects-audit contributes handlers but no setup', () => {
+    // `projects-audit` is the only submodule of the four with no `setup` at all
+    // (docs/dev-core-consolidation-contract.md#composite-setup-ordering). Nothing may be added
+    // to the composite setup list on its behalf -- not a placeholder, not a no-op. This asserts
+    // the absence at the source rather than inferring it from the composite setup's behavior.
+    expect(projectsAuditModule.setup).toBeUndefined()
+    expect(projectsAuditHandlers).toHaveLength(4)
+  })
+
+  test('the four projects-audit routes are registered, with their exact paths', () => {
+    // The `projects-audit` suite is a single placeholder assertion over one pure function and
+    // cannot detect a handler regression, so the route surface is asserted here instead. These
+    // paths mount under `/projects` alongside the `projects` submodule's own; a duplicate would
+    // be a hard startup crash, which the no-duplicate test above covers.
+    const auditRoutes = handlers
+      .filter(({ path }) => path?.[0] === 'projects' && /^audit/.test(path[path.length - 1]))
+      .map(({ method, path }) => `${method.toUpperCase()} ${JSON.stringify(path)}`)
+      .sort()
+    expect(auditRoutes).toEqual([
+      'GET ["projects",":projectName","audit"]',
+      'GET ["projects","audit"]',
+      'PUT ["projects",":projectName","audit-fix"]',
+      'PUT ["projects","audit-fix"]'
+    ])
   })
 
   test('no (method, path) pair is registered twice across the merged handlers array', () => {

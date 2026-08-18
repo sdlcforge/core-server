@@ -10,7 +10,7 @@ It does not cover per-endpoint parameter reference (that lives in the route tabl
 
 `@sdlcforge/dev-core` is a `plugable-express` plugin for `@sdlcforge/core-server`. It consolidates development-lifecycle capability that previously shipped as four separate `plugable-express` plugin packages — `@liquid-labs/liq-projects`, `@liquid-labs/liq-orgs`, `@liquid-labs/liq-work`, and `@liquid-labs/plugable-projects-audit` — into one package with one build, one release cycle, and one explicit statement of the runtime contracts those four packages used to share implicitly across separate repositories.
 
-As of this writing, three of the four donors have landed: `projects`, `orgs`, and `work` are absorbed and live under `src/`. `projects-audit` has not yet been absorbed. `core-server`'s own `explicitPlugins` list has not yet been repointed from the four donor packages to `@sdlcforge/dev-core` — that repointing is a separate, later step, specified per-donor in [`docs/consumer-migration.md`](./consumer-migration.md), not performed by this package itself.
+All four donors have landed: `projects`, `orgs`, `work`, and `projects-audit` are absorbed and live under `src/`. `core-server`'s own `explicitPlugins` list has not yet been repointed from the four donor packages to `@sdlcforge/dev-core` — that repointing is a separate, later step, specified per-donor in [`docs/consumer-migration.md`](./consumer-migration.md), not performed by this package itself.
 
 ```mermaid
 graph TD
@@ -19,45 +19,50 @@ graph TD
     Aggregator --> Projects["src/projects/<br/>handlers + setup<br/>(landed)"]
     Aggregator --> Orgs["src/orgs/<br/>handlers + setup<br/>(landed)"]
     Aggregator --> Work["src/work/<br/>handlers + setup<br/>(landed)"]
-    Aggregator -.->|not yet absorbed| ProjectsAudit["src/projects-audit/<br/>handlers only"]
+    Aggregator --> ProjectsAudit["src/projects-audit/<br/>handlers only, no setup<br/>(landed)"]
 
     Projects -->|installs, 1st in setup order| LiqProjects["app.ext._liqProjects"]
     Orgs -->|reads/writes, 2nd in setup order| LiqOrgs["app.ext._liqOrgs"]
     Work -->|writes, 3rd in setup order| WorkDbPath["app.ext.constants.WORK_DB_PATH"]
+    ProjectsAudit -.->|reads at request time| LiqProjects
 
     LiqProjects --> LiqControlsExt["liq-controls (external package)"]
     LiqOrgs --> LiqControlsExt
     LiqProjects --> LiqIntegrationsExt["liq-integrations-issues-github (external package)"]
 ```
 
-<!-- For AI agents and non-visual readers: the diagram above shows core-server dynamic-importing dist/dev-core.js, which resolves to the single aggregator src/index.mjs. The aggregator composes three landed submodules (projects, orgs, work) and one not-yet-absorbed submodule (projects-audit, dashed edge). Each landed submodule's setup installs or maintains its own app.ext key, in the fixed order projects, then orgs, then work; two of those keys (app.ext._liqProjects and app.ext._liqOrgs) are also read by external packages outside this consolidation, liq-controls and liq-integrations-issues-github. -->
+<!-- For AI agents and non-visual readers: the diagram above shows core-server dynamic-importing dist/dev-core.js, which resolves to the single aggregator src/index.mjs. The aggregator composes all four landed submodules: projects, orgs, and work each contribute handlers and a setup, while projects-audit contributes handlers only and has no setup at all. Each of the three submodules with a setup installs or maintains its own app.ext key, in the fixed order projects, then orgs, then work; projects-audit contributes no key of its own but reads app.ext._liqProjects at request time (dashed edge). Two of those keys (app.ext._liqProjects and app.ext._liqOrgs) are also read by external packages outside this consolidation, liq-controls and liq-integrations-issues-github. -->
 
 The remaining sections detail each part of this picture: the submodule decomposition, the aggregation boundary, the setup-ordering contract, the `app.ext` service contracts (including the external consumers the diagram only names), the route namespaces, and the build/artifact topology.
 
 ## Submodule decomposition
 
-Each absorbed package gets exactly one top-level directory under `src/`, named for its domain, exposing `handlers` and — where the donor had one — `setup` through its own `index.mjs`. No submodule imports another; the four donors never imported each other before consolidation, and that stays true after it (verified: `src/projects/`, `src/orgs/`, and `src/work/` each import only from their own subtree and from external npm dependencies).
+Each absorbed package gets exactly one top-level directory under `src/`, named for its domain, exposing `handlers` and — where the donor had one — `setup` through its own `index.mjs`. No submodule imports another; the four donors never imported each other before consolidation, and that stays true after it (verified: `src/projects/`, `src/orgs/`, `src/work/`, and `src/projects-audit/` each import only from their own subtree and from external npm dependencies).
 
 | Submodule | Status | Absorbed from | `index.mjs` exports |
 |---|---|---|---|
 | `src/projects/` | Landed | `@liquid-labs/liq-projects` | `handlers`, `setup` |
 | `src/orgs/` | Landed | `@liquid-labs/liq-orgs` | `handlers`, `setup` |
 | `src/work/` | Landed | `@liquid-labs/liq-work` | `handlers`, `setup` |
-| `src/projects-audit/` | Not yet absorbed | `@liquid-labs/plugable-projects-audit` | — (planned: `handlers` only, no `setup`) |
+| `src/projects-audit/` | Landed | `@liquid-labs/plugable-projects-audit` | `handlers` only — no `setup` |
 
-`projects-audit` is planned to stay a separate top-level directory from `projects` even though both will mount under the `/projects` route namespace — folding them together would re-couple two independently-absorbed submodules for no structural benefit, per [the consolidation contract's layout convention](./dev-core-consolidation-contract.md#layout-convention).
+`projects-audit` stays a separate top-level directory from `projects` even though both mount under the `/projects` route namespace — folding them together would re-couple two independently-absorbed submodules for no structural benefit, per [the consolidation contract's layout convention](./dev-core-consolidation-contract.md#layout-convention).
+
+`projects-audit` is the one submodule with no `setup`, and it is also the clearest illustration of why the absence of a `setup` is not the absence of a dependency: its handlers read `app.ext._liqProjects` at request time, and two of its four routes carry a `:projectName` segment whose path variable only `projects`' `setup` registers — so registering its handlers without `projects` present throws at server startup. The full statement of that coupling lives in [`README.md`](../README.md#the-projects-audit--projects-dependency).
 
 ## The aggregation boundary
 
 `src/index.mjs` is this package's single plugin surface — the one place all submodules compose. That is a direct consequence of how `plugable-express`'s loader (`load-plugins.js`) works: it dynamic-imports exactly one module per package (`<pluginDir>/<package.json main>`) and reads only two exports from it, `handlers` and `setup` — nothing else the module exports is read. A package cannot register more than one plugin's worth of routes and setup by exporting more from other files; everything has to fold into the one module the loader actually imports.
 
-The aggregator therefore builds one fresh, merged `handlers` array by spreading each landed submodule's own `handlers` array (never by `push`ing into an imported array, since two submodules mutating a shared array would be a latent aliasing bug once they share one package), and one composite `setup` function that awaits each landed submodule's own `setup` in a fixed order (see [The composite-setup ordering contract](#the-composite-setup-ordering-contract) below).
+The aggregator therefore builds one fresh, merged `handlers` array by spreading all four submodules' own `handlers` arrays (never by `push`ing into an imported array, since two submodules mutating a shared array would be a latent aliasing bug once they share one package), and one composite `setup` function that awaits each submodule's own `setup` in a fixed order (see [The composite-setup ordering contract](#the-composite-setup-ordering-contract) below).
+
+The aggregator is also the one file in this package that a careless absorption can silently destroy, which is why [the consolidation contract](./dev-core-consolidation-contract.md#root-file-ownership) calls it out by name: `plugable-projects-audit`'s own root entry point was literally `src/index.mjs` — the same path — and resolving that merge conflict the wrong way would have replaced this aggregator with a one-line re-export, dropping three submodules' handlers and the entire composite `setup` while still producing a valid module and a green `make build`.
 
 The plugin's identity in the server comes from the package manifest, not the module: `plugable-express`'s loader reads `npmName` from `package.json`'s `name` and the server-visible plugin `summary` from `package.json`'s `description`. One consequence follows directly: every endpoint's recorded provenance `npmName` is `@sdlcforge/dev-core`, regardless of which submodule it came from — a visible, permanent change in the server's generated API spec and `help` output relative to when each submodule shipped as its own plugin.
 
 ## The composite-setup ordering contract
 
-`src/index.mjs`'s `setup` is `async` and awaits each landed submodule's own setup, in this fixed order: **`projects` first, then `orgs`, then `work`.** (`projects-audit`, once absorbed, will contribute no `setup` at all — handlers only.)
+`src/index.mjs`'s `setup` is `async` and awaits each submodule's own setup that has one, in this fixed order: **`projects` first, then `orgs`, then `work`.** `projects-audit` contributes no `setup` at all — handlers only — and is deliberately absent from the ordered list rather than represented there by a placeholder or a no-op.
 
 The ordering is load-bearing in exactly one place, not uniformly:
 
@@ -65,7 +70,7 @@ The ordering is load-bearing in exactly one place, not uniformly:
 - **`orgs`' own `setup` call does not itself depend on `projects`.** It is synchronous, returns `undefined`, and only pushes three entries onto `app.ext.setupMethods` (`plugable-express`'s own deferred-work queue, drained by its `DependencyRunner` after every plugin's `setup` has returned) plus registers the `orgKey`/`newOrgKey` path variables. It is the *deferred* `load orgs` method — not `orgs`' `setup` call itself — that actually reads `app.ext._liqProjects`. Keeping `orgs` second is still correct, since the deferred method still needs `projects`' installation to have already happened by the time it runs; a passing composite-setup smoke test alone does not, on its own, prove this dependency, because it does not exercise the deferred `load orgs` method.
 - **`work`'s third position is a fixed convention, not a dependency it satisfies.** `work`'s setup reads only `app.ext.serverConfigRoot`, which `plugable-express` itself supplies to every plugin's `setup` regardless of submodule order — nothing about `work`'s setup requires `projects` or `orgs` to have run first. `work`'s setup is synchronous and returns `undefined`, exactly like `orgs`'.
 
-`registerPathVar` is forwarded to each landed submodule's setup unchanged. The merged set of path variables the three landed submodules register — `projectName`, `newProjectName` (from `projects`), `orgKey`, `newOrgKey` (from `orgs`), `workKey` (from `work`) — has no name collisions, which matters because a collision does not fail gracefully: `registerPathVar` **throws** `Path variable '<name>' is already registered.` on a second registration for the same name, crashing server startup. A sixth name, `parameterKey`, is registered not from any submodule's `setup` but from `orgs`' `parameters-detail.mjs` handler's `func`, at route-registration time — `plugable-express` invokes a handler's `func` once at registration specifically to give it the chance to register its own path variables, so the full merged path-variable surface is not determined by reading each submodule's `setup` function alone.
+`registerPathVar` is forwarded to each submodule's setup unchanged. The merged set of path variables the three submodules with a `setup` register — `projectName`, `newProjectName` (from `projects`), `orgKey`, `newOrgKey` (from `orgs`), `workKey` (from `work`) — has no name collisions, which matters because a collision does not fail gracefully: `registerPathVar` **throws** `Path variable '<name>' is already registered.` on a second registration for the same name, crashing server startup. A sixth name, `parameterKey`, is registered not from any submodule's `setup` but from `orgs`' `parameters-detail.mjs` handler's `func`, at route-registration time — `plugable-express` invokes a handler's `func` once at registration specifically to give it the chance to register its own path variables, so the full merged path-variable surface is not determined by reading each submodule's `setup` function alone. `projects-audit` registers none, but *consumes* one: two of its routes reference `:projectName`, and `plugable-express`'s `pathToRe` throws `Unknown variable path element type 'projectName' …` for an unregistered variable, so this submodule's registration depends on `projects`' setup having already run — a second, registration-time face of the same ordering contract.
 
 ## Runtime service contracts (`app.ext`)
 
@@ -73,7 +78,7 @@ The submodules that live in this one package still share no import edge with eac
 
 | `app.ext` key | Set by (this package) | Read by (this package) | Read by (outside this package) |
 |---|---|---|---|
-| `app.ext._liqProjects` (`{ playgroundMonitor, playgroundPath }`) | `src/projects/setup.mjs`, synchronously, before `setup` returns | `src/orgs/setup.mjs`'s deferred `load orgs` method; 24 call sites across 12 modules under `src/work/`, all unconditional and unguarded | `liq-controls` (`src/lib/integrations/get-question-controls.mjs`); `liq-integrations-issues-github` (`src/create-or-update-pull-request.mjs`) |
+| `app.ext._liqProjects` (`{ playgroundMonitor, playgroundPath }`) | `src/projects/setup.mjs`, synchronously, before `setup` returns | `src/orgs/setup.mjs`'s deferred `load orgs` method; 24 call sites across 12 modules under `src/work/`, all unconditional and unguarded; 2 call sites under `src/projects-audit/`, likewise unguarded | `liq-controls` (`src/lib/integrations/get-question-controls.mjs`); `liq-integrations-issues-github` (`src/create-or-update-pull-request.mjs`) |
 | `app.ext._liqOrgs` (`{ orgs, orgSetupMethods }`) | `src/orgs/setup.mjs`'s deferred `load orgs`/`prepare org dependencies` methods | — | `liq-controls` (`src/lib/resources/load-controls.mjs`, `src/lib/integrations/get-question-controls.mjs`, `src/lib/handlers/orgs/controls/_lib/list-lib.mjs`) |
 | `app.ext.constants.WORK_DB_PATH` (`<serverConfigRoot>/work/work-db.yaml`) | `src/work/setup.mjs`, from `app.ext.serverConfigRoot` | `src/work/handlers/_lib/work-db.mjs` (via `WorkDB`) | — |
 | `app.ext.setupMethods` | `plugable-express` itself (the deferred-work queue) | `src/orgs/setup.mjs` pushes three entries onto it | `liq-policy` (`src/liq-policy/setup.mjs`) pushes entries `orgs`' deferred `process org setup` method later drains |
@@ -84,15 +89,15 @@ One further coupling has no `app.ext` key at all, which is exactly why it is eas
 
 ## Route namespaces
 
-Each landed submodule declares its own routes via a `path` (or `paths`) export on each handler module — a handler's route is never derived from its position in the source tree, so the [layout convention](./dev-core-consolidation-contract.md#layout-convention)'s relocation of a donor's files into `src/<submodule>/` never changed the HTTP surface it exposes.
+Each submodule declares its own routes via a `path` (or `paths`) export on each handler module — a handler's route is never derived from its position in the source tree, so the [layout convention](./dev-core-consolidation-contract.md#layout-convention)'s relocation of a donor's files into `src/<submodule>/` never changed the HTTP surface it exposes.
 
 | Route namespace | Owning submodule(s) | Registered in |
 |---|---|---|
-| `/projects` | `projects` (landed); `projects-audit` (once absorbed) will share this namespace | `src/projects/handlers/index.js`, `src/projects/handlers/releases/index.js` |
-| `/orgs` | `orgs` (landed) | `src/orgs/handlers/index.js` |
-| `/work` | `work` (landed) | `src/work/handlers/index.js`, `src/work/handlers/issues/index.js`, `src/work/handlers/projects/index.js` |
+| `/projects` | `projects` and `projects-audit`, sharing the namespace | `src/projects/handlers/index.js`, `src/projects/handlers/releases/index.js`, `src/projects-audit/handlers/index.mjs` |
+| `/orgs` | `orgs` | `src/orgs/handlers/index.js` |
+| `/work` | `work` | `src/work/handlers/index.js`, `src/work/handlers/issues/index.js`, `src/work/handlers/projects/index.js` |
 
-`projects` and `projects-audit` sharing `/projects` is a deliberate outcome of the layout convention: they stay separate top-level `src/` directories even while sharing a route prefix, so folding them together later is optional cosmetic follow-up, never a consolidation requirement. The exact per-endpoint method/path tables for `projects`, `orgs`, and `work` — including the 19 + 5 + 30 = 54 endpoints currently registered — live in [`README.md`](../README.md#routes) rather than being duplicated here.
+`projects` and `projects-audit` sharing `/projects` is a deliberate outcome of the layout convention: they stay separate top-level `src/` directories even while sharing a route prefix, so folding them together later is optional cosmetic follow-up, never a consolidation requirement. The two contribute disjoint path sets — `projects-audit`'s `audit`/`audit-fix` appear nowhere among `projects`' own 19 paths — which matters because a duplicate command path is a hard startup crash (`Non-unique command path: <path>`), not a silent shadow. The exact per-endpoint method/path tables for all four submodules — including the 19 + 5 + 30 + 4 = 58 endpoints currently registered — live in [`README.md`](../README.md#routes) rather than being duplicated here.
 
 ## Build and artifact topology
 
