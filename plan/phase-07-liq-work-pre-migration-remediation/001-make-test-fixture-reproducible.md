@@ -101,3 +101,32 @@ architectural_impact: false
 - After the untrack + nested-`.git` removal + `git add` of `package.json`, with `git ls-files -s src | grep '^160000'` empty.
 - After the runtime initialiser and the fixture assertion are written and `make test` reproduces the 6 passing tests.
 - After the fresh-clone (or `.git`-removal) demonstration, with its output recorded.
+
+## Status
+
+**Outcome:** succeeded. Date: 2026-08-18.
+
+**Requirement 1 — starting state, as observed in this task's own worktree** (`worktrees/plan/dev-core-consolidation-07-001`, not the main `liq-work` checkout):
+- `git ls-files -s src/handlers/work/_lib/test/data/` showed `160000 4805e7893c269582cf7f6d24bfa99350520d787d 0 src/handlers/work/_lib/test/data/playground/orgA/proj1` alongside the ordinary `100644` entry for `work-db-a/work-db.yaml` — matches the task doc exactly.
+- `git submodule status` errored with `fatal: no submodule mapping found in .gitmodules for path '...proj1'` — matches.
+- **Deviation from the task doc's expectation:** `ls -a src/handlers/work/_lib/test/data/playground/orgA/proj1` in this worktree showed only `.` and `..` — empty, not `.git`/`package.json`/`subdir/`. `git worktree` only materializes tracked content, and the gitlink's real content was never tracked (no `.gitmodules` entry, no object data for it in the repo), so the worktree behaves exactly like the "fresh clone yields an empty directory" case the task doc's own Purpose and scope section already documents. The real content (`.git` on branch `orgA/proj1/1`, one commit `4805e78`, `package.json`, empty `subdir/`) was inspected instead at the main checkout, `/Users/zane/playground/liquid-labs/liq-work/src/handlers/work/_lib/test/data/playground/orgA/proj1` — the "one working tree" the Purpose and scope section refers to — and confirmed identical to the task doc's description: `git branch --show-current` → `orgA/proj1/1`; `git ls-files` → `package.json` only; `git log --oneline` → one commit, `4805e78 added package`; `git remote -v` → empty; `package.json` bytes → `{\n  "name": "@orgA/proj1"\n}` with no trailing newline (verified via `xxd`). No halt condition was triggered.
+
+**Requirement 2 — untrack + remove.** `git rm --cached src/handlers/work/_lib/test/data/playground/orgA/proj1` was run in this worktree. The `rm -rf .../proj1/.git` step was a no-op here — there was no nested `.git` in this worktree to remove, per the deviation noted above. The main checkout's real nested `.git`/`package.json` were only ever read (never modified or deleted) to source the byte-exact `package.json` content for requirement 3, since deleting them is outside this task's worktree-scoped mandate; see `flagged_for_manager` in the structured report.
+
+**Requirement 3 — real content committed.** `package.json` was copied byte-for-byte from the main checkout (verified via `xxd` diff of both ends) and `git add`ed at `src/handlers/work/_lib/test/data/playground/orgA/proj1/package.json`. `subdir/` and the sibling `orgA/proj2/` were left untouched (and were already absent as filesystem entries in this worktree, since git does not track empty directories).
+
+**Requirement 4/5 — runtime initialiser + assertion.** Added to `src/handlers/work/_lib/test/determine-projects.test.js`: an idempotent `initializeFixtureRepo` (no-op when `<fixture>/.git` exists; otherwise `git init -q -b 'orgA/proj1/1'`, `git add package.json`, then a per-command-identity, non-GPG-signed commit) invoked from a `beforeAll`, followed by a positive assertion — `determineCurrentBranch({ projectPath })` must equal `'orgA/proj1/1'` — before the `test.each` rows run.
+
+**Requirement 7 — numbers.** `git ls-files src | wc -l`: **69 → 69** (one gitlink entry removed, one real file added — matches expectation). `make test` summary: `Test Suites: 1 failed, 1 passed, 2 total` / `Tests: 6 passed, 6 total` — unchanged known-failure set (`work-db.test.js`'s `TypeError: Cannot read properties of undefined (reading 'prototype')` from `buffer-equal-constant-time`).
+
+**Validation performed:**
+- Full clean `make test` (after `rm -rf test-staging qa`) from this worktree: `determine-projects.test.js` — 6/6 passed; `work-db.test.js` — failed with the expected, unchanged `SlowBuffer`/`buffer-equal-constant-time` error. `Test Suites: 1 failed, 1 passed, 2 total`.
+- Fresh-clone demonstration (the primary method, not the `.git`-removal substitute): `git clone --no-hardlinks -b plan/dev-core-consolidation-07-001 /Users/zane/playground/liquid-labs/liq-work <scratch>`, then `npm install` (succeeded, ~5s) and `make test` — `determine-projects.test.js` passed all 6 tests; identical known-failure set. Confirmed no `160000` gitlink entries and clean `git submodule status` in the clone.
+- Also ran the `.git`-removal substitute as an additional check in the working checkout: after a full `make test`, `rm -rf test-staging/.../proj1/.git`, then re-ran only `determine-projects.test.js` directly via `jest` from `test-staging/` — still passed all 6, confirming the initialiser rebuilt the repository.
+- Deliberately broke the initialiser (changed only the `git init -b` branch argument to `'main'`, leaving the assertion's expected value at `'orgA/proj1/1'`), forced re-initialisation, and re-ran: all 5 `test.each` rows failed with a legible Jest diff — `Expected: "orgA/proj1/1"`, `Received: "main"`, pointing at the `expect(currentBranch).toBe(FIXTURE_BRANCH)` line. Restored the correct file (diffed byte-identical against the pre-break backup) and re-ran clean: green again, same known-failure set.
+- `make build`: produced `dist/liq-work.js` successfully.
+- `make lint`: clean (`qa/lint.txt` shows no findings; exit 0).
+- `git diff --stat` against the phase base (`156b31b`) confined to `src/handlers/work/_lib/test/data/playground/orgA/proj1` (gitlink removal + `package.json` add) and `src/handlers/work/_lib/test/determine-projects.test.js`. No `.mjs` outside `test/` changed.
+- `git config --global --list` unchanged (checked before/after); the initialiser used `-c user.email=...`, `-c user.name=...`, `-c commit.gpgsign=false` rather than writing global config.
+
+**Assumptions applied (from the task doc's own `## Assumptions`):** `work-db.test.js`'s pre-existing `SlowBuffer` failure is out of scope and was left untouched; the nested `.git` (where it existed, at the main checkout) was safe to treat as disposable, having no remote and a single reproducible commit.
