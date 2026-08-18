@@ -74,3 +74,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: rewrite-readme-as-superseded-notice
+          title: Rewrite README As Superseded Notice
+          path: phase-09-retire-liq-work/002-rewrite-readme-as-superseded-notice.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
