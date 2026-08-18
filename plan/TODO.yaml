@@ -64,6 +64,7 @@ phases:
           path: phase-08-liq-work-migration/003-extend-consumer-migration-handoff.md
           done: false
           tier: sonnet-med
+          digest: Created docs/consumer-migration.md in sdlcforge/dev-core (did not previously exist) with a structure anticipating the three sibling donor sections (liq-projects, liq-orgs, projects-audit) but populating only liq-work, per the create-or-extend instruction. Specifies exact core-server edits needed to swap @liquid-labs/liq-work for @sdlcforge/dev-core, all file/line references re-verified live against core-server's current main (no drift). States the atomicity requirement with both verified error strings and throw sites, the npmName provenance change, four does-not-change guarantees, the stale serverHome comment correction, and the Node >= 24 SlowBuffer disclosure. Added a README.md link to close the link chain. Committed on task/extend-consumer-migration-handoff-work (c6f23e1) in dev-core; core-server read-only throughout, unchanged. Not merged; merge is a manager/user step.
           git:
             branch: task/extend-consumer-migration-handoff-work
             commit: []
