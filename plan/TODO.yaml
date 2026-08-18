@@ -50,6 +50,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 3
+          slug: extend-consumer-migration-handoff
+          title: Extend Consumer Migration Handoff
+          path: phase-08-liq-work-migration/003-extend-consumer-migration-handoff.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 9
       slug: retire-liq-work
       title: Retire liq-work
