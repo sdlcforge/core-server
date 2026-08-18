@@ -6,7 +6,7 @@ This document specifies, for each of the four `@liquid-labs/plugable-express` pl
 
 The [Dev-Core Consolidation Contract](./dev-core-consolidation-contract.md) governs the separate, earlier step of absorbing a package's source into `dev-core`. This document governs the later, independent step of repointing the consumer once an absorption has landed — the two are not the same operation and do not share a timeline.
 
-One section per absorbed package, keyed by submodule short name (`liq-projects`, `liq-orgs`, `liq-work`, `projects-audit`), each added independently as its own handoff is authored. Only the `liq-work` section exists as of this writing.
+One section per absorbed package, keyed by submodule short name (`liq-projects`, `liq-orgs`, `liq-work`, `projects-audit`), each added independently as its own handoff is authored. Only the `liq-work` and `liq-projects` sections exist as of this writing.
 
 ## Table of contents
 
@@ -19,6 +19,13 @@ One section per absorbed package, keyed by submodule short name (`liq-projects`,
    - [What does not change](#what-does-not-change)
    - [Corrections and disclosures](#corrections-and-disclosures)
    - [Scope of this document](#scope-of-this-document)
+3. [liq-projects](#liq-projects)
+   - [Edits required in core-server](#edits-required-in-core-server-1)
+   - [Atomicity requirement](#atomicity-requirement-1)
+   - [Provenance change](#provenance-change-1)
+   - [What does not change](#what-does-not-change-1)
+   - [Corrections and disclosures](#corrections-and-disclosures-1)
+   - [Verification checklist](#verification-checklist)
 
 ## Overview
 
@@ -96,3 +103,72 @@ Use this positive check instead: on a Node version where the full explicit-plugi
 ### Scope of this document
 
 This section specifies edits; it does not make them. The owning plan-group for the actual `core-server` edits is `core-server-domain-consolidation`. The four donors' entries should be executed **together**, as one atomic swap of four `explicitPlugins` entries for a single `@sdlcforge/dev-core` entry, rather than as four separate changes — because the intermediate states are exactly the crashing configurations [Atomicity requirement](#atomicity-requirement) describes.
+
+## liq-projects
+
+`liq-projects` (the `projects` submodule) has already landed in `dev-core` as of this writing — it is the first of the four absorptions to land, and none of the other three has swapped yet. That makes this the first (and, today, the only) swap `core-server`'s own plan-group can actually execute: adding `@sdlcforge/dev-core` to `core-server` here is the one-time addition the [Overview](#overview) describes, shared by whichever of `liq-work`, `liq-orgs`, or `plugable-projects-audit` swaps next — those later swaps only remove their own donor entry, they do not re-add `@sdlcforge/dev-core`.
+
+### Edits required in core-server
+
+Re-verified directly against `core-server`'s `main` (commit `54b06d0`, 2026-08-17) while writing this section; every line below matched exactly.
+
+| File | Line | Current | Required edit |
+|---|---|---|---|
+| `package.json` | 47 | `"@liquid-labs/liq-projects": "file:.yalc/@liquid-labs/liq-projects",` | **Remove.** Add `"@sdlcforge/dev-core"` in its place. Two consumption forms exist — a registry range (once published, e.g. `^1.0.0-alpha.0`) or a local `yalc` link (`file:.yalc/@sdlcforge/dev-core`) — and the `yalc` form is recommended for the transition: it is how `core-server` already consumes this same package (as `liq-projects`) and `@liquid-labs/plugable-express` (`package.json` line 49, `"file:.yalc/@liquid-labs/plugable-express"`). The sequence is `yalc publish` from the `dev-core` checkout, then `yalc add @sdlcforge/dev-core` from `core-server`, which writes the `file:.yalc/@sdlcforge/dev-core` entry. `.yalc/` is gitignored in `core-server` (`.gitignore` lines 3 and 8, `/.yalc` and `/yalc.lock`), so a fresh worktree has neither and needs provisioning before install — `core-server` already has a script for exactly this, `scripts/provision-local-deps.sh`, which copies `.yalc/` in from the main checkout and then installs. That script's own `REQUIRED_YALC_PACKAGES` array hardcodes `@liquid-labs/liq-projects` as one of the packages it verifies is present under `.yalc/`; this swap must also update that array to `@sdlcforge/dev-core`, or the script will report a missing package that no longer needs linking. |
+| `src/lib/app-init.mjs` | 38 | `'@liquid-labs/liq-projects',` inside the `explicitPlugins` array (lines 33–45) | **Remove.** Add `'@sdlcforge/dev-core'` once, shared with whichever other donor's swap lands in the same commit — do not add it a second time if it is already present. The array is otherwise alphabetically ordered and the new entry sorts differently (`@sdlcforge/...` sorts after every `@liquid-labs/...` entry, so it belongs at the end of the array), which is cosmetic but worth doing deliberately rather than dropping it in place of the removed `liq-projects` line. |
+| `test/test-basic.js` | 54 | `'@liquid-labs/liq-projects'`, one entry in the `expectedPackages` array (lines 50–54) | **Update** — replace with `'@sdlcforge/dev-core'`. |
+| `test/test-integration-quick.js` | 61 and 87 | `'@liquid-labs/liq-projects'`, one entry in each of two separate `explicitPlugins` array literals (the JSON-parse path and the non-JSON fallback path) | **Update both** — replace with `'@sdlcforge/dev-core'`. |
+| `test/__snapshots__/golden-api-spec.json` and `test/__snapshots__/golden-plugins-list.json` | — | Re-verify rather than assume. As observed today, `golden-plugins-list.json` is literally `[]` and every `npmName` in `golden-api-spec.json` is `@liquid-labs/plugable-express` — the golden fixtures are captured with no explicit plugins loaded at all, so this swap is unlikely to move either file. If it does move them, the change is provenance-only and legitimate. `core-server`'s own `npm run test:update-golden-api-spec` (`UPDATE_GOLDEN_API_SPEC=true TEST=golden-api-spec make test`) is the regeneration path. |
+
+### Atomicity requirement
+
+Remove the `@liquid-labs/liq-projects` entry and add the `@sdlcforge/dev-core` entry in the same commit — see [How an unsynchronized swap fails](#how-an-unsynchronized-swap-fails) for the general mechanism. For `liq-projects` specifically, loading both packages at once does **not** reach the route-registration stage at all — it crashes earlier, during plugin `setup`, because `liq-projects`'s `setup` and `dev-core`'s composite `setup` (which runs the absorbed `projects` submodule's identical setup logic first, per its ordering) both call `registerPathVar('newProjectName', …)` before either registers `'projectName'` or any route. Loading order runs `explicitPlugins` sequentially, and `@sdlcforge/dev-core` sorts after `@liquid-labs/liq-projects` in that array (per the edit above), so `liq-projects` registers first and `dev-core`'s setup collides on the second pass:
+
+```text
+Path variable 'newProjectName' is already registered.
+```
+
+thrown from `plugable-express/src/lib/path-var-registry.mjs:28-34`. Had that not fired, the next error would have been the same route-level failure the [Overview](#overview) describes generally — a duplicated array-style command path, e.g.:
+
+```text
+Non-unique command path: projects/:projectName/detail
+```
+
+(or whichever `/projects` path registers first), thrown from `plugable-express/src/lib/register-handlers.js:129-131`. Both strings are named here verbatim so the failure is recognizable — and greppable — on sight. This is a **loud** failure, not a silent one; it happens at server startup, before the server ever accepts a request.
+
+The credential side of the atomicity requirement runs the opposite direction — it is not about loading both packages at once, but about loading **neither**. `liq-projects`'s `setup` (`src/setup.mjs`) calls `setupCredentials({ credentialsDB : app.ext.credentialsDB })` from `@liquid-labs/credentials-db-plugin-github`, which registers the `GITHUB_API` credential type that `liq-integrations-issues-github` later fetches via `credentialsDB.getToken('GITHUB_API')` (`src/create-or-update-pull-request.mjs:32`) — an undeclared, load-order-dependent contract. `dev-core`'s composite `setup` performs the identical registration (the `projects` submodule runs first in its ordering), so the contract survives the swap **only if** the provider is never absent: a step that removes `@liquid-labs/liq-projects` from `explicitPlugins` without adding `@sdlcforge/dev-core` in the same change breaks GitHub-issue integration at runtime — silently, until a token is next requested, since `registerCredentialType` itself does not fail on a missing registration; the failure surfaces only downstream, the next time `getToken('GITHUB_API')` is called and finds no registered credential type at all.
+
+### Provenance change
+
+Every `/projects` endpoint's recorded `npmName` becomes `@sdlcforge/dev-core` instead of `@liquid-labs/liq-projects`. `@liquid-labs/plugable-express` takes plugin identity from the package manifest (`package.json`'s `name`/`description`), never from the loaded module's own `name`/`summary` exports, so `liq-projects`'s inert module-level `name = 'core-projects'` export was never visible to the server to begin with. The change is harmless at runtime but **visible** in the server's generated API spec and in `help` output, so `core-server`'s golden-API-spec snapshot must be re-verified after the swap rather than assumed unchanged (see the edit table above).
+
+Plugin count is a one-for-one swap at this point, not a reduction: today only `liq-projects` has an absorbed counterpart in `dev-core`, so removing its entry and adding `@sdlcforge/dev-core` leaves the total explicit-plugin count unchanged. The plugin list only shrinks from four entries to one once `liq-work`, `liq-orgs`, and `plugable-projects-audit` also swap — each of those later swaps removes an entry without adding a new one, per the [Overview](#overview). The one plugin entry's summary comes from `dev-core`'s `package.json` `description`, already authored as: "Plugable-express plugin for core-server consolidating the liq project lifecycle, work orchestration, org settings, and project audit capabilities into a single package."
+
+No route, method, parameter, or response shape changes for any of the 19 `/projects` endpoints.
+
+### What does not change
+
+`app.ext._liqProjects` keeps its exact name — and, once the other three donors land, so will `app.ext._liqOrgs`, `app.ext.constants.WORK_DB_PATH`, and `app.ext.setupMethods`. No participant in the absorption renames any of these keys.
+
+Verified readers of `app.ext._liqProjects` that need no change:
+
+- `liq-integrations-issues-github` — `src/create-or-update-pull-request.mjs:26`, reading `app.ext._liqProjects.playgroundMonitor.getProjectData(projectFQN)`.
+- `liq-controls` — `src/lib/integrations/get-question-controls.mjs:7`, reading the identical `app.ext._liqProjects.playgroundMonitor.getProjectData(projectName)` call.
+
+`liq-plugins-lib`'s use of the string `@liquid-labs/liq-projects` (`src/lib/test/select-matching-plugins.test.js`, lines 17 and 20) is sample test data for a plugin-matching function, not a dependency — that file also uses a nonexistent `@liquid-labs/liq-projects2` package name in the same fixture, confirming the values are arbitrary test data rather than a real reference.
+
+### Corrections and disclosures
+
+#### Correction: `liq-controls`'s `load-controls.mjs` and its test fixture do not read `app.ext._liqProjects`
+
+An earlier survey of this migration named `liq-controls`'s `src/lib/resources/load-controls.mjs`, plus an unspecified test fixture, alongside `get-question-controls.mjs` as readers needing no change for this swap. Re-verified directly against `liq-controls`'s source: `load-controls.mjs` reads `app.ext._liqOrgs.orgs` (line 6), not `app.ext._liqProjects` — it is a reader of the `liq-orgs` contract, relevant to that donor's own future handoff section, not to this one. No test fixture in `liq-controls` references `app.ext._liqProjects`, `playgroundMonitor`, or `getProjectData` anywhere in the repository; `get-question-controls.mjs` is the only file in `liq-controls` that reads the `_liqProjects` contract this swap touches.
+
+### Verification checklist
+
+A consumer's own task can confirm the swap landed cleanly with:
+
+1. The server starts with no error — in particular, no `Path variable '...' is already registered.` or `Non-unique command path: ...` error, confirming the old and new entries were never loaded together (see [Atomicity requirement](#atomicity-requirement)).
+2. `/projects/detail` (or another cheap `/projects` route) responds normally, with its response shape unchanged from before the swap.
+3. The plugin list (the server's generated API spec, or `GET /server/plugins/list`) reports `@sdlcforge/dev-core` for the `/projects` routes, not `@liquid-labs/liq-projects`.
+4. The `GITHUB_API` credential resolves — `credentialsDB.getToken('GITHUB_API')` succeeds, confirming `dev-core`'s composite `setup` registered the credential type in `liq-projects`'s place.
+5. `core-server`'s three test tiers pass: the unit suite (`make test` / `npm test`, which also exercises the golden-API-spec snapshot), the local integration smoke test (`npm run test:local`, `scripts/test.sh`), and the Docker-based multi-Node-version integration suite (`npm run test:integration`, `test/run-integration-tests.sh`).
