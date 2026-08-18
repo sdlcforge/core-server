@@ -32,6 +32,7 @@ phases:
     - number: 2
       slug: liq-projects-migration
       title: Liq-Projects Migration
+      diff_base: 6a17b953da5e884711f520413f811f80576ef89d
       tasks:
         - number: 1
           slug: restructure-src-into-dev-core-layout
