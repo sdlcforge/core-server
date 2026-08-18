@@ -15,7 +15,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/dev-core-consolidation-07-001
-            commit: []
+            commit:
+                - 2039d65
             merge: null
         - number: 2
           slug: inline-cross-link-dev-projects
