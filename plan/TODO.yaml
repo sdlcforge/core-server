@@ -5,6 +5,7 @@ phases:
     - number: 7
       slug: liq-work-pre-migration-remediation
       title: liq-work Pre-Migration Remediation
+      diff_base: 470b4b1b8188e20c7e14e72bbcf7f004ed3d3314
       tasks:
         - number: 1
           slug: make-test-fixture-reproducible
