@@ -53,4 +53,14 @@ phases:
     - number: 13
       slug: retire-plugable-projects-audit
       title: Retire plugable-projects-audit
-      tasks: []
+      tasks:
+        - number: 1
+          slug: verify-dev-core-absorption
+          title: Verify Dev-Core Absorption
+          path: phase-13-retire-plugable-projects-audit/001-verify-dev-core-absorption.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
