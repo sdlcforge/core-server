@@ -10,12 +10,12 @@ import {
   verifyIsOnBranch
 } from '@liquid-labs/git-toolkit'
 import { determineGitHubLogin, getGitHubOrgAndProjectBasename } from '@liquid-labs/github-toolkit'
-import { crossLinkDevProjects } from '@liquid-labs/liq-projects-lib'
 import { Octocache } from '@liquid-labs/octocache'
 import { PLUGABLE_PLAYGROUND } from '@liquid-labs/plugable-defaults'
 import { tryExec } from '@liquid-labs/shell-toolkit'
 
 import { WORKSPACE } from './constants'
+import { crossLinkDevProjects } from './cross-link-dev-projects'
 
 const WorkDB = class WorkDB {
   #authToken
