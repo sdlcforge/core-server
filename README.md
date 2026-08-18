@@ -193,6 +193,7 @@ make qa      # test + lint
 
 ## Additional documentation
 
+- [`docs/architecture.md`](./docs/architecture.md) — the structural view: submodule decomposition, the single aggregation boundary, the composite-setup ordering contract, the `app.ext` runtime service contracts (including their external consumers), route namespaces, and the build/artifact topology.
 - [`docs/dev-core-consolidation-contract.md`](./docs/dev-core-consolidation-contract.md) — the durable reference for this package's layout convention, submodule interface, root-file ownership, absorption recipe, and the runtime contracts it must preserve.
 - [`docs/consumer-migration.md`](./docs/consumer-migration.md) — the per-donor specification of the exact edits `@sdlcforge/core-server` must make to repoint from each absorbed package to `@sdlcforge/dev-core`.
 
