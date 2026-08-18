@@ -58,3 +58,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'src/projects/handlers/_lib/test/project-lifecycle.test.mjs fails independently of credentials/network: its appMock supplies app.ext.serverHome while create-lib.mjs reads app.ext.serverConfigRoot (both files byte-identical to the liq-projects donor''s blobs, not touched by the phase-2 absorb task). A real pre-existing donor defect, not a regression from absorption. Will keep make test/make qa red in dev-core until fixed. Phase 3''s verify-dev-core-absorption task (and any future full-suite gate) should not expect a fully-green make qa because of this one suite. Also note: src/projects/handlers/test/close-implied.mjs is a misnamed test file (missing the .test infix) that Jest never collects — dead in both directions, migrated verbatim from liq-projects per scope fence.'
+    - title: Command injection risk in projects shell-outs
+      id: g23a
+      date: "2026-08-18"
+      tags:
+        - plan/phase:phase-02-liq-projects-migration
+        - plan/slug:dev-core-consolidation
+        - type:security
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Automated security review flagged 4 pre-existing command-injection-capable patterns in code migrated verbatim from liq-projects during this session''s dev-core-consolidation absorption (phase 2 task 002): src/projects/handlers/_lib/create-lib.mjs (shell.exec building a `hub create` command from newProjectName/githubOwner/orgKey), src/projects/handlers/_lib/rename-lib.mjs (shell.exec building `git remote set-url` from newName/projectPath), src/projects/handlers/releases/_lib/do-npm-publish.mjs (tryExec building `npm publish` with an OTP/tag), and src/projects/handlers/releases/_lib/publish-lib.mjs (tryExec building `git checkout -b` from a release-branch name). Confirmed via git log that these patterns predate this consolidation (commits 841f543/69de4e7/bacc1f0 in liq-projects, well before this plan) — the absorption task''s own git mv/merge carried them across with zero content-line changes, consistent with D11''s no-behavior-change rule. Not introduced by this session; now first-party dev-core code rather than a vendored dependency. Suggested remediation when next touched: replace shell-string interpolation with execFile/spawn argv-array invocation, and validate the interpolated values (project names, branch names, OTP) against strict allowlist regexes before use.'
