@@ -38,7 +38,7 @@ phases:
           slug: restructure-src-into-dev-core-layout
           title: Restructure Src Into Dev-Core Layout
           path: phase-02-liq-projects-migration/001-restructure-src-into-dev-core-layout.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: 'Relocated liq-projects''s entire source tree via git mv into src/projects/... shape: src/handlers/projects/ -> src/projects/handlers/ (57 files), src/setup.mjs -> src/projects/setup.mjs, src/handlers/index.js deleted, new src/projects/index.mjs added as submodule interface. src/index.js is now a thin re-export of ./projects with name/summary preserved. Deleted 32 stale generated docs/ HTML files and repointed README''s moved-path mentions. Every rename verified as a true git rename with zero content drift; the three cross-directory imports still resolve; make build produces an externals-only bundle. Pre-existing environment issue (Node v26.5.0 SlowBuffer removal breaking 5/8 test suites via jsonwebtoken/jwa chain, and 6 pre-existing lint errors in releases/_lib files) reproduces identically pre/post move, confirming no regression from the relocation itself — this matches the already-known, plan-group-level SlowBuffer defect flagged in liq-work''s own plan overview.'
           git:
