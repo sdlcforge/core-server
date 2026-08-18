@@ -9,7 +9,7 @@
 - **`projects`** — *landed*, absorbed from `@liquid-labs/liq-projects`. Project lifecycle: creation, setup, detail, rename, update, documentation, close, archive, destroy, and release publishing. In this system a "project" is the union of three artifacts kept in sync: an NPM package (`package.json`), a local clone in the developer's playground directory (tracked via `@liquid-labs/playground-monitor`), and a GitHub repository — this submodule owns creating, inspecting, updating, and retiring that triad.
 - **`work`** — *landed*, absorbed from `@liquid-labs/liq-work`. Work orchestration on top of the project lifecycle. A **unit of work** is a cross-repo, git-branch-scoped bundle of effort that ties GitHub issues and projects together through a lifecycle from creation to submission and merge. This submodule orchestrates issues and projects rather than defining either: it owns the unit-of-work record and its lifecycle operations, and reaches into the `projects` submodule's runtime state for everything about a project itself.
 - **`orgs`** — *landed*, absorbed from `@liquid-labs/liq-orgs`. Organization-level settings and configuration. **An "org" here is not a free-standing entity — it is a classification of a project.** At setup time, `orgs` scans the projects `projects` has already discovered (via `app.ext._liqProjects.playgroundMonitor.getProjectsData()`) and promotes any whose scanned `package.json` carries `liq.packageType === 'org'` into the org registry. There is no separate org-creation flow that isn't also a project; an org's settings (common name, legal name, and arbitrary dotted-key-path parameters) live in `data/org/settings.yaml` within that same project's directory.
-- **`projects-audit`** — *not yet absorbed.* Auditing checks over existing projects.
+- **`projects-audit`** — *landed*, absorbed from `@liquid-labs/plugable-projects-audit`. Dependency auditing for an existing project: `npm audit`'s security findings plus outdated, missing, and extraneous dependency analysis, and an automatic-fix counterpart for both. **"Audit" here means npm dependency auditing and nothing else** — it is not a policy or compliance check, and it is unrelated to `liq-controls`. This is the only submodule of the four with no `setup`; it contributes handlers only, and depends at runtime on state the `projects` submodule's setup installs (see [The `projects-audit` → `projects` dependency](#the-projects-audit--projects-dependency) below).
 
 Each submodule exposes only `handlers` and, where applicable, `setup` from its own `src/<submodule>/index.mjs` — no other file under a submodule directory is part of its public surface. The layout convention, the runtime contracts each submodule must preserve, and the procedure for bringing a submodule's source in are recorded in [`docs/dev-core-consolidation-contract.md`](./docs/dev-core-consolidation-contract.md).
 
@@ -170,11 +170,83 @@ Two other things worth knowing about the path-variable surface this submodule co
 - `orgs`' `setup` registers **`orgKey`** and **`newOrgKey`** directly (both validated against `(?:@|%40)[a-z][a-zA-Z0-9-]*`, `orgKey`'s `optionsFetcher` enumerating `app.ext._liqOrgs.orgs`).
 - **`parameterKey`** is registered from `src/orgs/handlers/parameters-detail.mjs`'s handler `func` instead — `plugable-express` invokes a handler's `func` at route-registration time specifically to give it the chance to register its own path variables, so the full merged path-variable surface across every submodule is not determined by reading each submodule's `setup` function alone. `parameters-set.mjs` carries the identical registration commented out, because registering the same path-variable name twice throws (`plugable-express`'s `registerPathVar` rejects a duplicate registration outright).
 
+### `projects-audit` submodule
+
+All routes below are mounted under `/projects` — the same namespace the `projects` submodule owns — and are registered in `src/projects-audit/handlers/index.mjs`. As with `projects`, each operation exists in two variants: an **explicit** ("named") form taking `:projectName` from the path, and an **implied** form that infers the project from the caller's current working directory.
+
+| Operation | Method | Explicit path | Implied path | Purpose |
+|---|---|---|---|---|
+| Audit | GET | `/projects/:projectName/audit` | `/projects/audit` | Reports the project's security vulnerabilities plus its outdated, missing, and extraneous package dependencies. |
+| Audit fix | PUT | `/projects/:projectName/audit-fix` | `/projects/audit-fix` | Applies the automatically-fixable subset of that report: runs `npm audit fix`, installs missing packages, updates outdated ones, and — only when `removePackages` is set — removes extraneous ones. |
+
+That is 4 registered endpoints — the same set, at the same `path` arrays, that `@liquid-labs/plugable-projects-audit` served before the absorption:
+
+| method | `path` array |
+|---|---|
+| `get` | `['projects', ':projectName', 'audit']` |
+| `get` | `['projects', 'audit']` |
+| `put` | `['projects', ':projectName', 'audit-fix']` |
+| `put` | `['projects', 'audit-fix']` |
+
+Neither `audit` nor `audit-fix` appears anywhere among the `projects` submodule's own 19 paths, so the two submodules share the `/projects` prefix without colliding. That matters more than it might sound: a duplicate command path is a **hard startup crash** — `plugable-express` throws `Non-unique command path: <path>` rather than shadowing one route with the other.
+
+#### What "audit" means here, and what it does not
+
+The name is misleading in a system that also carries policy and compliance tooling. This submodule audits **npm dependencies** and nothing else:
+
+- `npm audit`'s security-vulnerability findings, and
+- outdated / missing / extraneous dependency analysis, both by way of the `npm-check-plus` package (`npmCheck`, `generateReport`, `npmAutoFix`, `fixReport`).
+
+It performs **no** policy evaluation, **no** compliance checking, and has no relationship to `liq-controls` or to any org-level control or attestation flow. Nothing about a project other than its dependency graph is examined.
+
+The four `audit-fix` parameters are worth knowing before calling it, since three of them change files on disk:
+
+| Parameter | Effect |
+|---|---|
+| `dryRun` | Reports what would be done without changing anything. |
+| `removePackages` | Opt-in removal of "extra" (apparently-unused) packages. Off by default because indirect use is common — `_npm-check-plus.depcheck.ignoreMatches` in the audited project's own `package.json` is the escape hatch for known false positives. |
+| `updateMinimums` | Raises a production dependency's semver *minimum* to the currently-wanted version. Off by default; pre-release minimums are always updated regardless. |
+| `projectName` | **Ignored on the implied variants** — see [Known defects](#known-defects-projects-audit-submodule) below. |
+
+#### The explicit/implied pairing and the `X-CWD` header
+
+The **explicit** variants (`audit.mjs`, `audit-fix.mjs`) read `projectName` out of `req.vars`, populated from the `:projectName` path segment.
+
+The **implied** variants (`audit-implied.mjs`, `audit-fix-implied.mjs`) have no such segment. They read the **`X-CWD` request header**, pass it to `getPackageJSON({ pkgDir: cwd })` from `@liquid-labs/npm-toolkit`, and take the project name from the resulting `package.json`. When the `X-CWD` header is absent the handler throws `createError.BadRequest`, so the caller gets a **400** with the message `Called 'project audit' with implied project, but 'X-CWD' header not found.` (both implied handlers use that same message, including the `audit-fix` one).
+
+#### The `projects-audit` → `projects` dependency
+
+**`projects-audit` contributes no `setup` — it is the only one of the four submodules that does not — yet it cannot work without the `projects` submodule.** The dependency is invisible from this submodule's own source, which declares nothing about it, so it is stated here explicitly:
+
+1. **At request time**, both `doAudit` and `doAuditFix` (`src/projects-audit/handlers/_lib/{audit,audit-fix}-lib.mjs`) call `app.ext._liqProjects.playgroundMonitor.getProjectData(projectName)` to resolve the project's on-disk path. `app.ext._liqProjects` is installed only by the `projects` submodule's `setup`.
+2. **At handler-registration time**, two of the four paths contain `:projectName`. `plugable-express`'s `pathToRe` **throws** `Unknown variable path element type 'projectName' while processing path projects/:projectName/audit.` when that path variable has not been registered — and only the `projects` submodule's `setup` registers it. This is a startup-time failure, not a request-time one: registering these handlers without `projects` present crashes the server before it serves anything.
+
+Both couplings are satisfied inside this package: the composite `setup` runs `projects`' setup first, and `plugable-express` defers all handler registration until every plugin's `setup` has returned. The reason they are worth writing down is that they are the answer to "what breaks if the `projects` submodule is removed?": **every one of these four endpoints, and server startup along with them.** These endpoints cannot be split back out of `dev-core` later without carrying that contract with them.
+
+Before the consolidation this was an undeclared runtime dependency between two separately-published plugins that happened to work only because `plugable-express`'s loader runs every plugin's `setup` eagerly and defers *all* handler registration until afterwards — so `plugable-projects-audit`'s position relative to `liq-projects` in `core-server`'s `explicitPlugins` list never mattered. It also sharpens why a consumer's repointing must be atomic: leaving `plugable-projects-audit` loaded while `liq-projects` is gone produces exactly the `pathToRe` throw above.
+
+#### Known defects (`projects-audit` submodule)
+
+Four pre-existing defects were inherited unchanged from `@liquid-labs/plugable-projects-audit`. They are migrated as-is because this consolidation does not change behavior — fixing the first two would change the server's generated API spec — and they are documented here rather than left buried, so the consolidation does not launder known defects into a new package under a new name:
+
+1. **The two *implied* endpoints advertise a `projectName` parameter they cannot use.** `getAuditEndpointParameters` / `getAuditFixEndpointParameters` unconditionally spread `commonAuditPathParameters` (which is `[{ name: 'projectName', … }]`) for both the named and implied variants, but the implied paths carry no `:projectName` — the project comes from the `X-CWD` header instead. The generated API spec and CLI help therefore advertise a parameter that is silently ignored.
+2. **A typo drops one parameter's help text from the API spec.** In `src/projects-audit/handlers/_lib/audit-fix-lib.mjs`, the `removePackages` parameter object spells its key **`dascription`** rather than `description`. Its long and genuinely useful explanation is consequently absent from the generated documentation.
+3. **An unknown project name yields a 500, not a 404.** Both libs immediately destructure the result of `getProjectData(projectName)`, which returns `undefined` for a name the playground monitor does not know, so the destructuring throws a `TypeError` and the request fails as a server error rather than a not-found.
+4. **Four prose typos are published in user-facing help text**: `Auidts` (in `audit-lib.mjs`'s summary), and `reomved`, `pacagkes`, and `specificatinos` (in `audit-fix-lib.mjs`'s description and parameter help). All four are visible in generated API documentation today.
+
+A fifth, purely internal, item worth noting: all four handlers assign `reporter = reporter.isolate()` and then never read `reporter` — dead code, with no user-visible effect.
+
+Fixing any of these is out of scope for the consolidation and is tracked as a follow-up item against the `dev-core-consolidation` plan in [`plan/followups.yaml`](./plan/followups.yaml).
+
+#### What happened to `@liquid-labs/plugable-projects-audit`
+
+Its entire `src/` tree moved here as `src/projects-audit/`, with its git history preserved through the merge, one runtime dependency (`npm-check-plus`) added to this package's manifest, and all 4 routes registered unchanged at the same paths. `@liquid-labs/plugable-projects-audit` is superseded by `@sdlcforge/dev-core` and ships nothing in its place — no re-export shim, because loading both at once would crash the server rather than serve stale routes (`plugable-express` throws `Non-unique command path: projects/:projectName/audit` on the duplicate registration). The donor package never had a `README.md`, a `docs/` directory, or a non-empty `description`; the four endpoints above had never been described anywhere except in `sdlcforge/core-cli`'s generated reference, which is why this section is authored rather than ported.
+
 ## How it loads
 
 `dev-core` is loaded by `@sdlcforge/core-server` as an explicit `plugable-express` plugin: the server dynamic-imports this package's `main` entry (`dist/dev-core.js`, built from `src/index.mjs`) and reads exactly two exports from it — a merged `handlers` array and a composite, asynchronous `setup` function. No other export is read; the plugin's own identity comes from `package.json` (`name` supplies the server-visible `npmName`, `description` the plugin summary), not from the module.
 
-Each handler module exports `path`, `method`, `parameters`, `help`, and `func`, following `plugable-express`'s route-registration convention. The composite `setup` awaits each landed submodule's own setup in a fixed order; `projects`' setup runs first because it is the one that wires GitHub credentials, creates the playground directory, and installs `app.ext._liqProjects = { playgroundMonitor, playgroundPath }` — state that later submodules' setups depend on — as well as registering the `projectName`/`newProjectName` path resolvers used for path-parameter validation. `orgs`' setup runs second, after `projects`: its own `setup` call is synchronous and does not itself touch `app.ext._liqProjects`, but the deferred work it schedules onto `app.ext.setupMethods` does (see [The `app.ext._liqOrgs` contract](#the-appext_liqorgs-contract) above), so keeping `orgs` after `projects` in the composite order is correct even though it is not the strict dependency a passing composite-setup smoke test alone would suggest. `work`'s setup runs third, and — unlike `projects`' position — its own is a fixed convention rather than a dependency: it writes `app.ext.constants.WORK_DB_PATH` from `app.ext.serverConfigRoot`, which the framework supplies at server initialization, and registers `workKey` with a lazily-invoked `optionsFetcher`, so nothing it does at setup time needs `projects` or `orgs` to have run. (Its *handlers*, by contrast, depend on `projects` completely — see [The `work` → `projects` coupling](#the-work--projects-coupling-and-the-appext-keys-work-reads) above.) Both `orgs`' and `work`'s setups are synchronous and return `undefined`; the composite `await` is a harmless no-op for each.
+Each handler module exports `path`, `method`, `parameters`, `help`, and `func`, following `plugable-express`'s route-registration convention. The composite `setup` awaits, in a fixed order, the setup of each submodule that has one; `projects`' setup runs first because it is the one that wires GitHub credentials, creates the playground directory, and installs `app.ext._liqProjects = { playgroundMonitor, playgroundPath }` — state that later submodules' setups depend on — as well as registering the `projectName`/`newProjectName` path resolvers used for path-parameter validation. `orgs`' setup runs second, after `projects`: its own `setup` call is synchronous and does not itself touch `app.ext._liqProjects`, but the deferred work it schedules onto `app.ext.setupMethods` does (see [The `app.ext._liqOrgs` contract](#the-appext_liqorgs-contract) above), so keeping `orgs` after `projects` in the composite order is correct even though it is not the strict dependency a passing composite-setup smoke test alone would suggest. `work`'s setup runs third, and — unlike `projects`' position — its own is a fixed convention rather than a dependency: it writes `app.ext.constants.WORK_DB_PATH` from `app.ext.serverConfigRoot`, which the framework supplies at server initialization, and registers `workKey` with a lazily-invoked `optionsFetcher`, so nothing it does at setup time needs `projects` or `orgs` to have run. (Its *handlers*, by contrast, depend on `projects` completely — see [The `work` → `projects` coupling](#the-work--projects-coupling-and-the-appext-keys-work-reads) above.) Both `orgs`' and `work`'s setups are synchronous and return `undefined`; the composite `await` is a harmless no-op for each. `projects-audit` appears in the merged `handlers` array and **deliberately nowhere in the composite setup**: it exports no `setup` at all, and no placeholder or no-op stands in for one. That does not make it independent — its handlers need `app.ext._liqProjects` at request time, and two of its routes need the `projectName` path variable at registration time, both supplied by `projects`' setup ([The `projects-audit` → `projects` dependency](#the-projects-audit--projects-dependency) above).
 
 One consequence of the consolidation is visible to consumers: every endpoint's recorded provenance `npmName` is now `@sdlcforge/dev-core` rather than the name of the package it was absorbed from. This shows up in the server's generated API spec and `help` output. The `app.ext` key names themselves are unchanged and stay unchanged, per [the contract's `app.ext` freeze](./docs/dev-core-consolidation-contract.md#appext-contract-freeze).
 
