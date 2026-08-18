@@ -17,7 +17,7 @@ phases:
           git:
             branch: plan/dev-core-consolidation-01-001
             commit: []
-            merge: null
+            merge: 18277df
         - number: 2
           slug: scaffold-build-and-entry-point
           title: Scaffold Build And Entry Point
