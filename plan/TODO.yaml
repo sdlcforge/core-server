@@ -18,7 +18,7 @@ phases:
             branch: plan/dev-core-consolidation-05-001
             commit:
                 - 72da060
-            merge: null
+            merge: c3e04826f7ce96fb18950be6d69a851ab71f7996
         - number: 2
           slug: absorb-orgs-into-dev-core
           title: Absorb Orgs Into Dev-Core
