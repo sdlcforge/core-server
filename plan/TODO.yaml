@@ -16,6 +16,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: inline-cross-link-dev-projects
+          title: Inline crossLinkDevProjects And Drop liq-projects-lib
+          path: phase-07-liq-work-pre-migration-remediation/002-inline-cross-link-dev-projects.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 8
       slug: liq-work-migration
       title: liq-work Migration Into dev-core
