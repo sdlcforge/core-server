@@ -30,6 +30,7 @@ make lint    # ESLint
 ## Additional documentation
 
 - [`docs/dev-core-consolidation-contract.md`](./docs/dev-core-consolidation-contract.md) — the durable reference for this package's layout convention, submodule interface, root-file ownership, absorption recipe, and the runtime contracts it must preserve.
+- [`docs/consumer-migration.md`](./docs/consumer-migration.md) — the per-donor specification of the exact edits `@sdlcforge/core-server` must make to repoint from each absorbed package to `@sdlcforge/dev-core`.
 
 ## License
 
