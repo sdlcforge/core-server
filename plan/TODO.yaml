@@ -1,0 +1,8 @@
+slug: dev-core-consolidation
+version: 1
+title: ""
+phases:
+    - number: 11
+      slug: projects-audit-dependency-remediation
+      title: projects-audit Dependency Remediation
+      tasks: []
