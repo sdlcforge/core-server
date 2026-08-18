@@ -6,3 +6,7 @@ phases:
       slug: projects-audit-dependency-remediation
       title: projects-audit Dependency Remediation
       tasks: []
+    - number: 12
+      slug: projects-audit-migration
+      title: projects-audit Migration Into dev-core
+      tasks: []
