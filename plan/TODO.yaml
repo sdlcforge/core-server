@@ -28,7 +28,7 @@ phases:
           git:
             branch: plan/dev-core-consolidation-01-002
             commit: []
-            merge: null
+            merge: d6681ef
     - number: 2
       slug: liq-projects-migration
       title: Liq-Projects Migration
