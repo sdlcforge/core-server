@@ -30,7 +30,6 @@
     "@liquid-labs/github-toolkit": "^1.0.0-alpha.25",
     "@liquid-labs/http-smart-response": "^1.0.0-alpha.3",
     "@liquid-labs/liq-handlers-lib": "^1.0.0-alpha.13",
-    "@liquid-labs/liq-projects-lib": "^1.0.0-alpha.12",
     "@liquid-labs/liq-qa-lib": "^1.0.0-alpha.9",
     "@liquid-labs/npm-toolkit": "^1.0.0-alpha.21",
     "@liquid-labs/octocache": "^1.0.0-alpha.4",
