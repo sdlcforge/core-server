@@ -6,7 +6,7 @@ This document specifies, for each of the four `@liquid-labs/plugable-express` pl
 
 The [Dev-Core Consolidation Contract](./dev-core-consolidation-contract.md) governs the separate, earlier step of absorbing a package's source into `dev-core`. This document governs the later, independent step of repointing the consumer once an absorption has landed — the two are not the same operation and do not share a timeline.
 
-One section per absorbed package, keyed by submodule short name (`liq-projects`, `liq-orgs`, `liq-work`, `projects-audit`), each added independently as its own handoff is authored. Only the `liq-work`, `liq-projects`, and `liq-orgs` sections exist as of this writing.
+One section per absorbed package, keyed by submodule short name (`liq-projects`, `liq-orgs`, `liq-work`, `projects-audit`), each added independently as its own handoff is authored. As of this writing all four sections exist — `liq-work`, `liq-projects`, `liq-orgs`, and `projects-audit` — so consumer migration is fully actionable for every donor this document covers.
 
 ## Table of contents
 
@@ -32,6 +32,13 @@ One section per absorbed package, keyed by submodule short name (`liq-projects`,
    - [Provenance change](#provenance-change-2)
    - [What does not change](#what-does-not-change-2)
    - [Corrections and disclosures](#corrections-and-disclosures-2)
+5. [projects-audit](#projects-audit)
+   - [Edits required in core-server](#edits-required-in-core-server-3)
+   - [The `http-smart-response` simplification](#the-http-smart-response-simplification)
+   - [Atomicity requirement](#atomicity-requirement-3)
+   - [Provenance change](#provenance-change-3)
+   - [What does not change](#what-does-not-change-3)
+   - [Corrections and disclosures](#corrections-and-disclosures-3)
 
 ## Overview
 
@@ -249,3 +256,88 @@ The [Dev-Core Consolidation Contract](./dev-core-consolidation-contract.md#sourc
 Neither is loaded by the running server, neither is a wave participant, and **neither is this plan-group's to fix** — but both would break on an `npm deprecate`/unpublish of `@liquid-labs/liq-orgs`, so this is recorded here rather than left for a later reader to trust the inherited "only core-server" claim.
 
 Also recorded, as dead metadata needing no action: `liq-controls/plugable-express.yaml` declares `dependencies: ['@liquid-labs/liq-projects', '@liquid-labs/liq-orgs']`, but **no code anywhere reads that file** (verified by grep across all `.js`/`.mjs` outside `node_modules` in the `liquid-labs` checkouts). And `plugable-registry/registry.yaml` catalogs `@liquid-labs/liq-orgs` (lines 18, 40, and 50); updating a registry catalog is outside this plan-group.
+
+## projects-audit
+
+`plugable-projects-audit` (the `projects-audit` submodule — the short name drops the `plugable-` framework prefix, the same way `liq-projects`, `liq-orgs`, and `liq-work` drop their own `liq-` prefix) has now landed in `dev-core` as of this writing — the fourth and last of the four absorptions to land, after `liq-projects`, `liq-orgs`, and `liq-work`. That completes the set: every donor this document covers has landed, so consumer migration is now fully actionable for all four, not just three of them. `core-server`'s own `package.json` and `explicitPlugins` array still carry all four donor entries unswapped as of this writing (re-verified below), so none of the four swaps has landed in `core-server` yet. Whichever swap executes first performs the one-time `@sdlcforge/dev-core` addition the [Overview](#overview) describes; whichever of the remaining three — including this one — executes later only removes its own donor entry, exactly as the [liq-projects](#liq-projects) section states for its own case.
+
+### Edits required in core-server
+
+Re-verified directly against `core-server`'s `main` (commit `54b06d0`, 2026-08-17) while writing this section; every line below matched exactly.
+
+| File | Line | Current | Required edit |
+|---|---|---|---|
+| `package.json` | 50 | `"@liquid-labs/plugable-projects-audit": "^1.0.0-alpha.2",` | **Remove.** A registry version range, not a `file:.yalc/…` link — unlike `liq-projects`, nothing needs `yalc` unlinking on removal. Add `"@sdlcforge/dev-core": "file:.yalc/@sdlcforge/dev-core"` once, shared with whichever other donor's swap lands in the same commit — do not add it a second time if it is already present. |
+| `src/lib/app-init.mjs` | 40 | `'@liquid-labs/plugable-projects-audit',` inside the `explicitPlugins` array | **Remove.** Add `'@sdlcforge/dev-core'` once, shared with the other donors' entries — do not add it a second time if it is already present. |
+| `docs/architecture/plugin-loading-tiers.md` | 59 | Row 7 of the explicit-plugin table: `\| 7 \| @liquid-labs/plugable-projects-audit \| Project auditing — auditing a project and applying fixes for audit issues found. \|` | **Update** — remove the row; the rows after it renumber. Do not add a parallel `dev-core` row per donor; once all four donors have swapped, the table needs a single `dev-core` row replacing all four (per the [liq-work](#edits-required-in-core-server) section's identical note). |
+| `test/README.md` | 111 | `- \`@liquid-labs/plugable-projects-audit\`` in the expected-plugin list | **Update** — remove the line. |
+| `AGENTS.md` | 60 | the yalc-snapshot paragraph, which names this package as the source of the transitive `http-smart-response` `file:.yalc/…` resolution | **Update** — see [The `http-smart-response` simplification](#the-http-smart-response-simplification) below. |
+| `scripts/provision-local-deps.sh` | 8, 31–35, 79 | the header comment, the `REQUIRED_YALC_PACKAGES` array, and the missing-package error text | **Update** — see [The `http-smart-response` simplification](#the-http-smart-response-simplification) below. |
+| `bun.lock` | 374, 1776 | — | **Regenerated, never hand-edited.** Per `core-server`'s own `AGENTS.md`, a `file:` resolution change requires `rm -f bun.lock && bun install` (or `./scripts/provision-local-deps.sh --refresh-lock`); a bare `bun install` will not re-resolve it. |
+
+**No `core-server` test fixture needs changing.** `test/test-basic.js:54` and `test/test-integration-quick.js:61` (and its second, fallback-path occurrence at line 87) assert only `@liquid-labs/liq-controls`, `@liquid-labs/liq-credentials`, and `@liquid-labs/liq-projects` — this donor was never in that list. `test/README.md:111`, updated above, is prose naming the expected-plugin list, not a test assertion; it is a real touch-point but not a fixture. A reader who has just done the [liq-projects](#liq-projects) section (three fixtures) will expect symmetry here that doesn't exist — this donor needs none, the same as [liq-orgs](#liq-orgs).
+
+### The `http-smart-response` simplification
+
+This is the part unique to this slice: removing `plugable-projects-audit` doesn't just delete a dependency line, it removes a `file:.yalc/…` resolution that has no other reason to exist in `core-server`'s lock. `bun.lock:1776` records `@liquid-labs/plugable-projects-audit/@liquid-labs/http-smart-response` resolving to `@liquid-labs/http-smart-response@file:.yalc/@liquid-labs/http-smart-response`. That entry exists **only** because this donor's published `1.0.0-alpha.2` declares the dependency as a `file:.yalc/…` spec — this plan's phase 11 fixes the donor itself, but `core-server`'s lock still carries the old resolution until this swap lands. `@liquid-labs/plugable-express` declares the same package at the registry range `^1.0.0-alpha.6`, and `@sdlcforge/dev-core` will too.
+
+So, once this donor is removed:
+
+- `scripts/provision-local-deps.sh`'s `REQUIRED_YALC_PACKAGES` array (lines 31–35) drops `"@liquid-labs/http-smart-response"`, going from three entries to two (`@liquid-labs/plugable-express` and, until `liq-projects` is also swapped, `@liquid-labs/liq-projects`). Its header comment (line 8) and its missing-package error text (line 79) — both of which name this package explicitly as the source of the transitive resolution — lose that clause.
+- `AGENTS.md:60`'s statement that `bun.lock` "currently resolves three packages via `file:.yalc/…`: two direct … plus one transitive … pulled in by `@liquid-labs/plugable-projects-audit`'s own pinned dependency" becomes false and must be updated to two. That paragraph already asks the reader to re-derive it with `grep -n 'file:\.yalc' bun.lock` when in doubt, and to keep `scripts/provision-local-deps.sh`'s own `REQUIRED_YALC_PACKAGES` list in sync — do exactly that as part of this edit.
+
+This is a **simplification**, not a regression: the yalc-linked package count in `core-server` drops from three to two because a spurious transitive `file:` link disappears along with the donor that caused it, not because anything broke.
+
+### Atomicity requirement
+
+Remove the `@liquid-labs/plugable-projects-audit` entry and add the `@sdlcforge/dev-core` entry in the same commit — see [How an unsynchronized swap fails](#how-an-unsynchronized-swap-fails) for why no intermediate state is viable in general. For `plugable-projects-audit` specifically there are **two distinct** failure modes, and the handoff names both because they look nothing alike.
+
+**Both loaded at once** → duplicate registration. Plugin `setup` runs eagerly while handler registration is deferred (see the [Overview](#overview)), so the first collision fires during `setup`:
+
+```text
+Path variable '<name>' is already registered.
+```
+
+thrown from `plugable-express/src/lib/path-var-registry.mjs:28-34` — it throws, it does not silently shadow (correction **C1**). Had that not fired, the next error would have been a duplicated command path:
+
+```text
+Non-unique command path: projects/audit
+```
+
+(or whichever of this donor's `/projects/audit*` paths registers first), thrown from `plugable-express/src/lib/register-handlers.js:130-132`.
+
+**This donor left in `explicitPlugins` while `liq-projects` is removed** → a different failure, unique to this donor among the four (correction **C14**):
+
+```text
+Unknown variable path element type 'projectName' while processing path projects/:projectName/audit.
+```
+
+thrown from `plugable-express/src/lib/path-to-re.mjs:14-19`. Two of this donor's four paths — `projects/:projectName/audit` and `projects/:projectName/audit-fix` — use the `projectName` path variable, and **only** the `projects` submodule's `setup` registers it; if `liq-projects` is gone from `explicitPlugins` while this donor is still present, that registration never happens and `pathToRe` throws it during handler registration instead of during `setup`. This failure mode exists in no sibling handoff section — none of the other three donors shares a path variable with `liq-projects`.
+
+All three strings are named here verbatim so each failure is recognizable — and greppable — on sight. Both are **loud** failures, not silent ones.
+
+### Provenance change
+
+Every one of this donor's four endpoints' recorded `npmName` becomes `@sdlcforge/dev-core` instead of `@liquid-labs/plugable-projects-audit`. Harmless at runtime, but **visible** in `/server/plugins/list`, in the generated API spec, and in `help` output — so any golden snapshot capturing these fields must be re-verified after the swap rather than assumed unchanged.
+
+### What does not change
+
+- `app.ext._liqProjects` is preserved verbatim (D7). Both of this donor's library functions — `doAudit` and `doAuditFix` — call `app.ext._liqProjects.playgroundMonitor.getProjectData(projectName)`; the key, the object, and the method are unchanged by the consolidation.
+- `sdlcforge/core-cli/docs/projects.md` needs no edit. It is generated CLI reference documentation that already interleaves all four audit endpoints with `liq-projects`'s under one `/projects` page and carries no package provenance. Because every `path` and every `help` string is preserved byte-identically, it regenerates identically — mentioned here only so its appearance in a `grep` doesn't look like a missed touch-point.
+- No `app.ext` key, route, method, parameter, or help string changes.
+
+### Corrections and disclosures
+
+#### Confirmation: the single-consumer claim holds for `plugable-projects-audit`
+
+The [Dev-Core Consolidation Contract](./dev-core-consolidation-contract.md#source-package-retirement-policy) states that "the only npm dependent of any source package is `@sdlcforge/core-server`." That holds here — verified by a playground-wide grep for `plugable-projects-audit` across every `package.json`, `*.mjs`, `*.js`, `*.md`, `*.yaml`, and `*.sh` outside `node_modules/`, `dist/`, `test-staging/`, and lockfiles. Unlike `liq-orgs` (correction **C2**), there is no second dependent to disclose: `core-server` is the only consumer anywhere in the playground.
+
+#### Disclosure: the inherited defects migrate unchanged
+
+Four defects travel with this donor into `dev-core`, none introduced by the consolidation and none fixed by it — worth knowing before attributing a post-swap bug report to the swap itself:
+
+- The two *implied* endpoints (`projects/audit`, `projects/audit-fix`) advertise a `projectName` parameter in their generated API spec and `help` output that they cannot actually use — the value comes from the `X-CWD` request header, not the path.
+- `audit-fix-lib.mjs`'s `removePackages` parameter object uses the key `dascription` instead of `description`, so its explanation is silently dropped from the API spec.
+- An unknown project name produces a `500`, not a `404`: `getProjectData` returns `undefined` for a name it doesn't recognize, and both library functions destructure that result immediately.
+
+`dev-core`'s own [README](./README.md#projects-audit-submodule) — the `projects-audit submodule` section, following the pattern of its existing `projects submodule`, `work submodule`, and `orgs submodule` sections — has the fuller account, including exact source locations. This handoff states them briefly so a consumer swapping packages isn't the last to know.
