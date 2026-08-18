@@ -34,18 +34,20 @@ Rewrite `package.json`'s `description` so the deprecation is visible in `npm vie
 
    Do **not** touch the two declared-but-unused dependencies (`@liquid-labs/terminal-text`, `octokit`) — removing them is a real (if small) resolution change with no benefit to a deprecated package, and they are recorded as Wave 3/4 follow-ups.
 
-4. **Change nothing else in `package.json`.** `name`, `main`, `scripts`, `engines`, `author`, `license`, `repository`, `bugs`, `homepage`, the `liq` block, and `devDependencies` all stay exactly as they are. `keywords` stays the empty array — do not add a `deprecated` keyword; `npm deprecate` (task 9-004) is the mechanism for that.
+4. **Add or correct a `files` allowlist.** Run `npm pack --dry-run` **before** any edit: this repo has no `files` field and no `.npmignore`, so `npm pack` falls back to a stale `.gitignore` and will pick up this Flow planning session's own local artifacts (`.flow/`, `plan/manifest.yaml`, and a full nested copy of the package under `worktrees/plan/dev-core-consolidation/`, lockfile included) alongside the real package contents. Compare against the currently-published `1.0.0-alpha.10` tarball's actual contents (`npm view @liquid-labs/liq-work dist.tarball`, or inspect an installed copy) and add a `files` field listing only what the published tarball actually needs (e.g. `dist`, `src`, `Makefile` — confirm against the real tarball rather than guessing). This is permitted in addition to `description`/`version`/the `http-errors` decision.
 
-5. **Touch no other file.** No `README.md` change (that is task 9-002), no source change, no test change, no `Makefile` change. `package-lock.json` changes **only** if requirement 3 adds the dependency, in which case refresh it with `npm install` and commit it.
+5. **Change nothing else in `package.json`.** `name`, `main`, `scripts`, `engines`, `author`, `license`, `repository`, `bugs`, `homepage`, the `liq` block, and `devDependencies` all stay exactly as they are. `keywords` stays the empty array — do not add a `deprecated` keyword; `npm deprecate` (task 9-004) is the mechanism for that.
+
+6. **Touch no other file.** No `README.md` change (that is task 9-002), no source change, no test change, no `Makefile` change. `package-lock.json` changes **only** if requirement 3 adds the dependency, in which case refresh it with `npm install` and commit it.
 
 ## Validation
 
-- **The diff is minimal.** `git diff --stat` shows `package.json` (and, only if requirement 3 added the dependency, `package-lock.json`) and nothing else. `git diff package.json` shows exactly the `description` line, the `version` line, and at most the one added dependency line.
+- **The diff is minimal.** `git diff --stat` shows `package.json` (and, only if requirement 3 added the dependency, `package-lock.json`) and nothing else. `git diff package.json` shows the `description` line, the `version` line, the added/corrected `files` array, and at most the one added dependency line.
 - **`version` is `1.0.0-alpha.11`** (or the next free version, if 2's re-check found otherwise), and it is **not** already published: `npm view @liquid-labs/liq-work@<new version>` reports it does not exist.
 - **The description leads with the deprecation** and names `@sdlcforge/dev-core` within the first 80 characters, so a truncated registry listing still carries the essential information.
 - **`make build` and `make lint` pass.** If requirement 3 added `http-errors`, `dist/liq-work.js` is **byte-identical** to the pre-change build (`shasum` before and after) — the evidence that declaring an already-resolved dependency changed nothing.
 - **`make test`'s failure set is unchanged**: exactly the known `work-db.test.js` `SlowBuffer` `TypeError`, with every other suite passing. Record the summary line. `make qa` will therefore still fail on `test`; that is expected and is **not** a gate for this task (see `## Assumptions`).
-- **`npm pack --dry-run` succeeds** and lists the expected file set, confirming the package is publishable before task 9-004 attempts it.
+- **`npm pack --dry-run` succeeds** and lists the expected file set — no `.flow/`, no `plan/`, no `worktrees/` — confirming the package is publishable and clean before task 9-004 attempts it.
 - **The `http-errors` decision is recorded** in the task report with its rationale, whichever way it went.
 
 ## Metadata
