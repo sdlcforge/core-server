@@ -14,24 +14,26 @@
 // specifiers, so an explicit `.mjs` specifier resolves under Rollup but not under Jest.
 import { handlers as projectsHandlers, setup as projectsSetup } from './projects'
 import { handlers as orgsHandlers, setup as orgsSetup } from './orgs'
-// import { handlers as workHandlers, setup as workSetup } from './work'
+import { handlers as workHandlers, setup as workSetup } from './work'
 // import { handlers as projectsAuditHandlers } from './projects-audit'
 
 // A fresh array built by spreading each submodule's own handlers array (e.g.
 // `[...projectsHandlers, ...orgsHandlers, ...workHandlers, ...projectsAuditHandlers]`) --
 // never by `push`ing into an imported array, since two submodules mutating a shared array would
 // be a latent aliasing bug once they share this one package.
-const handlers = [...projectsHandlers, ...orgsHandlers]
+const handlers = [...projectsHandlers, ...orgsHandlers, ...workHandlers]
 
 // Ordered list of submodule setup functions (e.g. `[projectsSetup, orgsSetup, workSetup]`;
 // `projects-audit` has no setup). `setup` below awaits each in this fixed order because
 // `projects`' setup is eager and installs `app.ext._liqProjects` synchronously before
 // returning; `orgs` defers its own work onto `app.ext.setupMethods`, but that deferred work
 // reads `app.ext._liqProjects` and therefore needs it to already exist by the time it runs;
-// `work` only needs `app.ext.serverConfigRoot`, which is present from server initialization
-// regardless of submodule order. See
+// `work` only needs `app.ext.serverConfigRoot`, which the framework supplies at server
+// initialization regardless of submodule order -- so `work`'s third position is a convention
+// this contract fixes, not a dependency it satisfies. `work`'s setup is synchronous and returns
+// `undefined`; the `await` below is a harmless no-op for it, exactly as for `orgs`. See
 // docs/dev-core-consolidation-contract.md#composite-setup-ordering.
-const submoduleSetups = [projectsSetup, orgsSetup]
+const submoduleSetups = [projectsSetup, orgsSetup, workSetup]
 
 const setup = async(setupArgs) => {
   for (const submoduleSetup of submoduleSetups) {
