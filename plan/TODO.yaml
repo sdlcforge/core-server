@@ -15,7 +15,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/dev-core-consolidation-11-001
-            commit: []
+            commit:
+                - 95c28d8
             merge: null
     - number: 12
       slug: projects-audit-migration
