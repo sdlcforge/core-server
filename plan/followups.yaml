@@ -107,3 +107,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Automated security review flagged 7 pre-existing command-injection-capable patterns in code migrated verbatim from liq-work during this session''s dev-core-consolidation absorption (phase 8 task 002): src/work/handlers/_lib/save-lib.mjs (git commit -m built via tryExec, partial escaping via replaceAll but not fully safe), src/work/handlers/_lib/work-db.mjs (git remote add with ghUser/projectBasename interpolation), src/work/handlers/resume.mjs (git checkout ${workKey}), src/work/handlers/issues/_lib/list-lib.mjs (open with ghOrg/project/number interpolation), src/work/handlers/_lib/submit-lib.mjs (open ${url} unquoted), src/work/handlers/_lib/pause-lib.mjs (git checkout ${main}), src/work/handlers/projects/_lib/list-lib.mjs (open with projectFQN interpolation). Confirmed via git log that these files'' shell-out patterns predate this consolidation (liq-work commits well before this plan). Not introduced by this session; now first-party dev-core code rather than a vendored dependency. Same class of issue as followup g23a (liq-projects'' shell-outs). Suggested remediation when next touched: replace shell-string interpolation with execFile/spawn argv-array invocation, and validate interpolated values (branch names, org/project names, URLs, issue numbers) against strict allowlist regexes before use.'
+    - title: condition-eval Function() eval pattern
+      id: 7ZF2
+      date: "2026-08-18"
+      tags:
+        - plan/phase:phase-08-liq-work-migration
+        - plan/slug:dev-core-consolidation
+        - type:security
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Security review (phase 8 gate) noted: the new dependency @liquid-labs/condition-eval (added by liq-work''s absorption, resolving to 1.0.0-alpha.19) evaluates expressions via Function(e(o))() gated by a regex allowlist (numeric literals, true/false, fixed operator/paren set) — a regex-then-Function() pattern with a history of allowlist-bypass issues in other libraries, though this allowlist looks reasonably tight. Reachability from externally-influenced input (issue title/body, GitHub label, user-supplied work parameter) could not be confirmed since the review was scoped to dev-core''s aggregator/docs/package.json changes, not src/work/''s own handler source where condition-eval is actually called. Low confidence, minor severity. When src/work/''s own handler source is next reviewed, grep for condition-eval/Evaluator/evalTruth/evalNumber call sites and confirm every expression string is either a fixed developer-authored template or built only from already-validated/typed values, never a raw external string concatenated into the expression shape.'
