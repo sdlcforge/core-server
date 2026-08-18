@@ -22,23 +22,25 @@ The `description` matters more than its size suggests: per D5, `plugable-express
 
 2. **Set `version` to `1.0.0-alpha.8`** (from `1.0.0-alpha.7`). Edit the field directly rather than running `npm version`, which would create a git tag and a commit this plan does not want — and which triggers `preversion: make qa` as a side effect at an awkward moment.
 
-3. **Change nothing else in `package.json`.** Not `name`, `main`, `scripts`, `engines`, `keywords`, `author`, `license`, `repository`, `bugs`, `homepage`, `dependencies`, or `devDependencies`. In particular:
+3. **Add or correct a `files` allowlist.** Run `npm pack --dry-run` before making any change: this repo has no `files` field and no `.npmignore`, so `npm pack` falls back to a stale `.gitignore` and will pick up this Flow planning session's own local artifacts (`.flow/`, `plan/manifest.yaml`, and a full nested copy of the package under `worktrees/plan/dev-core-consolidation/`, lockfile included) alongside the real package contents. Compare against the currently-published `1.0.0-alpha.7` tarball's actual contents (`npm view @liquid-labs/liq-orgs dist.tarball`, or inspect an installed copy) and add a `files` field listing only what the published tarball actually needs (e.g. `dist`, `src`, `Makefile` — confirm against the real tarball rather than guessing). This is permitted in addition to `version`/`description`.
+
+4. **Change nothing else in `package.json`.** Not `name`, `main`, `scripts`, `engines`, `keywords`, `author`, `license`, `repository`, `bugs`, `homepage`, `dependencies`, or `devDependencies`. In particular:
    - Do **not** add `"deprecated"` as a `package.json` field. npm deprecation is a registry operation (`npm deprecate`), which task 004 performs; a `deprecated` key in the manifest is not a supported npm mechanism and would be noise.
    - Do **not** re-add `@liquid-labs/playground-monitor`. Phase 5 task 001 reverted a stray uncommitted `file:.yalc/…` entry for it; if it is present again, that is a regression — halt and report rather than accepting it.
    - Do **not** migrate the `catalyst-resource-*` devDependencies. This package is being retired; a toolchain migration on its final release is pure risk.
 
-4. **Verify the package still builds and passes QA** after the edit — `make qa` (which runs lint and test) must be green, since task 004 will publish from this state.
+5. **Verify the package still builds and passes QA** after the edit — `make qa` (which runs lint and test) must be green, since task 004 will publish from this state.
 
 ## Validation
 
-- **`git diff` on `package.json` shows exactly two changed lines**: `version` and `description`. Any third changed line fails this task.
+- **`git diff` on `package.json` shows changes on exactly three fields**: `version`, `description`, and the added/corrected `files` array. Any other changed line fails this task.
 - `version` is exactly `1.0.0-alpha.8`.
 - `description` is non-empty, is a single line, names `@sdlcforge/dev-core`, and leads with the deprecation — a reader seeing only the first six words knows the package is deprecated.
 - **The derived summary reads correctly.** Apply `plugable-express`'s strip regex (` +(?:for|in) a @liquid-labs/plugable-express server`) to the description and confirm the result is still a grammatical, informative sentence. This is a 30-second check that prevents a mangled string appearing in the server's plugin list.
 - **`package.json` is valid JSON** and `npm pkg get name version description` returns the expected values.
 - **`make qa` passes** — lint clean and 1 suite / 37 tests green. (The suite lives at `src/orgs/resources/lib/test/settings.test.mjs` after phase 5's restructure.)
 - **`git status` shows exactly one changed path: `package.json`.** No other tracked file is modified, no file added.
-- `npm pack --dry-run` succeeds and the resulting file list contains no `.yalc` path and no unresolvable `file:` dependency — a sanity check that the final tarball is publishable before task 004 attempts it.
+- `npm pack --dry-run` succeeds and the resulting file list contains no `.yalc` path, no unresolvable `file:` dependency, **and no `.flow/`, `plan/`, or `worktrees/` path** — a sanity check that the final tarball is publishable and clean before task 004 attempts it.
 
 ## Assumptions
 
