@@ -29,7 +29,17 @@ phases:
     - number: 8
       slug: liq-work-migration
       title: liq-work Migration Into dev-core
-      tasks: []
+      tasks:
+        - number: 1
+          slug: restructure-src-into-dev-core-layout
+          title: Restructure Src Into Dev-Core Layout
+          path: phase-08-liq-work-migration/001-restructure-src-into-dev-core-layout.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 9
       slug: retire-liq-work
       title: Retire liq-work
