@@ -64,3 +64,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: author-readme-superseded-notice
+          title: Author Readme As Superseded Notice
+          path: phase-13-retire-plugable-projects-audit/002-author-readme-superseded-notice.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
