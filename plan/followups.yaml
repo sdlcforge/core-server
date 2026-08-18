@@ -48,3 +48,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: While fixing two stale README.md sentences (dev-core-consolidation phase 1 gate follow-up), the task agent noted line 22 ("Once source exists, dev-core builds and tests through the same Make-based toolchain...") is arguably also now slightly stale since source already exists. Left unchanged as out of scope for that narrow two-sentence fix. Worth a look in a future doc-drift pass.
+    - title: project-lifecycle test pre-existing failure
+      id: 2aMD
+      date: "2026-08-18"
+      tags:
+        - plan/phase:phase-02-liq-projects-migration
+        - plan/slug:dev-core-consolidation
+        - type:bug
+        - priority:unspecified
+        - effort:unspecified
+      text: 'src/projects/handlers/_lib/test/project-lifecycle.test.mjs fails independently of credentials/network: its appMock supplies app.ext.serverHome while create-lib.mjs reads app.ext.serverConfigRoot (both files byte-identical to the liq-projects donor''s blobs, not touched by the phase-2 absorb task). A real pre-existing donor defect, not a regression from absorption. Will keep make test/make qa red in dev-core until fixed. Phase 3''s verify-dev-core-absorption task (and any future full-suite gate) should not expect a fully-green make qa because of this one suite. Also note: src/projects/handlers/test/close-implied.mjs is a misnamed test file (missing the .test infix) that Jest never collects — dead in both directions, migrated verbatim from liq-projects per scope fence.'
