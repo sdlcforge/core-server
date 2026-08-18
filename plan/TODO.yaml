@@ -74,3 +74,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 3
+          slug: mark-package-deprecated-and-bump-version
+          title: Mark Package Deprecated, Bump Version, And Fix Packaging
+          path: phase-13-retire-plugable-projects-audit/003-mark-package-deprecated-and-bump-version.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
