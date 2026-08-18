@@ -39,4 +39,14 @@ phases:
     - number: 6
       slug: retire-liq-orgs
       title: Retire liq-orgs
-      tasks: []
+      tasks:
+        - number: 1
+          slug: verify-dev-core-absorption
+          title: Verify Dev-Core Absorption
+          path: phase-06-retire-liq-orgs/001-verify-dev-core-absorption.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
