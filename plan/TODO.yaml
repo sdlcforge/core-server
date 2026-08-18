@@ -5,6 +5,7 @@ phases:
     - number: 1
       slug: dev-core-package-foundation
       title: Dev-Core Package Foundation
+      diff_base: 79f8b9c8c98f143577e669c15f9a4e3777e5ae16
       tasks:
         - number: 1
           slug: author-consolidation-contract
