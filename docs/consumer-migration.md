@@ -45,7 +45,7 @@ This corrects `dev-core-target-shape.md`'s original wording (decision D10), whic
 
 ## liq-work
 
-`liq-work` (the `work` submodule) has not yet landed in `dev-core` as of this writing. This section documents the `core-server` edits its swap requires so that `core-server`'s own plan-group can execute them the moment the submodule lands, without waiting on or re-deriving anything from this plan.
+`liq-work` (the `work` submodule) has already landed in `dev-core` as of this writing — the third of the four absorptions to land, after `liq-projects` and `liq-orgs`. That makes this the third swap `core-server`'s own plan-group can actually execute: `core-server`'s own `package.json` and `explicitPlugins` array still carry `@liquid-labs/liq-work`, `@liquid-labs/liq-projects`, and `@liquid-labs/liq-orgs` unswapped as of this writing (re-verified below), so none of the three swaps has landed in `core-server` yet. Whichever of the three executes first performs the one-time `@sdlcforge/dev-core` addition the [Overview](#overview) describes; whichever executes later only removes its own donor entry, exactly as the [liq-projects](#liq-projects) and [liq-orgs](#liq-orgs) sections state for their own cases.
 
 ### Edits required in core-server
 
