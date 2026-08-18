@@ -5,6 +5,7 @@ phases:
     - number: 11
       slug: projects-audit-dependency-remediation
       title: projects-audit Dependency Remediation
+      diff_base: 98d2600d6f7967a84531b496e29cec4b348b6659
       tasks:
         - number: 1
           slug: restore-registry-dependency-range
