@@ -112,3 +112,42 @@ The move is a pure `git mv`: **no import in this package needs rewriting** (veri
 - After the pre-move baseline and route list are captured, before any `git mv`.
 - After all nine moves, the deletion, and the two one-line files, before running the toolchain.
 - After `make build`/`make test`/`make lint` are green and the route-list diff is empty, with the file census written down for task 002.
+
+## Status
+
+**Outcome: succeeded.** Implemented 2026-08-18.
+
+- **Requirement 1 (pre-conditions).** Confirmed clean on arrival in this worktree: `git grep -n 'file:' -- package.json` returned nothing (phase 11 landed — base commit `0bc5890`), `git ls-files -s | grep '^160000'` returned nothing (no gitlink), `git ls-files src | wc -l` was **11**.
+- **Requirement 2 (pre-move baseline).** `npm install` reported "up to date" (dependencies already installed per `dependencies_installed=npm`). `make build` produced `dist/plugable-projects-audit.js`. `make test` → 1 suite passed, 1 test passed. `make lint` → clean. Route list captured to `/tmp/ppa-routes-pre-move.json` (4 handlers). Module shape: `[ 'handlers' ] 4 undefined`.
+- **Requirements 3–4 (relocate + delete shim).** All nine files moved with `git mv`; `src/handlers/index.mjs` removed with `git rm`. `git diff --find-renames --name-status <base> HEAD` confirms nine `R100` entries (100% similarity, zero content drift — independently re-verified per-file with `git show <base>:<old> | diff - <new>`, all empty), one `D` (`src/handlers/index.mjs`), one `A` (`src/projects-audit/index.mjs`), one `M` (`src/index.mjs`).
+- **Requirement 5 (`src/projects-audit/index.mjs`).** Created with exactly `export * from './handlers'`. No `setup` export added (this donor has none — D6 item 4).
+- **Requirement 6 (root `src/index.mjs` reduced).** Reduced to exactly `export * from './projects-audit'`. **Left as `src/index.mjs`, not renamed to `src/index.js`, on purpose** — per requirement 6 and C17, the collision with dev-core's own aggregator path is deliberately handled in phase 12 task 002, not this task. Confirmed: `git ls-files src/index.js` returns nothing; `git ls-files src/index.mjs` returns it.
+- **Requirement 7 (scope discipline).** No other file touched — confirmed via `git diff --name-only <base> HEAD -- . ':(exclude)src'`, empty. No import specifier was rewritten (verified: every import in `src/` is a bare specifier or same-directory-relative path; no `../` anywhere in `src/`).
+- **Requirement 8 (toolchain re-run) — recorded below.**
+
+**Post-move file census (11 paths) — recorded for task 002 (subtract root `src/index.mjs` for task 002's 10-path check):**
+```
+src/index.mjs
+src/projects-audit/handlers/_lib/audit-fix-lib.mjs
+src/projects-audit/handlers/_lib/audit-lib.mjs
+src/projects-audit/handlers/_lib/audit-lib.test.mjs
+src/projects-audit/handlers/_lib/common-audit-path-parameters.mjs
+src/projects-audit/handlers/audit-fix-implied.mjs
+src/projects-audit/handlers/audit-fix.mjs
+src/projects-audit/handlers/audit-implied.mjs
+src/projects-audit/handlers/audit.mjs
+src/projects-audit/handlers/index.mjs
+src/projects-audit/index.mjs
+```
+`git ls-files src | wc -l` → **11**. `git ls-files 'src/handlers/*'` → empty.
+
+**Validation summary (all green, matching the pre-move baseline exactly):**
+- `make build` — succeeded, `dist/plugable-projects-audit.js` produced from the reduced `src/index.mjs`.
+- `make test` — **1 suite passed, 1 test passed** — identical to baseline; the relocated test (`src/projects-audit/handlers/_lib/audit-lib.test.mjs`) is still discovered by the depth-agnostic `*.test.*js` finder.
+- `make lint` — clean, including the two new/edited files.
+- Route surface — `diff /tmp/ppa-routes-pre-move.json /tmp/ppa-routes-post-move.json` → empty. Same 4 entries, same order, same `method`/`path`/`help.name`/`parameters`.
+- Module shape — `node -e "..."` → `[ 'handlers' ] 4 undefined`. The `undefined` `setup` is load-bearing per D6 item 4.
+- `npm pack --dry-run` — succeeded (`prepack` ran `make build`); `src/` entries in the tarball are the new `src/projects-audit/...` paths. Tarball still carries `plan/` (not `.flow/`/`worktrees/` in this worktree's case) — that pollution is C9, out of this task's scope (phase 13 task 003).
+- Working tree — `git status --short` clean after the finalize commit.
+
+Affected source files (repo-relative): `src/index.mjs` (reduced), `src/projects-audit/index.mjs` (new), `src/projects-audit/handlers/index.mjs`, `src/projects-audit/handlers/audit.mjs`, `src/projects-audit/handlers/audit-implied.mjs`, `src/projects-audit/handlers/audit-fix.mjs`, `src/projects-audit/handlers/audit-fix-implied.mjs`, `src/projects-audit/handlers/_lib/audit-lib.mjs`, `src/projects-audit/handlers/_lib/audit-fix-lib.mjs`, `src/projects-audit/handlers/_lib/audit-lib.test.mjs`, `src/projects-audit/handlers/_lib/common-audit-path-parameters.mjs`, `src/handlers/index.mjs` (deleted).
