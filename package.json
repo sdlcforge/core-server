@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/liquid-labs/plugable-projects-audit#readme",
   "dependencies": {
-    "@liquid-labs/http-smart-response": "file:.yalc/@liquid-labs/http-smart-response",
+    "@liquid-labs/http-smart-response": "^1.0.0-alpha.6",
     "@liquid-labs/npm-toolkit": "^1.0.0-alpha.17",
     "http-errors": "^2.0.0",
     "npm-check-plus": "^1.0.0-alpha.5"
