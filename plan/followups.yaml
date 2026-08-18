@@ -38,3 +38,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Security review (dev-core-consolidation phase 1 gate) flagged: serialize-javascript@6.0.2, transitively required via @rollup/plugin-terser (a dependency of the pinned devDependency @liquid-labs/sdlc-resource-babel-and-rollup@1.0.0-alpha.5), carries an unpatched high-severity RCE advisory (GHSA-5c6j-r48x-rmvq, CVSS 8.1) plus a moderate DoS advisory (GHSA-qj8w-gfj5-8c6v). npm audit confirms 4 findings (1 high, 3 moderate) all rooted here. Dev/CI-only (never bundled into dist/dev-core.js or the published tarball); dev-core does not control @rollup/plugin-terser''s pin directly. Fix requires either a semver-major bump upstream in sdlc-resource-babel-and-rollup, or migrating to its stated successor @sdlcforge/packjs (see the related deprecation-notice followup). Track rather than patch in dev-core directly; worth re-checking on every future submodule absorption''s npm install since the same toolchain package will be pulled in again.'
+    - title: README line 22 also slightly stale
+      id: 0eWj
+      date: "2026-08-18"
+      tags:
+        - plan/phase:phase-01-dev-core-package-foundation
+        - plan/slug:dev-core-consolidation
+        - type:documentation
+        - priority:unspecified
+        - effort:unspecified
+      text: While fixing two stale README.md sentences (dev-core-consolidation phase 1 gate follow-up), the task agent noted line 22 ("Once source exists, dev-core builds and tests through the same Make-based toolchain...") is arguably also now slightly stale since source already exists. Left unchanged as out of scope for that narrow two-sentence fix. Worth a look in a future doc-drift pass.
