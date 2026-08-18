@@ -1,5 +1,4 @@
-export * from './handlers'
-export * from './setup'
+export * from './projects'
 
 const name = 'core-projects'
 const summary = 'Manages liq enabled projects (NPM packages).'
