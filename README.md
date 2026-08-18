@@ -4,7 +4,7 @@
 
 ## Planned composition
 
-`dev-core` is not yet a shipped, working plugin — this repository currently holds only its package identity and this documentation. Its target internal shape is one top-level directory under `src/` per submodule:
+`dev-core` is not yet a shipped, working plugin — this repository currently holds only its package scaffolding, a buildable-but-empty plugin entry point, and this documentation, with no submodule yet landed. Its target internal shape is one top-level directory under `src/` per submodule:
 
 - **`projects`** — project lifecycle: creation, setup, rename, update, archive, close, destroy, and release publishing.
 - **`work`** — work-item orchestration on top of the project lifecycle.
@@ -15,7 +15,7 @@ Each submodule will expose only `handlers` and, where applicable, `setup` from i
 
 ## How it loads
 
-`dev-core` is loaded by `@sdlcforge/core-server` as an explicit `plugable-express` plugin: the server dynamic-imports this package's `main` entry (`dist/dev-core.js`, built from `src/index.mjs`) and reads exactly two exports from it — a merged `handlers` array and a composite, asynchronous `setup` function. No other export is read. Today, before any submodule has landed, `src/index.mjs` and `dist/dev-core.js` do not yet exist.
+`dev-core` is loaded by `@sdlcforge/core-server` as an explicit `plugable-express` plugin: the server dynamic-imports this package's `main` entry (`dist/dev-core.js`, built from `src/index.mjs`) and reads exactly two exports from it — a merged `handlers` array and a composite, asynchronous `setup` function. No other export is read. Today, before any submodule has landed, `src/index.mjs` already exists and builds to `dist/dev-core.js` — it just exports an empty `handlers` array and a no-op `setup`, since no submodule has landed yet.
 
 ## Build and test
 
