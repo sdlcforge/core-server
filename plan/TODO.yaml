@@ -11,7 +11,7 @@ phases:
           slug: restore-registry-dependency-range
           title: Restore Registry Dependency Range
           path: phase-11-projects-audit-dependency-remediation/001-restore-registry-dependency-range.md
-          done: false
+          done: true
           tier: sonnet-med
           digest: 'Replaced file:.yalc/... spec for @liquid-labs/http-smart-response with ^1.0.0-alpha.6 (verified against yalc copy version, npm latest dist-tag, and liq-projects''s existing range — all matched). Regenerated package-lock.json via surgical edit (removing only the two .yalc/link:true entries) rather than full deletion, since full regeneration was measured to also bump an unrelated devDependency (sdlc-resource-eslint) breaking make lint via a hardcoded Makefile path. Reproduced the defect first in a disposable clone, then proved the fix from a second fresh clone: npm install/make build/make test/make lint all green, dependency resolves to a real directory at 1.0.0-alpha.6, route-list diff empty (4 handlers, identical shape). Scope held to exactly package.json (one line) and package-lock.json.'
           git:
