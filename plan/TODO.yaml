@@ -42,6 +42,7 @@ phases:
           path: phase-08-liq-work-migration/001-restructure-src-into-dev-core-layout.md
           done: false
           tier: sonnet-high
+          digest: 'Relocated liq-work''s entire src/ tree into its dev-core target shape via git mv: the 68-file src/handlers/work/** subtree flattened to src/work/handlers/**, plus src/setup.mjs -> src/work/setup.mjs and src/docs/Issues.md -> src/work/docs/Issues.md (70 renames total, all at 100% similarity), deleted the redundant src/handlers/index.js shim, rewrote the single invalidated import specifier in setup.mjs, added src/work/index.mjs as the new submodule public surface, and reduced root src/index.js to a thin re-export. Measured pre-move baseline (72 files, 30 routes, 82,698-byte bundle, 7/7 tests across 3 suites with one known SlowBuffer failure) and confirmed every post-move check reproduces it exactly: same file count, same route list, same bundle size, same test/lint results, content drift confined to exactly the three files the task doc names.'
           git:
             branch: plan/dev-core-consolidation-08-001
             commit:
