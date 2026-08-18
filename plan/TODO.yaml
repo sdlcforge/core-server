@@ -28,7 +28,7 @@ phases:
           slug: restructure-src-into-dev-core-layout
           title: Restructure Src Into Dev-Core Layout
           path: phase-12-projects-audit-migration/001-restructure-src-into-dev-core-layout.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: Restructured src/ tree to final dev-core-relative path. All 9 files moved via git mv, recorded as 100%-similarity renames with zero content drift, independently re-verified per-file. src/handlers/index.mjs deleted, src/projects-audit/index.mjs created (export * from './handlers', deliberately no setup export). Root src/index.mjs reduced to export * from './projects-audit' and DELIBERATELY LEFT with the .mjs extension (not renamed to .js) per C17 — this intentionally collides with dev-core's own aggregator path, to be resolved as an explicit merge conflict in task 002, not avoided here. No import rewrites needed. make build/test/lint all green at baseline numbers, route surface byte-identical, module shape unchanged ([handlers], 4, undefined setup). File census (11 paths) recorded verbatim for task 002's parity check.
           git:
