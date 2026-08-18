@@ -11,7 +11,7 @@
 
 ## Routes
 
-All routes are mounted under `/projects` (registered in `src/handlers/projects/index.js` and, for releases, `src/handlers/projects/releases/index.js`). Most operations exist in two variants: an explicit form naming `:projectName`, and an "implied" form that infers the project from the current working directory. This table is a summary — full per-parameter documentation is in the generated API reference at [docs/index.html](./docs/index.html); it is not reproduced here.
+All routes are mounted under `/projects` (registered in `src/projects/handlers/index.js` and, for releases, `src/projects/handlers/releases/index.js`). Most operations exist in two variants: an explicit form naming `:projectName`, and an "implied" form that infers the project from the current working directory.
 
 | Operation | Method | Explicit path | Implied path | Purpose |
 |---|---|---|---|---|
