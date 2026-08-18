@@ -5,7 +5,7 @@ import { tryExec } from '@liquid-labs/shell-toolkit'
 
 const doNpmPublish = ({ nextVer, otp, projectName, projectPath, reporter }) => {
   reporter.push('Preparing to publish...')
-  
+
   let tagOpt = ''
   const nextVerPreRelease = semver.prerelease(nextVer)
   console.log(`nextVer: ${nextVer}; nextVerPreRelease:`, nextVerPreRelease) // DEBUG
@@ -13,10 +13,10 @@ const doNpmPublish = ({ nextVer, otp, projectName, projectPath, reporter }) => {
     reporter.push('Checking current latest version to determine prerelease tag...')
     const pkgInfo = view({ packageName : projectName })
     const currLatest = pkgInfo?.version
-    if (currLatest === undefined 
+    if (currLatest === undefined
         || (semver.prerelease(currLatest) !== null
             && semver.gt(nextVer, currLatest, { loose : true, includePrerelease : true })
-    )) {
+        )) {
       tagOpt = ' --tag latest'
     }
     else {
@@ -25,7 +25,7 @@ const doNpmPublish = ({ nextVer, otp, projectName, projectPath, reporter }) => {
         tagOpt = ` --tag ${pretype}`
       }
       else {
-        tagOpt = ` --tag next`
+        tagOpt = ' --tag next'
       }
     }
     reporter.push(`  using tag: ${tagOpt}`)

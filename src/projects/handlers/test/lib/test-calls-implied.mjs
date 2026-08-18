@@ -10,7 +10,7 @@ const testCallsImplied = async(doFunc, func) => {
   const handler = func({ reporter : reporterMock })
   await handler(reqMock)
 
-  expect(result).toBe('@liquid-labs/liq-projects')
+  expect(result).toBe('@sdlcforge/dev-core')
 }
 
 export { testCallsImplied }

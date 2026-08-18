@@ -14,7 +14,7 @@ const doGitHubRelease = async({ app, mainBranch, name, projectName, releaseVersi
 
   const prerelease = semver.prerelease(releaseVersion) !== null
 
-  const currentRelease = await getLatestRelease({ authToken, considerAll: true, githubOwner, project : githubBasename, reporter })
+  const currentRelease = await getLatestRelease({ authToken, considerAll : true, githubOwner, project : githubBasename, reporter })
   console.log(`releaseVersion: ${releaseVersion}; currentRelease:`, currentRelease) // DEBUG
   const makeLatest = semver.gt(releaseVersion, currentRelease, { loose : true })
 

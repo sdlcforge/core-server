@@ -9,16 +9,19 @@
 // Expected submodules, in the order their setup must run (see the ordering note on `setup`
 // below): projects, orgs, work, projects-audit (handlers only, no setup).
 //
-// import { handlers as projectsHandlers, setup as projectsSetup } from './projects/index.mjs'
-// import { handlers as orgsHandlers, setup as orgsSetup } from './orgs/index.mjs'
-// import { handlers as workHandlers, setup as workSetup } from './work/index.mjs'
-// import { handlers as projectsAuditHandlers } from './projects-audit/index.mjs'
+// Submodule imports are extensionless directory imports (`./orgs`, not `./orgs/index.mjs`):
+// Babel rewrites `.mjs` sources to `.js` in `test-staging/` without rewriting import
+// specifiers, so an explicit `.mjs` specifier resolves under Rollup but not under Jest.
+import { handlers as projectsHandlers, setup as projectsSetup } from './projects'
+// import { handlers as orgsHandlers, setup as orgsSetup } from './orgs'
+// import { handlers as workHandlers, setup as workSetup } from './work'
+// import { handlers as projectsAuditHandlers } from './projects-audit'
 
 // A fresh array built by spreading each submodule's own handlers array (e.g.
 // `[...projectsHandlers, ...orgsHandlers, ...workHandlers, ...projectsAuditHandlers]`) --
 // never by `push`ing into an imported array, since two submodules mutating a shared array would
 // be a latent aliasing bug once they share this one package.
-const handlers = []
+const handlers = [...projectsHandlers]
 
 // Ordered list of submodule setup functions (e.g. `[projectsSetup, orgsSetup, workSetup]`;
 // `projects-audit` has no setup). `setup` below awaits each in this fixed order because
@@ -28,7 +31,7 @@ const handlers = []
 // `work` only needs `app.ext.serverConfigRoot`, which is present from server initialization
 // regardless of submodule order. See
 // docs/dev-core-consolidation-contract.md#composite-setup-ordering.
-const submoduleSetups = []
+const submoduleSetups = [projectsSetup]
 
 const setup = async(setupArgs) => {
   for (const submoduleSetup of submoduleSetups) {

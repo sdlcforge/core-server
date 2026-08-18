@@ -166,7 +166,7 @@ const doPublish = async({ app, cache, projectName, reporter, req, res }) => {
   if (pushResult.code !== 0) { throw createError.InternalServerError(`Failed to push merged '${mainBranch}' to remote '${originRemote}'; push manually.`) }
 
   if (publish === 'main-branch' || (publishOnPrepare === 'main-branch')) {
-    doNpmPublish({ nextVer,otp, projectName, projectPath, reporter })
+    doNpmPublish({ nextVer, otp, projectName, projectPath, reporter })
   }
 
   /* TODO: open browser to
