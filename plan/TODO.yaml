@@ -10,3 +10,7 @@ phases:
       slug: liq-work-migration
       title: liq-work Migration Into dev-core
       tasks: []
+    - number: 9
+      slug: retire-liq-work
+      title: Retire liq-work
+      tasks: []
