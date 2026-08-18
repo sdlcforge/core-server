@@ -35,7 +35,7 @@ phases:
             branch: plan/dev-core-consolidation-12-001
             commit:
                 - ca2817e
-            merge: null
+            merge: a3c0c679709a97310b955adf9b4255117226f6ea
         - number: 2
           slug: absorb-projects-audit-into-dev-core
           title: Absorb Projects-Audit Into Dev-Core
