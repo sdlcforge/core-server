@@ -30,6 +30,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: absorb-projects-audit-into-dev-core
+          title: Absorb Projects-Audit Into Dev-Core
+          path: phase-12-projects-audit-migration/002-absorb-projects-audit-into-dev-core.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 13
       slug: retire-plugable-projects-audit
       title: Retire plugable-projects-audit
