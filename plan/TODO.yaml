@@ -42,7 +42,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/dev-core-consolidation-02-001
-            commit: []
+            commit:
+                - d4a3741
             merge: null
         - number: 2
           slug: absorb-projects-into-dev-core
