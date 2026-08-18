@@ -5,6 +5,7 @@ phases:
     - number: 5
       slug: liq-orgs-migration
       title: liq-orgs Migration
+      diff_base: 75d14ebbb0b2fd71de91a219116751715df482f0
       tasks:
         - number: 1
           slug: restructure-src-into-dev-core-layout
