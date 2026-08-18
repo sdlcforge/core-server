@@ -27,7 +27,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/dev-core-consolidation-07-002
-            commit: []
+            commit:
+                - f41ddb5
             merge: null
     - number: 8
       slug: liq-work-migration
