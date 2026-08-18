@@ -28,3 +28,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Security review (dev-core-consolidation phase 1 gate) noted: the pinned devDependency @liquid-labs/sdlc-resource-babel-and-rollup@1.0.0-alpha.5 carries an explicit npm registry deprecation notice ("This package has been moved to <sdlcforge/packjs.") visible in package-lock.json. The exact pinned version was a deliberate, documented choice (matching liq-projects''s working lockfile to avoid a lint-breaking newer prerelease — see phase 1 task 002''s status notes), not an oversight, but it means dev-core''s first dependency manifest starts pinned to a package receiving no further fixes under its current name (including for the related serialize-javascript RCE followup). No action needed now; track the eventual migration to @sdlcforge/packjs as a plan-level item so it is not only rediscovered via a future npm audit.'
+    - title: serialize-javascript RCE via terser pin
+      id: 0RpG
+      date: "2026-08-18"
+      tags:
+        - plan/phase:phase-01-dev-core-package-foundation
+        - plan/slug:dev-core-consolidation
+        - type:security
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Security review (dev-core-consolidation phase 1 gate) flagged: serialize-javascript@6.0.2, transitively required via @rollup/plugin-terser (a dependency of the pinned devDependency @liquid-labs/sdlc-resource-babel-and-rollup@1.0.0-alpha.5), carries an unpatched high-severity RCE advisory (GHSA-5c6j-r48x-rmvq, CVSS 8.1) plus a moderate DoS advisory (GHSA-qj8w-gfj5-8c6v). npm audit confirms 4 findings (1 high, 3 moderate) all rooted here. Dev/CI-only (never bundled into dist/dev-core.js or the published tarball); dev-core does not control @rollup/plugin-terser''s pin directly. Fix requires either a semver-major bump upstream in sdlc-resource-babel-and-rollup, or migrating to its stated successor @sdlcforge/packjs (see the related deprecation-notice followup). Track rather than patch in dev-core directly; worth re-checking on every future submodule absorption''s npm install since the same toolchain package will be pulled in again.'
