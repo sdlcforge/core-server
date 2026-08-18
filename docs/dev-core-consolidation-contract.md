@@ -107,7 +107,7 @@ Every endpoint's recorded provenance `npmName` becomes `@sdlcforge/dev-core` onc
 
 The ordering is not arbitrary: `projects`' setup is eager — it registers GitHub credentials and installs `app.ext._liqProjects = { playgroundMonitor, playgroundPath }` before returning — while `orgs` defers its own work onto `app.ext.setupMethods` (run later by the server) but still needs `app.ext._liqProjects` to already exist by the time that deferred work runs, and `work` only needs `app.ext.serverConfigRoot`, which is present from server initialization regardless of submodule order. Running `projects` first is therefore load-bearing, not a stylistic default.
 
-`registerPathVar` is forwarded to each submodule's setup unchanged. The merged set of path variables these four submodules register — `projectName`, `newProjectName`, `orgKey`, `newOrgKey`, `workKey` — has no name collisions, so no submodule's registration can silently shadow another's.
+`registerPathVar` is forwarded to each submodule's setup unchanged. The merged set of path variables these four submodules register — `projectName`, `newProjectName`, `orgKey`, `newOrgKey`, `parameterKey`, `workKey` — has no name collisions, so no submodule's registration can silently shadow another's. `parameterKey` is registered not from `orgs`' `setup` but from its `parameters-detail` handler's `func`, at route-registration time — a *handler* can register a path variable there too, so the merged path-variable surface is not fully determined by reading each submodule's `setup` function alone.
 
 ## `app.ext` contract freeze
 
