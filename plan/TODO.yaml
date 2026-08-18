@@ -18,7 +18,7 @@ phases:
             branch: plan/dev-core-consolidation-07-001
             commit:
                 - 2039d65
-            merge: null
+            merge: 9b37d5041a3eccdd7cb240729dc22e79ee4c60b3
         - number: 2
           slug: inline-cross-link-dev-projects
           title: Inline crossLinkDevProjects And Drop liq-projects-lib
