@@ -16,6 +16,12 @@ const terminalFormatter = ({ data: orgs }) => orgs.map((o) => `${o.commonName} (
 const textFormatter = ({ data: orgs }) => orgs.map((o) => `${o.commonName} (${o.key})`).join('\n')
 
 const func = ({ model, reporter }) => (req, res) => {
+  // KNOWN BROKEN: plugable-express's load-plugins.js never passes `model` to plugin
+  // handlers (only { npmName, handlers, reporter, setupData, cache }), so `model` is
+  // always undefined here and this throws TypeError on every request. The org registry
+  // actually lives at app.ext._liqOrgs.orgs. Migrated as-is from @liquid-labs/liq-orgs
+  // (pre-existing defect, not introduced by the dev-core consolidation).
+  // Tracked: sdlcforge/dev-core plan/followups.yaml id jY7C.
   const orgs = Object.values(model.orgs)
 
   formatOutput({

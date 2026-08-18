@@ -34,6 +34,10 @@ const func = ({ app }) => async(req, res) => {
 
   await fs.mkdir(localRootDir, { recursive : true })
 
+  // KNOWN BROKEN: this handler never sends a response (falls through after fs.mkdir),
+  // so the request hangs until client timeout. Migrated as-is from @liquid-labs/liq-orgs
+  // (pre-existing defect, not introduced by the dev-core consolidation).
+  // Tracked: sdlcforge/dev-core plan/followups.yaml id jY7C.
   // TODO
 }
 
