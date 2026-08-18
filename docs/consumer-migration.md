@@ -155,13 +155,13 @@ The credential side of the atomicity requirement runs the opposite direction —
 
 Every `/projects` endpoint's recorded `npmName` becomes `@sdlcforge/dev-core` instead of `@liquid-labs/liq-projects`. `@liquid-labs/plugable-express` takes plugin identity from the package manifest (`package.json`'s `name`/`description`), never from the loaded module's own `name`/`summary` exports, so `liq-projects`'s inert module-level `name = 'core-projects'` export was never visible to the server to begin with. The change is harmless at runtime but **visible** in the server's generated API spec and in `help` output, so `core-server`'s golden-API-spec snapshot must be re-verified after the swap rather than assumed unchanged (see the edit table above).
 
-Plugin count is a one-for-one swap at this point, not a reduction: today only `liq-projects` has an absorbed counterpart in `dev-core`, so removing its entry and adding `@sdlcforge/dev-core` leaves the total explicit-plugin count unchanged. The plugin list only shrinks from four entries to one once `liq-work`, `liq-orgs`, and `plugable-projects-audit` also swap — each of those later swaps removes an entry without adding a new one, per the [Overview](#overview). The one plugin entry's summary comes from `dev-core`'s `package.json` `description`, already authored as: "Plugable-express plugin for core-server consolidating the liq project lifecycle, work orchestration, org settings, and project audit capabilities into a single package."
+Plugin count is a one-for-one swap at this point, not a reduction: as of this writing, `dev-core` has absorbed all four donors (`liq-projects`, `liq-work`, `liq-orgs`, and `plugable-projects-audit`), but each donor's own `core-server` swap is a separate, per-consumer step this handoff document only specifies — it does not perform any of them. Swapping this one donor's entry for `@sdlcforge/dev-core` leaves the total explicit-plugin count unchanged; the plugin list only shrinks from four entries to one once all four swaps have actually been performed against a given `core-server` instance, per the [Overview](#overview). The one plugin entry's summary comes from `dev-core`'s `package.json` `description`, already authored as: "Plugable-express plugin for core-server consolidating the liq project lifecycle, work orchestration, org settings, and project audit capabilities into a single package."
 
 No route, method, parameter, or response shape changes for any of the 19 `/projects` endpoints.
 
 ### What does not change
 
-`app.ext._liqProjects` keeps its exact name — and, once the other three donors land, so will `app.ext._liqOrgs`, `app.ext.constants.WORK_DB_PATH`, and `app.ext.setupMethods`. No participant in the absorption renames any of these keys.
+`app.ext._liqProjects` keeps its exact name — and so do the other three donors' equivalent keys: `app.ext._liqOrgs`, `app.ext.constants.WORK_DB_PATH`, and `app.ext.setupMethods`. No participant in the absorption renames any of these keys.
 
 Verified readers of `app.ext._liqProjects` that need no change:
 
