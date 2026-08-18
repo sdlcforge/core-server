@@ -5,6 +5,7 @@ import * as os from 'node:os'
 
 import { handlers, setup } from '../index'
 import { handlers as projectsHandlers } from '../projects'
+import { handlers as orgsHandlers } from '../orgs'
 
 describe('dev-core plugin entry point', () => {
   test('handlers is an array', () => {
@@ -19,8 +20,9 @@ describe('dev-core plugin entry point', () => {
     // Update this expectation as each further submodule is wired in. The aggregator must build
     // a fresh array rather than alias a submodule's own, or two submodules pushing into a
     // shared array would corrupt each other.
-    expect(handlers).toEqual([...projectsHandlers])
+    expect(handlers).toEqual([...projectsHandlers, ...orgsHandlers])
     expect(handlers).not.toBe(projectsHandlers)
+    expect(handlers).not.toBe(orgsHandlers)
   })
 
   describe('setup', () => {
@@ -39,9 +41,14 @@ describe('dev-core plugin entry point', () => {
       await fs.rm(playgroundPath, { force : true, recursive : true })
     })
 
-    test("runs the projects submodule's setup and populates app.ext._liqProjects", async() => {
+    test("runs the projects and orgs submodules' setup, in order, and populates their app.ext contracts", async() => {
       const registeredPathVars = []
-      const app = { ext : { credentialsDB : { registerCredentialType : () => {} } } }
+      const app = {
+        ext : {
+          credentialsDB : { registerCredentialType : () => {} },
+          setupMethods  : []
+        }
+      }
       const setupArgs = {
         app,
         cache            : {},
@@ -58,7 +65,23 @@ describe('dev-core plugin entry point', () => {
       expect(Object.keys(app.ext)).toContain('_liqProjects')
       expect(app.ext._liqProjects.playgroundPath).toBe(playgroundPath)
       expect(app.ext._liqProjects.playgroundMonitor).toBeDefined()
-      expect(registeredPathVars).toEqual(['newProjectName', 'projectName'])
+
+      // `orgs`' own setup is synchronous and defers its real work onto `app.ext.setupMethods`
+      // (drained later by the server's DependencyRunner) rather than running it inline here --
+      // see docs/dev-core-consolidation-contract.md#composite-setup-ordering. Confirming
+      // `_liqProjects` is already populated by the time `orgs` runs is what proves the fixed
+      // `projects`-then-`orgs` order actually held.
+      expect(registeredPathVars).toEqual(['newProjectName', 'projectName', 'newOrgKey', 'orgKey'])
+      expect(app.ext.setupMethods.map(({ name, deps }) => ({ name, deps }))).toEqual([
+        { name : 'prepare org dependencies', deps : ['!'] },
+        { name : 'load orgs', deps : undefined },
+        { name : 'process org setup', deps : ['*'] }
+      ])
+
+      // Assert the exact `_liqOrgs` key name (D7/the contract freeze) and its initial shape,
+      // by invoking the first deferred setup method the way the server's DependencyRunner would.
+      app.ext.setupMethods[0].func({ app })
+      expect(app.ext._liqOrgs).toEqual({ orgSetupMethods : [] })
     })
   })
 })
