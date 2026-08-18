@@ -11,7 +11,7 @@ phases:
           slug: author-consolidation-contract
           title: Author Consolidation Contract
           path: phase-01-dev-core-package-foundation/001-author-consolidation-contract.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: Authored docs/dev-core-consolidation-contract.md and README.md in the sdlcforge/dev-core repository (cross-repo task) on branch task/author-consolidation-contract (commit f3506b9, based on dev-core main c8b5071), transcribing decisions D1-D11 into dev-core's own durable, plan-independent voice, covering all 13 required contract elements, verified against actual source (plugable-express loader/registration, liq-controls, liq-integrations-issues-github). Not merged to dev-core main; merge is a separate manager step. No liq-projects worktree edits made (cross-repo task, worktree untouched).
           git:
