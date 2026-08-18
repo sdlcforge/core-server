@@ -11,7 +11,7 @@ phases:
           slug: restructure-src-into-dev-core-layout
           title: Restructure Src Into Dev-Core Layout
           path: phase-05-liq-orgs-migration/001-restructure-src-into-dev-core-layout.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: 'Relocated all 11 surviving liq-orgs source files from src/{handlers/orgs,resources}/ into the flat src/orgs/{handlers,resources}/ dev-core target layout using git mv, preserving 100%-similarity rename detection and zero content drift throughout. Deleted the redundant src/handlers/index.js shim, added src/orgs/index.mjs as the new submodule public surface, reduced root src/index.js to a thin re-export keeping the plugin contract byte-identical. Requirement 1''s dirty-package.json revert was moot (worktree arrived clean). All validation passed at the exact pre-move baseline: make build/test (37/37)/lint/qa green, route-array parity byte-identical via mechanical diff, file census matches, renames verified via numstat.'
           git:
