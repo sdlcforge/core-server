@@ -111,6 +111,48 @@ architectural_impact: true
 - `/Users/zane/playground/liquid-labs/liq-projects/worktrees/plan/dev-core-consolidation/plan/phase-02-liq-projects-migration/001-restructure-src-into-dev-core-layout.md` — the sibling task that ran this same recipe first; consult it for anything the recipe left ambiguous.
 - `/Users/zane/playground/liquid-labs/plugable-express/src/lib/register-handlers.js` — how `path` exports become Express routes, for the route-parity check.
 
+## Status
+
+**Outcome: succeeded.** Implemented 2026-08-18.
+
+- **Requirement 1 (dirty working tree).** Not applicable as described in this task's own worktree: `git status --short` and `git diff package.json` both showed a clean state on arrival (no uncommitted `@liquid-labs/playground-monitor` `file:.yalc/…` entry). The task doc's dirty-tree finding describes the main `liq-orgs` checkout at plan-authoring time, not this provisioned worktree, which was cut clean from the plan branch. `package.json` was not touched by this task at all — no revert was needed or performed.
+- **Requirements 2–3 (relocate + delete shim).** All 11 files moved with `git mv`; `src/handlers/index.js` removed with `git rm`. `git diff --cached -M --stat` (captured before commit) and `git diff <pre-task-sha>..HEAD -M --numstat` (captured after) both confirm all 11 relocations recorded as 100%-similarity renames with `0 0` line changes — zero content drift.
+- **Requirement 4 (`src/orgs/index.mjs`).** Added, exporting exactly `{ handlers, setup }`, matching the sibling `src/handlers/orgs/index.js` style (no semicolons). `make lint` passes with it present.
+- **Requirement 5 (`src/index.js` thin re-export).** Reduced to `export * from './orgs'` plus the same inert `name`/`summary` exports; Rollup entry point and `dist/liq-orgs.js` output unchanged.
+- **Requirement 6 (no import rewrites).** Confirmed — no import specifier inside any moved file was edited.
+- **Requirement 7 (scope discipline).** No other file touched; the four dead handlers and the `create` stub were left exactly as migrated, per `## Assumptions`.
+- **Requirement 8 (file census) — recorded for task 002:**
+  - `git ls-files src | wc -l` → **13**
+  - `git ls-files src`:
+    ```
+    src/index.js
+    src/orgs/handlers/_lib/parameters-lib.mjs
+    src/orgs/handlers/create.mjs
+    src/orgs/handlers/index.js
+    src/orgs/handlers/list.mjs
+    src/orgs/handlers/parameters-detail.mjs
+    src/orgs/handlers/parameters-list.mjs
+    src/orgs/handlers/parameters-set.mjs
+    src/orgs/index.mjs
+    src/orgs/resources/lib/settings.mjs
+    src/orgs/resources/lib/test/settings.test.mjs
+    src/orgs/resources/organization.mjs
+    src/orgs/setup.mjs
+    ```
+
+**Validation summary** (all green, matching the pre-move baseline exactly):
+- `make build` — succeeded, `dist/liq-orgs.js` produced from `src/index.js` unchanged.
+- `make test` — **1 test suite, 37 tests, all passing** — identical to the recorded baseline.
+- `make lint` — passed, no findings, including `src/orgs/index.mjs`.
+- `make qa` — `test lint` prerequisites already satisfied (make reported "Nothing to be done"), i.e. green transitively.
+- `test-staging/orgs/resources/lib/test/settings.test.js` confirmed present after build — the depth-agnostic finder still classifies the relocated test correctly.
+- File census — exact match: 13 paths; `git ls-files src/handlers` and `find src -path 'src/handlers/*'` both empty.
+- Moves recorded as renames — confirmed via `git diff --cached -M --stat` (pre-commit) and `git diff <pre-task-sha>..HEAD -M --numstat` (post-commit): all 11 relocated files show `0 0` line changes.
+- Plugin contract — `dist/liq-orgs.js` loaded via `node -e "import(...)"`: `handlers.length === 5`, `typeof setup === 'function'`, and the 5 `path` arrays diffed mechanically (via `diff` against a hand-written expected-list file) byte-for-byte identical to the task doc's expected list. No mismatch.
+- Working tree — `git status --porcelain` clean after the finalize commit; `package.json` untouched (never modified).
+
+Affected source files (repo-relative): `src/index.js`, `src/orgs/index.mjs` (new), `src/orgs/setup.mjs`, `src/orgs/handlers/index.js`, `src/orgs/handlers/create.mjs`, `src/orgs/handlers/list.mjs`, `src/orgs/handlers/parameters-detail.mjs`, `src/orgs/handlers/parameters-list.mjs`, `src/orgs/handlers/parameters-set.mjs`, `src/orgs/handlers/_lib/parameters-lib.mjs`, `src/orgs/resources/organization.mjs`, `src/orgs/resources/lib/settings.mjs`, `src/orgs/resources/lib/test/settings.test.mjs`, `src/handlers/index.js` (deleted).
+
 ## Checkpoint hints
 
 - After the working-tree decision in requirement 1, before any `git mv`.
