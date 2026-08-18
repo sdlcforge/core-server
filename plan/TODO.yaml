@@ -41,7 +41,7 @@ phases:
           done: false
           tier: sonnet-high
           git:
-            branch: null
+            branch: plan/dev-core-consolidation-02-001
             commit: []
             merge: null
         - number: 2
