@@ -84,3 +84,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 3
+          slug: mark-package-deprecated-and-bump-version
+          title: Mark Package Deprecated And Bump Version
+          path: phase-09-retire-liq-work/003-mark-package-deprecated-and-bump-version.md
+          done: false
+          tier: sonnet-low
+          git:
+            branch: null
+            commit: []
+            merge: null
