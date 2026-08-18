@@ -94,3 +94,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 5
+          slug: refresh-architecture-docs
+          title: Refresh Dev-Core Architecture Docs For All Four Submodules
+          path: phase-13-retire-plugable-projects-audit/005-refresh-architecture-docs.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
