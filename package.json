@@ -51,6 +51,7 @@
     "http-errors": "^2.0.0",
     "js-yaml": "^4.1.0",
     "natural-sort": "^1.0.0",
+    "npm-check-plus": "^1.0.0-alpha.5",
     "shelljs": "^0.8.5"
   },
   "_npm-check-plus": {
