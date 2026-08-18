@@ -18,3 +18,13 @@ items:
         2. `create` — never sends a response; the request hangs until client timeout. `func` creates the org directory (`fs.mkdir`) then falls off the end of the function at a bare `// TODO` (some destructured fields are even commented out with the note "to pass lint until we rebuild 'create'"). Needs to be finished: build and return the org resource / an appropriate response.
 
         None of these are reachable from a passing test today — `orgs`' test coverage is 100% concentrated on one unrelated pure module (`settings.mjs`); the handlers themselves are at 0% coverage, so fixing this should include adding real tests.
+    - title: sdlc-resource-babel-and-rollup is deprecated
+      id: AEsA
+      date: "2026-08-18"
+      tags:
+        - plan/phase:phase-01-dev-core-package-foundation
+        - plan/slug:dev-core-consolidation
+        - type:optimization
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Security review (dev-core-consolidation phase 1 gate) noted: the pinned devDependency @liquid-labs/sdlc-resource-babel-and-rollup@1.0.0-alpha.5 carries an explicit npm registry deprecation notice ("This package has been moved to <sdlcforge/packjs.") visible in package-lock.json. The exact pinned version was a deliberate, documented choice (matching liq-projects''s working lockfile to avoid a lint-breaking newer prerelease — see phase 1 task 002''s status notes), not an oversight, but it means dev-core''s first dependency manifest starts pinned to a package receiving no further fixes under its current name (including for the related serialize-javascript RCE followup). No action needed now; track the eventual migration to @sdlcforge/packjs as a plan-level item so it is not only rediscovered via a future npm audit.'
