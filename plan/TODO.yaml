@@ -40,6 +40,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: absorb-work-into-dev-core
+          title: Absorb Work Into Dev-Core
+          path: phase-08-liq-work-migration/002-absorb-work-into-dev-core.md
+          done: false
+          tier: opus-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 9
       slug: retire-liq-work
       title: Retire liq-work
