@@ -1,5 +1,4 @@
-export * from './handlers'
-export * from './setup'
+export * from './orgs'
 
 const name = 'core-orgs'
 const summary = 'Manage org level settings.'
