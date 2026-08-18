@@ -236,7 +236,7 @@ Four pre-existing defects were inherited unchanged from `@liquid-labs/plugable-p
 
 A fifth, purely internal, item worth noting: all four handlers assign `reporter = reporter.isolate()` and then never read `reporter` — dead code, with no user-visible effect.
 
-Fixing any of these is out of scope for the consolidation and is tracked as a follow-up item against the `dev-core-consolidation` plan in [`plan/followups.yaml`](./plan/followups.yaml).
+Fixing any of these is out of scope for the consolidation and is tracked as `sdlcforge/dev-core` `plan/followups.yaml` id `bTGn` — not attempted here.
 
 #### What happened to `@liquid-labs/plugable-projects-audit`
 
