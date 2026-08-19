@@ -2,3 +2,6 @@ version: 1
 plans:
     - slug: core-server-domain-consolidation
       status: working
+      wave:
+        slug: sdlcforge-modernization
+        leadProject: core-server
