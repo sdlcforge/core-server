@@ -25,6 +25,7 @@ phases:
           path: phase-12-inline-determine-current-milestone/002-correct-docs-external-dependency-claims.md
           done: false
           tier: sonnet-med
+          digest: The plan branch this worktree derives from never merged main's doc-authoring commit, so README.md/AGENTS.md/docs/ did not exist in the worktree at task start. Per the plan's own anomaly-8 note, read pre-correction docs from main via git show, applied the four factual corrections (local determineCurrentMilestone implementation replacing external-dependency claims, toolkit-dependency list gaining @liquid-labs/versioning, two AGENTS.md sections rewritten), extended project-structure.md for the new source file, and committed all three as new-file adds on this branch. README.md intentionally left absent per task scope (Phase 14 task 002 owns it). make qa green (2 suites/5 tests, lint clean).
           git:
             branch: plan/core-server-domain-consolidation-12-002
             commit:
