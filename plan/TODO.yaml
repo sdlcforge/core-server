@@ -60,6 +60,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 3
+          slug: wire-builtin-plugins-aggregator
+          title: Wire Builtin-Plugins Aggregator And Prove With Probe
+          path: phase-04-in-tree-plugin-mechanism/003-wire-builtin-plugins-aggregator.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 5
       slug: absorb-donor-plugins
       title: Absorb Donor Plugins And Retire Explicit-Tier Entries
