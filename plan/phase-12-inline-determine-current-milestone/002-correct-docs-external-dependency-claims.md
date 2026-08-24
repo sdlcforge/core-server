@@ -53,3 +53,16 @@ Four claims to correct, plus one listing to extend. The line references below ar
 
 - [`plan/notes/liq-integrations-issues-github-source-inventory.md`](../notes/liq-integrations-issues-github-source-inventory.md) — anomaly 8 records exactly which documentation statements go stale and why; its dependency inventory is what the corrected lists must agree with.
 - [`001-inline-determine-current-milestone.md`](./001-inline-determine-current-milestone.md) — the source change these corrections describe, including the deliberately-preserved oddities requirement 4 restates as a convention.
+
+## Status
+
+**Outcome:** succeeded (2026-08-24).
+
+`docs/`, `AGENTS.md`, and `README.md` are not present on this worktree's branch (`plan/core-server-domain-consolidation-12-002`, cut from `plan/core-server-domain-consolidation`) — per source-inventory anomaly 8, they exist only on `main` (commit `af00846`). Per that note's explicit instruction, this task read the three in-scope docs from `main` (`git show main:<path>`), applied the four corrections plus the file-listing update, and wrote the corrected files into this worktree at their normal paths — this is the first commit on this branch lineage carrying these three docs, so the change lands as new-file adds rather than diffs against a prior in-branch version. `README.md` was left untouched and was **not** added to this worktree, consistent with Requirement 6 and the Validation bullet naming it out of scope.
+
+Affected files (repo-relative):
+- `docs/liq-integrations-issues-github-spec.md`
+- `AGENTS.md`
+- `docs/project-structure.md`
+
+Validation: all `## Validation` checks passed, including `make qa` (2 test suites / 5 tests passed; lint clean) and the requirement-7 sweep grep, which surfaced no unanticipated hits.
