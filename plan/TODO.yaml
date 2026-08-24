@@ -10,3 +10,7 @@ phases:
       slug: relocate-plugin-source
       title: Relocate Plugin Source
       tasks: []
+    - number: 14
+      slug: retire-liq-integrations-issues-github
+      title: Retire Liq-Integrations-Issues-Github
+      tasks: []
