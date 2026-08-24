@@ -15,7 +15,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/core-server-domain-consolidation-01-001
-            commit: []
+            commit:
+                - 33a2e2e
             merge: null
     - number: 2
       slug: retire-liq-controls
