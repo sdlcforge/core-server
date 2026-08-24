@@ -13,6 +13,7 @@ phases:
           path: phase-12-inline-determine-current-milestone/001-inline-determine-current-milestone.md
           done: false
           tier: sonnet-high
+          digest: Inlined determineCurrentMilestone verbatim from @liquid-labs/liq-projects-lib into src/determine-current-milestone.mjs, repointed the single import site in create-or-update-pull-request.mjs, and corrected package.json's dependency set (dropped liq-projects-lib, added versioning ^1.0.0-alpha.4 and octocache ^1.0.0-alpha.4, closing a pre-existing undeclared-transitive hazard). Confirmed via npm ls that liq-projects-lib is genuinely gone from the resolved tree. Added new unit coverage (no prior coverage existed), mocking octocache. make build/test/lint all green (5/5 tests, baseline was 2/2). Confirmed createPR call path (Promise.all race, PATCH payload, try/catch) unchanged. Lands on branch plan/core-server-domain-consolidation-12-001 only pending merge into plan/core-server-domain-consolidation.
           git:
             branch: plan/core-server-domain-consolidation-12-001
             commit:
