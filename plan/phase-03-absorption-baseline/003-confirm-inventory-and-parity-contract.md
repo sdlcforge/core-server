@@ -61,3 +61,17 @@ This task touches no source and no test. It is analysis plus two written artifac
 - After the three donors' import sweeps are complete and the undeclared-specifier findings are written down.
 - After `plan/resources/absorption-dependency-union.md` is authored.
 - After `plan/resources/absorption-parity-contract.md` is authored and cross-checked against the three notes it draws from.
+
+## Status
+
+**Outcome:** succeeded, with one validation item the task agent could not itself satisfy (see below). Date: 2026-08-24.
+
+Both deliverables were authored and committed: [`plan/resources/absorption-dependency-union.md`](../resources/absorption-dependency-union.md) and [`plan/resources/absorption-parity-contract.md`](../resources/absorption-parity-contract.md). All source reads for the three donors were taken live from their `plan/core-server-domain-consolidation` branch tips, cited by branch and commit in the dependency-union document: `liq-controls@3030cdab991fadab6fee8d50e27ae244ab2051de`, `liq-credentials@fc72da1dc483c8cfff7f303d391f71741297e866`, `liq-integrations-issues-github@e5240c1a5773a3153fe42c1311c9b04a48e6d488`.
+
+Findings summary:
+- `liq-controls`' `@liquid-labs/liq-qa-lib` and `@liquid-labs/http-smart-response` declarations are confirmed genuinely unused (zero static or dynamic imports across all 8 non-test source files under `src/lib/`); neither is carried into the union on `controls`' own account.
+- `issues-github`'s `@liquid-labs/octocache` import is confirmed live and undeclared; resolved version `^1.0.0-alpha.4` from `core-server`'s installed tree (`node_modules` + `bun.lock`), to be declared explicitly.
+- The undeclared-bare-specifier sweep found exactly one discrepancy across all three donors: the `octocache` case above. `liq-controls` and `liq-credentials` both report "none found."
+- The `determineCurrentMilestone` / `@liquid-labs/liq-projects-lib` inlining has **not** landed as of the cited `issues-github` commit; the import is live at `src/create-or-update-pull-request.mjs:3`. Flagged explicitly for Phase 5 task 003 to re-check at absorb time.
+
+**One validation item not satisfied by this task agent, by design:** the task's `## Validation` section requires the two new documents to be "linked from `plan/overview.md`," but also requires `git diff --stat` to show only the two new `plan/resources/` documents — and the dispatching manager's operating-contract instructions to this task agent explicitly forbid editing `plan/overview.md` (a master plan doc owned by the manager, per [Plan documents handling protocol](flow-mcp:s/Vl)). These two validation clauses are in direct tension for this task, and the master-plan-doc ownership boundary is a hard contract this agent does not cross. **The two documents are not yet linked from `plan/overview.md`.** The manager (who owns that file) should add two links — e.g. alongside the existing prose mention of both paths in the Phase 3 task 003 bullet — as a follow-up when applying this report. See the structured report's `flagged_for_manager` for the exact suggested edit.
