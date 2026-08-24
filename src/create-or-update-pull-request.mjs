@@ -1,11 +1,11 @@
 import { determineOriginAndMain } from '@liquid-labs/git-toolkit'
 import { determineGitHubLogin, getGitHubOrgAndProjectBasename } from '@liquid-labs/github-toolkit'
-import { determineCurrentMilestone } from '@liquid-labs/liq-projects-lib'
 import { getGitHubQAFileLinks } from '@liquid-labs/liq-qa-lib'
 import { Octocache } from '@liquid-labs/octocache'
 import { tryExec } from '@liquid-labs/shell-toolkit'
 
 import { GH_BASE_URL, WORKSPACE } from './constants'
+import { determineCurrentMilestone } from './determine-current-milestone'
 
 const createOrUpdatePullRequest = async({
   app,
