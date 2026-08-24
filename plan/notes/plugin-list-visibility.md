@@ -33,6 +33,10 @@ Option 3 keeps every provider attributable, tells the truth about where the code
 
 Note that the same value also becomes the `npmName` provenance stamped into every absorbed endpoint's `app.ext.handlers` entry, which is what `GET /server/api` and the golden API spec snapshot record. That change is unavoidable under any of the three options except 2, and matches what `dev-core` accepted for its own four absorbed submodules.
 
+## Answer
+
+Option 3 — re-identify absorbed capability under `@sdlcforge/core-server`'s own identity. The user accepted this recommendation directly.
+
 ## Consequence for the parity check
 
 The characterization baseline this plan builds has to know the answer in advance: under option 1 or 3 the baseline for these two endpoints is expected to differ before and after absorption, and the accepted diff must be enumerated rather than treated as a regression. Under option 2 the baseline is expected to match exactly.

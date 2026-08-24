@@ -26,6 +26,13 @@ Absorbing both sides of that contract into `core-server` (the credentials DB wir
 
 Each donor's retirement phase depends on this project's absorb phase landing. If those retirements include unpublishing or archiving, and if any consumer resolves `@sdlcforge/core-server` from the registry rather than locally, a version bump and publish belongs at the end of this plan — as it did in the `framework-consolidation` plan for `plugable-express`. That plan also established that `npm publish` is reliably blocked by this environment's Bash-permission classifier and has to be reported for manual user action. The request does not mention release at all.
 
+## Answer
+
+All three recommendations accepted directly by the user:
+1. **`liq-integrations-issues-github` is absorbed and retired**, per the planning request. The manifest entry's description is being amended by the manager (see below) to match — this is confirmed, not still open.
+2. **`GITHUB_API` credential-contract hardening is out of scope here**, deferred to Wave 3.
+3. **This plan bumps and attempts to publish `@sdlcforge/core-server`** at the end of the final phase, with the exact command handed to the user if the environment blocks it.
+
 ## Recommendations from the second planning pass
 
 Stated so the decisions can be confirmed rather than re-derived.
