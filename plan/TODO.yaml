@@ -131,4 +131,14 @@ phases:
     - number: 7
       slug: release
       title: Release And Publish
-      tasks: []
+      tasks:
+        - number: 1
+          slug: bump-version-and-publish
+          title: Bump Version And Publish
+          path: phase-07-release/001-bump-version-and-publish.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
