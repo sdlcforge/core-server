@@ -39,7 +39,17 @@ phases:
     - number: 4
       slug: in-tree-plugin-mechanism
       title: In-Tree Plugin Registration Mechanism
-      tasks: []
+      tasks:
+        - number: 1
+          slug: verify-plugable-express-builtin-plugins
+          title: Verify Plugable-Express Builtin-Plugins Mechanism
+          path: phase-04-in-tree-plugin-mechanism/001-verify-plugable-express-builtin-plugins.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 5
       slug: absorb-donor-plugins
       title: Absorb Donor Plugins And Retire Explicit-Tier Entries
