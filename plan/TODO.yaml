@@ -27,7 +27,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/core-server-domain-consolidation-12-002
-            commit: []
+            commit:
+                - 98f9bc2
             merge: null
     - number: 13
       slug: relocate-plugin-source
