@@ -13,6 +13,7 @@ phases:
           path: phase-10-relocate-plugin-source/001-restructure-src-into-core-server-layout.md
           done: false
           tier: sonnet-high
+          digest: Relocated all 8 files under liq-credentials's src/ tree into src/credentials/ via git mv, preserving history, then reduced src/index.js to export * from './credentials' in a separate commit. Verified no import resolves outside the moved subtree, make build/test/lint all green at baseline parity, route/setup/app.ext parity unchanged (2 handlers, credentialsDB/credential path-var contract). Two pre-existing defects left untouched per scope.
           git:
             branch: plan/core-server-domain-consolidation-10-001
             commit:
