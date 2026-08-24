@@ -2,6 +2,23 @@ version: 1
 plans:
     - slug: core-server-domain-consolidation
       status: working
+      dependencies:
+        /Users/zane/playground/liquid-labs/liq-controls:
+            phase: phase-01-relocate-plugin-source
+            task: 001-restructure-src-into-core-server-layout.md
+            note: core-server phase 5 task 001 cannot be dispatched until this relocation lands on liq-controls' plan/core-server-domain-consolidation branch with src/controls/ present.
+        /Users/zane/playground/liquid-labs/liq-credentials:
+            phase: TBD — relocation, plan not yet authored
+            task: TBD
+            note: core-server phase 5 task 002 gates on relocation to src/credentials/ landing on liq-credentials' plan branch.
+        /Users/zane/playground/liquid-labs/liq-integrations-issues-github:
+            phase: TBD — relocation, plan not yet authored
+            task: TBD
+            note: core-server phase 5 task 003 gates on relocation to src/integrations-issues-github/ landing. Also carries determineCurrentMilestone inlining, which dev-core-consolidation's last task (liq-projects-lib phase 10 task 003) is waiting on.
+        /Users/zane/playground/liquid-labs/plugable-express:
+            phase: TBD — plugable-express's own builtinPlugins phase, slice not yet authored
+            task: TBD
+            note: core-server phase 4 task 001 (plan/phase-04-in-tree-plugin-mechanism/001-verify-plugable-express-builtin-plugins.md) is a read-only gate on plugable-express's builtinPlugins appInit affordance having landed and been yalc-pushed. Refine phase/task once that slice is authored.
       wave:
         slug: sdlcforge-modernization
         leadProject: core-server
