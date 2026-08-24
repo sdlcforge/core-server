@@ -38,3 +38,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'During phase-3 (yalc-dependency-refresh) task execution, the manager''s pre-dispatch `yalc push` from plugable-express propagated a dist build that was stale relative to plugable-express''s own current main branch (missing a registerPathVar plugin-setup parameter that liq-credentials needs to start up), which briefly broke core-server''s local server startup. The dispatched task agent resolved it (forced rebuild + re-push from plugable-express, source untouched, per the task doc''s own re-push contingency) and re-verified. Root cause not investigated further: worth checking whether plugable-express''s prepack/make build has an mtime-gating or lifecycle-script issue that could cause a stale dist/ to be packed on a future yalc push.'
+    - title: 'make lint is not clean repo-wide due to ~230 '
+      id: Jsp2
+      date: "2026-08-24"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorption-baseline
+        - plan/slug:core-server-domain-consolidation
+        - priority:unspecified
+        - effort:unspecified
+      text: make lint is not clean repo-wide due to ~230 pre-existing lint violations in test/get-node-versions.js, test/test-basic.js, test/test-integration-quick.js, test/test-server.js — unrelated to this task, already tracked as followup b3hk. Re-confirming for visibility only; no new followup needed.
