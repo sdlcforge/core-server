@@ -30,3 +30,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: author-readme-superseded-notice
+          title: Author README As Superseded Notice
+          path: phase-02-retire-liq-controls/002-author-readme-superseded-notice.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
