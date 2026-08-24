@@ -59,3 +59,24 @@ No standard skill covers this; follow the `## Procedure` below.
 - After the two endpoint snapshots are captured and compare green.
 - After the three non-snapshot assertion groups (setup methods, `app.ext` keys, `credentialsDB`) are added.
 - After the `package.json` regeneration script is added and both existing golden snapshots are confirmed untouched.
+
+## Status
+
+**Outcome: succeeded.** Implemented 2026-08-24.
+
+- Added `src/lib/test/full-tier-baseline.test.js`, calling `appInit()` without `skipCorePlugins` against the real, full eleven-package explicit tier, with `PLUGABLE_PLAYGROUND` exported to a fresh per-run temp directory before `appInit()` runs (restored/deleted in `afterAll`), a per-run temp `serverConfigRoot` (removed in `afterAll`), `new Reporter({ silent: true })`, and `cache?.release()`.
+- Captured `test/__snapshots__/full-tier-api-spec.json` (165 entries) and `test/__snapshots__/full-tier-plugins-list.json` (11 entries) via the new `UPDATE_FULL_TIER_BASELINE` opt-in and the `test:update-full-tier-baseline` `package.json` script. Two consecutive real regeneration runs (forcing Make to actually re-invoke Jest rather than short-circuit on stale mtimes) produced byte-identical snapshot output.
+- Added the four additive in-file assertions: the two endpoint snapshot comparisons, the `{name, deps}` setup-methods check (sorted, deps sorted, since enqueue order is not a contract), the `Object.keys(app.ext).sort()` check, and the `credentialsDB` method-presence check. All values matched `plan/notes/parity-baseline.md` exactly on first capture — no drift from the plan's measured baseline.
+- **Requirement 7 finding (subset relationship), confirmed by a one-off script comparison (not a permanent assertion):** all 35 entries of the existing `test/__snapshots__/golden-api-spec.json` appear byte-identically inside the new 165-entry `full-tier-api-spec.json` capture — zero missing entries. This licenses leaving `golden-api-spec.test.js` untouched, per the task's own framing.
+- `test/__snapshots__/golden-api-spec.json`, `test/__snapshots__/golden-plugins-list.json`, `src/lib/test/golden-api-spec.test.js`, and `src/lib/test/app-init.test.js` are byte-identical to their starting state (`git diff --stat` against them is empty).
+- `full-tier-plugins-list.json` carries entries for `@liquid-labs/liq-controls`, `@liquid-labs/liq-credentials`, and `@liquid-labs/liq-integrations-issues-github` — confirmed present, so no halt was needed under the task's Validation's last bullet.
+- Hand-perturbation check: mutated one snapshot entry's `method` field, re-ran `TEST=full-tier-baseline make test`, observed a failing test with a legible Jest `toEqual` diff pinpointing the exact perturbed field, then restored the snapshot and re-verified green (byte-identical to the pre-perturbation capture).
+- `${HOME}/playground` was not created or modified at any point (checked via directory mtime before and after every run).
+- `make test` is green including the new file (`Test Suites: 4 passed, 4 total`, 10 tests). `make lint` is **not** fully clean repo-wide, but this is a pre-existing condition unrelated to this task: `test/get-node-versions.js`, `test/test-basic.js`, `test/test-integration-quick.js`, and `test/test-server.js` (none touched by this task) already carry ~230 lint violations before this task's changes (confirmed by lint-checking the worktree with the new test file removed), matching the previously-recorded followup `b3hk` ("make lint-fix surfaces 231 pre-existing lint [violations]... confined to test/*.js (unrelated to this task...)"). `src/lib/test/full-tier-baseline.test.js` itself is lint-clean (verified with a targeted `eslint` invocation, after one `--fix` pass corrected a `key-spacing` auto-fixable finding).
+- `bun.lock` shows as modified in `git status`, pre-dating this task's own edits (the manager's yalc-snapshot-copy dependency-install remedy noted in the dispatch). Not touched or reverted by this task; not part of the expected changed-file set stated in the task's Validation, but pre-existing and out of scope.
+
+### Assumptions relied upon
+
+- `appInit()` did **not** throw against the full tier — confirmed empirically on first run; the `ynGa` assumption held.
+- `find-root` correctly resolved `serverPackageRoot` under Jest with no special handling needed — confirmed.
+- The host-local yalc-linked package baseline (`plugable-express`, `liq-projects`, `liq-work`, `sdlc-projects-workflow-local-node-build`) was used, as documented; a CI capture from a clean registry install is out of scope here.

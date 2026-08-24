@@ -18,7 +18,8 @@
     "stop": "./scripts/stop.sh",
     "test:local": "./scripts/test.sh",
     "test:integration": "./test/run-integration-tests.sh",
-    "test:update-golden-api-spec": "UPDATE_GOLDEN_API_SPEC=true TEST=golden-api-spec make test"
+    "test:update-golden-api-spec": "UPDATE_GOLDEN_API_SPEC=true TEST=golden-api-spec make test",
+    "test:update-full-tier-baseline": "UPDATE_FULL_TIER_BASELINE=true TEST=full-tier-baseline make test"
   },
   "engines": {
     "node": ">=18.0.0"
