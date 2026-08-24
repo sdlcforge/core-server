@@ -5,6 +5,7 @@ phases:
     - number: 3
       slug: absorption-baseline
       title: Absorption Baseline And Parity Harness
+      diff_base: f923651c9ba62092086500adab637930fb638988
       tasks:
         - number: 1
           slug: capture-full-tier-baseline-harness
