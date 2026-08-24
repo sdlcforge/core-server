@@ -6,7 +6,7 @@ import * as os from 'node:os'
 
 import request from 'supertest'
 
-import { Reporter } from '@liquid-labs/plugable-express'
+import { IntegrationsManager, Reporter } from '@liquid-labs/plugable-express'
 
 import { appInit } from '../app-init'
 
@@ -21,6 +21,7 @@ import { appInit } from '../app-init'
 const SNAPSHOT_DIR = fsPath.join(__dirname, '..', '..', '..', 'test', '__snapshots__')
 const API_SNAPSHOT_PATH = fsPath.join(SNAPSHOT_DIR, 'full-tier-api-spec.json')
 const PLUGINS_SNAPSHOT_PATH = fsPath.join(SNAPSHOT_DIR, 'full-tier-plugins-list.json')
+const INTEGRATIONS_LIST_SNAPSHOT_PATH = fsPath.join(SNAPSHOT_DIR, 'full-tier-integrations-list.json')
 
 // Regeneration is an explicit opt-in (`npm run test:update-full-tier-baseline`), never the
 // default `npm test` path. Mirrors the `UPDATE_GOLDEN_API_SPEC` convention from
@@ -89,6 +90,56 @@ const EXPECTED_CREDENTIALS_DB_METHODS = [
   'writeDB'
 ].sort()
 
+// The recorded `{providerFor, name, npmName, hooks}` baseline for every
+// `IntegrationsManager.register()` call the full explicit-plugin tier makes
+// (plan/notes/parity-baseline.md's "Integration providers and hooks" table). Sorted by
+// `providerFor` -- the three values are distinct, so this is an unambiguous sort key and no
+// secondary key is needed. Hooks are asserted by name (sorted), not function identity, per
+// the task doc.
+//
+// Both `issues-github` registrations (`tickets`, `pull request`) deliberately omit `name`.
+// This is a real, pre-existing defect, encoded here as present-day fact rather than fixed:
+// `IntegrationsManager.listInstalledPlugins()` de-duplicates via
+// `new Map(list.map((p) => [p.name, p]))`, so the two providers -- both keyed on `undefined`
+// -- collapse into one, and `GET /server/plugins/integrations/list` reports two entries
+// where three providers are actually registered (see the
+// `full-tier-integrations-list.json` snapshot below). Tracked as a follow-up item, not
+// fixed in this plan.
+const EXPECTED_INTEGRATION_PROVIDERS = [
+  {
+    providerFor : 'controls',
+    name        : 'controls',
+    npmName     : '@liquid-labs/liq-controls',
+    hooks       : ['getQuestionControls']
+  },
+  {
+    providerFor : 'tickets',
+    name        : undefined,
+    npmName     : '@liquid-labs/liq-integrations-issues-github',
+    hooks       : ['getCurrentIntegrationUser', 'getIssueURL', 'getProjectURL']
+  },
+  {
+    providerFor : 'pull request',
+    name        : undefined,
+    npmName     : '@liquid-labs/liq-integrations-issues-github',
+    hooks       : [
+      'createOrUpdatePullRequest',
+      'getCurrentIntegrationUser',
+      'getPullRequestURLsByHead',
+      'getQALinkFileIndex'
+    ]
+  }
+].sort((a, b) => a.providerFor.localeCompare(b.providerFor))
+
+// Captured `IntegrationsManager.prototype.register()` calls, and the original function so it
+// can be restored in `afterAll` and verified restored afterward. Both are module-scoped
+// (rather than local to the describe block below) so the sibling
+// 'IntegrationsManager.prototype.register restoration' describe block -- which Jest runs
+// only after the main describe block's `afterAll` has completed -- can read `originalRegister`
+// once restoration has actually happened.
+let capturedIntegrationRegistrations
+let originalIntegrationsManagerRegister
+
 describe('Full-tier baseline characterization', () => {
   let app, cache, serverHome, playgroundHome
   let origPluggablePlayground
@@ -107,7 +158,22 @@ describe('Full-tier baseline characterization', () => {
     // way (plan/notes/parity-baseline.md), so this is purely an isolation/noise concern,
     // but it must be set before `appInit()` runs.
     origPluggablePlayground = process.env.PLUGABLE_PLAYGROUND
-    process.env.PLUGABLE_PLAYGROUND = playgroundHome;
+    process.env.PLUGABLE_PLAYGROUND = playgroundHome
+
+    // Wrap `IntegrationsManager.prototype.register` *before* `appInit()` runs so every
+    // `{providerFor, name, npmName, hooks}` call it makes is captured faithfully.
+    // `IntegrationsManager`'s `#providers` field is private, so this is the only way to
+    // observe the real registration arguments; reading the field afterward, or reading the
+    // consumer-visible `/server/plugins/integrations/list` endpoint, would only surface the
+    // already-de-duplicated view (see EXPECTED_INTEGRATION_PROVIDERS above). Restored in
+    // `afterAll` below so no other test file is affected.
+    capturedIntegrationRegistrations = []
+    originalIntegrationsManagerRegister = IntegrationsManager.prototype.register
+    IntegrationsManager.prototype.register = function(registration) {
+      capturedIntegrationRegistrations.push(registration)
+
+      return originalIntegrationsManagerRegister.call(this, registration)
+    };
 
     ({ app, cache } = await appInit({
       serverConfigRoot : serverHome,
@@ -121,6 +187,10 @@ describe('Full-tier baseline characterization', () => {
   })
 
   afterAll(async() => {
+    // Restored first, ahead of the other cleanup steps below, so a failure in an unrelated
+    // cleanup step can never leave the prototype patched for a later test file.
+    IntegrationsManager.prototype.register = originalIntegrationsManagerRegister
+
     cache?.release()
     await fs.rm(serverHome, { recursive : true, force : true })
     await fs.rm(playgroundHome, { recursive : true, force : true })
@@ -185,5 +255,61 @@ describe('Full-tier baseline characterization', () => {
     for (const method of EXPECTED_CREDENTIALS_DB_METHODS) {
       expect(typeof app.ext.credentialsDB[method]).toBe('function')
     }
+  })
+
+  test('IntegrationsManager.prototype.register was called exactly three times, matching the recorded provider/hook baseline', () => {
+    expect(capturedIntegrationRegistrations).toHaveLength(3)
+
+    // Normalized for call order (registration order follows `find-plugins` scan order and is
+    // not a contract) and for hook identity (hooks are asserted by name, sorted, not by
+    // function reference).
+    const actual = capturedIntegrationRegistrations
+      .map(({ hooks, name, npmName, providerFor }) => ({
+        providerFor,
+        name,
+        npmName,
+        hooks : Object.keys(hooks).sort()
+      }))
+      .sort((a, b) => a.providerFor.localeCompare(b.providerFor))
+
+    expect(actual).toEqual(EXPECTED_INTEGRATION_PROVIDERS)
+  })
+
+  test('GET /server/plugins/integrations/list matches the full-tier baseline snapshot', async() => {
+    const { status, body } = await request(app)
+      .get('/server/plugins/integrations/list')
+      .set('Accept', 'application/json')
+
+    expect(status).toBe(200)
+    expect(Array.isArray(body)).toBe(true)
+
+    // Two entries, not three: the `name`-omission defect asserted above
+    // (EXPECTED_INTEGRATION_PROVIDERS) collapses the two `issues-github` registrations
+    // (`tickets`, `pull request`) into a single `undefined`-keyed Map entry, so this
+    // consumer-visible endpoint reports only `controls` plus one merged `issues-github`
+    // entry (showing the `pull request` hook set, since it was registered last and
+    // overwrote the `tickets` entry sharing its `undefined` key). Snapshotted faithfully,
+    // defect included -- the point of this baseline is to preserve the observable, not to
+    // fix it. See plan/notes/parity-baseline.md.
+    expect(body.length).toBe(2)
+
+    if (UPDATE_FULL_TIER_BASELINE) {
+      await writeGolden(INTEGRATIONS_LIST_SNAPSHOT_PATH, body)
+    }
+
+    expect(existsSync(INTEGRATIONS_LIST_SNAPSHOT_PATH)).toBe(true)
+    const golden = await readGolden(INTEGRATIONS_LIST_SNAPSHOT_PATH)
+    expect(body).toEqual(golden)
+  })
+})
+
+// A sibling describe block, deliberately separate from the one above: Jest fully completes
+// one top-level describe block (including its `afterAll`) before starting the next one
+// declared in the same file, so this is the earliest point at which the restoration
+// performed in the block above's `afterAll` can be observed and asserted.
+describe('IntegrationsManager.prototype.register restoration', () => {
+  test('prototype method is restored to the original function once the full-tier suite has completed', () => {
+    expect(IntegrationsManager.prototype.register).toBe(originalIntegrationsManagerRegister)
+    expect(typeof originalIntegrationsManagerRegister).toBe('function')
   })
 })

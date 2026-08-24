@@ -1,0 +1,10 @@
+[
+  {
+    "npmName": "@liquid-labs/liq-controls",
+    "installed": true
+  },
+  {
+    "npmName": "@liquid-labs/liq-integrations-issues-github",
+    "installed": true
+  }
+]
