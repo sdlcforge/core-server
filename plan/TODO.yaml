@@ -84,6 +84,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: absorb-liq-credentials
+          title: Absorb Liq-Credentials
+          path: phase-05-absorb-donor-plugins/002-absorb-liq-credentials.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 6
       slug: doc-updates
       title: Documentation Updates
