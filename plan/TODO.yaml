@@ -1,0 +1,8 @@
+slug: core-server-domain-consolidation
+version: 1
+title: ""
+phases:
+    - number: 3
+      slug: absorption-baseline
+      title: Absorption Baseline And Parity Harness
+      tasks: []
