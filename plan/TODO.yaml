@@ -25,6 +25,7 @@ phases:
           path: phase-03-absorption-baseline/002-capture-integration-provider-baseline.md
           done: false
           tier: sonnet-high
+          digest: Extended task 001's full-tier-baseline.test.js harness with a module-scoped wrapper around IntegrationsManager.prototype.register, installed before appInit() and restored as the first afterAll statement. Captured registrations asserted against the exact three-provider/hook baseline from parity-baseline.md, with the two issues-github registrations' name:undefined encoded deliberately as documented pre-existing defect. Added full-tier-integrations-list.json snapshot (2 entries, de-duplicated). make test green (4 suites/13 tests). make lint fails only on pre-existing tracked violations (followup b3hk), unrelated to this task's files.
           git:
             branch: plan/core-server-domain-consolidation-03-002
             commit:
