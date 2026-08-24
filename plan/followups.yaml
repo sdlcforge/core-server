@@ -1,0 +1,12 @@
+version: 2
+items:
+    - title: '[manager action] Ensure this task branch is m'
+      id: 2S7c
+      date: "2026-08-24"
+      tags:
+        - type:ambiguity
+        - plan/phase:inline-determine-current-milestone
+        - plan/slug:core-server-domain-consolidation
+        - priority:unspecified
+        - effort:unspecified
+      text: '[manager action] Ensure this task branch is merged into plan/core-server-domain-consolidation before core-server''s absorb task (phase-05 task 003) is dispatched, per anomaly 5 in the source inventory.'
