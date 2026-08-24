@@ -16,6 +16,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: correct-docs-external-dependency-claims
+          title: Correct Docs External Dependency Claims
+          path: phase-12-inline-determine-current-milestone/002-correct-docs-external-dependency-claims.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 13
       slug: relocate-plugin-source
       title: Relocate Plugin Source
