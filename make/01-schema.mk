@@ -1,4 +1,4 @@
-SCHEMA_SRC:=$(SRC)/schema
+SCHEMA_SRC:=$(SRC)/controls/schema
 SCHEMA_FILES:=$(SCHEMA_SRC)/audit.schema.json
 SCHEMA_DIST:=$(patsubst $(SCHEMA_SRC)%, $(DIST)%, $(SCHEMA_FILES))
 

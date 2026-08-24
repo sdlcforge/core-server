@@ -1,2 +1,1 @@
-export * from './handlers'
-export * from './setup'
+export * from '../controls'

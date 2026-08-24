@@ -62,6 +62,29 @@ Relocate `liq-controls`'s entire `src/` tree in place, within this repository, t
 - The target directory name `src/controls/` is this plan's own choice (no existing core-server document mandates a specific name for this donor) — see the source inventory's [Anomalies and flags](../notes/liq-controls-source-inventory.md#anomalies-and-flags) section for the reasoning and the open confirmation this depends on from core-server's own later absorption-authoring phase. If that phase later decides on a different directory name, this task's relocation still stands (the recipe relocates "in place to its final path" once, at donor-authoring time) — a rename at that point would be an addendum to this task, not a redo of it.
 - `CATALYST_JS_LIB_SRC_PATH` in the root `Makefile` is not changed — it stays `$(SRC)/lib`, so the build's root entry point remains `src/lib/index.js`.
 
+## Status
+
+**Outcome:** succeeded. Date: 2026-08-24.
+
+Implemented as two commits inside the task worktree so `git log --follow` / rename detection stay clean:
+
+1. Pure `git mv` of the whole `src/lib/` tree to `src/controls/` (one directory-level `git mv`, so every nested file — including `src/lib/index.js` → `src/controls/index.js` — carries its full pre-move history), plus `git mv src/schema/audit.schema.json src/controls/schema/audit.schema.json`, `rmdir` of the now-empty `src/schema/`, and the `make/01-schema.mk` `SCHEMA_SRC` edit — all in one commit (`1202f28`).
+2. A second commit adding the new `src/lib/index.js` thin re-export stub (`export * from '../controls'` plus trailing newline) as a genuinely new file at that path, so it does not pollute the rename detection for `src/controls/index.js`. (Note: an earlier attempt that created the stub *before* staging caused git to see `src/lib/index.js` as modified-in-place rather than deleted, which broke rename pairing for `src/controls/index.js` — sequencing the stub into its own commit after the pure-rename commit fixed this.)
+
+Validation:
+- `git log --oneline --follow -- src/controls/resources/load-controls.mjs` and `-- src/controls/index.js` both reach back through the pre-move commit history (verified).
+- `git diff --stat` for the rename commit shows all 27 relocated files as `rename ... (100%)`.
+- File census: 19 source files (excluding fixture/test-data) under `src/controls/`; `find src/lib src/schema -type f` shows only the retained `src/lib/index.js`.
+- `src/controls/index.js` content confirmed byte-identical to the pre-move `src/lib/index.js` (diffed against the git blob at the rename commit).
+- `grep -rn "src/lib" src/` (excluding `src/lib/index.js` itself) returns nothing.
+- `make build` succeeds; `dist/liq-controls.js` and `dist/audit.schema.json` produced; `dist/audit.schema.json` byte-identical to `src/controls/schema/audit.schema.json`.
+- `make test`: 4 suites / 6 tests pass (no test added/removed).
+- `make lint`: clean (empty ESLint report).
+- Built bundle's `handlers` array and `setup` export shape verified unchanged (route `path` arrays and `deps` orderings intact).
+- Working tree clean aside from the intended relocation and the two edited files (`src/lib/index.js`, `make/01-schema.mk`).
+
+Affected files: `src/controls/**` (relocated from `src/lib/**` and `src/schema/audit.schema.json`), `src/lib/index.js` (new thin re-export), `make/01-schema.mk` (SCHEMA_SRC path updated).
+
 ## References
 
 - [`plan/notes/liq-controls-source-inventory.md`](../notes/liq-controls-source-inventory.md) — full file census, route table, `app.ext` contract, and pre-existing defects.
