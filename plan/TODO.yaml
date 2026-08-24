@@ -27,7 +27,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/core-server-domain-consolidation-03-002
-            commit: []
+            commit:
+                - 55c58fa
             merge: null
         - number: 3
           slug: confirm-inventory-and-parity-contract
