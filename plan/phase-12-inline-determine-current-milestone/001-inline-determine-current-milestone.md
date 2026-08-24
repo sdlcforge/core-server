@@ -68,6 +68,19 @@ Read [`plan/notes/liq-integrations-issues-github-source-inventory.md`](../notes/
 - The report states: whether `liq-projects-lib` had any test coverage for this function (expected: none); the `@liquid-labs/versioning` range chosen and why; whether requirement 6's test landed or was blocked, with the blocker if so; the requirement 7 call-path confirmation; and the branch(es) carrying the change.
 - No file outside `src/determine-current-milestone.mjs`, `src/create-or-update-pull-request.mjs`, `src/test/determine-current-milestone.test.js`, `package.json`, and `package-lock.json` is modified.
 
+## Status
+
+**Outcome:** succeeded. Implemented 2026-08-24 in worktree `worktrees/plan/core-server-domain-consolidation-12-001` on branch `plan/core-server-domain-consolidation-12-001` (cut from `plan/core-server-domain-consolidation`).
+
+**Validation summary:** `make build`, `make test` (5/5, up from the 2/2 baseline — 3 new cases added), and `make lint` all pass clean. `src/determine-current-milestone.mjs` is byte-identical to `liq-projects-lib`'s source (verified with `diff`). `grep -rn 'liq-projects-lib' src/ package.json` returns nothing. `npm ls` confirms `@liquid-labs/liq-projects-lib` is genuinely gone from the resolved tree and both `@liquid-labs/versioning` (`1.0.0-alpha.6`) and `@liquid-labs/octocache` (`1.0.0-alpha.4`, deduped with `github-toolkit`'s copy) resolve. The post-change bundle externalizes both new deps as `require()` calls (previously `octocache` was inlined, since it was undeclared) and the `exports.setup` structure (hook keys, `providerFor`, `providerTest`, `npmName` values) is unchanged from the pre-change bundle, modulo Rollup's own minified variable-name choices.
+
+**Findings requested by the task doc:**
+- `liq-projects-lib` had no test coverage for `determineCurrentMilestone` — confirmed directly (its `src/test/` holds only `cross-link-dev-projects.test.js` and `update-package-json.test.js`).
+- `@liquid-labs/versioning` range chosen: `^1.0.0-alpha.4`, matching the range `liq-projects-lib` itself declared; the installed `1.0.0-alpha.6` (registry latest `1.0.0-alpha.7`) satisfies it and carries no deprecation notice (`npm view @liquid-labs/versioning deprecated` returns nothing).
+- Requirement 6's test landed, not blocked. Standard Jest+Babel `jest.mock('@liquid-labs/octocache', ...)` worked once the mock closure's captured variable was renamed to the `mock`-prefixed `mockPaginate` (jest's out-of-scope-variable restriction on mock factories) — no source restructuring was needed.
+- Requirement 7 call-path confirmation: `createPR` still races `determineCurrentMilestone` against the repo-metadata request via `Promise.all` (`src/create-or-update-pull-request.mjs` line 130), still hands the resolved `milestone` to the `PATCH /repos/{owner}/{repo}/issues/{issueNumber}` call (line 152), and that `PATCH` remains inside the surrounding `try`/`catch` that reports non-critical failures through `reporter` and returns the PR URL anyway (lines 145, 177-181).
+- **Branch(es) carrying the change:** the task branch `plan/core-server-domain-consolidation-12-001`, cut from and to be merged back into `plan/core-server-domain-consolidation` — not `main`. No branch surgery was performed. `core-server`'s absorb task verifies `plan/core-server-domain-consolidation`, so the inlining becomes visible there once this task branch is merged back into it (outside this task's own scope).
+
 ## Assumptions
 
 - `@liquid-labs/versioning` is a live, separately-maintained package and is **not** being retired by this wave. `minVersion` is imported from it, not inlined a second level down. Confirm it is not itself carrying a deprecation notice before relying on this; if it is, halt and report rather than choosing a workaround.
