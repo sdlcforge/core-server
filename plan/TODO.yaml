@@ -15,7 +15,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/core-server-domain-consolidation-12-001
-            commit: []
+            commit:
+                - 0719be3
             merge: null
         - number: 2
           slug: correct-docs-external-dependency-claims
