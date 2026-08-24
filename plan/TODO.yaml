@@ -50,6 +50,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: refresh-plugable-express-snapshot
+          title: Refresh Plugable-Express Yalc Snapshot
+          path: phase-04-in-tree-plugin-mechanism/002-refresh-plugable-express-snapshot.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 5
       slug: absorb-donor-plugins
       title: Absorb Donor Plugins And Retire Explicit-Tier Entries
