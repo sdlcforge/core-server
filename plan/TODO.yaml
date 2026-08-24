@@ -13,6 +13,7 @@ phases:
           path: phase-03-absorption-baseline/001-capture-full-tier-baseline-harness.md
           done: false
           tier: sonnet-high
+          digest: Added src/lib/test/full-tier-baseline.test.js, a new Jest harness that calls appInit() against core-server's real, full eleven-package explicit plugin tier (no skipCorePlugins), with mandatory PLUGABLE_PLAYGROUND isolation. Snapshots GET /server/api (165 entries) and GET /server/plugins/list (11 entries), gated behind UPDATE_FULL_TIER_BASELINE opt-in. Added assertions for setup methods, app.ext keys, credentialsDB method set — all matched parity-baseline.md exactly. Confirmed golden-api-spec pair byte-identical/untouched; confirmed 35-entry golden snapshot is a strict subset of the 165-entry capture. Two forced regeneration runs byte-identical. make test green (10/10). make lint fails only on pre-existing unrelated test/*.js violations (tracked as followup b3hk); new file itself lint-clean.
           git:
             branch: plan/core-server-domain-consolidation-03-001
             commit:
