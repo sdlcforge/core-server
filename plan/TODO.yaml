@@ -15,7 +15,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/core-server-domain-consolidation-03-001
-            commit: []
+            commit:
+                - "0467841"
             merge: null
         - number: 2
           slug: capture-integration-provider-baseline
