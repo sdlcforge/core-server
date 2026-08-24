@@ -5,6 +5,7 @@ phases:
     - number: 12
       slug: inline-determine-current-milestone
       title: Inline Determine Current Milestone
+      diff_base: d5c520758a067bf74f2d0445ad9f75cec6f397ff
       tasks:
         - number: 1
           slug: inline-determine-current-milestone
