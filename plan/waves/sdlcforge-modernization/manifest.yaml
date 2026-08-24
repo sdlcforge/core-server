@@ -31,12 +31,13 @@ waves:
             plugable-server-documentation: framework-consolidation
         - name: Fold domain-specific plugins into core-server
           slug: core-server-domain-consolidation
-          description: Fold liq-controls, liq-credentials, and liq-integrations-issues-github's domain-specific plugin functionality into core-server, retiring the donor repos. Also unblocks dev-core-consolidation's last remaining task (liq-projects-lib phase 10 task 003), which needs determineCurrentMilestone inlined into liq-integrations-issues-github before it can complete.
+          description: 'Fold liq-controls, liq-credentials, and liq-integrations-issues-github''s functionality directly into core-server''s own codebase as in-tree modules, retiring all three donor repos (confirmed 2026-08-24: liq-integrations-issues-github IS absorbed and retired here, superseding an earlier manifest draft that had it staying product-level — the executed plan accounts for its own retirement phase and the determineCurrentMilestone inlining, which only make sense under absorption). Registering an in-tree module as a plugin has no supported mechanism in @liquid-labs/plugable-express today, so this plan-group adds plugable-express as a 5th participant for a small, minimally-scoped appInit affordance (confirmed 2026-08-24). Also unblocks dev-core-consolidation''s last remaining task (liq-projects-lib phase 10 task 003), which needs determineCurrentMilestone inlined into liq-integrations-issues-github before it can complete.'
           plans:
             core-server: core-server-domain-consolidation
             liq-controls: core-server-domain-consolidation
             liq-credentials: core-server-domain-consolidation
             liq-integrations-issues-github: core-server-domain-consolidation
+            plugable-express: PLACEHOLDER
         - name: Create sdlcforge/dev-core
           slug: dev-core-consolidation
           description: 'Merge liq-projects, liq-work, liq-orgs, and plugable-projects-audit into a new sdlcforge/dev-core package. liq-projects-lib retires once liq-work absorbs its sole surviving single-consumer usage (crossLinkDevProjects); determineCurrentMilestone inlines into liq-integrations-issues-github separately under core-server-domain-consolidation. Lead-project-for-this-slice: liq-projects (most central of the four functional participants; liq-work explicitly orchestrates atop it).'
