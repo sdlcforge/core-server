@@ -18,7 +18,7 @@ phases:
             branch: plan/core-server-domain-consolidation-01-001
             commit:
                 - 33a2e2e
-            merge: null
+            merge: 2e2e0659072b28fa026dd9e93be8e83e51052595
     - number: 2
       slug: retire-liq-controls
       title: Retire Liq-Controls
