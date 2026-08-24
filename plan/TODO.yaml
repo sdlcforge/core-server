@@ -5,7 +5,17 @@ phases:
     - number: 12
       slug: inline-determine-current-milestone
       title: Inline Determine Current Milestone
-      tasks: []
+      tasks:
+        - number: 1
+          slug: inline-determine-current-milestone
+          title: Inline Determine Current Milestone
+          path: phase-12-inline-determine-current-milestone/001-inline-determine-current-milestone.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 13
       slug: relocate-plugin-source
       title: Relocate Plugin Source
