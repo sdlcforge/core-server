@@ -94,6 +94,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 3
+          slug: absorb-liq-integrations-issues-github
+          title: Absorb Liq-Integrations-Issues-Github
+          path: phase-05-absorb-donor-plugins/003-absorb-liq-integrations-issues-github.md
+          done: false
+          tier: opus-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 6
       slug: doc-updates
       title: Documentation Updates
