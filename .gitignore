@@ -5,3 +5,6 @@
 /dist
 /test-staging
 /qa
+status.md
+.flow/project-index.json
+.flow/instances/
