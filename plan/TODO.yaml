@@ -73,7 +73,17 @@ phases:
     - number: 5
       slug: absorb-donor-plugins
       title: Absorb Donor Plugins And Retire Explicit-Tier Entries
-      tasks: []
+      tasks:
+        - number: 1
+          slug: absorb-liq-controls
+          title: Absorb Liq-Controls
+          path: phase-05-absorb-donor-plugins/001-absorb-liq-controls.md
+          done: false
+          tier: opus-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 6
       slug: doc-updates
       title: Documentation Updates
