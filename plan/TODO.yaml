@@ -35,7 +35,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/core-server-domain-consolidation-03-003
-            commit: []
+            commit:
+                - e7ac9c1
             merge: null
     - number: 4
       slug: in-tree-plugin-mechanism
