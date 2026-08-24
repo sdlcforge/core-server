@@ -43,4 +43,14 @@ phases:
     - number: 14
       slug: retire-liq-integrations-issues-github
       title: Retire Liq-Integrations-Issues-Github
-      tasks: []
+      tasks:
+        - number: 1
+          slug: verify-core-server-absorption
+          title: Verify Core-Server Absorption
+          path: phase-14-retire-liq-integrations-issues-github/001-verify-core-server-absorption.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
