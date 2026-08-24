@@ -18,7 +18,7 @@ phases:
             branch: plan/core-server-domain-consolidation-12-001
             commit:
                 - 0719be3
-            merge: null
+            merge: d499ce339face5dbb9a3111063462b70fd61814f
         - number: 2
           slug: correct-docs-external-dependency-claims
           title: Correct Docs External Dependency Claims
