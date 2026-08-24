@@ -13,6 +13,7 @@ phases:
           path: phase-01-relocate-plugin-source/001-restructure-src-into-core-server-layout.md
           done: false
           tier: sonnet-high
+          digest: Relocated liq-controls's entire src/lib/ and src/schema/ trees to src/controls/ via git mv (whole-directory move, history preserved), reduced src/lib/index.js to export * from '../controls', updated make/01-schema.mk's SCHEMA_SRC. No file contents changed apart from the two required edits. make build/test/lint all pass; route/setup exports confirmed unchanged in built bundle.
           git:
             branch: plan/core-server-domain-consolidation-01-001
             commit:
