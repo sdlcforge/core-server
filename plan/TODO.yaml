@@ -19,4 +19,14 @@ phases:
     - number: 11
       slug: retire-liq-credentials
       title: Retire Liq-Credentials
-      tasks: []
+      tasks:
+        - number: 1
+          slug: verify-core-server-absorption
+          title: Verify Core-Server Absorption
+          path: phase-11-retire-liq-credentials/001-verify-core-server-absorption.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
