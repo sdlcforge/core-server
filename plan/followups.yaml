@@ -38,3 +38,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'During phase-3 (yalc-dependency-refresh) task execution, the manager''s pre-dispatch `yalc push` from plugable-express propagated a dist build that was stale relative to plugable-express''s own current main branch (missing a registerPathVar plugin-setup parameter that liq-credentials needs to start up), which briefly broke core-server''s local server startup. The dispatched task agent resolved it (forced rebuild + re-push from plugable-express, source untouched, per the task doc''s own re-push contingency) and re-verified. Root cause not investigated further: worth checking whether plugable-express''s prepack/make build has an mtime-gating or lifecycle-script issue that could cause a stale dist/ to be packed on a future yalc push.'
+    - title: 'title: IntegrationsManager.listInstalledPlugi'
+      id: wvEq
+      date: "2026-08-24"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorption-baseline
+        - plan/slug:core-server-domain-consolidation
+        - priority:unspecified
+        - effort:unspecified
+      text: 'title: IntegrationsManager.listInstalledPlugins() de-duplicates on undefined name, collapsing issues-github''s two providers | tags: type:bug, plan/phase:absorption-baseline, plan/slug:core-server-domain-consolidation | text: IntegrationsManager.listInstalledPlugins() (in @liquid-labs/plugable-express) de-duplicates its provider list via new Map(list.map((p) => [p.name, p])). Both register() call sites in @liquid-labs/liq-integrations-issues-github''s setup (tickets and pull request providers) omit the name field, so both are keyed on undefined and the Map collapses them into one entry — the later pull request registration silently overwrites the earlier tickets registration. GET /server/plugins/integrations/list reports two entries where three providers are actually registered; tickets is invisible to that endpoint (though still functional via callHook/hasHook, which key on providerFor not name). Fix belongs either in liq-integrations-issues-github (supply distinct name values) or in plugable-express''s de-duplication key. Captured as present-day, deliberately-preserved behavior in core-server''s phase-03 baseline test and snapshot; out of scope for the domain-consolidation absorption plan.'
