@@ -30,7 +30,7 @@ phases:
             branch: plan/core-server-domain-consolidation-03-002
             commit:
                 - 55c58fa
-            merge: null
+            merge: be3aa09f184213a49200fd768db1076c952c3595
         - number: 3
           slug: confirm-inventory-and-parity-contract
           title: Confirm Donor Inventory And Author Parity Contract
