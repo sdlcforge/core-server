@@ -18,7 +18,7 @@ phases:
             branch: plan/core-server-domain-consolidation-03-001
             commit:
                 - "0467841"
-            merge: null
+            merge: 9109b3981bf9773f194081132eb721178aa4cf6c
         - number: 2
           slug: capture-integration-provider-baseline
           title: Capture Integration Provider And Hook Baseline
