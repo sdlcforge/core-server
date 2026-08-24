@@ -5,6 +5,7 @@ phases:
     - number: 1
       slug: relocate-plugin-source
       title: Relocate Plugin Source
+      diff_base: eae085902cd9f98d5f16daaf47a7aacd573b3410
       tasks:
         - number: 1
           slug: restructure-src-into-core-server-layout
