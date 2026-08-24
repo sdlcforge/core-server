@@ -14,3 +14,7 @@ phases:
       slug: absorb-donor-plugins
       title: Absorb Donor Plugins And Retire Explicit-Tier Entries
       tasks: []
+    - number: 6
+      slug: doc-updates
+      title: Documentation Updates
+      tasks: []
