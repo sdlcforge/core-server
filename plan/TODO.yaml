@@ -31,7 +31,7 @@ phases:
           slug: confirm-inventory-and-parity-contract
           title: Confirm Donor Inventory And Author Parity Contract
           path: phase-03-absorption-baseline/003-confirm-inventory-and-parity-contract.md
-          done: false
+          done: true
           tier: sonnet-med
           digest: 'Completed all six requirements as pure research/documentation work, no source/test/package.json touched. Read each donor''s current plan/core-server-domain-consolidation branch tip directly (liq-controls@3030cdab9, liq-credentials@fc72da1d, liq-integrations-issues-github@e5240c1a5). Confirmed both open TO CONFIRM items: liq-controls'' liq-qa-lib/http-smart-response are dead code; determineCurrentMilestone/liq-projects-lib coupling was not yet inlined as of this snapshot (task 001 in that donor''s own plan slice has since landed it separately). Swept all three donors for undeclared bare specifiers, found one (issues-github''s octocache, resolved to ^1.0.0-alpha.4). Authored plan/resources/absorption-dependency-union.md and plan/resources/absorption-parity-contract.md.'
           git:
