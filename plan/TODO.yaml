@@ -11,7 +11,7 @@ phases:
           slug: restructure-src-into-core-server-layout
           title: Restructure Src Into Core-Server Layout
           path: phase-10-relocate-plugin-source/001-restructure-src-into-core-server-layout.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: Relocated all 8 files under liq-credentials's src/ tree into src/credentials/ via git mv, preserving history, then reduced src/index.js to export * from './credentials' in a separate commit. Verified no import resolves outside the moved subtree, make build/test/lint all green at baseline parity, route/setup/app.ext parity unchanged (2 handlers, credentialsDB/credential path-var contract). Two pre-existing defects left untouched per scope.
           git:
