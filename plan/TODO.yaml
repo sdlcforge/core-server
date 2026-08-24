@@ -40,7 +40,7 @@ phases:
             branch: plan/core-server-domain-consolidation-03-003
             commit:
                 - e7ac9c1
-            merge: null
+            merge: b4ba5ac524503a5c1b868fc9221eaa72f1f0ae1d
     - number: 4
       slug: in-tree-plugin-mechanism
       title: In-Tree Plugin Registration Mechanism
