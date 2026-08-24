@@ -104,6 +104,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 4
+          slug: verify-post-absorption-parity
+          title: Verify Post-Absorption Parity
+          path: phase-05-absorb-donor-plugins/004-verify-post-absorption-parity.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 6
       slug: doc-updates
       title: Documentation Updates
