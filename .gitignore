@@ -4,3 +4,6 @@
 /.yalc
 /dist
 /test-staging
+status.md
+.flow/project-index.json
+.flow/instances/
