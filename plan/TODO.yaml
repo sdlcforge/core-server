@@ -30,7 +30,7 @@ phases:
             branch: plan/core-server-domain-consolidation-12-002
             commit:
                 - 98f9bc2
-            merge: null
+            merge: 5861e7af70d043cb1cf705544a56ffcd16da5164
     - number: 13
       slug: relocate-plugin-source
       title: Relocate Plugin Source
