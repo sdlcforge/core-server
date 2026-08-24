@@ -5,7 +5,17 @@ phases:
     - number: 10
       slug: relocate-plugin-source
       title: Relocate Plugin Source
-      tasks: []
+      tasks:
+        - number: 1
+          slug: restructure-src-into-core-server-layout
+          title: Restructure Src Into Core-Server Layout
+          path: phase-10-relocate-plugin-source/001-restructure-src-into-core-server-layout.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 11
       slug: retire-liq-credentials
       title: Retire Liq-Credentials
