@@ -6,3 +6,7 @@ phases:
       slug: inline-determine-current-milestone
       title: Inline Determine Current Milestone
       tasks: []
+    - number: 13
+      slug: relocate-plugin-source
+      title: Relocate Plugin Source
+      tasks: []
