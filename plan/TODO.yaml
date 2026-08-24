@@ -19,4 +19,14 @@ phases:
     - number: 2
       slug: retire-liq-controls
       title: Retire Liq-Controls
-      tasks: []
+      tasks:
+        - number: 1
+          slug: verify-core-server-absorption
+          title: Verify Core-Server Absorption
+          path: phase-02-retire-liq-controls/001-verify-core-server-absorption.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
