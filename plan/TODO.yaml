@@ -150,7 +150,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/core-server-domain-consolidation-06-001
-            commit: []
+            commit:
+                - fd8d483
             merge: null
     - number: 7
       slug: release
