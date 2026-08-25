@@ -46,6 +46,7 @@ phases:
     - number: 4
       slug: in-tree-plugin-mechanism
       title: In-Tree Plugin Registration Mechanism
+      diff_base: e5a845636261a30e968b44db420b0ca0c786d064
       tasks:
         - number: 1
           slug: verify-plugable-express-builtin-plugins
