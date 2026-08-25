@@ -67,7 +67,7 @@ phases:
           done: false
           tier: sonnet-med
           git:
-            branch: null
+            branch: plan/core-server-domain-consolidation-04-002
             commit: []
             merge: null
         - number: 3
