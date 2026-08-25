@@ -96,7 +96,7 @@ phases:
           done: false
           tier: opus-med
           git:
-            branch: null
+            branch: plan/core-server-domain-consolidation-05-001
             commit: []
             merge: null
         - number: 2
