@@ -42,7 +42,7 @@
     "@liquid-labs/comply-defaults": "^1.0.0-alpha.8",
     "@liquid-labs/find-plus": "^1.0.1",
     "@liquid-labs/http-smart-response": "^1.0.0-alpha.6",
-    "@liquid-labs/liq-credentials": "^1.0.0-alpha.3",
+    "@liquid-labs/liq-credentials-db": "^1.0.0-alpha.9",
     "@liquid-labs/liq-handlers-lib": "^1.0.0-alpha.16",
     "@liquid-labs/liq-integrations-issues-github": "^1.0.0-alpha.3",
     "@liquid-labs/liq-orgs": "^1.0.0-alpha.6",
