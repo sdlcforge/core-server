@@ -33,10 +33,18 @@
 // would build cleanly and then fail module resolution in the test path.
 import * as controls from '../controls'
 import * as credentials from '../credentials'
+import * as issuesGitHub from '../integrations-issues-github'
 
-// Absorbed from `@liquid-labs/liq-controls` (phase-05 task 001) and `@liquid-labs/liq-credentials`
-// (phase-05 task 002). Append-only: see fact 2.
-const submodules = [controls, credentials]
+// Absorbed from `@liquid-labs/liq-controls` (phase-05 task 001),
+// `@liquid-labs/liq-credentials` (phase-05 task 002), and
+// `@liquid-labs/liq-integrations-issues-github` (phase-05 task 003). Append-only: see fact 2.
+//
+// `issuesGitHub` contributes no `handlers` at all -- its entire surface is the two integration
+// providers its `setup` registers -- so the `handlers` aggregation below relies on the
+// `handlers: submoduleHandlers = []` default for it. That is also why no route snapshot can
+// witness this submodule's presence; `full-tier-baseline.test.js`' `register()` capture is what
+// does.
+const submodules = [controls, credentials, issuesGitHub]
 
 const handlers = submodules.flatMap(({ handlers: submoduleHandlers = [] }) => submoduleHandlers)
 

@@ -9,6 +9,7 @@ import { Reporter } from '@liquid-labs/plugable-express'
 
 import * as controls from '../../controls'
 import * as credentials from '../../credentials'
+import * as issuesGitHub from '../../integrations-issues-github'
 import { appInit } from '../app-init'
 import { builtinPluginsFor, handlers as builtinHandlers, summary as builtinSummary } from '../builtin-plugins'
 import {
@@ -48,11 +49,13 @@ const makeTempDir = (prefix) =>
   fsPath.join(os.tmpdir(), prefix + Math.round(Math.random() * 10000000000000000))
 
 // The absorbed submodules currently wired into `builtin-plugins.mjs`' `submodules` array, in the
-// same order. Two so far: `src/controls/`, absorbed from `@liquid-labs/liq-controls` by phase-05
-// task 001, and `src/credentials/`, absorbed from `@liquid-labs/liq-credentials` by phase-05 task
-// 002. Each further absorption appends its namespace here rather than rewriting the assertions
-// below.
-const ABSORBED_SUBMODULES = [controls, credentials]
+// same order. All three: `src/controls/`, absorbed from `@liquid-labs/liq-controls` by phase-05
+// task 001; `src/credentials/`, absorbed from `@liquid-labs/liq-credentials` by phase-05 task
+// 002; and `src/integrations-issues-github/`, absorbed from
+// `@liquid-labs/liq-integrations-issues-github` by phase-05 task 003. The third contributes no
+// `handlers` at all, which is exactly why the aggregation assertion below reads each submodule's
+// own `handlers` (defaulting to `[]`) rather than assuming every submodule has some.
+const ABSORBED_SUBMODULES = [controls, credentials, issuesGitHub]
 
 describe('builtin-plugins aggregator', () => {
   test('contributes exactly the absorbed submodules` own handlers, in submodule order', () => {
@@ -89,7 +92,8 @@ describe('builtin-plugins aggregator', () => {
     const [{ module: { setup } }] = builtinPluginsFor({ npmName : '@example/host', version : '9.9.9' })
 
     // A minimal stand-in for the framework's `app` and its `setup()` argument object. The
-    // absorbed `controls` setup only enqueues onto `app.ext.setupMethods`; the absorbed
+    // absorbed `controls` and `integrations-issues-github` setups only enqueue onto
+    // `app.ext.setupMethods`; the absorbed
     // `credentials` setup additionally needs a real, writable `serverConfigRoot` (it `mkdir -p`s
     // a subdirectory under it and constructs a `CredentialsDB` against it) and a real
     // `registerPathVar` function (it registers the `credential` path variable). Asserting the
@@ -112,7 +116,8 @@ describe('builtin-plugins aggregator', () => {
 
       expect(app.ext.setupMethods.map(({ name, deps }) => ({ name, deps }))).toEqual([
         { name : 'load org controls', deps : ['load orgs'] },
-        { name : 'load controls integrations', deps : ['setup integrations'] }
+        { name : 'load controls integrations', deps : ['setup integrations'] },
+        { name : 'register github issues integrations', deps : ['setup integrations'] }
       ])
 
       // `credentials`' setup contract: installs `app.ext.credentialsDB` (the cross-package
