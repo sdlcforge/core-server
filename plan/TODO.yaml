@@ -167,5 +167,6 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/core-server-domain-consolidation-07-001
-            commit: []
+            commit:
+                - fccddbe
             merge: null
