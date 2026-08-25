@@ -2,24 +2,26 @@
 
 ## Purpose and scope
 
-This document is the repository layout reference for `liq-integrations-issues-github`: what each significant directory is for and what the key root-level files do, so a contributor or agent can orient without exploring the whole tree. Build, test, and contribution conventions live in `AGENTS.md` (not yet present in this repository; see [Related documents](#related-documents)) rather than here.
+This document is the repository layout reference for `liq-integrations-issues-github`: what each significant directory is for and what the key root-level files do, so a contributor or agent can orient without exploring the whole tree. Build, test, and contribution conventions live in `AGENTS.md` (see [Related documents](#related-documents)) rather than here.
 
 ## Directory tree
 
 ```text
 liq-integrations-issues-github/
-├── src/                                    # Provider hook implementations — the package's entire runtime surface
-│   ├── index.js                            # setup() — registers the `tickets` and `pull request` provider hooks
-│   ├── uses-github-issues.mjs              # Shared activation test (bugs.url must be a github.com URL)
-│   ├── create-or-update-pull-request.mjs   # createOrUpdatePullRequest hook
-│   ├── get-current-integration-user.mjs    # getCurrentIntegrationUser hook
-│   ├── get-issue-url.mjs                   # getIssueURL hook
-│   ├── get-project-url.mjs                 # getProjectURL hook
-│   ├── get-pull-request-urls-by-head.mjs   # getPullRequestURLsByHead hook
-│   ├── get-qa-link-file-index.mjs          # getQALinkFileIndex hook
-│   ├── constants.mjs                       # Shared constants
-│   ├── determine-current-milestone.mjs     # determineCurrentMilestone — shared helper, not a registered hook
-│   └── test/                               # Jest unit tests, co-located with source
+├── src/                                    # Build entry point and provider hook implementations
+│   ├── index.js                            # Thin re-export: `export * from './integrations-issues-github'`
+│   └── integrations-issues-github/         # The package's entire runtime surface
+│       ├── index.js                        # setup() — registers the `tickets` and `pull request` provider hooks
+│       ├── uses-github-issues.mjs          # Shared activation test (bugs.url must be a github.com URL)
+│       ├── create-or-update-pull-request.mjs   # createOrUpdatePullRequest hook
+│       ├── get-current-integration-user.mjs    # getCurrentIntegrationUser hook
+│       ├── get-issue-url.mjs               # getIssueURL hook
+│       ├── get-project-url.mjs             # getProjectURL hook
+│       ├── get-pull-request-urls-by-head.mjs   # getPullRequestURLsByHead hook
+│       ├── get-qa-link-file-index.mjs      # getQALinkFileIndex hook
+│       ├── constants.mjs                   # Shared constants
+│       ├── determine-current-milestone.mjs # determineCurrentMilestone — shared helper, not a registered hook
+│       └── test/                           # Jest unit tests, co-located with source
 ├── docs/                                   # Project documentation
 │   ├── liq-integrations-issues-github-spec.md  # Canonical functional specification
 │   └── project-structure.md                # This document
@@ -34,7 +36,7 @@ liq-integrations-issues-github/
 
 ## src/
 
-`src/` is the entire runtime surface of the plugin. `index.js` exports the `setup` function that registers two provider entries — `tickets` and `pull request` — with the host `plugable-express` server's `IntegrationsManager`; each of the other top-level `.mjs` files implements one hook named in that registration (PR create/update, issue/project/PR-search URL construction, current-user lookup, QA link-file index) or the shared `usesGitHubIssues` activation test. `constants.mjs` holds values shared across those hooks, and `determine-current-milestone.mjs` holds the shared `determineCurrentMilestone` helper that `createOrUpdatePullRequest` uses to select a project's current milestone — a shared helper, not a registered hook. `src/test/` holds the Jest unit tests, co-located with the source they exercise rather than segregated into a top-level `test/` directory. The full hook contract — signatures, return types, and behavior — is documented in the [project specification](./liq-integrations-issues-github-spec.md#api-definition), not restated here.
+`src/index.js` is a thin re-export (`export * from './integrations-issues-github'`) kept as the build entry point so the package stays independently buildable through the interim absorption into `@sdlcforge/core-server`; it carries no logic of its own. `src/integrations-issues-github/` is the entire runtime surface of the plugin. Its `index.js` exports the `setup` function that registers two provider entries — `tickets` and `pull request` — with the host `plugable-express` server's `IntegrationsManager`; each of the other `.mjs` files implements one hook named in that registration (PR create/update, issue/project/PR-search URL construction, current-user lookup, QA link-file index) or the shared `usesGitHubIssues` activation test. `constants.mjs` holds values shared across those hooks, and `determine-current-milestone.mjs` holds the shared `determineCurrentMilestone` helper that `createOrUpdatePullRequest` uses to select a project's current milestone — a shared helper, not a registered hook. `src/integrations-issues-github/test/` holds the Jest unit tests, co-located with the source they exercise rather than segregated into a top-level `test/` directory. The full hook contract — signatures, return types, and behavior — is documented in the [project specification](./liq-integrations-issues-github-spec.md#api-definition), not restated here.
 
 ## docs/
 
@@ -57,4 +59,4 @@ liq-integrations-issues-github/
 
 - [README.md](../README.md) — consumer-facing overview and entry point.
 - [docs/liq-integrations-issues-github-spec.md](./liq-integrations-issues-github-spec.md) — the canonical functional specification.
-- [AGENTS.md](../AGENTS.md) — build, test, and contribution conventions for developers and AI agents working on this repository (not yet written; forward link per the project's documentation authoring order).
+- [AGENTS.md](../AGENTS.md) — build, test, and contribution conventions for developers and AI agents working on this repository.

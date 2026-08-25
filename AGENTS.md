@@ -22,10 +22,11 @@ Build, lint, and test tooling is supplied by the shared `@liquid-labs/catalyst-s
 
 ## Code organization
 
-- `src/index.js` — the plugin's entry point; the `setup` function that registers the `tickets` and `pull request` provider entries with the host's `IntegrationsManager`.
-- `src/*.mjs` — one file per hook or shared helper, named to match the hook it exports (e.g. `create-or-update-pull-request.mjs` exports `createOrUpdatePullRequest`). `src/constants.mjs` holds shared constants (`GH_BASE_URL`, `WORKSPACE`).
-- `src/uses-github-issues.mjs` — the shared activation test (`usesGitHubIssues`) both provider registrations use.
-- `src/test/` — Jest test sources; transpiled into `test-staging/test/` for the actual test run.
+- `src/index.js` — thin re-export (`export * from './integrations-issues-github'`); the build entry point, kept so the package stays independently buildable through the interim absorption into `@sdlcforge/core-server`.
+- `src/integrations-issues-github/index.js` — the plugin's real entry point; the `setup` function that registers the `tickets` and `pull request` provider entries with the host's `IntegrationsManager`.
+- `src/integrations-issues-github/*.mjs` — one file per hook or shared helper, named to match the hook it exports (e.g. `create-or-update-pull-request.mjs` exports `createOrUpdatePullRequest`). `constants.mjs` holds shared constants (`GH_BASE_URL`, `WORKSPACE`).
+- `src/integrations-issues-github/uses-github-issues.mjs` — the shared activation test (`usesGitHubIssues`) both provider registrations use.
+- `src/integrations-issues-github/test/` — Jest test sources; transpiled into `test-staging/integrations-issues-github/test/` for the actual test run.
 - `dist/` — build output (`make build`); not source, do not edit.
 - `test-staging/` — Babel build output used only to run tests; not source, do not edit.
 - `qa/` — captured `make test` / `make lint` output (`unit-test.txt`, `lint.txt`) and pass markers.
@@ -34,10 +35,10 @@ See [docs/project-structure.md](./docs/project-structure.md) for the full reposi
 
 ## Conventions
 
-- Hooks are plain async (or, for the pure URL builders, synchronous) functions exported by name from a dedicated `src/<hook-name>.mjs` file; `src/index.js` only wires hooks into provider registrations, it contains no hook logic itself.
+- Hooks are plain async (or, for the pure URL builders, synchronous) functions exported by name from a dedicated `src/integrations-issues-github/<hook-name>.mjs` file; `src/integrations-issues-github/index.js` only wires hooks into provider registrations, it contains no hook logic itself. `src/index.js` at the repository root is a thin re-export only.
 - Every hook that calls the GitHub API retrieves its auth token from the host app's `credentialsDB` under the `GITHUB_API` key (`app.ext.credentialsDB.getToken('GITHUB_API')`); hooks never accept credentials as a parameter.
 - Non-critical failures in `createOrUpdatePullRequest` (assignee, milestone, reviewer, or body-update assignment) are caught and reported via the supplied `reporter`, not thrown — the hook still returns the PR URL. Preserve this behavior when touching that hook.
-- `determineCurrentMilestone` lives at `src/determine-current-milestone.mjs` as a verbatim copy of the former `@liquid-labs/liq-projects-lib` implementation, deliberately kept unmodified — including its unused `cache` parameter and its construction of a second `Octocache` — so the fold into `@sdlcforge/core-server` absorbs a behavior-identical implementation. If either oddity is to be cleaned up, that is a change to make on its own, after the fold, not incidentally.
+- `determineCurrentMilestone` lives at `src/integrations-issues-github/determine-current-milestone.mjs` as a verbatim copy of the former `@liquid-labs/liq-projects-lib` implementation, deliberately kept unmodified — including its unused `cache` parameter and its construction of a second `Octocache` — so the fold into `@sdlcforge/core-server` absorbs a behavior-identical implementation. If either oddity is to be cleaned up, that is a change to make on its own, after the fold, not incidentally.
 
 ## External services and dependencies
 
@@ -46,7 +47,7 @@ See [docs/project-structure.md](./docs/project-structure.md) for the full reposi
 - `@liquid-labs/github-toolkit` — GitHub login and org/repo resolution from `package.json`.
 - `@liquid-labs/liq-qa-lib` — QA file link resolution for `getQALinkFileIndex`.
 - `@liquid-labs/shell-toolkit` — shell command execution.
-- `@liquid-labs/versioning` — supplies `minVersion`, used by `src/determine-current-milestone.mjs`.
+- `@liquid-labs/versioning` — supplies `minVersion`, used by `src/integrations-issues-github/determine-current-milestone.mjs`.
 - Requires a `plugable-express`-based host exposing `app.ext.integrations.register`, `app.ext.credentialsDB`, and `app.ext._liqProjects.playgroundMonitor`.
 
 ## Documentation

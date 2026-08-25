@@ -77,14 +77,14 @@ This spec covers the plugin's registered hooks, the activation condition that de
 
 ## API definition
 
-The plugin's external surface is a `setup` function (`src/index.js`) that registers two provider entries with the host `IntegrationsManager`, plus the individual hook functions each registration exposes. The surface is small enough to define inline; there is no separate API reference document for this project.
+The plugin's external surface is a `setup` function (`src/integrations-issues-github/index.js`, reached via the `src/index.js` re-export) that registers two provider entries with the host `IntegrationsManager`, plus the individual hook functions each registration exposes. The surface is small enough to define inline; there is no separate API reference document for this project.
 
 | Registration `providerFor` | Hooks exposed | Activation test |
 |---|---|---|
 | `tickets` | `getCurrentIntegrationUser`, `getIssueURL`, `getProjectURL` | `usesGitHubIssues` |
 | `pull request` | `createOrUpdatePullRequest`, `getCurrentIntegrationUser`, `getPullRequestURLsByHead`, `getQALinkFileIndex` | `usesGitHubIssues` |
 
-Hook function signatures (all exported from `src/*.mjs`):
+Hook function signatures (all exported from `src/integrations-issues-github/*.mjs`):
 
 | Hook | Signature | Returns |
 |---|---|---|
@@ -100,7 +100,7 @@ Every hook that performs GitHub API calls (`createOrUpdatePullRequest`, `getCurr
 
 ## Constraints and assumptions
 
-- **Milestone determination is implemented locally.** `createOrUpdatePullRequest` assigns a milestone when creating a PR via `determineCurrentMilestone`, implemented at `src/determine-current-milestone.mjs` — copied verbatim from `@liquid-labs/liq-projects-lib` and no longer imported from it. It still requires a `GITHUB_API` token from the host `credentialsDB`, and it still depends on `minVersion` from the live, separately-maintained `@liquid-labs/versioning`.
+- **Milestone determination is implemented locally.** `createOrUpdatePullRequest` assigns a milestone when creating a PR via `determineCurrentMilestone`, implemented at `src/integrations-issues-github/determine-current-milestone.mjs` — copied verbatim from `@liquid-labs/liq-projects-lib` and no longer imported from it. It still requires a `GITHUB_API` token from the host `credentialsDB`, and it still depends on `minVersion` from the live, separately-maintained `@liquid-labs/versioning`.
 - **Dependent on the broader `liq`/`liquid-labs` toolkit libraries.** The plugin relies on `@liquid-labs/git-toolkit` (origin/main resolution, shell push), `@liquid-labs/github-toolkit` (GitHub login and org/repo resolution from `package.json`), `@liquid-labs/liq-qa-lib` (QA file link resolution), `@liquid-labs/octocache` (cached GitHub API client), `@liquid-labs/shell-toolkit` (shell command execution), and `@liquid-labs/versioning` (`minVersion` for milestone selection) as external dependencies, all of type-checked against the versions pinned in `package.json`.
 - **Requires a `plugable-express`-based host.** The plugin only functions when loaded by a host server exposing `app.ext.integrations.register`, `app.ext.credentialsDB`, and `app.ext._liqProjects.playgroundMonitor` — it is not a standalone runnable package.
 - **Node.js `>=18.0.0`** per `package.json` `engines`.
