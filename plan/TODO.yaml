@@ -97,7 +97,8 @@ phases:
           tier: opus-med
           git:
             branch: plan/core-server-domain-consolidation-05-001
-            commit: []
+            commit:
+                - ea705de
             merge: null
         - number: 2
           slug: absorb-liq-credentials
