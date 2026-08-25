@@ -109,7 +109,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/core-server-domain-consolidation-05-002
-            commit: []
+            commit:
+                - ef98c31
             merge: null
         - number: 3
           slug: absorb-liq-integrations-issues-github
