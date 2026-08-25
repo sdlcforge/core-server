@@ -117,7 +117,7 @@ phases:
           slug: absorb-liq-integrations-issues-github
           title: Absorb Liq-Integrations-Issues-Github
           path: phase-05-absorb-donor-plugins/003-absorb-liq-integrations-issues-github.md
-          done: false
+          done: true
           tier: opus-med
           digest: 'Merged liq-integrations-issues-github into src/integrations-issues-github/ via git merge --allow-unrelated-histories from donor''s plan branch. determineCurrentMilestone inlining confirmed already landed (verified from source): create-or-update-pull-request.mjs imports the local module, zero liq-projects-lib references anywhere. liq-projects-lib therefore did NOT enter the dependency union and is now fully absent from bun.lock - unblocks dev-core-consolidation''s final task. octocache hazard handled: declared explicitly, confirmed externalized in both bundles (zero undeclared bare specifiers). Wire-in/unplug landed together; missing-name defect on both register() calls preserved and documented in-source as deliberate. full-tier-api-spec.json byte-identical (165 entries, no npmName movement, the distinguishing property of this donor); plugins-list 10->9; explicitPlugins=8 (plan''s target count). make build/test green (12 suites/40 tests), bun run test:local 7/7. make lint pre-existing failure unchanged (230 errors, same 4 files, tracked as b3hk).'
           git:
