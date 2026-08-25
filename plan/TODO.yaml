@@ -133,7 +133,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/core-server-domain-consolidation-05-004
-            commit: []
+            commit:
+                - f38bff9
             merge: null
     - number: 6
       slug: doc-updates
