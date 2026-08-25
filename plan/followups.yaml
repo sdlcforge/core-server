@@ -32,12 +32,10 @@ items:
       id: CJ9P
       date: "2026-08-14"
       tags:
-        - type:ambiguity
-        - plan/phase:yalc-dependency-refresh
-        - plan/slug:pluggable-express-rename
-        - priority:unspecified
+        - type:enhancement
+        - priority:medium
         - effort:unspecified
-      text: 'During phase-3 (yalc-dependency-refresh) task execution, the manager''s pre-dispatch `yalc push` from plugable-express propagated a dist build that was stale relative to plugable-express''s own current main branch (missing a registerPathVar plugin-setup parameter that liq-credentials needs to start up), which briefly broke core-server''s local server startup. The dispatched task agent resolved it (forced rebuild + re-push from plugable-express, source untouched, per the task doc''s own re-push contingency) and re-verified. Root cause not investigated further: worth checking whether plugable-express''s prepack/make build has an mtime-gating or lifecycle-script issue that could cause a stale dist/ to be packed on a future yalc push.'
+      text: 'RECURRED (2026-08-24, core-server-domain-consolidation plan-group, Phase 4 task 001''s read-only verify gate): the manager''s pre-dispatch `yalc push` from plugable-express again propagated a stale, pre-feature dist/ build (core-server''s .yalc/ snapshot''s dist/plugable-express.js had zero occurrences of the just-landed builtinPlugins mechanism despite package.json reporting a matching version). Confirmed root cause this time: plugable-express''s own working-tree dist/ was itself 8 days stale — `yalc push` did not trigger prepack (`make build`) as package.json''s `prepack: make build` script implies it should. Workaround applied: explicitly ran `make build` in plugable-express before `yalc push`, confirmed via grep on the packed bundle. This is now a confirmed, reproducible defect (or at least a reproducible operational gotcha) rather than a one-off: `yalc push` cannot be trusted to rebuild dist/ on its own in this project. Recommend either (a) confirming why prepack isn''t firing on `yalc push` specifically (it may only fire on `npm pack`/`npm publish`, not yalc''s own packing path) and documenting that yalc callers must always `make build` first, or (b) wrapping the project''s yalc-push workflow (a script, or a Makefile target) that runs `make build && yalc push` atomically so this can''t be forgotten again. Originally: during phase-3 (yalc-dependency-refresh) task execution of the pluggable-express-rename plan, the same symptom occurred (missing a registerPathVar plugin-setup parameter), resolved then via forced rebuild + re-push.'
     - title: IntegrationsManager de-dup collapses provider
       id: uROI
       date: "2026-08-24"
