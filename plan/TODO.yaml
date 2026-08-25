@@ -163,7 +163,7 @@ phases:
           slug: bump-version-and-publish
           title: Bump Version And Publish
           path: phase-07-release/001-bump-version-and-publish.md
-          done: false
+          done: true
           tier: sonnet-med
           digest: Bumped @sdlcforge/core-server 1.0.0-alpha.15 -> 1.0.0-alpha.16 (package.json only; bun.lock unaffected). make build/test green (12/12 suites, 40/40 tests); make lint's 230 pre-existing errors confined to the 4 already-tracked test files (follow-up b3hk), unchanged. npm publish --access public --tag alpha reached the registry and was rejected E404 (no publish permission) — the same registry-auth-class block liq-controls's and liq-credentials's own publish/deprecate attempts hit in this session; neither donor has actually been deprecated live either, so no real installability gap has opened. Exact handoff command and sequencing guidance (publish core-server before running any donor's deprecate command) recorded as follow-up 1aTE at the project root. Donors' retirement phases are NOT unblocked by a live registry publish, though this does not block dispatching liq-integrations-issues-github's own absorption-verification gate, which is independent of the publish outcome.
           git:
