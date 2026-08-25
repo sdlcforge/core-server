@@ -80,7 +80,7 @@ Configuration is resolved through `@liquid-labs/comply-defaults`:
 | `COMPLY_HOME()` | Server home directory |
 | `COMPLY_SERVER_CONFIG_ROOT()` | Server configuration root: `${XDG_DATA_HOME:-$HOME/.local/share}/sdlcforge-core`. The packaged `server-settings.yaml` defaults are seeded here on first run. |
 
-`${COMPLY_HOME}/plugins/server/` is where the third (user-supplied) plugin tier is loaded from; if unset or empty, only the core and explicit-npm tiers load.
+`${COMPLY_HOME}/plugins/server/` is where the third (user-supplied) plugin tier is loaded from; if unset or empty, only the core and explicit tiers load.
 
 ## Common tasks
 

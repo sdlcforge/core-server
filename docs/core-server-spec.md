@@ -44,7 +44,7 @@ It covers the server's use cases, cross-cutting behavioral requirements, and ext
 
 - **Actor:** a project maintainer.
 - **Action:** places a plugin package under `${COMPLY_HOME}/plugins/server/`.
-- **Outcome:** on the next server start, the plugin is loaded as the third (user-supplied) tier, and its contributed capabilities appear in the server's discoverable API surface alongside the core and explicit-npm tiers — without modifying `core-server`'s own source or dependency set.
+- **Outcome:** on the next server start, the plugin is loaded as the third (user-supplied) tier, and its contributed capabilities appear in the server's discoverable API surface alongside the core and explicit tiers — without modifying `core-server`'s own source or dependency set.
 
 ### Build and publish the package
 
@@ -70,7 +70,7 @@ It covers the server's use cases, cross-cutting behavioral requirements, and ext
 
 ## API definition
 
-The server's HTTP surface is a **combination** of a small, fixed set of core endpoints and a dynamic set of endpoints contributed by whichever plugins are loaded (core, explicit-npm, and user-supplied tiers). The full live surface for a given running instance is only knowable at runtime via `GET /server/api`; this section defines the fixed core endpoints only.
+The server's HTTP surface is a **combination** of a small, fixed set of core endpoints and a dynamic set of endpoints contributed by whichever plugins are loaded (core, explicit, and user-supplied tiers). The full live surface for a given running instance is only knowable at runtime via `GET /server/api`; this section defines the fixed core endpoints only.
 
 | Endpoint | Method | Requirement |
 |----------|--------|-------------|
@@ -87,7 +87,7 @@ Beyond the fixed core endpoints above, every loaded plugin is expected to regist
 
 - **Node.js `>=18.0.0`** is the minimum supported runtime, per the package's declared `engines` constraint; the Docker multi-version test suite validates behavior across Node 18 through 24.
 - **Explicit and dynamic plugin installation may require network access** (fetching plugin packages), and a network-constrained environment (e.g. a sandboxed CI container) can affect first-startup plugin loading.
-- **User-supplied plugins depend on a configured `${COMPLY_HOME}`.** The third plugin tier only loads plugins found under `${COMPLY_HOME}/plugins/server/`; if that location is unset or empty, only the core and explicit-npm tiers are active.
+- **User-supplied plugins depend on a configured `${COMPLY_HOME}`.** The third plugin tier only loads plugins found under `${COMPLY_HOME}/plugins/server/`; if that location is unset or empty, only the core and explicit tiers are active.
 - **Designed as a companion to the SDLC CLI.** While the HTTP API is usable by any client, the server's capability set and command-discovery endpoints (`/server/next-commands`, `/server/api`) are shaped around driving the companion CLI's workflow.
 
 ## Pointers to deeper docs
