@@ -106,3 +106,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: '@liquid-labs/versioning ^1.0.0-alpha.4 is a dependency-union entry the plan''s absorption-dependency-union.md did not predict (it''s the direct replacement for liq-projects-lib now that determineCurrentMilestone is inlined, needed for minVersion). Declared correctly at donor''s own range for the same nodeExternals() reason octocache was. Worth correcting that resource doc if Phase 5 task 004''s parity check reads it.'
+    - title: 'absorption-dependency-union.md''s requirement '
+      id: BPvA
+      date: "2026-08-25"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-donor-plugins
+        - plan/slug:core-server-domain-consolidation
+        - priority:unspecified
+        - effort:unspecified
+      text: absorption-dependency-union.md's requirement 2 (octocache undeclared-by-donor) is now stale in a benign direction - the donor has since fixed this upstream and declares it at exactly the prescribed range.
