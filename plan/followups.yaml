@@ -86,16 +86,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Deliberately not consolidated: src/lib/index.js''s summary constant and builtin-plugins.mjs''s summary are near-identical duplicates; importing one from the other would create an index.js -> app-init.mjs -> builtin-plugins.mjs -> index.js cycle. Task doc explicitly names this a follow-up.'
-    - title: arch docs stale post-builtinPlugins
-      id: QNmX
-      date: "2026-08-25"
-      tags:
-        - plan/phase:doc-updates
-        - plan/slug:core-server-domain-consolidation
-        - type:documentation
-        - priority:unspecified
-        - effort:unspecified
-      text: 'Surfaced by the phase-4 review gate; deliberately deferred to Phase 6 (already scoped to update these exact files) rather than fixed twice (once for the empty mechanism, once after Phase 5''s real donor absorption). Specifics to fold into Phase 6 task 001: (1) docs/architecture/plugin-loading-tiers.md lines 18,43-45,96-112 — "Tier 1: core plugins" section falsely claims core-server exercises no control over which core plugins load; the new builtinPlugins wiring in app-init.mjs (src/lib/builtin-plugins.mjs) contradicts this now, and the superInit({...}) code excerpt needs the builtinPlugins line added. (2) docs/architecture.md lines 11,51,64 and docs/core-server-spec.md lines 23,64,89 — same fixed three-tier characterization needs syncing once (1) is fixed. (3) CLAUDE.md has zero inbound links from README.md/AGENTS.md, unreachable from the doc chain — add a cross-link. (4) docs/architecture.md''s Security model section attributes credential handling entirely to the liq-credentials explicit plugin — will need updating once Phase 5 absorbs liq-credentials into builtin-plugins.mjs''s submodules. (5) Consider naming the new mechanism its own category (e.g. "Tier 1b: in-tree builtin plugins") rather than folding it into Tier 1 prose. (6) Independently noted, pre-existing and unrelated to this phase: docs/architecture.md and docs/core-server-spec.md both say explicitPlugins holds "13" packages vs. the actual 11, and docs/architecture.md disagrees with plugin-loading-tiers.md (13 vs 11) on the same count — worth correcting in the same pass.'
     - title: '@liquid-labs/versioning ^1.0.0-alpha.4 is a d'
       id: p4j0
       date: "2026-08-25"
