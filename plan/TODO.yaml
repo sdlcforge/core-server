@@ -68,7 +68,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/core-server-domain-consolidation-04-002
-            commit: []
+            commit:
+                - "4473740"
             merge: null
         - number: 3
           slug: wire-builtin-plugins-aggregator
