@@ -76,3 +76,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: A fresh task worktree in this repo needs a one-time `bun link` before `bun run test:local` will run (bare spawn('sdlcforge-server') relies on PATH resolution a plain bun install doesn't provision). Not a regression, worth noting for future worktree provisioning in this project.
+    - title: '[manager action] ~/.bun/install/global/node_m'
+      id: CJPJ
+      date: "2026-08-25"
+      tags:
+        - type:ambiguity
+        - plan/phase:in-tree-plugin-mechanism
+        - plan/slug:core-server-domain-consolidation
+        - priority:unspecified
+        - effort:unspecified
+      text: '[manager action] ~/.bun/install/global/node_modules/@sdlcforge/core-server currently symlinks to this disposable task worktree (from the manager''s earlier `bun link`). Must be re-pointed at the main checkout (or removed) once this worktree is torn down, or a later worktree''s test:local will silently exercise a stale/removed dist/.'
