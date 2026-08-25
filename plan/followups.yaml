@@ -56,3 +56,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: plugable-express's src/app.js imports WeakCache (@liquid-labs/weak-cache) and readFJSON (@liquid-labs/federated-json) in production code paths, but both are declared only in devDependencies, not dependencies. Worth checking during task 002's bun.lock regeneration since a from-registry install wouldn't pull these transitively.
+    - title: finalize-task-commit.sh's yalc-override guard
+      id: Z2Ar
+      date: "2026-08-25"
+      tags:
+        - type:ambiguity
+        - plan/phase:in-tree-plugin-mechanism
+        - plan/slug:core-server-domain-consolidation
+        - priority:unspecified
+        - effort:unspecified
+      text: finalize-task-commit.sh's yalc-override guard excludes any bun.lock refresh from its automated commit in this repo, since bun.lock permanently carries file:.yalc/... entries by design here. This task's bun.lock was committed manually as a documented workaround. Worth considering a per-project exception to that guard, or documenting manual follow-up commit as the accepted pattern for yalc-refresh tasks in bun-based repos.
