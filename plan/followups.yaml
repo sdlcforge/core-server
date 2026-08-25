@@ -86,3 +86,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: '[manager action] ~/.bun/install/global/node_modules/@sdlcforge/core-server currently symlinks to this disposable task worktree (from the manager''s earlier `bun link`). Must be re-pointed at the main checkout (or removed) once this worktree is torn down, or a later worktree''s test:local will silently exercise a stale/removed dist/.'
+    - title: 'Deliberately not consolidated: src/lib/index.'
+      id: O1n0
+      date: "2026-08-25"
+      tags:
+        - type:ambiguity
+        - plan/phase:in-tree-plugin-mechanism
+        - plan/slug:core-server-domain-consolidation
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Deliberately not consolidated: src/lib/index.js''s summary constant and builtin-plugins.mjs''s summary are near-identical duplicates; importing one from the other would create an index.js -> app-init.mjs -> builtin-plugins.mjs -> index.js cycle. Task doc explicitly names this a follow-up.'
