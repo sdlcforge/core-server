@@ -1,0 +1,16 @@
+{
+  "name": "@orgA/projectA01",
+  "version": "1.0.0",
+  "description": "Test data",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Zane Rockenbaugh <zane@liquid-labs.com>",
+  "license": "UNLICENSED",
+  "liq": {
+    "packageType": "org",
+    "org": {
+      "staffProject": "orgA/projectA01"
+    }
+  }
+}

@@ -73,6 +73,59 @@ architectural_impact: true
 - [`dev-core-consolidation-contract.md`](/Users/zane/playground/sdlcforge/dev-core/docs/dev-core-consolidation-contract.md) — the six-step absorption recipe, the `app.ext` contract freeze, and the root-file-ownership rule.
 - `plan/resources/absorption-parity-contract.md` and `plan/resources/absorption-dependency-union.md` — authored by Phase 3 task 003.
 
+## Status
+
+**Outcome: succeeded** (2026-08-24). Pre-merge `core-server` commit: `ae8b64b`. Donor merged from `liq-controls/plan/core-server-domain-consolidation` at `b1c5dbc`. Landed in two commits: `de7a1ca` (merge + resolution + drops) and `cf160b7` (dependency union + wire-in + unplug, together).
+
+### Requirements
+
+1. **Donor relocation verified, not assumed.** `git ls-tree -r --name-only liq-controls/plan/core-server-domain-consolidation -- src` showed the `src/controls/…` layout (28 files) plus the donor's reduced `src/lib/index.js`. Verified against the fetched remote-tracking ref, not only the donor checkout.
+2. **History-preserving merge.** `git merge --allow-unrelated-histories` against the donor's **plan** branch. Merge commit `de7a1ca` has two parents (`ae8b64b`, `b1c5dbc`). `git log --follow src/controls/setup.mjs` reaches four commits, ending at the donor's pre-relocation `86de6ba`.
+3. **`src/lib/index.js` resolved `--ours` and blob-verified.** `git diff ae8b64b -- src/lib/index.js` is empty, checked after the merge and before any edit. Never `git rm`'d, never `--theirs`. `src/lib/test/index.test.js` passes; the built bundle still exports `appInit`, `Reporter`, `name`, `summary`.
+4. **Donor package-level files dropped.** Nine root conflicts resolved `--ours` (`.gitignore`, `AGENTS.md`, `Makefile`, `README.md`, `docs/project-structure.md`, `package.json`, `plan/TODO.yaml`, `plan/manifest.yaml`, `plan/overview.md`); six clean non-conflicting adds `git rm`'d (`docs/liq-controls-spec.md`, `make/01-schema.mk`, `package-lock.json`, `plugable-express.yaml`, and the donor's six remaining `plan/` files). `plan/` removal was scoped to the enumerated arriving paths, never a blanket `git rm -r plan/`.
+5. **Git's conflict list was not treated as the review list.** `git diff --stat ae8b64b -- . ':(exclude)src/controls'` was **empty** immediately after the merge — every root-level path, including the silently-merged `Makefile` and `make/`, is `core-server`'s own blob.
+6. **Dependency union re-verified against the donor branch tip, no discrepancy.** The donor's `package.json` at `b1c5dbc` matches `absorption-dependency-union.md` exactly. A fresh import sweep of the donor's `src/` re-confirmed **zero** references to `@liquid-labs/liq-qa-lib` and `@liquid-labs/http-smart-response` (static and dynamic), so neither is carried in on controls' account. Seven added: `@liquid-labs/find-plus` `^1.0.1`, `@liquid-labs/liq-handlers-lib` `^1.0.0-alpha.16`, `@liquid-labs/npm-toolkit` `^1.0.0-alpha.15`, `@liquid-labs/resource-item` `^1.0.0-alpha.4`, `@liquid-labs/resource-model` `^1.0.0-alpha.10`, `http-errors` `^2.0.0`, `js-yaml` `^4.1.0`. No new `file:` spec — `grep -n 'file:' package.json` still shows exactly the two pre-existing entries.
+7. **Wire-in and unplug landed in one commit** (`cf160b7`): `import * as controls from '../controls'` (namespace, extensionless) plus `submodules = [controls]`, and, in the same commit, removal from `explicitPlugins` **and** from `package.json` `dependencies`. No transient state on this branch had the donor loaded both ways; the intermediate merge commit carried the code in-tree but unwired.
+8. **Donor tests ported with no edits required.** All four execute and pass under `core-server`'s Babel/Jest/`test-staging` pipeline; the `test/data/` fixture trees are picked up by the existing `CATALYST_TEST_DATA_SELECTOR` rule unchanged. No fixture path or runner assumption broke.
+9. **Snapshots regenerated; every diff predicted.** Enumerated below.
+10. **Bundle audited.** Every bare-specifier `require(...)` in both `dist/` bundles is a Node builtin or a declared dependency; zero undeclared specifiers, so nothing was silently inlined. `dist/sdlcforge-server.js` 2554 → 7781 bytes; `dist/sdlcforge-server-exec.js` 2387 → 7618 bytes.
+
+### Accepted snapshot diffs
+
+- `full-tier-api-spec.json` — route count **165 → 165**; same route multiset; route **order unchanged**. Exactly four entries changed, each in exactly one field (`npmName`, `@liquid-labs/liq-controls` → `@sdlcforge/core-server`): `GET /orgs/:orgKey/controls/list`, `GET /help/orgs/:orgKey/controls/list`, `GET /orgs/controls/list`, `GET /help/orgs/controls/list`. No `path`/`method`/`matcher`/`help`/`parameters` value changed anywhere. Parity contract item 1 permitted a reordering; none occurred — the absorbed routes already occupied indices 35–38, immediately after the 35 framework routes, so `loadBuiltinPlugins` running before `loadPlugins` reproduced their previous position exactly.
+- `full-tier-plugins-list.json` — **12 → 11** entries: the `@liquid-labs/liq-controls` entry is gone; the `@sdlcforge/core-server` entry (Phase 4's) remains with its expected summary. Parity contract item 2.
+- `full-tier-integrations-list.json` — still **2** entries; the `controls` provider's `npmName` becomes `@sdlcforge/core-server`. The two entries also swap position: `listPluginsHandler` (`@liquid-labs/liq-plugins-lib`) sorts its response by `npmName.localeCompare`, and `@sdlcforge/core-server` sorts after `@liquid-labs/liq-integrations-issues-github` where `@liquid-labs/liq-controls` sorted before it. This is the *same* predicted `npmName` change re-expressed through the endpoint's own deterministic sort, not an independent diff. The `name`-omission defect on the two `issues-github` registrations is preserved untouched.
+- `golden-api-spec.json` and `golden-plugins-list.json` — **byte-identical** (`git diff --stat` empty), as parity contract item 7 requires.
+- Setup-method `{name, deps}` set, `app.ext` key set, and `credentialsDB` method set — all unchanged (parity contract items 5 and 6), asserted green by `full-tier-baseline.test.js`.
+
+Parity contract item 4 (`GET /server/plugins/details/@liquid-labs%2Fliq-controls` stops resolving) follows mechanically from the verified `handlerPlugins` change and was not separately probed.
+
+### Validation
+
+| Check | Result |
+| --- | --- |
+| `make build` | passed |
+| `make test` | passed — 9 suites, 34 tests, including all four ported donor test files |
+| `make lint` | **failed, pre-existing and unchanged** — 230 errors, all in `test/get-node-versions.js`, `test/test-basic.js`, `test/test-integration-quick.js`, `test/test-server.js`. Identical count and file set measured at `ae8b64b` before any edit. **Zero** lint errors in `src/`, including the whole absorbed `src/controls/` tree. Not fixed: those four files are outside this task's scope, and reformatting them would break this task's own requirement-5 check that no unexpected root-level path changed. |
+| `bun run test:local` | passed — 7/7 endpoints; server log shows `Updating controls data...`, i.e. the absorbed setup method ran in a real startup |
+
+### Affected files
+
+- `src/controls/**` (28 files) — absorbed, byte-identical to the donor except `src/controls/integrations/register-controls-integrations.mjs` (`npmName` re-identification and its log string)
+- `src/lib/builtin-plugins.mjs`, `src/lib/app-init.mjs` — wire-in and unplug
+- `src/lib/test/builtin-plugins.test.js` — Phase 4's empty-`submodules` assertions replaced; the composed `setup` test now asserts the two enqueued `{name, deps}` pairs verbatim
+- `src/lib/test/full-tier-baseline.test.js` — expected `controls` provider `npmName`
+- `package.json`, `bun.lock` — dependency union and unplug
+- `test/__snapshots__/full-tier-{api-spec,plugins-list,integrations-list}.json` — regenerated
+
+### Notes
+
+- **`make/01-schema.mk` was dropped** with the rest of the donor's `make/`, per requirement 4. Its only effect was copying `src/controls/schema/audit.schema.json` into `dist/`; nothing in the absorbed source imports that schema, and `core-server` has no `files` allowlist. The schema file itself is retained under `src/controls/schema/`.
+- **`plugable-express.yaml`'s load-order fact, preserved here as required:** `controls` genuinely needs both `@liquid-labs/liq-projects` and `@liquid-labs/liq-orgs` loaded. `src/controls/resources/load-controls.mjs` reads `app.ext._liqOrgs.orgs` and `src/controls/integrations/get-question-controls.mjs` reads both `app.ext._liqOrgs.orgs` and `app.ext._liqProjects.playgroundMonitor`. Both plugins stay external explicit-tier dependencies; the ordering is carried by the `'load org controls'` → `deps: ['load orgs']` setup-method dependency, now asserted directly in `src/lib/test/builtin-plugins.test.js`.
+- A stale, unpruned `node_modules/@liquid-labs/liq-controls` directory survives `bun install` (`bun.lock` has zero references to it and no installed package declares it). Its presence strengthens rather than weakens the result: the donor is on disk yet absent from `GET /server/plugins/list`, confirming the "no keyword discovery" assumption.
+- `bun install` incidentally re-hoisted the transitive `entities` package (root 7.0.1 → 4.5.0, with 7.0.1 pushed under `@vue/compiler-core` and `htmlparser2`). Dev-tooling only; `entities` appears nowhere in either `dist/` bundle.
+- The `liq-controls` git remote added per requirement 2 remains configured in the shared repository config.
+
 ## Checkpoint hints
 
 - After the donor branch's relocated layout is verified and the pre-merge SHA recorded.

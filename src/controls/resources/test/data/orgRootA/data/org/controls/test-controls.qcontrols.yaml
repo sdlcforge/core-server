@@ -1,0 +1,12 @@
+name: test-controls
+source: '@liquid-labs/liq-controls'
+description: |
+  Test controls
+controls:
+  - name: test-control
+    description: Control validation.
+    actions:
+      - prompt: Will anyone ever see this?
+        parameter: TEST_CONTROL_WILL_BE_SEEN
+        paramType: boolean
+        

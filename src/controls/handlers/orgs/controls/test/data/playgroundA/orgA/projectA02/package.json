@@ -1,0 +1,10 @@
+{
+  "name": "@orgB/projectA02",
+  "version": "1.0.0",
+  "description": "Test data",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Zane Rockenbaugh <zane@liquid-labs.com>",
+  "license": "UNLICENSED"
+}

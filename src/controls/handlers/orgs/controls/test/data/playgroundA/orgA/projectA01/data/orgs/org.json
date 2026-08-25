@@ -1,0 +1,44 @@
+{
+  "_meta": {
+    "com.liquid-labs.federated-json": {
+      "mountSpecs": [
+        {
+          "path": ".staff",
+          "file": "${ORG_DATA_PATH}/../staff.json"
+        },
+        {
+          "path": ".settings",
+          "file": "${ORG_DATA_PATH}/orgs/settings.yaml"
+        },
+        {
+          "path": ".controlsMap",
+          "file": "${ORG_DATA_PATH}/orgs/controlsMap.json"
+        }
+      ]
+    }
+  },
+  "alerts": {
+    "reviews": [],
+    "sources": []
+  },
+  "audits": [],
+  "roles": [
+    { "name": "Staff", "designated": true, "summary": "Staff."},
+    { "name": "Employee", "designated": true, "summary": "Employee."},
+    { "name": "Contractor", "designated": true, "summary": "Contractor."},
+    {
+      "name": "CEO",
+      "singular": true,
+      "titular": true,
+      "selfManaged": true,
+      "jobDescription": "Chief executive officer."
+     },
+    { "name": "CTO", "singular": true, "titular": true, "jobDescription": "Chief technical officer." },
+    { "name": "Developer", "titular": true, "qualifiable": true, "jobDescription": "Hacker." },
+    { "name": "Tester", "titular": true, "qualifiable": true, "jobDescription": "QA." }
+  ],
+  "staff": null,
+  "thirdPartyAccounts": [],
+  "technologies": [],
+  "controlsMap": null
+}

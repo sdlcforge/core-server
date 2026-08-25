@@ -6,8 +6,8 @@
 // and before the API spec is written. That ordering is the entire reason this mechanism exists
 // rather than post-`appInit()` registration.
 //
-// Deliberately empty for now: the `submodules` array is filled in as each donor plugin is
-// absorbed. Nothing below changes shape when that happens.
+// The `submodules` array is filled in as each donor plugin is absorbed. Nothing below changes
+// shape when that happens.
 //
 // Three facts a future reader will otherwise rediscover the hard way:
 //
@@ -27,7 +27,14 @@
 //    preserves that escape hatch; `builtinPluginsFor` returning a single-element array is a
 //    deliberate policy choice (plan/notes/plugin-list-visibility.md), not a structural limit.
 
-const submodules = []
+// Namespace import, extensionless directory specifier -- both deliberate, per facts 1 and 2
+// above. `'../controls'` resolves to `src/controls/index.js` under Rollup and, after Babel emits
+// `test-staging/controls/index.js`, under Jest as well; an explicit `.mjs`/`/index.js` specifier
+// would build cleanly and then fail module resolution in the test path.
+import * as controls from '../controls'
+
+// Absorbed from `@liquid-labs/liq-controls` (phase-05 task 001). Append-only: see fact 2.
+const submodules = [controls]
 
 const handlers = submodules.flatMap(({ handlers: submoduleHandlers = [] }) => submoduleHandlers)
 
