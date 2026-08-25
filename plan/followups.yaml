@@ -46,3 +46,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: IntegrationsManager.listInstalledPlugins() (in @liquid-labs/plugable-express) de-duplicates its provider list via new Map(list.map((p) => [p.name, p])). Both register() call sites in @liquid-labs/liq-integrations-issues-github's setup (tickets and pull request providers) omit the name field, so both are keyed on undefined and the Map collapses them into one entry — the later pull request registration silently overwrites the earlier tickets registration. GET /server/plugins/integrations/list reports two entries where three providers are actually registered; tickets is invisible to that endpoint (though still functional via callHook/hasHook, which key on providerFor not name). Fix belongs either in liq-integrations-issues-github (supply distinct name values) or in plugable-express's de-duplication key. Captured as present-day, deliberately-preserved behavior in core-server's phase-03 baseline test and snapshot; out of scope for the domain-consolidation absorption plan.
+    - title: plugable-express's src/app.js imports WeakCac
+      id: OjpW
+      date: "2026-08-25"
+      tags:
+        - type:ambiguity
+        - plan/phase:in-tree-plugin-mechanism
+        - plan/slug:core-server-domain-consolidation
+        - priority:unspecified
+        - effort:unspecified
+      text: plugable-express's src/app.js imports WeakCache (@liquid-labs/weak-cache) and readFJSON (@liquid-labs/federated-json) in production code paths, but both are declared only in devDependencies, not dependencies. Worth checking during task 002's bun.lock regeneration since a from-registry install wouldn't pull these transitively.
