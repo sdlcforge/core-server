@@ -1630,7 +1630,7 @@
     "matcher": "^\\/help\\/orgs\\/controls\\/list[/#?]?$"
   },
   {
-    "npmName": "@liquid-labs/liq-credentials",
+    "npmName": "@sdlcforge/core-server",
     "routablePath": "/^\\/credentials\\/((?:[A-Z0-9][A-Z0-9_]*))\\/import[/#?]?$/",
     "method": "PUT",
     "parameters": [
@@ -1662,7 +1662,7 @@
     "matcher": "^\\/credentials\\/((?:[A-Z0-9][A-Z0-9_]*))\\/import[/#?]?$"
   },
   {
-    "npmName": "@liquid-labs/liq-credentials",
+    "npmName": "@sdlcforge/core-server",
     "routablePath": "/^\\/credentials\\/list[/#?]?$/",
     "method": "GET",
     "parameters": [

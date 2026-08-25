@@ -1,10 +1,5 @@
 [
   {
-    "npmName": "@liquid-labs/liq-credentials",
-    "installed": true,
-    "summary": ""
-  },
-  {
     "npmName": "@liquid-labs/liq-integrations-issues-github",
     "installed": true,
     "summary": ""

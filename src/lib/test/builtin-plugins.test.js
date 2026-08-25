@@ -8,6 +8,7 @@ import request from 'supertest'
 import { Reporter } from '@liquid-labs/plugable-express'
 
 import * as controls from '../../controls'
+import * as credentials from '../../credentials'
 import { appInit } from '../app-init'
 import { builtinPluginsFor, handlers as builtinHandlers, summary as builtinSummary } from '../builtin-plugins'
 import {
@@ -47,10 +48,11 @@ const makeTempDir = (prefix) =>
   fsPath.join(os.tmpdir(), prefix + Math.round(Math.random() * 10000000000000000))
 
 // The absorbed submodules currently wired into `builtin-plugins.mjs`' `submodules` array, in the
-// same order. One so far: `src/controls/`, absorbed from `@liquid-labs/liq-controls` by phase-05
-// task 001. Each further absorption appends its namespace here rather than rewriting the
-// assertions below.
-const ABSORBED_SUBMODULES = [controls]
+// same order. Two so far: `src/controls/`, absorbed from `@liquid-labs/liq-controls` by phase-05
+// task 001, and `src/credentials/`, absorbed from `@liquid-labs/liq-credentials` by phase-05 task
+// 002. Each further absorption appends its namespace here rather than rewriting the assertions
+// below.
+const ABSORBED_SUBMODULES = [controls, credentials]
 
 describe('builtin-plugins aggregator', () => {
   test('contributes exactly the absorbed submodules` own handlers, in submodule order', () => {
@@ -86,29 +88,59 @@ describe('builtin-plugins aggregator', () => {
   test('the composed `setup` awaits every absorbed submodule`s own setup and resolves undefined', async() => {
     const [{ module: { setup } }] = builtinPluginsFor({ npmName : '@example/host', version : '9.9.9' })
 
-    // A minimal stand-in for the framework's `app`: the absorbed `controls` setup only enqueues
-    // onto `app.ext.setupMethods`. Asserting the enqueued `{name, deps}` pairs verbatim is the
-    // point of this test -- `@liquid-labs/dependency-runner` matches `deps` by exact string, so
-    // `load orgs` (contributed by the still-external `liq-orgs`) and `setup integrations`
-    // (contributed by `plugable-express`) are a cross-package contract, not cosmetic labels.
-    // Renaming either resolves silently wrong in one direction and loudly in the other. See
+    // A minimal stand-in for the framework's `app` and its `setup()` argument object. The
+    // absorbed `controls` setup only enqueues onto `app.ext.setupMethods`; the absorbed
+    // `credentials` setup additionally needs a real, writable `serverConfigRoot` (it `mkdir -p`s
+    // a subdirectory under it and constructs a `CredentialsDB` against it) and a real
+    // `registerPathVar` function (it registers the `credential` path variable). Asserting the
+    // enqueued `{name, deps}` pairs verbatim is the point of the `setupMethods` half of this test
+    // -- `@liquid-labs/dependency-runner` matches `deps` by exact string, so `load orgs`
+    // (contributed by the still-external `liq-orgs`) and `setup integrations` (contributed by
+    // `plugable-express`) are a cross-package contract, not cosmetic labels. Renaming either
+    // resolves silently wrong in one direction and loudly in the other. See
     // `plan/resources/absorption-parity-contract.md` item 5.
+    const serverConfigRoot = makeTempDir('comply-server-builtin-plugins-composed-setup-')
+    await fs.mkdir(serverConfigRoot, { recursive : true })
+
+    const registeredPathVars = {}
+    const registerPathVar = (name, opts) => { registeredPathVars[name] = opts }
+
     const app = { ext : { setupMethods : [] } }
 
-    await expect(setup({ app })).resolves.toBeUndefined()
+    try {
+      await expect(setup({ app, registerPathVar, serverConfigRoot })).resolves.toBeUndefined()
 
-    expect(app.ext.setupMethods.map(({ name, deps }) => ({ name, deps }))).toEqual([
-      { name : 'load org controls', deps : ['load orgs'] },
-      { name : 'load controls integrations', deps : ['setup integrations'] }
-    ])
+      expect(app.ext.setupMethods.map(({ name, deps }) => ({ name, deps }))).toEqual([
+        { name : 'load org controls', deps : ['load orgs'] },
+        { name : 'load controls integrations', deps : ['setup integrations'] }
+      ])
+
+      // `credentials`' setup contract: installs `app.ext.credentialsDB` (the cross-package
+      // contract name `liq-work` and `liq-integrations-issues-github` both read) and registers
+      // the `credential` path variable via the forwarded `registerPathVar`.
+      expect(app.ext.credentialsDB).toBeDefined()
+      expect(typeof app.ext.credentialsDB.listSupported).toBe('function')
+      expect(Object.keys(registeredPathVars)).toEqual(['credential'])
+    }
+    finally {
+      await fs.rm(serverConfigRoot, { recursive : true, force : true })
+    }
   })
 })
 
 // The full-tier configuration: `skipCorePlugins` absent, so `loadBuiltinPlugins` actually runs.
 // `PLUGABLE_PLAYGROUND` isolation and a temp `serverConfigRoot` mirror
 // `full-tier-baseline.test.js`, the harness Phase 3 already proved works. The probe reaches
-// `appInit` through the `builtinPlugins` option override, replacing (not joining) the real
-// `@sdlcforge/core-server` entry `app-init.mjs` defaults to.
+// `appInit` through the `builtinPlugins` option override -- but, unlike when only `controls` was
+// absorbed, that override can no longer *replace* the real `@sdlcforge/core-server` entry
+// wholesale: `explicitPlugins` is left at its production default (not overridden), and the still-
+// external, npm-discovered `liq-projects` plugin's own `setup()` calls `setupCredentials({
+// credentialsDB: app.ext.credentialsDB })` at plugin-load time (see
+// `plan/resources/absorption-parity-contract.md` item 8) -- so `app.ext.credentialsDB` must
+// already be installed by the time `liq-projects`' setup runs, exactly as it is in production.
+// The override therefore *joins* the real absorbed submodules' own `builtinPlugins` entry
+// alongside the probe's, rather than replacing it.
+const REAL_BUILTIN_PLUGINS = builtinPluginsFor({ npmName : '@sdlcforge/core-server', version : '0.0.0-test' })
 describe('builtinPlugins registration path, proven with a test-injected probe', () => {
   let app, cache, serverHome, playgroundHome, apiSpecPath, probe
   let origPluggablePlayground
@@ -130,7 +162,7 @@ describe('builtinPlugins registration path, proven with a test-injected probe', 
     ({ app, cache } = await appInit({
       serverConfigRoot : serverHome,
       apiSpecPath,
-      builtinPlugins   : [probe.builtinPluginsEntry],
+      builtinPlugins   : [...REAL_BUILTIN_PLUGINS, probe.builtinPluginsEntry],
       reporter         : new Reporter({ silent : true })
     }))
   })
