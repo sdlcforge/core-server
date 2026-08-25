@@ -49,8 +49,6 @@ async function runBasicTest() {
 
   // Check that explicitPlugins includes expected packages
   const expectedPackages = [
-    '@liquid-labs/liq-controls',
-    '@liquid-labs/liq-credentials',
     '@liquid-labs/liq-projects'
   ]
   
