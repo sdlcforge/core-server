@@ -157,6 +157,7 @@ phases:
     - number: 7
       slug: release
       title: Release And Publish
+      diff_base: 981d17da9cbba53833b344784de8747cc6f984c4
       tasks:
         - number: 1
           slug: bump-version-and-publish
