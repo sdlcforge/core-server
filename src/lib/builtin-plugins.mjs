@@ -32,9 +32,11 @@
 // `test-staging/controls/index.js`, under Jest as well; an explicit `.mjs`/`/index.js` specifier
 // would build cleanly and then fail module resolution in the test path.
 import * as controls from '../controls'
+import * as credentials from '../credentials'
 
-// Absorbed from `@liquid-labs/liq-controls` (phase-05 task 001). Append-only: see fact 2.
-const submodules = [controls]
+// Absorbed from `@liquid-labs/liq-controls` (phase-05 task 001) and `@liquid-labs/liq-credentials`
+// (phase-05 task 002). Append-only: see fact 2.
+const submodules = [controls, credentials]
 
 const handlers = submodules.flatMap(({ handlers: submoduleHandlers = [] }) => submoduleHandlers)
 

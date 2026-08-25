@@ -37,13 +37,14 @@ const checkSdlcEnv = (suffix, converter = (x) => x) => {
   return value !== undefined ? converter(value) : undefined
 }
 
-// `@liquid-labs/liq-controls` is deliberately absent: its source is absorbed in-tree at
-// `src/controls/` and registered through `builtinPlugins` above. Loading it both ways at once is
-// a hard startup crash -- `plugable-express` throws `Non-unique command path: <path>` on the
-// second registration of the same array-style path -- so this entry's removal and the
-// `builtin-plugins.mjs` wire-in must always land together.
+// `@liquid-labs/liq-controls` and `@liquid-labs/liq-credentials` are deliberately absent: their
+// source is absorbed in-tree at `src/controls/` and `src/credentials/` and registered through
+// `builtinPlugins` above. Loading either both ways at once is a hard startup crash --
+// `plugable-express` throws `Non-unique command path: <path>` on a second registration of the
+// same array-style path, and `Path variable '<name>' is already registered.` on a second
+// `registerPathVar` call for the same name (`liq-credentials` registers `credential`) -- so each
+// entry's removal and the `builtin-plugins.mjs` wire-in must always land together.
 const explicitPlugins = [
-  '@liquid-labs/liq-credentials',
   '@liquid-labs/liq-integrations-issues-github',
   '@liquid-labs/liq-orgs',
   '@liquid-labs/liq-projects',
