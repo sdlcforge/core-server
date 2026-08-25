@@ -40,7 +40,7 @@ phases:
           slug: restructure-src-into-core-server-layout
           title: Restructure Src Into Core-Server Layout
           path: phase-13-relocate-plugin-source/001-restructure-src-into-core-server-layout.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: Relocated all 12 files under liq-integrations-issues-github's src/ tree into src/integrations-issues-github/ via git mv, preserving history. src/index.js reduced to export * from './integrations-issues-github'. make build byte-identical bundle, make test held at baseline (2 suites/5 tests, both relocated tests confirmed executing from new path), make lint clean. Provider/hook/setup-method parity byte-identical including the deliberately-preserved missing-name defect. No import escaped the moved subtree; package.json/Makefile/README/AGENTS/docs untouched.
           git:
