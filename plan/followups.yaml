@@ -116,3 +116,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: absorption-dependency-union.md's requirement 2 (octocache undeclared-by-donor) is now stale in a benign direction - the donor has since fixed this upstream and declares it at exactly the prescribed range.
+    - title: Requirement 7's stated ported-test-file count
+      id: 88IA
+      date: "2026-08-25"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-donor-plugins
+        - plan/slug:core-server-domain-consolidation
+        - priority:unspecified
+        - effort:unspecified
+      text: Requirement 7's stated ported-test-file count for issues-github ("one") is stale against current reality (two files, both passing, traceable via git log --follow to legitimate donor-side work) - worth correcting in the task doc's text if ever revisited, informational only.
