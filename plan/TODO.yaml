@@ -124,7 +124,7 @@ phases:
             branch: plan/core-server-domain-consolidation-05-003
             commit:
                 - b55898e
-            merge: null
+            merge: 17a62615ca4112f027805e17ed13938f4c07d273
         - number: 4
           slug: verify-post-absorption-parity
           title: Verify Post-Absorption Parity
