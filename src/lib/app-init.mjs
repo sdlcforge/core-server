@@ -37,15 +37,19 @@ const checkSdlcEnv = (suffix, converter = (x) => x) => {
   return value !== undefined ? converter(value) : undefined
 }
 
-// `@liquid-labs/liq-controls` and `@liquid-labs/liq-credentials` are deliberately absent: their
-// source is absorbed in-tree at `src/controls/` and `src/credentials/` and registered through
-// `builtinPlugins` above. Loading either both ways at once is a hard startup crash --
-// `plugable-express` throws `Non-unique command path: <path>` on a second registration of the
-// same array-style path, and `Path variable '<name>' is already registered.` on a second
-// `registerPathVar` call for the same name (`liq-credentials` registers `credential`) -- so each
-// entry's removal and the `builtin-plugins.mjs` wire-in must always land together.
+// `@liquid-labs/liq-controls`, `@liquid-labs/liq-credentials`, and
+// `@liquid-labs/liq-integrations-issues-github` are deliberately absent: their source is absorbed
+// in-tree at `src/controls/`, `src/credentials/`, and `src/integrations-issues-github/` and
+// registered through `builtinPlugins` above. Loading one both ways at once is a defect in every
+// case, but it does not always announce itself the same way. For a donor that contributes routes
+// or path variables it is a hard startup crash -- `plugable-express` throws
+// `Non-unique command path: <path>` on a second registration of the same array-style path, and
+// `Path variable '<name>' is already registered.` on a second `registerPathVar` call for the same
+// name (`liq-credentials` registers `credential`). `liq-integrations-issues-github` registers
+// neither, so its double-load is *silent*: its two integration providers are simply registered
+// twice. That is a stronger reason for each entry's removal and the `builtin-plugins.mjs` wire-in
+// to always land together, not a weaker one.
 const explicitPlugins = [
-  '@liquid-labs/liq-integrations-issues-github',
   '@liquid-labs/liq-orgs',
   '@liquid-labs/liq-projects',
   '@liquid-labs/liq-work',

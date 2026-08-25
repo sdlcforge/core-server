@@ -118,15 +118,19 @@ const EXPECTED_INTEGRATION_PROVIDERS = [
     hooks       : ['getQuestionControls']
   },
   {
+    // Absorbed in-tree at `src/integrations-issues-github/` (phase-05 task 003) and registered
+    // through `builtinPlugins`, so -- exactly as for `controls` above -- this provider now reports
+    // under the identity of the package that ships it. `providerFor`, the omitted `name`, and the
+    // hook set are all unchanged; `npmName` is the only field this absorption moved.
     providerFor : 'tickets',
     name        : undefined,
-    npmName     : '@liquid-labs/liq-integrations-issues-github',
+    npmName     : '@sdlcforge/core-server',
     hooks       : ['getCurrentIntegrationUser', 'getIssueURL', 'getProjectURL']
   },
   {
     providerFor : 'pull request',
     name        : undefined,
-    npmName     : '@liquid-labs/liq-integrations-issues-github',
+    npmName     : '@sdlcforge/core-server',
     hooks       : [
       'createOrUpdatePullRequest',
       'getCurrentIntegrationUser',

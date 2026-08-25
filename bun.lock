@@ -7,14 +7,17 @@
       "dependencies": {
         "@liquid-labs/comply-defaults": "^1.0.0-alpha.8",
         "@liquid-labs/find-plus": "^1.0.1",
+        "@liquid-labs/git-toolkit": "^1.0.0-alpha.15",
+        "@liquid-labs/github-toolkit": "^1.0.0-alpha.16",
         "@liquid-labs/http-smart-response": "^1.0.0-alpha.6",
         "@liquid-labs/liq-credentials-db": "^1.0.0-alpha.9",
         "@liquid-labs/liq-handlers-lib": "^1.0.0-alpha.16",
-        "@liquid-labs/liq-integrations-issues-github": "^1.0.0-alpha.3",
         "@liquid-labs/liq-orgs": "^1.0.0-alpha.6",
         "@liquid-labs/liq-projects": "file:.yalc/@liquid-labs/liq-projects",
+        "@liquid-labs/liq-qa-lib": "^1.0.0-alpha.8",
         "@liquid-labs/liq-work": "^1.0.0-alpha.9",
         "@liquid-labs/npm-toolkit": "^1.0.0-alpha.15",
+        "@liquid-labs/octocache": "^1.0.0-alpha.4",
         "@liquid-labs/plugable-express": "file:.yalc/@liquid-labs/plugable-express",
         "@liquid-labs/plugable-projects-audit": "^1.0.0-alpha.2",
         "@liquid-labs/resource-item": "^1.0.0-alpha.4",
@@ -23,6 +26,8 @@
         "@liquid-labs/sdlc-projects-badges-github-workflows": "^1.0.0-alpha.2",
         "@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd": "^1.0.0-alpha.2",
         "@liquid-labs/sdlc-projects-workflow-local-node-build": "^1.0.0-alpha.7",
+        "@liquid-labs/shell-toolkit": "^1.0.0-alpha.7",
+        "@liquid-labs/versioning": "^1.0.0-alpha.4",
         "http-errors": "^2.0.0",
         "js-yaml": "^4.1.0",
       },
@@ -347,15 +352,11 @@
 
     "@liquid-labs/liq-handlers-lib": ["@liquid-labs/liq-handlers-lib@1.0.0-alpha.17", "", { "dependencies": { "@liquid-labs/md2x": "^1.0.0-alpha.3", "js-convert-case": "^4.2.0", "markdown-link-extractor": "^4.0.1", "shelljs": "^0.8.5" } }, "sha512-jN7QQys25v8ZTVo3+vYM4pmTD4ZYW6uyQ1BGzAMwRdwx5i660JY2FbElZvzPcL/WQCvhsvZLGlH9fYiJqiTrww=="],
 
-    "@liquid-labs/liq-integrations-issues-github": ["@liquid-labs/liq-integrations-issues-github@1.0.0-alpha.3", "", { "dependencies": { "@liquid-labs/git-toolkit": "^1.0.0-alpha.15", "@liquid-labs/github-toolkit": "^1.0.0-alpha.16", "@liquid-labs/liq-projects-lib": "^1.0.0-alpha.11", "@liquid-labs/liq-qa-lib": "^1.0.0-alpha.8", "@liquid-labs/shell-toolkit": "^1.0.0-alpha.7" } }, "sha512-D09QRlrdaLI9pSO4bTmSN8tGgoQJp1z+3OZn8fWumAscY3nPYQPaC/YDwoHnnJrEYcbrKdVBoA7D7vblXdRH4Q=="],
-
     "@liquid-labs/liq-orgs": ["@liquid-labs/liq-orgs@1.0.0-alpha.8", "", { "dependencies": { "@liquid-labs/dependency-runner": "^1.0.0-alpha.8", "@liquid-labs/liq-handlers-lib": "^1.0.0-alpha.17", "@liquid-labs/playground-monitor": "file:.yalc/@liquid-labs/playground-monitor", "@liquid-labs/resource-model": "^1.0.0-alpha.10", "js-yaml": "^4.1.0" } }, "sha512-j0qCRkGJRIjb/dOH0BRnT6ieW+Ng/dmy0w9ZDwHGfz9D1nOwEP3TpRF2begfCfkRchO/IoDYQdoimVfTq3RYiA=="],
 
     "@liquid-labs/liq-plugins-lib": ["@liquid-labs/liq-plugins-lib@1.0.0-alpha.22", "", { "dependencies": { "@liquid-labs/http-smart-response": "^1.0.0-alpha.4", "@liquid-labs/liq-handlers-lib": "^1.0.0-alpha.17", "@liquid-labs/npm-toolkit": "^1.0.0-alpha.17", "@liquid-labs/shell-toolkit": "^1.0.0-alpha.4", "dependency-graph": "^0.11.0", "http-errors": "^2.0.0", "js-yaml": "^4.1.0", "semver": "^7.5.3" } }, "sha512-/LNRcFqyWBxvLxeQ4AGEh6ZBgRoxHo6hZfIZTh5iSFHl+hVp2l7CFzzq6IMfj1FaVGJi7Rhy3vTRr2CqoUc0tg=="],
 
     "@liquid-labs/liq-projects": ["@liquid-labs/liq-projects@file:.yalc/@liquid-labs/liq-projects", { "dependencies": { "@liquid-labs/credentials-db-plugin-github": "^1.0.0-alpha.5", "@liquid-labs/federated-json": "^1.0.0-alpha.34", "@liquid-labs/git-toolkit": "^1.0.0-alpha.16", "@liquid-labs/github-toolkit": "^1.0.0-alpha.20", "@liquid-labs/http-smart-response": "^1.0.0-alpha.6", "@liquid-labs/liq-credentials-db": "^1.0.0-alpha.7", "@liquid-labs/liq-qa-lib": "^1.0.0-alpha.9", "@liquid-labs/npm-toolkit": "^1.0.0-alpha.21", "@liquid-labs/octocache": "^1.0.0-alpha.4", "@liquid-labs/playground-monitor": "^1.0.0-beta.4", "@liquid-labs/semver-plus": "^1.0.0-alpha.11", "@liquid-labs/shell-toolkit": "^1.0.0-alpha.10", "highlight.js": "^11.9.0", "http-errors": "^2.0.0", "natural-sort": "^1.0.0", "shelljs": "^0.8.5" } }],
-
-    "@liquid-labs/liq-projects-lib": ["@liquid-labs/liq-projects-lib@1.0.0-alpha.13", "", { "dependencies": { "@liquid-labs/federated-json": "^1.0.0-alpha.33", "@liquid-labs/liq-credentials-db": "^1.0.0-alpha.6", "@liquid-labs/octocache": "^1.0.0-alpha.4", "@liquid-labs/shell-toolkit": "^1.0.0-alpha.7", "@liquid-labs/versioning": "^1.0.0-alpha.4", "find-root": "^1.1.0", "http-errors": "^2.0.0", "semver": "^7.5.4" } }, "sha512-A/BbhO4ZKdvYai6wGyl7OoDXMHa7aiIwj8/o09BwUb7/QsuqaHEij3TXSjAKn4LUR9krHpcNmH9kZIEFKwrCrw=="],
 
     "@liquid-labs/liq-qa-lib": ["@liquid-labs/liq-qa-lib@1.0.0-alpha.9", "", { "dependencies": { "@liquid-labs/federated-json": "^1.0.0-alpha.33", "@liquid-labs/shell-toolkit": "^1.0.0-alpha.3", "http-errors": "^2.0.0" } }, "sha512-kjncDGKATdESI6qJk89U1nJIRA5X+m9/sekb7+98QKUUevDPfkVryV9fOwR5Eh2fKc7+fDQ2jWCcgHMDVbqKUw=="],
 
