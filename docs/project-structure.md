@@ -23,15 +23,20 @@ This document is the repository layout reference for `@sdlcforge/core-server`: w
 ├── src/                     # Server source (ES6+, transpiled to CommonJS via Babel/Rollup)
 │   ├── cli/                 #   CLI entry point — starts the server as an executable
 │   │   └── index.js
-│   └── lib/                 #   Core library: app init, plugin wiring, library exports
-│       ├── app-init.mjs     #     Configures explicit plugins, delegates to plugable-express
-│       ├── index.js         #     Library exports (appInit, Reporter, name, summary)
-│       └── test/            #     Jest unit tests for the lib
+│   ├── lib/                 #   Core library: app init, plugin wiring, library exports
+│   │   ├── app-init.mjs     #     Configures built-in + explicit plugins, delegates to plugable-express
+│   │   ├── builtin-plugins.mjs #  Aggregates the built-in (in-tree) submodules below into one plugin
+│   │   ├── index.js         #     Library exports (appInit, Reporter, name, summary)
+│   │   └── test/            #     Jest unit tests for the lib
+│   ├── controls/            #   Built-in (in-tree) plugin: policy controls
+│   ├── credentials/         #   Built-in (in-tree) plugin: credential storage/retrieval
+│   └── integrations-issues-github/  #   Built-in (in-tree) plugin: GitHub issue-tracking integration (no routes)
 ├── test/                    # Local and Docker-based multi-version integration tests
 │   ├── run-integration-tests.sh
 │   ├── test-server.js
 │   ├── Dockerfile
 │   ├── docker-compose.yml
+│   ├── __snapshots__/       #   Checked-in golden + full-tier baseline JSON snapshots (not gitignored)
 │   └── …                    #   CI/quick-test scripts, node-version helper, own README.md
 ├── make/                    # Modular Makefile includes (Catalyst build framework)
 │   ├── 10-locations.mk
@@ -68,11 +73,11 @@ This document is the repository layout reference for `@sdlcforge/core-server`: w
 
 ## `src/`
 
-The server's own source, intentionally minimal since nearly all behavior is delegated to `@liquid-labs/plugable-express`. `src/cli/index.js` is the CLI entry point that starts the server as a standalone executable. `src/lib/app-init.mjs` is the core initialization module — it assembles the explicit-plugin list and configuration and hands off to `plugable-express`. `src/lib/index.js` is the library's public export surface (`appInit`, `Reporter`, `name`, `summary`). `src/lib/test/` holds the Jest unit tests for this library code. Written in ES6+ and transpiled to CommonJS at build time; the resulting dual artifacts land in `dist/`.
+The server's own source, intentionally minimal since nearly all behavior is delegated to `@liquid-labs/plugable-express`. `src/cli/index.js` is the CLI entry point that starts the server as a standalone executable. `src/lib/app-init.mjs` is the core initialization module — it assembles the built-in-plugin aggregate, the explicit-plugin list, and configuration, and hands off to `plugable-express`. `src/lib/builtin-plugins.mjs` aggregates `core-server`'s own built-in (in-tree) plugin submodules — `src/controls/`, `src/credentials/`, and `src/integrations-issues-github/`, siblings of `src/lib/` and `src/cli/` — into the single already-imported plugin module `app-init.mjs` registers through `plugable-express`'s `builtinPlugins` option. `src/lib/index.js` is the library's public export surface (`appInit`, `Reporter`, `name`, `summary`). `src/lib/test/` holds the Jest unit tests for this library code. Written in ES6+ and transpiled to CommonJS at build time; the resulting dual artifacts land in `dist/`.
 
 ## `test/`
 
-Integration test infrastructure, distinct from the unit tests colocated under `src/lib/test/`. Contains a quick local test path (`test-server.js`, invoked via `scripts/test.sh`) and the Docker-based multi-version suite (`run-integration-tests.sh`, `Dockerfile`, `docker-compose.yml`, `get-node-versions.js`) that verifies explicit-plugin loading across every supported Node.js version. [`test/README.md`](../test/README.md) documents this directory's own files and usage in detail; `test-staging/` (generated, gitignored) is where the Docker suite writes its per-version JSON results and server logs.
+Integration test infrastructure, distinct from the unit tests colocated under `src/lib/test/`. Contains a quick local test path (`test-server.js`, invoked via `scripts/test.sh`) and the Docker-based multi-version suite (`run-integration-tests.sh`, `Dockerfile`, `docker-compose.yml`, `get-node-versions.js`) that verifies explicit-plugin loading across every supported Node.js version. `test/__snapshots__/` holds the checked-in JSON baselines compared by `src/lib/test/golden-api-spec.test.js` (`golden-api-spec.json`, `golden-plugins-list.json` — the framework-level surface with `skipCorePlugins: true`) and `src/lib/test/full-tier-baseline.test.js` (`full-tier-api-spec.json`, `full-tier-plugins-list.json`, `full-tier-integrations-list.json` — the whole-server surface with every tier loaded); unlike `test-staging/`, this directory is not gitignored. [`test/README.md`](../test/README.md) documents this directory's own files and usage in detail; `test-staging/` (generated, gitignored) is where the Docker suite writes its per-version JSON results and server logs.
 
 ## `make/`
 

@@ -20,7 +20,7 @@ It is typically installed and provisioned automatically as part of setting up a 
 npm start
 ```
 
-This starts the server locally (via `scripts/start.sh`). On startup, the server loads its plugin set — core plugins, explicit npm-dependency plugins, and any user-supplied plugins from `${COMPLY_HOME}/plugins/server/` — and exposes SDLC tooling, integrations, and workflow automation to the companion CLI. Stop it with `npm stop`.
+This starts the server locally (via `scripts/start.sh`). On startup, the server loads its plugin set — core plugins, its own built-in (in-tree) plugins, explicit npm-dependency plugins, and any user-supplied plugins from `${COMPLY_HOME}/plugins/server/` — and exposes SDLC tooling, integrations, and workflow automation to the companion CLI. Stop it with `npm stop`.
 
 ## Additional documentation
 

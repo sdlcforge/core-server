@@ -45,9 +45,10 @@ bun run stop             # Stop server (via scripts/stop.sh)
 ### Plugin System
 The server uses a layered plugin architecture:
 
-1. **Core Server** (`src/lib/app-init.mjs`) configures 13 explicit plugins and delegates initialization to `@liquid-labs/plugable-express`
-2. **Explicit Plugins** (installed as npm dependencies): liq-controls, liq-credentials, liq-integrations, liq-projects, liq-work, and various SDLC workflows
-3. **User Plugins** loaded from `${COMPLY_HOME}/plugins/server/`
+1. **Core Server** (`src/lib/app-init.mjs`) configures a built-in (in-tree) plugin aggregate plus 8 explicit npm-dependency plugins, and delegates initialization to `@liquid-labs/plugable-express`
+2. **Built-in Plugins** (in-tree, aggregated by `src/lib/builtin-plugins.mjs` and registered under `@sdlcforge/core-server`'s own package identity via `plugable-express`'s `builtinPlugins` option): `src/controls/`, `src/credentials/`, `src/integrations-issues-github/`
+3. **Explicit Plugins** (installed as npm dependencies): liq-orgs, liq-projects, liq-work, plugable-projects-audit, and the sdlc-projects-* workflow/badges family
+4. **User Plugins** loaded from `${COMPLY_HOME}/plugins/server/`
 
 **Important**: During test runs with `NODE_ENV=test`, consider whether explicit plugin loading should be skipped to avoid network dependencies and timeouts.
 
@@ -105,7 +106,9 @@ Configuration via `@liquid-labs/comply-defaults`:
 ## Key Source Files
 
 - `src/cli/index.js` - CLI entry point (starts server)
-- `src/lib/app-init.mjs` - Core initialization, delegates to plugable-express with explicitPlugins configuration
+- `src/lib/app-init.mjs` - Core initialization, delegates to plugable-express with builtinPlugins and explicitPlugins configuration
+- `src/lib/builtin-plugins.mjs` - Aggregates the built-in (in-tree) controls/credentials/integrations-issues-github submodules into one plugin
+- `src/controls/`, `src/credentials/`, `src/integrations-issues-github/` - Built-in (in-tree) plugin submodules, siblings of `src/lib/` and `src/cli/`
 - `src/lib/index.js` - Library exports (appInit, Reporter, name, summary)
 
 ## Important Development Notes
