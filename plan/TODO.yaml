@@ -80,7 +80,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/core-server-domain-consolidation-04-003
-            commit: []
+            commit:
+                - 15e25d4
             merge: null
     - number: 5
       slug: absorb-donor-plugins
