@@ -66,3 +66,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: finalize-task-commit.sh's yalc-override guard excludes any bun.lock refresh from its automated commit in this repo, since bun.lock permanently carries file:.yalc/... entries by design here. This task's bun.lock was committed manually as a documented workaround. Worth considering a per-project exception to that guard, or documenting manual follow-up commit as the accepted pattern for yalc-refresh tasks in bun-based repos.
+    - title: A fresh task worktree in this repo needs a on
+      id: 8lmN
+      date: "2026-08-25"
+      tags:
+        - type:ambiguity
+        - plan/phase:in-tree-plugin-mechanism
+        - plan/slug:core-server-domain-consolidation
+        - priority:unspecified
+        - effort:unspecified
+      text: A fresh task worktree in this repo needs a one-time `bun link` before `bun run test:local` will run (bare spawn('sdlcforge-server') relies on PATH resolution a plain bun install doesn't provision). Not a regression, worth noting for future worktree provisioning in this project.
