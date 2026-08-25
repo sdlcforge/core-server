@@ -136,3 +136,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: test/README.md (lines 105-106) still lists @liquid-labs/liq-controls and @liquid-labs/liq-credentials in its "Explicit Plugins Integration" prose, stale after Phase 5's absorption. Not covered by Phase 6's own doc-update scope (which targets docs/architecture*, docs/core-server-spec.md, docs/project-structure.md, AGENTS.md, README.md, CLAUDE.md - not test/README.md). Surfaced by liq-credentials's phase-11 retire-verification gate.
+    - title: docs/project-structure.md's docs/ prose secti
+      id: oY63
+      date: "2026-08-25"
+      tags:
+        - type:ambiguity
+        - plan/phase:doc-updates
+        - plan/slug:core-server-domain-consolidation
+        - priority:unspecified
+        - effort:unspecified
+      text: docs/project-structure.md's docs/ prose section doesn't mention docs/architecture.md or docs/architecture/plugin-loading-tiers.md at all (only core-server-spec.md) — pre-existing gap predating this plan, unrelated to donor absorption; worth a future doc pass.
