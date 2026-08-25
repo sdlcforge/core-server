@@ -107,3 +107,4 @@ Debugging aids: server logs at `test-staging/integration-results/server-log-vX_X
 - [docs/core-server-spec.md](./docs/core-server-spec.md) — the project specification: use cases, general features, and the fixed HTTP API surface.
 - [docs/architecture.md](./docs/architecture.md) — architecture overview, including the plugin system and build pipeline.
 - [docs/project-structure.md](./docs/project-structure.md) — repository layout reference.
+- [CLAUDE.md](./CLAUDE.md) — guidance for Claude Code when working in this repository.
