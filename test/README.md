@@ -102,9 +102,6 @@ The test suite verifies:
 
 The tests specifically verify that the following explicit plugins are automatically loaded:
 
-- `@liquid-labs/liq-controls`
-- `@liquid-labs/liq-credentials`
-- `@liquid-labs/liq-integrations-issues-github`
 - `@liquid-labs/liq-orgs`
 - `@liquid-labs/liq-projects`
 - `@liquid-labs/liq-work`

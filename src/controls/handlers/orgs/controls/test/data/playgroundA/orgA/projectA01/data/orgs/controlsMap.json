@@ -1,0 +1,23 @@
+{
+  "project-create-controls": {
+    "liquid-labs/policy-projects-best-practices/project-create-controls": {
+      "id": "liquid-labs/policy-projects-best-practices/project-create-controls",
+      "controls": [
+        {
+          "name": "project-uses-database-queries",
+          "description": "Projects making database queries are subject to additional requirements.",
+          "actions": [
+            {
+              "prompt": "Does the project make any queries to a database?",
+              "parameter": "PROJECT_USES_DATABASE_QUERIES",
+              "paramType": "boolean"
+            }
+          ],
+          "supports": [
+            "3404EDD0-4286-40F9-923B-1605872A526E"
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "$id": "https://raw.githubusercontent.com/liquid-labs/policy-projects-best-practices/main/policy/projects/controls/controls.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A series of question based controls.",
+  "type": "object",
+  "required": [ "id", "controls" ],
+  "properties": {
+    "id": {
+      "description": "The unique name of this control set.",
+      "type": "string"
+    },
+    "description": {
+      "description": "A description of the audit purpose.",
+      "type": "string"
+    },
+    "depends": {
+      "description": "One or more control set IDs upon which this control set builds.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "controls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [ "name", "description" ],
+        "properties": {
+          "name": { 
+            "description": "The name of the control.",
+            "type": "string" 
+          },
+          "description": { 
+            "description": "A brief 1-2 line description of what the control is meant to do.",
+            "type": "string"
+          },
+          "actions": {
+            "description": "A list of questions, mappings, statements, and reviews which make up the heart of the control.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "parameter": {
+                  "description": "The parameter name to which the resulting value is associated.",
+                  "type": "string"
+                },
+                "prompt": {
+                  "description": "The prompt (often queston) to present to the end user.",
+                  "type": "string"
+                },
+                "condition": {
+                  "description": "A condition string. If false, the action is skipped.",
+                  "type": "string"
+                },
+                "maps": {
+                  "description": "Maps one or more parameters based on current values.",
+                  "allOf": [ { "$ref": "#/$defs/maps" } ]
+                },
+                "statement": {
+                  "description": "A string statement to be displayed to the user.",
+                  "type": "string"
+                },
+                "review": {
+                  "description": "Reviews either 'questions' or 'all' data since the last review or start.",
+                  "type": "string",
+                  "enum": [ "all", "questions" ]
+                }
+              },
+              "oneOf": [
+                { "required": [ "prompt", "parameter" ], "not": { "required": [ "maps", "statement", "review" ]} },
+                { "required": [ "maps" ], "not": { "required": [ "prompt", "statement", "review" ]} },
+                { "required": [ "statement" ], "not": { "required": ["prompt", "maps", "review" ]} },
+                { "required": [ "review" ], "not": { "required": ["prompt", "maps", "statement" ]} }
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "maps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [ "parameter" ],
+        "properties": {
+          "parameter": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "oneOf": [
+          { "required": [ "value" ] },
+          { "required": [ "source" ] }
+        ]
+      }
+    }
+  }
+}

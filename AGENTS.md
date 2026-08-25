@@ -38,12 +38,14 @@ bun run start   # start the server locally, via scripts/start.sh
 bun run stop    # stop the server, via scripts/stop.sh
 ```
 
-On startup the server loads its plugin set — core plugins built into `@liquid-labs/plugable-express`, explicit npm-dependency plugins declared in `package.json`, and any user-supplied plugins from `${COMPLY_HOME}/plugins/server/` — then listens for HTTP requests.
+On startup the server loads its plugin set — core plugins built into `@liquid-labs/plugable-express`, `core-server`'s own built-in (in-tree) plugin submodules, explicit npm-dependency plugins declared in `package.json`, and any user-supplied plugins from `${COMPLY_HOME}/plugins/server/` — then listens for HTTP requests.
 
 ## Code organization
 
 - `src/cli/index.js` — CLI entry point that starts the server.
-- `src/lib/app-init.mjs` — core initialization; configures the explicit-plugin list and delegates to `@liquid-labs/plugable-express`.
+- `src/lib/app-init.mjs` — core initialization; configures the built-in-plugin aggregate and the explicit-plugin list, and delegates to `@liquid-labs/plugable-express`.
+- `src/lib/builtin-plugins.mjs` — aggregates the built-in (in-tree) `controls`, `credentials`, and `integrations-issues-github` submodules into the single plugin module registered via `plugable-express`'s `builtinPlugins` option.
+- `src/controls/`, `src/credentials/`, `src/integrations-issues-github/` — built-in (in-tree) plugin submodules, siblings of `src/lib/` and `src/cli/`.
 - `src/lib/index.js` — library exports (`appInit`, `Reporter`, `name`, `summary`).
 - `src/lib/test/*.test.js` — unit tests (Jest).
 - `make/` — modular makefiles, numbered by build priority (`10-locations.mk`, `20-js-src-finder.mk`, `50-sdlcforge-server-js.mk`, `55-lint.mk`, `95-final-targets.mk`, etc.).
@@ -78,7 +80,7 @@ Configuration is resolved through `@liquid-labs/comply-defaults`:
 | `COMPLY_HOME()` | Server home directory |
 | `COMPLY_SERVER_CONFIG_ROOT()` | Server configuration root: `${XDG_DATA_HOME:-$HOME/.local/share}/sdlcforge-core`. The packaged `server-settings.yaml` defaults are seeded here on first run. |
 
-`${COMPLY_HOME}/plugins/server/` is where the third (user-supplied) plugin tier is loaded from; if unset or empty, only the core and explicit-npm tiers load.
+`${COMPLY_HOME}/plugins/server/` is where the third (user-supplied) plugin tier is loaded from; if unset or empty, only the core and explicit tiers load.
 
 ## Common tasks
 

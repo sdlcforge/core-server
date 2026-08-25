@@ -8,7 +8,7 @@
 
 1. [Tier ordering and override semantics](#tier-ordering-and-override-semantics)
 2. [Tier 1: core plugins](#tier-1-core-plugins)
-3. [Tier 2: explicit npm-dependency plugins](#tier-2-explicit-npm-dependency-plugins)
+3. [Tier 2: explicit plugins](#tier-2-explicit-plugins)
 4. [Tier 3: user-supplied plugins](#tier-3-user-supplied-plugins)
 5. [Configuration surface](#configuration-surface)
 6. [Related documents](#related-documents)
@@ -17,7 +17,7 @@
 
 `src/lib/app-init.mjs` is where `core-server` assembles configuration and hands off to `@liquid-labs/plugable-express`'s `appInit`. The three tiers always load in the same fixed order:
 
-<!-- For AI agents and non-visual readers: this diagram shows the fixed load order — core plugins first, then the 11 explicit npm-dependency plugins declared in app-init.mjs, then any user-supplied plugins discovered under ${COMPLY_HOME}/plugins/server/ — with each tier's routes merging into one aggregated API surface. -->
+<!-- For AI agents and non-visual readers: this diagram shows the fixed load order — core plugins first, then Tier 2's built-in (in-tree) submodule aggregate followed by the 8 explicit npm-dependency plugins declared in app-init.mjs (both gated together by skipCorePlugins), then any user-supplied plugins discovered under ${COMPLY_HOME}/plugins/server/ — with each tier's routes merging into one aggregated API surface. -->
 
 ```mermaid
 flowchart LR
@@ -27,7 +27,9 @@ flowchart LR
     end
     subgraph T2["Tier 2: explicit"]
         direction TB
-        B["11 npm-dependency packages<br/>declared in app-init.mjs"]
+        BI["Built-in (in-tree), via builtinPlugins:<br/>src/controls/, src/credentials/,<br/>src/integrations-issues-github/"]
+        B["8 npm-dependency packages<br/>declared in app-init.mjs"]
+        BI --> B
     end
     subgraph T3["Tier 3: user-supplied"]
         direction TB
@@ -40,31 +42,42 @@ Ordering is what makes the tiers a *hierarchy of override* rather than three ind
 
 `core-server`'s own contribution to this mechanism is entirely configuration: it does not implement route merging, conflict resolution, or handler dispatch itself. The exact merge and override mechanics (how a later handler at the same path and method supersedes an earlier one) are implemented inside `@liquid-labs/plugable-express`; that library's own documentation is the canonical source for those internals. `app-init.mjs` does not pass `skipCorePlugins`, so tier 1 always loads.
 
+Tier 2 itself has two sources, registered in a fixed sub-order: `core-server`'s own built-in (in-tree) submodule aggregate registers first, immediately followed by npm-discovered explicit-tier packages. Both are gated by the same `skipCorePlugins` flag — see [Built-in (in-tree) plugins](#built-in-in-tree-plugins) below.
+
 ## Tier 1: core plugins
 
 Core plugins are built directly into `@liquid-labs/plugable-express` and load automatically as part of its `appInit`, before any tier `core-server` itself configures. `core-server` exercises no control over which core plugins load or what they contribute — that surface belongs entirely to `@liquid-labs/plugable-express`.
 
-## Tier 2: explicit npm-dependency plugins
+## Tier 2: explicit plugins
 
-The explicit tier is a static, ordered array literal, `explicitPlugins`, declared directly in `src/lib/app-init.mjs` and passed straight through to `appInit`. Every entry is also a regular `dependencies` entry in `package.json`, so the tier's full package set installs alongside `core-server` itself rather than being fetched dynamically at startup. As of this writing the array holds exactly 11 packages, in this order:
+### Built-in (in-tree) plugins
+
+`core-server` carries three plugin submodules directly in its own source tree rather than as installed npm packages: `src/controls/` (policy controls), `src/credentials/` (credential storage and retrieval for third-party integrations), and `src/integrations-issues-github/` (a GitHub issue-tracking integration adapter — no routes, hooks only). `src/lib/builtin-plugins.mjs` aggregates the three, via namespace imports, into a single already-imported plugin module and hands it to `@liquid-labs/plugable-express`'s `appInit` through its `builtinPlugins` option, which `src/lib/app-init.mjs` populates as `builtinPluginsFor({ npmName: pkgName, version: pkgVersion })` — `pkgName`/`pkgVersion` read from `core-server`'s own `package.json`. That is a deliberate identity choice: all three submodules register as one `@sdlcforge/core-server` entry rather than three separately-named ones, so `GET /server/plugins/list`, `GET /server/plugins/integrations/list`, and every route these submodules contribute all attribute the capability to `@sdlcforge/core-server` itself.
+
+`builtinPlugins` registration runs inside `appInit` at the same point in the sequence, and through the same code path, that npm-discovered explicit-tier plugins occupy — immediately before them — so absorbed handlers land in `app.ext.pendingHandlers` before the error middleware is installed and before the API-spec file is written, exactly like any other plugin. Because an in-tree submodule is in the server package directory more literally than a `node_modules` one, `skipCorePlugins: true` suppresses it exactly as it suppresses npm-discovered explicit-tier discovery — the two are gated together, not independently.
+
+The `controls` submodule genuinely requires two of the explicit-tier packages below to be loaded: `src/controls/resources/load-controls.mjs` reads `app.ext._liqOrgs.orgs` and `src/controls/integrations/get-question-controls.mjs` reads both `app.ext._liqOrgs.orgs` and `app.ext._liqProjects.playgroundMonitor`, so `@liquid-labs/liq-orgs` and `@liquid-labs/liq-projects` must both be present among the explicit-tier packages for controls to function. The dependency is also enforced mechanically for the `liq-orgs` half: controls' `'load org controls'` setup method declares `deps: ['load orgs']` (a method `liq-orgs` contributes), checked by `@liquid-labs/dependency-runner` and asserted directly in `src/lib/test/builtin-plugins.test.js`. Nothing enforces the `liq-projects` half at startup; it fails at the point `get-question-controls.mjs` actually runs if `liq-projects` was never loaded.
+
+The `builtinPlugins`/`explicitPlugins` split documented here is the current mechanism for declaring `core-server`'s own plugin set, not a fixed end state — a later compile-time plugin manifest for `core-server` is expected to eventually supersede the runtime `explicitPlugins` array this document describes.
+
+### The explicit-tier package list
+
+The explicit tier is a static, ordered array literal, `explicitPlugins`, declared directly in `src/lib/app-init.mjs` and passed straight through to `appInit`. Every entry is also a regular `dependencies` entry in `package.json`, so the tier's full package set installs alongside `core-server` itself rather than being fetched dynamically at startup. As of this writing the array holds exactly 8 packages, in this order:
 
 | # | Package | What it contributes |
 |---|---------|----------------------|
-| 1 | `@liquid-labs/liq-controls` | Policy controls for a `plugable-express` server — the package's own description states it "enables and manages policy controls." |
-| 2 | `@liquid-labs/liq-credentials` | Credential storage and retrieval for third-party integrations, keeping secret-handling logic out of `core-server`'s own minimal codebase (per [`docs/architecture.md`](../architecture.md#security-model)). |
-| 3 | `@liquid-labs/liq-integrations-issues-github` | A GitHub issue-tracking integration adapter that registers with `@liquid-labs/plugable-express`'s built-in integrations registry (`app.ext.integrations` / `IntegrationsManager`) — providing capabilities like resolving pull-request URLs by head branch and creating or updating pull requests against GitHub issues. |
-| 4 | `@liquid-labs/liq-orgs` | Organization management — creating and managing the organization entities the rest of the SDLC tooling operates within. |
-| 5 | `@liquid-labs/liq-projects` | Project management — project detail, listing, and release/publish operations for projects managed through the server. |
-| 6 | `@liquid-labs/liq-work` | Unit-of-work management — associating projects with units of work and driving QA operations across them. |
-| 7 | `@liquid-labs/plugable-projects-audit` | Project auditing — auditing a project and applying fixes for audit issues found. |
-| 8 | `@liquid-labs/sdlc-projects-badges-coverage` | Generates coverage badges from a project's local `clover.xml` results (per the package's own description). |
-| 9 | `@liquid-labs/sdlc-projects-badges-github-workflows` | Adds GitHub Workflow status badges to a project's `README.md` (per the package's own description). |
-| 10 | `@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd` | Generates GitHub Workflows CI/CD configuration for Node.js/Jest unit testing (per the package's own description). |
-| 11 | `@liquid-labs/sdlc-projects-workflow-local-node-build` | Installs and manages the local Node.js build workflow for a project — the local-build counterpart to the CI/CD workflow packages above. |
+| 1 | `@liquid-labs/liq-orgs` | Organization management — creating and managing the organization entities the rest of the SDLC tooling operates within. |
+| 2 | `@liquid-labs/liq-projects` | Project management — project detail, listing, and release/publish operations for projects managed through the server. |
+| 3 | `@liquid-labs/liq-work` | Unit-of-work management — associating projects with units of work and driving QA operations across them. |
+| 4 | `@liquid-labs/plugable-projects-audit` | Project auditing — auditing a project and applying fixes for audit issues found. |
+| 5 | `@liquid-labs/sdlc-projects-badges-coverage` | Generates coverage badges from a project's local `clover.xml` results (per the package's own description). |
+| 6 | `@liquid-labs/sdlc-projects-badges-github-workflows` | Adds GitHub Workflow status badges to a project's `README.md` (per the package's own description). |
+| 7 | `@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd` | Generates GitHub Workflows CI/CD configuration for Node.js/Jest unit testing (per the package's own description). |
+| 8 | `@liquid-labs/sdlc-projects-workflow-local-node-build` | Installs and manages the local Node.js build workflow for a project — the local-build counterpart to the CI/CD workflow packages above. |
 
-Packages 8–11 are the `sdlc-projects-workflow-*`/`sdlc-projects-badges-*` family referenced in [`docs/core-server-spec.md`](../core-server-spec.md#key-use-cases) as the mechanism behind "install optimized lint/test/build/CI-CD scripts into a project" — they are what actually write that tooling into a target project when invoked through the companion CLI.
+Packages 5–8 are the `sdlc-projects-workflow-*`/`sdlc-projects-badges-*` family referenced in [`docs/core-server-spec.md`](../core-server-spec.md#key-use-cases) as the mechanism behind "install optimized lint/test/build/CI-CD scripts into a project" — they are what actually write that tooling into a target project when invoked through the companion CLI.
 
-Because every explicit-tier package is a declared npm dependency rather than a dynamically-fetched one, the [Docker multi-version test suite](../architecture.md#test-infrastructure) exists primarily to catch loading regressions across this specific 11-package set on a fresh `npm install`, across every supported Node.js version — not to re-verify per-package internal correctness, which is each package's own responsibility.
+Because every explicit-tier package is a declared npm dependency rather than a dynamically-fetched one, the [Docker multi-version test suite](../architecture.md#test-infrastructure) exists primarily to catch loading regressions across this specific 8-package set on a fresh `npm install`, across every supported Node.js version — not to re-verify per-package internal correctness, which is each package's own responsibility.
 
 ## Tier 3: user-supplied plugins
 
@@ -103,6 +116,7 @@ const appInit = async(options) => {
     version                 : pkgVersion,
     apiSpecPath             : COMPLY_API_SPEC_PATH(),
     pluginsPath,
+    builtinPlugins,
     explicitPlugins,
     serverConfigRoot        : COMPLY_SERVER_CONFIG_ROOT(),
     dynamicPluginInstallDir : COMPLY_HOME(),
@@ -112,7 +126,7 @@ const appInit = async(options) => {
 }
 ```
 
-`explicitPlugins` and `pluginsPath` are, respectively, the tier-2 list and the tier-3 discovery directory documented above. `serverConfigRoot` resolves through `@liquid-labs/comply-defaults`'s `COMPLY_SERVER_CONFIG_ROOT()` accessor to `${XDG_DATA_HOME}/sdlcforge-core/` — a user-level data location, distinct from `core-server`'s own installed-package directory that this value pointed at before the configuration-root relocation — and is where `@liquid-labs/plugable-express` now finds and writes server configuration state. `...options` lets a caller of `appInit` override any of the above — `src/cli/index.js` does not currently exercise this, but a consumer embedding `core-server` as a library (via `src/lib/index.js`) can.
+`builtinPlugins`, `explicitPlugins`, and `pluginsPath` are, respectively, the built-in (in-tree) submodule aggregate, the tier-2 npm-dependency list, and the tier-3 discovery directory documented above. `serverConfigRoot` resolves through `@liquid-labs/comply-defaults`'s `COMPLY_SERVER_CONFIG_ROOT()` accessor to `${XDG_DATA_HOME}/sdlcforge-core/` — a user-level data location, distinct from `core-server`'s own installed-package directory that this value pointed at before the configuration-root relocation — and is where `@liquid-labs/plugable-express` now finds and writes server configuration state. `...options` lets a caller of `appInit` override any of the above — `src/cli/index.js` does not currently exercise this, but a consumer embedding `core-server` as a library (via `src/lib/index.js`) can.
 
 ## Related documents
 

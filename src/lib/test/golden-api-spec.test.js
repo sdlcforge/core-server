@@ -39,20 +39,16 @@ describe('Golden API-spec characterization', () => {
     serverHome = fsPath.join(os.tmpdir(), 'comply-server-golden-' + Math.round(Math.random() * 10000000000000000));
     ({ app, cache } = await appInit({
       serverConfigRoot : serverHome,
-      // Loading the real explicit-plugin set (liq-controls, liq-credentials, etc.)
-      // currently throws during `appInit()`: liq-credentials (and liq-credentials-db,
-      // liq-integrations, liq-work) still read `app.ext.serverHome`, which
-      // `@liquid-labs/plugable-express` no longer sets after its serverHome ->
-      // serverConfigRoot rename. That is a pre-existing, cross-package bug unrelated
-      // to this test-only task (and out of scope to fix here — see the task's own
-      // "do not modify any plugin, app-init, or build logic" constraint). Flagged for
-      // the manager as a separate follow-up.
+      // Loading the real explicit-plugin set no longer throws during `appInit()`: the
+      // `serverHome` -> `serverConfigRoot` rename bug this comment used to describe
+      // (liq-credentials, liq-credentials-db, liq-integrations, and liq-work all reading
+      // the stale `app.ext.serverHome` key) is fixed in every package that carried it.
       //
       // `skipCorePlugins: true` isolates this test to core-server's own
       // framework-level API surface (the routes `plugable-express` registers
-      // intrinsically, independent of any loaded plugin) so the golden snapshot is
-      // deterministic and reproducible without that unrelated blocker — matching the
-      // precedent already set by `app-init.test.js`.
+      // intrinsically, independent of any loaded plugin) so the golden snapshot stays
+      // deterministic and reproducible regardless of which plugins are installed —
+      // matching the precedent already set by `app-init.test.js`.
       skipCorePlugins  : true,
       reporter         : new Reporter({ silent : true })
     }))

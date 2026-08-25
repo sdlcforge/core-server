@@ -56,8 +56,6 @@ async function runQuickTest() {
         
         // Check if our explicit plugins are loaded
         const explicitPlugins = [
-          '@liquid-labs/liq-controls',
-          '@liquid-labs/liq-credentials',
           '@liquid-labs/liq-projects'
         ]
 
@@ -82,8 +80,6 @@ async function runQuickTest() {
 
         // Check if explicit plugins are mentioned in the response
         const explicitPlugins = [
-          '@liquid-labs/liq-controls',
-          '@liquid-labs/liq-credentials',
           '@liquid-labs/liq-projects'
         ]
 
