@@ -71,7 +71,7 @@ phases:
             branch: plan/core-server-domain-consolidation-04-002
             commit:
                 - "4473740"
-            merge: null
+            merge: 8caee2ab10f4bfeb6dea4164d244952354bd5067
         - number: 3
           slug: wire-builtin-plugins-aggregator
           title: Wire Builtin-Plugins Aggregator And Prove With Probe
