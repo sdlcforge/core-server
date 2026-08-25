@@ -38,13 +38,3 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'During phase-3 (yalc-dependency-refresh) task execution, the manager''s pre-dispatch `yalc push` from plugable-express propagated a dist build that was stale relative to plugable-express''s own current main branch (missing a registerPathVar plugin-setup parameter that liq-credentials needs to start up), which briefly broke core-server''s local server startup. The dispatched task agent resolved it (forced rebuild + re-push from plugable-express, source untouched, per the task doc''s own re-push contingency) and re-verified. Root cause not investigated further: worth checking whether plugable-express''s prepack/make build has an mtime-gating or lifecycle-script issue that could cause a stale dist/ to be packed on a future yalc push.'
-    - title: Publish core-server 1.0.0-alpha.16
-      id: n7Qx
-      date: "2026-08-24"
-      tags:
-        - type:enhancement
-        - plan/phase:phase-07-release
-        - plan/slug:core-server-domain-consolidation
-        - priority:unspecified
-        - effort:unspecified
-      text: 'npm publish blocked: `npm publish --access public --tag alpha`, run from this project''s root after `package.json`''s `version` was bumped to `1.0.0-alpha.16` (committed; `bun.lock` unaffected since it does not track the root workspace''s own version field), failed with `npm error code E404` / "404 Not Found - PUT https://registry.npmjs.org/@sdlcforge%2fcore-server - Not found... you do not have permission to access it" against the live `https://registry.npmjs.org/` registry. This is the same registry-auth-class block (401/404) that liq-controls''s and liq-credentials''s own npm publish/deprecate attempts hit in this same session — neither donor has actually been deprecated on the live registry either. No installability gap has therefore opened yet. Manual action needed: run `npm publish --access public --tag alpha` from the `@sdlcforge/core-server` project root with valid registry credentials, then verify via `npm view @sdlcforge/core-server versions` (expect `1.0.0-alpha.16` with the `alpha` dist-tag pointing at it). Sequencing: complete this publish before running any donor''s recorded deprecate command, so the replacement is live before any donor is marked deprecated.'
