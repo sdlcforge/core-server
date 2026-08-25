@@ -146,3 +146,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: docs/project-structure.md's docs/ prose section doesn't mention docs/architecture.md or docs/architecture/plugin-loading-tiers.md at all (only core-server-spec.md) — pre-existing gap predating this plan, unrelated to donor absorption; worth a future doc pass.
+    - title: Publish core-server 1.0.0-alpha.16
+      id: 1aTE
+      date: "2026-08-24"
+      tags:
+        - type:enhancement
+        - plan/phase:phase-07-release
+        - plan/slug:core-server-domain-consolidation
+        - priority:unspecified
+        - effort:unspecified
+      text: 'npm publish blocked: `npm publish --access public --tag alpha`, run from this project''s root after package.json''s version was bumped to 1.0.0-alpha.16 (committed; bun.lock unaffected since it does not track the root workspace''s own version field), failed with `npm error code E404` / "404 Not Found - PUT https://registry.npmjs.org/@sdlcforge%2fcore-server - Not found... you do not have permission to access it" against the live https://registry.npmjs.org/ registry. This is the same registry-auth-class block (401/404) that liq-controls''s and liq-credentials''s own npm publish/deprecate attempts hit in this same session — neither donor has actually been deprecated on the live registry either, so no installability gap has opened yet. Manual action needed: run `npm publish --access public --tag alpha` from the @sdlcforge/core-server project root with valid registry credentials, then verify via `npm view @sdlcforge/core-server versions` (expect 1.0.0-alpha.16 with the alpha dist-tag pointing at it). Sequencing: complete this publish before running any donor''s recorded deprecate command, so the replacement is live before any donor is marked deprecated.'
