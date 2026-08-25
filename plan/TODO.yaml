@@ -148,6 +148,7 @@ phases:
           path: phase-06-doc-updates/001-update-architecture-docs.md
           done: false
           tier: sonnet-high
+          digest: Comprehensive documentation-update pass across 7 target files plus test/README.md (flagged additional item) and a comment-only fix in golden-api-spec.test.js. Corrected the pre-existing 11-vs-8 (and 13-vs-8) explicit-plugin-count errors, described the new built-in (in-tree) tier and skipCorePlugins gating, preserved the liq-orgs+liq-projects load-order fact from the dropped plugable-express.yaml, added the Wave-3 compile-time-manifest supersession note, updated consumer-visible API-diff description in core-server-spec.md, and added the three new src/ directories plus src/lib/builtin-plugins.mjs to project-structure.md. bun run test green (12/12 suites, 40/40 tests). No behavioral code changed.
           git:
             branch: plan/core-server-domain-consolidation-06-001
             commit:
