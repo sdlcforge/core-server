@@ -54,6 +54,7 @@ phases:
           path: phase-04-in-tree-plugin-mechanism/001-verify-plugable-express-builtin-plugins.md
           done: false
           tier: sonnet-med
+          digest: 'Re-verified all eight requirements of the plugable-express builtinPlugins mechanism gate from scratch against producer HEAD a95c4cf0e12e98a6f15ae98930ed5659dc6c3013 (1.0.0-alpha.58). Requirements 1-7 and 8a (230-test suite) reconfirmed cleanly. Requirement 8b (yalc snapshot content check) now passes: core-server''s .yalc/ snapshot''s dist/plugable-express.js confirmed byte-identical (SHA-256) to the producer''s freshly-rebuilt dist, both containing the builtinPlugins mechanism. Gate passes in full; tasks 002/003 may proceed.'
           git:
             branch: plan/core-server-domain-consolidation-04-001
             commit:
