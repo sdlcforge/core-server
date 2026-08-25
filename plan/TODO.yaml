@@ -78,6 +78,7 @@ phases:
           path: phase-04-in-tree-plugin-mechanism/003-wire-builtin-plugins-aggregator.md
           done: false
           tier: sonnet-high
+          digest: Landed core-server's own side of the in-tree registration mechanism (builtin-plugins.mjs aggregator, app-init.mjs wiring) in empty-but-shaped form, proven end-to-end with a test-injected probe plugin. make build/test green (5 suites/28 tests), bun run test:local 7/7 passed. Existing golden tests/snapshots byte-identical. Error-shape assertion demonstrably meaningful (verified fail-then-restore per validation bullet 58). Bundle grew +340 bytes both artifacts, no new bare-specifier require, no build-config change needed. make lint fails only on the same 230 pre-existing test/*.js violations tracked as followup b3hk, confirmed byte-identical to this worktree's own pre-edit baseline; targeted lint on the 4 new/changed files is clean.
           git:
             branch: plan/core-server-domain-consolidation-04-003
             commit:
