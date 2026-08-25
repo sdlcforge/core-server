@@ -87,6 +87,7 @@ phases:
     - number: 5
       slug: absorb-donor-plugins
       title: Absorb Donor Plugins And Retire Explicit-Tier Entries
+      diff_base: f6da02fb35199d42ef9b85cd532a9e2f9f8d3fad
       tasks:
         - number: 1
           slug: absorb-liq-controls
