@@ -129,7 +129,7 @@ phases:
           slug: verify-post-absorption-parity
           title: Verify Post-Absorption Parity
           path: phase-05-absorb-donor-plugins/004-verify-post-absorption-parity.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: 'Aggregate verdict: PASS. Verified all 8 requirements against live source and live server output for all three donor absorptions (liq-controls, liq-credentials, liq-integrations-issues-github): full-tier API/plugins/integrations snapshots show exactly the contract-permitted npmName diffs and nothing else (165 routes, correct ordering); root-file blob comparison against each donor''s actual pre-merge commit confirms no donor file survived anywhere; explicitPlugins=8, submodules=[controls, credentials, issuesGitHub] in fixed order; full 15-entry dependency union present at recorded ranges including correctly-dropped conditional liq-projects-lib; bundle audit zero undeclared bare specifiers; git log --follow reaches donor pre-relocation history for each donor; all ported donor tests run and pass. make build/test green (12 suites/40 tests), bun run test:local 7/7. Sole non-green item: make lint fails on the same 4 pre-existing unrelated test/*.js files (tracked as b3hk), confirmed byte-identical to pre-plan main. The three donors'' retirement phases and this plan''s Phases 6/7 are unblocked from an absorption-parity standpoint. Behavioral parity of absorbed handlers/hooks themselves not verified (registration-time only, known accepted limitation).'
           git:
