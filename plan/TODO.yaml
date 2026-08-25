@@ -105,7 +105,7 @@ phases:
           slug: absorb-liq-credentials
           title: Absorb Liq-Credentials
           path: phase-05-absorb-donor-plugins/002-absorb-liq-credentials.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: Merged liq-credentials's relocated src/credentials/ tree via git merge --allow-unrelated-histories, removed donor's clean-add src/index.js (the exact silent hazard requirement 2 warns about), blob-verified nothing outside src/credentials/ changed. Wired credentials submodule into builtin-plugins.mjs, unplugged from explicitPlugins/package.json in same commit, unioned liq-credentials-db, confirmed via real server startup no duplicate-route/path-var crash. liq-projects/liq-credentials setup-ordering coupling verified clean; fixed a latent test-isolation gap in builtin-plugins.test.js's probe harness (joins the real absorbed-submodules entry alongside the probe rather than replacing it, since liq-projects now depends on credentials having run). make test green (10 suites/35 tests), make lint pre-existing failure unchanged (230 errors, same 4 test/*.js files, tracked as b3hk). Every snapshot diff matches parity contract; golden-* byte-identical.
           git:
