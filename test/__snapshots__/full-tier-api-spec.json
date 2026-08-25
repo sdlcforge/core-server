@@ -1412,7 +1412,7 @@
     "matcher": "^\\/help\\/server\\/plugins\\/integrations\\/-integrationPluginName-\\/remove[/#?]?$"
   },
   {
-    "npmName": "@liquid-labs/liq-controls",
+    "npmName": "@sdlcforge/core-server",
     "routablePath": "/^\\/orgs\\/((?:@|%40)[a-z][a-zA-Z0-9-]*)\\/controls\\/list[/#?]?$/",
     "help": {
       "name": "orgs controls list",
@@ -1518,11 +1518,11 @@
       "list"
     ],
     "routabblePath": "/^\\/help\\/orgs\\/-orgKey-\\/controls\\/list[/#?]?$/",
-    "npmName": "@liquid-labs/liq-controls",
+    "npmName": "@sdlcforge/core-server",
     "matcher": "^\\/help\\/orgs\\/-orgKey-\\/controls\\/list[/#?]?$"
   },
   {
-    "npmName": "@liquid-labs/liq-controls",
+    "npmName": "@sdlcforge/core-server",
     "routablePath": "/^\\/orgs\\/controls\\/list[/#?]?$/",
     "help": {
       "name": "orgs controls list",
@@ -1626,7 +1626,7 @@
       "list"
     ],
     "routabblePath": "/^\\/help\\/orgs\\/controls\\/list[/#?]?$/",
-    "npmName": "@liquid-labs/liq-controls",
+    "npmName": "@sdlcforge/core-server",
     "matcher": "^\\/help\\/orgs\\/controls\\/list[/#?]?$"
   },
   {

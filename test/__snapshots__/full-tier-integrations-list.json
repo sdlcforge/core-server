@@ -1,10 +1,10 @@
 [
   {
-    "npmName": "@liquid-labs/liq-controls",
+    "npmName": "@liquid-labs/liq-integrations-issues-github",
     "installed": true
   },
   {
-    "npmName": "@liquid-labs/liq-integrations-issues-github",
+    "npmName": "@sdlcforge/core-server",
     "installed": true
   }
 ]

@@ -1,10 +1,5 @@
 [
   {
-    "npmName": "@liquid-labs/liq-controls",
-    "installed": true,
-    "summary": "Enables and manages policy controls."
-  },
-  {
     "npmName": "@liquid-labs/liq-credentials",
     "installed": true,
     "summary": ""

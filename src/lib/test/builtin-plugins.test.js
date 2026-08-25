@@ -7,6 +7,7 @@ import request from 'supertest'
 
 import { Reporter } from '@liquid-labs/plugable-express'
 
+import * as controls from '../../controls'
 import { appInit } from '../app-init'
 import { builtinPluginsFor, handlers as builtinHandlers, summary as builtinSummary } from '../builtin-plugins'
 import {
@@ -45,10 +46,29 @@ const errorShape = ({ status, headers, text }) => {
 const makeTempDir = (prefix) =>
   fsPath.join(os.tmpdir(), prefix + Math.round(Math.random() * 10000000000000000))
 
-describe('builtin-plugins aggregator (empty-but-shaped)', () => {
-  test('contributes no handlers while `submodules` is empty', () => {
+// The absorbed submodules currently wired into `builtin-plugins.mjs`' `submodules` array, in the
+// same order. One so far: `src/controls/`, absorbed from `@liquid-labs/liq-controls` by phase-05
+// task 001. Each further absorption appends its namespace here rather than rewriting the
+// assertions below.
+const ABSORBED_SUBMODULES = [controls]
+
+describe('builtin-plugins aggregator', () => {
+  test('contributes exactly the absorbed submodules` own handlers, in submodule order', () => {
     expect(Array.isArray(builtinHandlers)).toBe(true)
-    expect(builtinHandlers).toHaveLength(0)
+
+    const expectedHandlers = ABSORBED_SUBMODULES.flatMap(({ handlers = [] }) => handlers)
+
+    // Non-vacuous: at least one submodule is absorbed and it really does contribute routes, so
+    // this cannot silently pass by comparing two empty arrays.
+    expect(expectedHandlers.length).toBeGreaterThan(0)
+    expect(builtinHandlers).toEqual(expectedHandlers)
+
+    // Every aggregated entry is a real `plugable-express` handler module, not an accidental
+    // namespace object picked up by a mis-shaped flatMap.
+    for (const handler of builtinHandlers) {
+      expect(Array.isArray(handler.path)).toBe(true)
+      expect(typeof handler.func).toBe('function')
+    }
   })
 
   test('`builtinPluginsFor` produces exactly one entry carrying the supplied identity', () => {
@@ -63,10 +83,24 @@ describe('builtin-plugins aggregator (empty-but-shaped)', () => {
     expect(typeof entry.module.setup).toBe('function')
   })
 
-  test('the composed `setup` is a no-op that resolves while `submodules` is empty', async() => {
+  test('the composed `setup` awaits every absorbed submodule`s own setup and resolves undefined', async() => {
     const [{ module: { setup } }] = builtinPluginsFor({ npmName : '@example/host', version : '9.9.9' })
 
-    await expect(setup({ probe : 'forwarded unchanged' })).resolves.toBeUndefined()
+    // A minimal stand-in for the framework's `app`: the absorbed `controls` setup only enqueues
+    // onto `app.ext.setupMethods`. Asserting the enqueued `{name, deps}` pairs verbatim is the
+    // point of this test -- `@liquid-labs/dependency-runner` matches `deps` by exact string, so
+    // `load orgs` (contributed by the still-external `liq-orgs`) and `setup integrations`
+    // (contributed by `plugable-express`) are a cross-package contract, not cosmetic labels.
+    // Renaming either resolves silently wrong in one direction and loudly in the other. See
+    // `plan/resources/absorption-parity-contract.md` item 5.
+    const app = { ext : { setupMethods : [] } }
+
+    await expect(setup({ app })).resolves.toBeUndefined()
+
+    expect(app.ext.setupMethods.map(({ name, deps }) => ({ name, deps }))).toEqual([
+      { name : 'load org controls', deps : ['load orgs'] },
+      { name : 'load controls integrations', deps : ['setup integrations'] }
+    ])
   })
 })
 

@@ -108,8 +108,13 @@ const EXPECTED_CREDENTIALS_DB_METHODS = [
 const EXPECTED_INTEGRATION_PROVIDERS = [
   {
     providerFor : 'controls',
+    // Absorbed in-tree at `src/controls/` (phase-05 task 001) and registered through
+    // `builtinPlugins`, so this provider now reports under the identity of the package that
+    // ships it. The predicted, accepted diff from the pre-absorption baseline -- item 3 of
+    // `plan/resources/absorption-parity-contract.md`. `providerFor`, `name`, and the hook set
+    // are unchanged.
     name        : 'controls',
-    npmName     : '@liquid-labs/liq-controls',
+    npmName     : '@sdlcforge/core-server',
     hooks       : ['getQuestionControls']
   },
   {
