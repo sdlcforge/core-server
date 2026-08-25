@@ -1,7 +1,7 @@
 {
   "name": "@sdlcforge/core-server",
   "version": "1.0.0-alpha.16",
-  "description": "",
+  "description": "Implements core SDLC logic.",
   "main": "dist/sdlcforge-server.js",
   "bin": {
     "sdlcforge-server": "dist/sdlcforge-server-exec.js"
