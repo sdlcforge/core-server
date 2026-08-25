@@ -79,7 +79,7 @@ phases:
           done: false
           tier: sonnet-high
           git:
-            branch: null
+            branch: plan/core-server-domain-consolidation-04-003
             commit: []
             merge: null
     - number: 5
