@@ -56,7 +56,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/core-server-domain-consolidation-04-001
-            commit: []
+            commit:
+                - ad518a1
             merge: null
         - number: 2
           slug: refresh-plugable-express-snapshot
