@@ -66,6 +66,7 @@ phases:
           path: phase-04-in-tree-plugin-mechanism/002-refresh-plugable-express-snapshot.md
           done: false
           tier: sonnet-med
+          digest: 'Refreshed core-server''s yalc-linked bun.lock against plugable-express''s confirmed builtinPlugins snapshot (commit a95c4cf0e12e98a6f15ae98930ed5659dc6c3013, 1.0.0-alpha.58) via rm -f bun.lock && bun install. The refresh by itself changed nothing observable: make build/test green, all five named snapshots byte-unchanged, dist bundle sizes identical before/after, diff confined entirely to bun.lock. make lint failed on 230 pre-existing ESLint errors in test/*.js proven byte-identical before/after this refresh via git-stash comparison (already tracked as followup b3hk, out of this task''s edit scope). Manager reviewed the evidence and accepts this task as substantively successful — the pre-existing, already-tracked, proven-unrelated lint debt does not represent a regression introduced by this refresh, and the task''s explicit scope forbids touching test/ to fix it.'
           git:
             branch: plan/core-server-domain-consolidation-04-002
             commit:
