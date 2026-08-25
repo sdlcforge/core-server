@@ -121,7 +121,8 @@ phases:
           tier: opus-med
           git:
             branch: plan/core-server-domain-consolidation-05-003
-            commit: []
+            commit:
+                - b55898e
             merge: null
         - number: 4
           slug: verify-post-absorption-parity
