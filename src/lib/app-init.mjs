@@ -11,6 +11,8 @@ import {
 } from '@liquid-labs/comply-defaults'
 import { appInit as superInit } from '@liquid-labs/plugable-express'
 
+import { builtinPluginsFor } from './builtin-plugins'
+
 const packageJSONPathProd = fsPath.resolve(__dirname, '..', 'package.json')
 const packageJSONPathTest = fsPath.resolve(__dirname, '..', '..', 'package.json')
 const packageJSONPath = existsSync(packageJSONPathProd) ? packageJSONPathProd : packageJSONPathTest
@@ -20,7 +22,12 @@ const packageJSONPath = existsSync(packageJSONPathProd) ? packageJSONPathProd : 
 const myPackagePath = fsPath.dirname(packageJSONPath)
 
 const pkgJSON = JSON.parse(readFileSync(packageJSONPath, { encoding : 'utf8' }))
-const { version: pkgVersion } = pkgJSON
+const { name: pkgName, version: pkgVersion } = pkgJSON
+
+// `npmName` is read from `package.json` rather than hardcoded, so the in-tree plugin identity
+// follows the package if it is ever renamed. `summary` cannot come from `package.json` (its
+// `description` is the empty string) and stays a literal in './builtin-plugins'.
+const builtinPlugins = builtinPluginsFor({ npmName : pkgName, version : pkgVersion })
 
 const pluginsPath = fsPath.join(COMPLY_SERVER_PLUGIN_DIR(), 'server')
 
@@ -80,6 +87,7 @@ const appInit = async(options) => {
     version                 : pkgVersion,
     apiSpecPath             : COMPLY_API_SPEC_PATH(),
     pluginsPath,
+    builtinPlugins,
     explicitPlugins,
     serverConfigRoot        : COMPLY_SERVER_CONFIG_ROOT(),
     dynamicPluginInstallDir : COMPLY_HOME(),

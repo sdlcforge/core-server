@@ -82,3 +82,79 @@ architectural_impact: true
 - After the probe fixture and the positive-path probe test are green.
 - After the error-middleware-shape assertion and the negative gating assertion are added.
 - After `make build` plus the bundle and `dist/sdlcforge-server-exec.js` start checks.
+
+## Status
+
+**Outcome: succeeded** (2026-08-24). One caveat, carried forward unchanged from task 002 and detailed under "`make lint`" below: `make lint` fails on 230 pre-existing errors confined to four `test/*.js` files this task neither touched nor is scoped to fix. Every other Validation check is green.
+
+### Files changed
+
+- `src/lib/builtin-plugins.mjs` (new) — the empty-but-shaped aggregator.
+- `src/lib/app-init.mjs` — the three wiring edits.
+- `src/lib/test/fixtures/probe-plugin.mjs` (new) — the test-injected probe and the negative-gating sentinel.
+- `src/lib/test/builtin-plugins.test.js` (new) — 15 tests across three describe blocks.
+- `test/__snapshots__/full-tier-plugins-list.json` — the one sanctioned regeneration (11 → 12).
+
+### Requirements
+
+1. **Aggregator** — `submodules = []`; `handlers` is its `flatMap` (`[]`); the composed `setup` is `async(setupArgs)` iterating `submodules` with `for...of` + `await submodule.setup?.(setupArgs)` (forwarding the framework's argument object unchanged) and returning `undefined`; `summary` is a literal; `builtinPluginsFor({ npmName, version })` returns a single-element array. The in-source comment records the load-order fact and the single-`setupData`-per-entry fact.
+2. **Namespace imports** — recorded as numbered fact 1 in the file's header comment, stating the ambiguous-export collision (`setup` exported by all three donors, `handlers` by two) and instructing a Phase 5 agent not to "simplify" it.
+3. **`app-init.mjs`** — all three edits made exactly as specified; `builtinPlugins,` sits between `pluginsPath,` and `explicitPlugins,`, before the `...options` spread. No `summary` import from `src/lib/index.js` (the cycle is noted in-source).
+4. **Probe** — injected through the `builtinPlugins` option override, never added to `submodules`. Run in the full-tier configuration (`skipCorePlugins` absent, `PLUGABLE_PLAYGROUND` isolation, temp `serverConfigRoot`, explicit temp `apiSpecPath`), mirroring `full-tier-baseline.test.js`. All seven listed observables asserted, including `setupArgKeys` deep-equalling `['app', 'cache', 'registerPathVar', 'reporter', 'serverConfigRoot']`, `serverConfigRoot === app.ext.serverConfigRoot`, the `DependencyRunner`-completed setup method, the path-var-consuming route, the throwing route's error shape, the probe's two routes present in both `GET /server/api` and the written `apiSpecPath` file, and the `handlerPlugins` entry whose `summary` retains the literal `' for a @liquid-labs/plugable-express server'` phrase the npm path would have stripped.
+5. **Negative gating** — a separate describe block asserts a sentinel entry's `setup` never runs under `skipCorePlugins: true` and that no `handlerPlugins` entry is recorded for it.
+6. **Existing tests unmodified** — `git diff` against the task-start commit reports zero changes to `src/lib/test/app-init.test.js`, `src/lib/test/golden-api-spec.test.js`, `test/__snapshots__/golden-api-spec.json` (35 entries), and `test/__snapshots__/golden-plugins-list.json` (`[]`).
+7. **Bundle** — see below.
+8. **Snapshots** — see below.
+
+### Bundle (requirement 7)
+
+| Artifact | Task 002 baseline | After this task |
+|---|---|---|
+| `dist/sdlcforge-server.js` | 2214 bytes | **2554 bytes** (+340) |
+| `dist/sdlcforge-server-exec.js` | 2047 bytes | **2387 bytes** (+340) |
+
+The aggregator is inlined into both bundles (the `summary` literal and the `builtinPluginsFor` factory body are both present as inlined source in `dist/sdlcforge-server.js`), confirming `nodeExternals()` never externalizes a relative specifier. `dist/sdlcforge-server-exec.js` keeps its `#!/usr/bin/env -S node --enable-source-maps` shebang and really starts — `bun run test:local` passes 7/7 against a started server, in the production configuration where builtins do register. No `src/lib/test/**` content reaches `dist/` (the build's own `CATALYST_TEST_SELECTOR` excludes `*/test/*` from the entry graph; grepping both bundles for the probe's npm name returns zero).
+
+The complete bare-specifier `require(...)` set in **both** bundles is `@liquid-labs/comply-defaults`, `@liquid-labs/plugable-express`, `node:fs`, `node:fs/promises`, `node:path` — identical to the pre-change set, so **no new bare specifier appeared**, and the two package specifiers are both declared in `package.json`'s `dependencies`. No build-config change was needed (assumption 3 held).
+
+### Snapshots (requirement 8)
+
+Only `test/__snapshots__/full-tier-plugins-list.json` was regenerated, via the existing `bun run test:update-full-tier-baseline` opt-in. The complete diff is one added entry, **11 → 12**:
+
+```json
+  {
+    "npmName": "@sdlcforge/core-server",
+    "installed": true,
+    "summary": "Built-in SDLC controls, credentials, and GitHub issues integration."
+  }
+```
+
+It lands **last** in the array because `GET /server/plugins/list` sorts by `npmName` (`@liquid-labs/*` all sort before `@sdlcforge/*`) — the raw `app.ext.handlerPlugins` order registers builtins first. `full-tier-api-spec.json` (165 entries) and `full-tier-integrations-list.json` (2 entries) are byte-unchanged, as is `full-tier-baseline.test.js`'s `EXPECTED_SETUP_METHODS` assertion (the empty aggregator enqueues nothing). No other snapshot moved.
+
+### Validation
+
+| Check | Result |
+|---|---|
+| `make build` | **passed** |
+| `make test` | **passed** — 5 suites, 28 tests (13 pre-existing + 15 new) |
+| `make lint` | **failed, pre-existing** — 230 errors, all in `test/get-node-versions.js`, `test/test-basic.js`, `test/test-integration-quick.js`, `test/test-server.js`; byte-identical to the pre-change baseline captured on this worktree before any edit. Zero findings in anything this task added or changed (verified by a targeted `eslint` run over `src/lib/builtin-plugins.mjs`, `src/lib/app-init.mjs`, `src/lib/test/builtin-plugins.test.js`, `src/lib/test/fixtures/probe-plugin.mjs` — clean). Not fixed: `make lint-fix` would rewrite four unrelated `test/*.js` files. Same finding task 002 reported. |
+| `bun run test:local` | **passed** — 7/7 endpoint checks against a really-started server |
+| Existing test files / golden snapshots unchanged | **passed** (`git diff --name-only` against task-start returns nothing for all four paths) |
+| `full-tier-api-spec.json` / `full-tier-integrations-list.json` unchanged; `full-tier-plugins-list.json` +1 entry | **passed** |
+| `explicitPlugins` still 11 entries; three donors still in `dependencies` | **passed** |
+| No `src/controls/`, `src/credentials/`, `src/integrations-issues-github/`; `submodules` empty | **passed** |
+| Error-shape assertion demonstrably meaningful | **passed** — see below |
+| `grep -n 'file:' package.json` shows exactly two entries | **passed** (`liq-projects`, `plugable-express`) |
+
+### The error-shape assertion is meaningful (Validation bullet 6)
+
+Performed and reverted. The throwing handler was temporarily withheld from the `builtinPlugins` entry and registered on `app` **after** `appInit()` returned instead. The error-shape assertion failed exactly as intended: the response fell through to Express's own default error handler rather than `plugable-express`'s two `app.use(...)` layers, giving
+
+- `content-type: text/html; charset=utf-8` instead of `text/plain; charset=utf-8`,
+- a full `<!DOCTYPE html>` document carrying the raw stack trace instead of the framework's `Server error 500: InternalServerError` banner,
+- one body section instead of three, and
+- **no** `error ref: /server/errors/<liqID>` line — the error was never recorded into `app.ext.errorsEphemeral` at all.
+
+Status stayed `500` in both cases, which is precisely why the assertion compares content-type and body structure rather than status alone. The file was then restored byte-for-byte from a pre-experiment copy and the full suite re-run green.
+
+The comparison error used for the core-route side is a real error from an existing `plugable-express` core route: `GET /server/version?probeUnknownQueryParameter=1`, where the framework's own per-route parameter middleware throws a plain `Error` (no `status`, therefore 500) — the same error class the probe's handler throws. No core route throws deterministically from inside its own `func`, so this is the closest available equivalent; the assertion additionally proves the two responses' bodies genuinely differ before comparing their normalized shapes, so it cannot pass vacuously.
