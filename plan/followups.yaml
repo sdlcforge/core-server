@@ -126,3 +126,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Requirement 7's stated ported-test-file count for issues-github ("one") is stale against current reality (two files, both passing, traceable via git log --follow to legitimate donor-side work) - worth correcting in the task doc's text if ever revisited, informational only.
+    - title: test/README.md stale donor plugin names
+      id: oGHy
+      date: "2026-08-25"
+      tags:
+        - type:documentation
+        - plan/phase:absorb-donor-plugins
+        - plan/slug:core-server-domain-consolidation
+        - priority:unspecified
+        - effort:unspecified
+      text: test/README.md (lines 105-106) still lists @liquid-labs/liq-controls and @liquid-labs/liq-credentials in its "Explicit Plugins Integration" prose, stale after Phase 5's absorption. Not covered by Phase 6's own doc-update scope (which targets docs/architecture*, docs/core-server-spec.md, docs/project-structure.md, AGENTS.md, README.md, CLAUDE.md - not test/README.md). Surfaced by liq-credentials's phase-11 retire-verification gate.
