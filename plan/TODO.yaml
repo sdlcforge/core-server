@@ -95,6 +95,7 @@ phases:
           path: phase-05-absorb-donor-plugins/001-absorb-liq-controls.md
           done: false
           tier: opus-med
+          digest: 'Absorbed @liquid-labs/liq-controls into core-server at src/controls/ by git merge --allow-unrelated-histories from the donor''s plan branch tip b1c5dbc, preserving full history. The src/lib/index.js add/add collision resolved --ours and blob-verified empty against pre-merge commit before any other edit. Whole-tree blob comparison empty, confirming silently-merged Makefile/make/ content is core-server''s own. Dependency union re-verified against donor tip (no discrepancy), adding seven ranges, no file: spec. Wire-in and unplug landed in a single commit. All four donor test files run and pass with no edits; bun run test:local confirms real server startup. Every snapshot diff matches the parity contract: 165 routes unchanged with exactly four npmName changes, plugins list 12->11, integrations provider re-identified, golden-* byte-identical. make lint pre-existing failure (230 errors, 4 test/*.js files) unchanged in count/file-set from pre-task baseline, deliberately not fixed to avoid violating this task''s own no-unexpected-root-path check.'
           git:
             branch: plan/core-server-domain-consolidation-05-001
             commit:
