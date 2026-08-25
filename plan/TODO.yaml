@@ -44,7 +44,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/core-server-domain-consolidation-13-001
-            commit: []
+            commit:
+                - b3cc154
             merge: null
     - number: 14
       slug: retire-liq-integrations-issues-github
