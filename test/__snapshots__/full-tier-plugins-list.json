@@ -53,5 +53,10 @@
     "npmName": "@liquid-labs/sdlc-projects-workflow-local-node-build",
     "installed": true,
     "summary": ""
+  },
+  {
+    "npmName": "@sdlcforge/core-server",
+    "installed": true,
+    "summary": "Built-in SDLC controls, credentials, and GitHub issues integration."
   }
 ]
