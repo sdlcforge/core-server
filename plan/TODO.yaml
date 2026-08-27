@@ -18,7 +18,7 @@ phases:
             branch: plan/dev-core-migration-01-001
             commit:
                 - 6d01bec
-            merge: null
+            merge: d5cd54be3cad351623f91d1539f43028ae0d5c41
         - number: 2
           slug: swap-explicit-plugins-atomically
           title: Swap Four Donor Plugins For Dev-Core In One Atomic Commit
