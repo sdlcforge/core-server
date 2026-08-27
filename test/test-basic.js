@@ -49,7 +49,7 @@ async function runBasicTest() {
 
   // Check that explicitPlugins includes expected packages
   const expectedPackages = [
-    '@liquid-labs/liq-projects'
+    '@sdlcforge/dev-core'
   ]
   
   let foundPackages = 0

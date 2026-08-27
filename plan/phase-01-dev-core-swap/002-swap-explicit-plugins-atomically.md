@@ -155,3 +155,29 @@ architectural_impact: true
 - `plan/notes/pre-swap-baseline.md` — task 001's recorded before-state; the comparison basis for every count above.
 - `AGENTS.md`, Conventions section — the `rm -f bun.lock && bun install` rule and the CI yalc policy.
 - `plan/followups.yaml` item `Z2Ar` — the prior encounter with the commit guard.
+
+## Status
+
+**Outcome: succeeded.** Implemented 2026-08-27 on branch `plan/dev-core-migration-01-002` as a single atomic commit.
+
+### Affected files
+
+- `package.json` — four donor dependency entries removed; `"@sdlcforge/dev-core": "file:.yalc/@sdlcforge/dev-core"` added once, alphabetically after `@liquid-labs/versioning` and before `http-errors`. `@liquid-labs/http-smart-response` left untouched.
+- `src/lib/app-init.mjs` — `explicitPlugins` 8 → 5 entries; the four donors removed from the head of the array, `'@sdlcforge/dev-core'` appended at the end. The comment block above the array was not touched.
+- `bun.lock` — regenerated with `rm -f bun.lock && bun install` (never hand-edited); verified stable across a second `bun install`.
+- `scripts/provision-local-deps.sh` — `REQUIRED_YALC_PACKAGES`, the header comment, and the missing-package error text all resynchronized to the two-entry post-swap set; the transitive-link clause removed from both prose sites.
+- `test/test-basic.js`, `test/test-integration-quick.js` (both array literals) — donor fixture string replaced with `'@sdlcforge/dev-core'`.
+- `test/__snapshots__/full-tier-api-spec.json`, `test/__snapshots__/full-tier-plugins-list.json` — regenerated via `bun run test:update-full-tier-baseline`. `full-tier-integrations-list.json`, `golden-api-spec.json`, and `golden-plugins-list.json` did not move and were not regenerated.
+
+### Validation summary
+
+- Scoped donor grep over `package.json src/ test/ scripts/` returns only `test/README.md:105-108` — documentation explicitly assigned to task 003 requirement 4.
+- `grep -n 'file:\.yalc' bun.lock` resolves exactly the two predicted packages, `@liquid-labs/plugable-express` and `@sdlcforge/dev-core`, matching `REQUIRED_YALC_PACKAGES` element for element. No transitive `file:.yalc` resolution remains.
+- `bun run test`: 12 suites / 40 tests passed — identical to task 001's pre-swap baseline. `full-tier-baseline.test.js`'s `EXPECTED_SETUP_METHODS` and `EXPECTED_APP_EXT_KEYS` assertions passed **unregenerated**.
+- `full-tier-api-spec.json`: 0 donor occurrences, 112 `@sdlcforge/dev-core`; the 35 `@liquid-labs/plugable-express` and 6 `@sdlcforge/core-server` occurrences did not move. `full-tier-plugins-list.json`: 9 → 6 entries with one `@sdlcforge/dev-core` entry.
+- The api-spec snapshot's textual diff is large only because the array order changed (`dev-core` now loads last where the donors loaded first). Verified structurally: after mapping the four donor `npmName` values to `@sdlcforge/dev-core` and normalizing entry order, the pre- and post-swap files are **entry-for-entry identical** across all 165 entries — no `path`, `method`, `parameters`, `help`, or `summary` movement whatsoever.
+- `git -C /Users/zane/playground/sdlcforge/dev-core status --porcelain` shows only the pre-existing untracked `.flow/`; no tracked file was dirtied.
+
+### Notes
+
+- `bun run lint` is red, with 230 pre-existing style errors across four `test/` files — including `test/get-node-versions.js` and `test/test-server.js`, neither touched by this task. No error falls on any line this task changed. Lint is not part of this task's `## Validation`.
