@@ -68,5 +68,6 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/dev-core-migration-02-001
-            commit: []
+            commit:
+                - 02bb83e
             merge: null
