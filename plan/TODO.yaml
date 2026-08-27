@@ -36,3 +36,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 4
+          slug: verify-migration
+          title: Verify Migration Against The Spec Checklist
+          path: phase-01-dev-core-swap/004-verify-migration.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
