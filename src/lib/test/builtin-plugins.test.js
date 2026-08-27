@@ -99,7 +99,7 @@ describe('builtin-plugins aggregator', () => {
     // `registerPathVar` function (it registers the `credential` path variable). Asserting the
     // enqueued `{name, deps}` pairs verbatim is the point of the `setupMethods` half of this test
     // -- `@liquid-labs/dependency-runner` matches `deps` by exact string, so `load orgs`
-    // (contributed by the still-external `liq-orgs`) and `setup integrations` (contributed by
+    // (contributed by `dev-core`'s `orgs` submodule) and `setup integrations` (contributed by
     // `plugable-express`) are a cross-package contract, not cosmetic labels. Renaming either
     // resolves silently wrong in one direction and loudly in the other. See
     // `plan/resources/absorption-parity-contract.md` item 5.
@@ -121,7 +121,8 @@ describe('builtin-plugins aggregator', () => {
       ])
 
       // `credentials`' setup contract: installs `app.ext.credentialsDB` (the cross-package
-      // contract name `liq-work` and `liq-integrations-issues-github` both read) and registers
+      // contract name `dev-core`'s `work` submodule and `liq-integrations-issues-github` both
+      // read) and registers
       // the `credential` path variable via the forwarded `registerPathVar`.
       expect(app.ext.credentialsDB).toBeDefined()
       expect(typeof app.ext.credentialsDB.listSupported).toBe('function')
@@ -139,10 +140,10 @@ describe('builtin-plugins aggregator', () => {
 // `appInit` through the `builtinPlugins` option override -- but, unlike when only `controls` was
 // absorbed, that override can no longer *replace* the real `@sdlcforge/core-server` entry
 // wholesale: `explicitPlugins` is left at its production default (not overridden), and the still-
-// external, npm-discovered `liq-projects` plugin's own `setup()` calls `setupCredentials({
+// external, npm-discovered `dev-core` plugin's own `setup()` calls `setupCredentials({
 // credentialsDB: app.ext.credentialsDB })` at plugin-load time (see
 // `plan/resources/absorption-parity-contract.md` item 8) -- so `app.ext.credentialsDB` must
-// already be installed by the time `liq-projects`' setup runs, exactly as it is in production.
+// already be installed by the time `dev-core`'s setup runs, exactly as it is in production.
 // The override therefore *joins* the real absorbed submodules' own `builtinPlugins` entry
 // alongside the probe's, rather than replacing it.
 const REAL_BUILTIN_PLUGINS = builtinPluginsFor({ npmName : '@sdlcforge/core-server', version : '0.0.0-test' })
@@ -157,8 +158,9 @@ describe('builtinPlugins registration path, proven with a test-injected probe', 
     await fs.mkdir(playgroundHome, { recursive : true })
     apiSpecPath = fsPath.join(serverHome, 'probe-api.json')
 
-    // Mandatory isolation: `liq-projects`' `setupPlayground()` otherwise defaults to
-    // `${HOME}/playground` and scans it. See `full-tier-baseline.test.js` for the full rationale.
+    // Mandatory isolation: `dev-core`'s `projects` submodule's `setupPlayground()` otherwise
+    // defaults to `${HOME}/playground` and scans it. See `full-tier-baseline.test.js` for the
+    // full rationale.
     origPluggablePlayground = process.env.PLUGABLE_PLAYGROUND
     process.env.PLUGABLE_PLAYGROUND = playgroundHome
 

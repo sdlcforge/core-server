@@ -102,11 +102,11 @@ The test suite verifies:
 
 The tests specifically verify that the following explicit plugins are automatically loaded:
 
-- `@sdlcforge/dev-core`
 - `@liquid-labs/sdlc-projects-badges-coverage`
 - `@liquid-labs/sdlc-projects-badges-github-workflows`
 - `@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd`
 - `@liquid-labs/sdlc-projects-workflow-local-node-build`
+- `@sdlcforge/dev-core`
 
 ## Test Results
 

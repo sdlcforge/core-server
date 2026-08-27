@@ -103,3 +103,21 @@ architectural_impact: true
 - `/Users/zane/playground/sdlcforge/dev-core/README.md` — per-submodule accounts of what `dev-core` actually provides; the source for an accurate combined table-row description.
 - [current-state drift](../notes/current-state-drift.md) — the full touch-point inventory including the three the migration spec omits.
 - `plugins/flow/standards/technology/markdown/markdown-design-standards.md` — Mermaid diagram and alt-description rules these docs follow.
+
+## Status
+
+- **Outcome:** succeeded
+- **Date:** 2026-08-27
+- **Files touched:** `docs/architecture.md`, `docs/architecture/plugin-loading-tiers.md`, `docs/project-structure.md`, `test/README.md`, `CLAUDE.md`, `AGENTS.md`, `src/lib/test/full-tier-baseline.test.js`, `src/lib/test/builtin-plugins.test.js`, `src/lib/test/golden-api-spec.test.js`.
+- **Validation summary:**
+  - `git grep -n -E 'liq-orgs|liq-projects|liq-work|plugable-projects-audit' -- . ':!plan' ':!test/__snapshots__' ':!bun.lock'` → one surviving hit, `docs/architecture/plugin-loading-tiers.md`'s new collapsed-row description, which names the four absorbed donors as legitimate historical/provenance context (per Requirement 2's instruction to summarize "all four absorbed capabilities"). No other surviving hits.
+  - `git grep -n '8 npm-dependency\|8 packages\|8-package\|eleven-package\|11 packages'` → empty outside `plan/` (which is off-limits to edit and is expected to retain historical drift-note/task-doc references to the old counts, consistent with how the first check itself treats `plan/` as legitimate historical context).
+  - `docs/architecture/plugin-loading-tiers.md`'s explicit-tier table → 5 rows, numbered 1-5, exactly one `@sdlcforge/dev-core` row (row 1, collapsing the four donor rows per Requirement 2's explicit instruction to "renumber the remaining rows").
+  - `test/README.md`'s expected-plugin list → 5 entries, reordered to match `src/lib/app-init.mjs`'s `explicitPlugins` array element-for-element (`sdlc-projects-badges-coverage`, `sdlc-projects-badges-github-workflows`, `sdlc-projects-workflow-github-node-jest-cicd`, `sdlc-projects-workflow-local-node-build`, `@sdlcforge/dev-core` — `dev-core` last, per the actual array order task 002 landed, not the donor block's old first-four position).
+  - Mermaid alt-description agreement: `docs/architecture.md`'s existing alt description never named the count or donor packages, so no edit was needed there (verified, not assumed); `docs/architecture/plugin-loading-tiers.md`'s alt description and its diagram node both corrected to 5.
+  - `AGENTS.md`'s CI-policy bullet re-derived against `grep -n 'file:\.yalc' bun.lock` (two entries, both direct: `@liquid-labs/plugable-express`, `@sdlcforge/dev-core`; no transitive) and `scripts/provision-local-deps.sh`'s `REQUIRED_YALC_PACKAGES` (same two) — bullet now matches both exactly, transitive clause dropped.
+  - `git diff -- src/` → touches only comment lines in the three named test files; no assertion or executing code changed.
+  - `bun run test` (via `make test`, after provisioning `.yalc/` from the main checkout per the dispatch note, since this worktree's own `.yalc/` was empty) → 12 test suites / 40 tests passed, identical to the pre-task baseline; `test/__snapshots__/` shows no modification (`git status --porcelain test/__snapshots__` empty).
+  - Internal doc links: no link target or anchor was repointed; only prose/count/name text changed.
+- **Assumptions applied:** Task 002 had landed (`package.json`/`bun.lock`/`app-init.mjs`/`provision-local-deps.sh` already reflect the swap) — confirmed directly by reading those files rather than merely assumed.
+- **Notes:** `docs/core-server-spec.md` was left untouched per Requirement 8 (out of scope; no donor package named there; Node 18-24-vs-host-v26.5.0 observation noted but not acted on, consistent with the task doc and the drift note's H3).
