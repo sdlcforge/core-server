@@ -27,7 +27,8 @@ phases:
           tier: opus-med
           git:
             branch: plan/dev-core-migration-01-002
-            commit: []
+            commit:
+                - 792a80a
             merge: null
         - number: 3
           slug: update-docs-and-stale-references
