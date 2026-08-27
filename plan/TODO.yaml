@@ -5,4 +5,14 @@ phases:
     - number: 1
       slug: dev-core-swap
       title: Dev-Core Swap
-      tasks: []
+      tasks:
+        - number: 1
+          slug: provision-dev-core-link-and-baseline
+          title: Provision Dev-Core Yalc Link And Capture Pre-Swap Baseline
+          path: phase-01-dev-core-swap/001-provision-dev-core-link-and-baseline.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
