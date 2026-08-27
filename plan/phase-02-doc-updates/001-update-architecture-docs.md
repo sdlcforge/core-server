@@ -65,3 +65,34 @@ architectural_impact: true
 - `/Users/zane/playground/sdlcforge/dev-core/docs/consumer-migration.md` — the authoritative migration specification; each donor's `Provenance change` and `What does not change` sections are what the architecture docs must now describe accurately.
 - [current-state drift](../notes/current-state-drift.md) — the record of what the migration specification itself missed, and why an enumerated touch-point list was not sufficient on its own.
 - `plugins/flow/standards/project-docs/project-architecture-document-standards.md` — the shape `docs/architecture.md` conforms to.
+
+## Status
+
+**Outcome: succeeded (no edits required — conformance already complete).** 2026-08-27.
+
+Followed the `update-architecture-docs` procedure: read `plan/overview.md`, the three completed Phase 1 task documents (002, 003, 004) and their reports, and [current-state drift](../notes/current-state-drift.md), then read all three files named in Requirement 2 in full and walked each section for staleness.
+
+### Per-file review outcome
+
+- **`docs/architecture.md`** — already correct after Phase 1 (task 003 plus the phase-boundary gate-fix commit). Mermaid diagram node reads "5 npm-dependency packages, e.g. dev-core"; its AI-agent alt description states no count and so cannot disagree; Core initialization, Plugin system, and Test infrastructure prose all read "5" with no surviving donor name; the Tech stack "Local dev loop: yalc" bullet and the matching Key Decisions bullet both name the two yalc-linked packages (`@liquid-labs/plugable-express` and `@sdlcforge/dev-core`). No edit made.
+- **`docs/architecture/plugin-loading-tiers.md`** — already correct after Phase 1. The explicit-tier table has exactly 5 rows in the same order as `src/lib/app-init.mjs`'s `explicitPlugins` array (verified element-for-element), with `@sdlcforge/dev-core` as row 5 (the array is alphabetically sorted and `@sdlcforge/…` sorts after every `@liquid-labs/…` entry — this ordering, and the row-5 position, was itself the subject of the Phase-1 gate-fix commit). The in-tree-`controls` dependency paragraph names `@sdlcforge/dev-core` as the single provider of both contracts and still uses the literal `app.ext._liqOrgs.orgs` / `app.ext._liqProjects.playgroundMonitor` key names, per Requirement 2's explicit "do not rename" instruction. No edit made.
+- **`docs/core-server-spec.md`** — reviewed in full; **no edit needed**. It names no donor package anywhere; its plugin-tier language ("core, explicit — built-in in-tree submodules then npm-dependency packages, user-supplied") is generic and does not enumerate a package count or list; its three-tier ordering and "All capability is plugin-delivered" claims are both intact and consistent with the post-swap state, since this migration changed only which package supplies the explicit tier, not the tier model itself. Confirmed by reading rather than assumed, as the task doc requires.
+
+### Validation
+
+- `git grep -n -E 'liq-orgs|liq-projects|liq-work|plugable-projects-audit' -- docs/` — **one surviving hit**, not zero: `docs/architecture/plugin-loading-tiers.md:73`, the `@sdlcforge/dev-core` table row's "What it contributes" cell, which names all four donors as the capabilities `dev-core` consolidates. This is deliberate historical/provenance prose written by task 003 under that task's own explicit Requirement 2 instruction ("Write the new row's 'What it contributes' as a genuine summary of all four absorbed capabilities"), already reviewed and justified in task 003's own report against an equivalent repo-wide grep. Removing the donor names here would contradict task 003's requirement and would make the row less accurate, not more — the row describes what was consolidated, which is exactly why the names appear. Left as-is; this task's grep bullet as literally worded does not carve out that exception the way task 003's own validation bullet did, so it is called out explicitly here rather than silently passed.
+- `git grep -n -E '8 npm-dependency|8 packages|8-package' -- docs/` — empty. Passed.
+- Mermaid diagram / alt-description agreement with `src/lib/app-init.mjs`'s 5-entry `explicitPlugins` array — confirmed in both `docs/architecture.md` and `docs/architecture/plugin-loading-tiers.md`. Passed.
+- `docs/architecture/plugin-loading-tiers.md`'s explicit-tier table — 5 rows, same order as `explicitPlugins`, literal `app.ext._liqOrgs` / `app.ext._liqProjects` key names retained in the dependency paragraph. Passed.
+- `docs/core-server-spec.md` reviewed; unchanged, reason recorded above. Passed.
+- Internal link chain — every relative link target in `README.md`, `AGENTS.md`, `CLAUDE.md`, `docs/architecture.md`, `docs/architecture/plugin-loading-tiers.md`, `docs/core-server-spec.md`, `docs/project-structure.md`, and `test/README.md` resolves to an existing file, and every `#anchor` fragment resolves to an existing heading (checked by extracting all relative links and cross-referencing headings). `README.md` → `AGENTS.md`/`docs/core-server-spec.md`/`docs/architecture.md`/`docs/project-structure.md` → `docs/architecture/plugin-loading-tiers.md`/`test/README.md`/`CLAUDE.md` — every doc in the corpus is reachable. Passed.
+
+### Flagged for manager (notice, not act — per Requirement 2)
+
+1. `docs/core-server-spec.md` and `docs/architecture.md` both state Node.js support across 18-24; this host runs v26.5.0, and the migration spec discloses a pre-existing `SlowBuffer` load failure on Node ≥ 24 that `dev-core` inherits. A real documentation-versus-reality gap, but pre-existing and out of this plan-group's scope.
+2. `docs/architecture.md`'s Test infrastructure section describes three test levels and does not mention `full-tier-baseline.test.js` or its checked-in snapshots (added by a later plan). Whether that belongs in the architecture doc is a judgment call for the manager; not acted on here.
+3. The one surviving donor-name grep hit at `docs/architecture/plugin-loading-tiers.md:73` (see Validation above) — flagged for awareness since this task's own validation bullet is worded without the "legitimate historical context" carve-out task 003's equivalent check used; recommend either accepting the row as-is (my assessment) or adjusting the validation wording in future task docs of this shape to match task 003's phrasing.
+
+### Files touched
+
+- `plan/phase-02-doc-updates/001-update-architecture-docs.md` (this Status section) only. No source, docs, or test file was modified — the conformance sweep found the tree already correct.
