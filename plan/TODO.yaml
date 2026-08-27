@@ -15,7 +15,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/dev-core-migration-01-001
-            commit: []
+            commit:
+                - 6d01bec
             merge: null
         - number: 2
           slug: swap-explicit-plugins-atomically
