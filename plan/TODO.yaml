@@ -5,6 +5,7 @@ phases:
     - number: 1
       slug: dev-core-swap
       title: Dev-Core Swap
+      diff_base: 5d4434bfc506a4ea364f99e977aad92c08ab8a5d
       tasks:
         - number: 1
           slug: provision-dev-core-link-and-baseline
