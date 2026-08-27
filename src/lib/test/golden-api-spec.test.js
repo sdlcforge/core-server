@@ -41,7 +41,7 @@ describe('Golden API-spec characterization', () => {
       serverConfigRoot : serverHome,
       // Loading the real explicit-plugin set no longer throws during `appInit()`: the
       // `serverHome` -> `serverConfigRoot` rename bug this comment used to describe
-      // (liq-credentials, liq-credentials-db, liq-integrations, and liq-work all reading
+      // (liq-credentials, liq-credentials-db, and liq-integrations all reading
       // the stale `app.ext.serverHome` key) is fixed in every package that carried it.
       //
       // `skipCorePlugins: true` isolates this test to core-server's own
