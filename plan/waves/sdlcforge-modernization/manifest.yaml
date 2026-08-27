@@ -68,9 +68,10 @@ waves:
             plugable-express: compile-time-manifest
         - name: Define compile-time plugin manifest for core-server
           slug: compile-time-manifest-sdlc-server
-          description: Using the compile-time manifest framework from compile-time-manifest-framework (plugable-express), define core-server's own SDLC-specific plugin manifest declaring provides/requires/optional for its plugin set, replacing the current explicitPlugins runtime array's implicit ordering with a declared, checkable one. Fixes bug ynGa and closes the GITHUB_API credential-registration-order gap.
+          description: Using the compile-time manifest framework from compile-time-manifest-framework (plugable-express), define core-server's own SDLC-specific plugin manifest declaring provides/requires/optional for its plugin set, replacing the current explicitPlugins runtime array's implicit ordering with a declared, checkable one. Fixes bug ynGa and closes the GITHUB_API credential-registration-order gap. Depends on the dev-core-migration plan-group landing first so core-server's manifest work targets its post-migration plugin set (dev-core), not the four soon-to-be-retired donor packages.
           dependencies:
             - compile-time-manifest-framework
+            - dev-core-migration
           plans:
             core-server: sdlc-plugin-manifest
     - name: Unified CLI and MCP Binaries
