@@ -6,3 +6,7 @@ phases:
       slug: framework-uptake-and-host-declaration
       title: Framework Uptake And Host Declaration
       tasks: []
+    - number: 2
+      slug: declare-in-tree-components
+      title: Declare The In-Tree Component Manifests
+      tasks: []
