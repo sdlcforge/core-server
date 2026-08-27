@@ -11,7 +11,7 @@ phases:
           slug: provision-dev-core-link-and-baseline
           title: Provision Dev-Core Yalc Link And Capture Pre-Swap Baseline
           path: phase-01-dev-core-swap/001-provision-dev-core-link-and-baseline.md
-          done: false
+          done: true
           tier: sonnet-med
           digest: 'Published @sdlcforge/dev-core@1.0.0-alpha.0 into the global yalc store (yalc publish --no-scripts), confirmed the source dev-core checkout stayed clean, and linked the package into this task worktree via yalc link (no package.json write). Provisioned the rest of .yalc/ by copying from the main checkout and running bun install directly after scripts/provision-local-deps.sh failed exactly as the drift note predicted (its REQUIRED_YALC_PACKAGES array is stale in both directions). Ran the one-time bun link per follow-up 8lmN. Captured a full pre-swap baseline in plan/notes/pre-swap-baseline.md: all three test tiers pass cleanly today (unit 40/40, local integration 7/7, Docker multi-Node 9 versions × 7/7 — Docker was available so this tier ran to completion, not "not runnable here"); liq-work loads without error on every Node version tested including several past the disclosed SlowBuffer line, a positive finding for task 004 to compare against; the yalc file: set and donor-provenance snapshot counts both matched the drift note''s D2/D3 findings exactly; and a genuine 200 /projects/detail response (with the X-CWD header it requires) was captured as a before-shape for task 004. No file outside plan/ was touched — package.json, bun.lock, src/, and test/ remain exactly as they were.'
           git:
