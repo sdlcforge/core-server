@@ -66,13 +66,13 @@ The explicit tier is a static, ordered array literal, `explicitPlugins`, declare
 
 | # | Package | What it contributes |
 |---|---------|----------------------|
-| 1 | `@sdlcforge/dev-core` | Consolidates the development-lifecycle capability that four separate packages — `liq-orgs`, `liq-projects`, `liq-work`, and `plugable-projects-audit` — previously shipped: project lifecycle management (creation, setup, detail, rename, update, close, archive, destroy, release publishing), unit-of-work orchestration across attached projects, organization-level settings, and project dependency auditing. |
-| 2 | `@liquid-labs/sdlc-projects-badges-coverage` | Generates coverage badges from a project's local `clover.xml` results (per the package's own description). |
-| 3 | `@liquid-labs/sdlc-projects-badges-github-workflows` | Adds GitHub Workflow status badges to a project's `README.md` (per the package's own description). |
-| 4 | `@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd` | Generates GitHub Workflows CI/CD configuration for Node.js/Jest unit testing (per the package's own description). |
-| 5 | `@liquid-labs/sdlc-projects-workflow-local-node-build` | Installs and manages the local Node.js build workflow for a project — the local-build counterpart to the CI/CD workflow packages above. |
+| 1 | `@liquid-labs/sdlc-projects-badges-coverage` | Generates coverage badges from a project's local `clover.xml` results (per the package's own description). |
+| 2 | `@liquid-labs/sdlc-projects-badges-github-workflows` | Adds GitHub Workflow status badges to a project's `README.md` (per the package's own description). |
+| 3 | `@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd` | Generates GitHub Workflows CI/CD configuration for Node.js/Jest unit testing (per the package's own description). |
+| 4 | `@liquid-labs/sdlc-projects-workflow-local-node-build` | Installs and manages the local Node.js build workflow for a project — the local-build counterpart to the CI/CD workflow packages above. |
+| 5 | `@sdlcforge/dev-core` | Consolidates the development-lifecycle capability that four separate packages — `liq-orgs`, `liq-projects`, `liq-work`, and `plugable-projects-audit` — previously shipped: project lifecycle management (creation, setup, detail, rename, update, close, archive, destroy, release publishing), unit-of-work orchestration across attached projects, organization-level settings, and project dependency auditing. |
 
-Packages 2–5 are the `sdlc-projects-workflow-*`/`sdlc-projects-badges-*` family referenced in [`docs/core-server-spec.md`](../core-server-spec.md#key-use-cases) as the mechanism behind "install optimized lint/test/build/CI-CD scripts into a project" — they are what actually write that tooling into a target project when invoked through the companion CLI.
+Packages 1–4 are the `sdlc-projects-workflow-*`/`sdlc-projects-badges-*` family referenced in [`docs/core-server-spec.md`](../core-server-spec.md#key-use-cases) as the mechanism behind "install optimized lint/test/build/CI-CD scripts into a project" — they are what actually write that tooling into a target project when invoked through the companion CLI.
 
 Because every explicit-tier package is a declared npm dependency rather than a dynamically-fetched one, the [Docker multi-version test suite](../architecture.md#test-infrastructure) exists primarily to catch loading regressions across this specific 5-package set on a fresh `npm install`, across every supported Node.js version — not to re-verify per-package internal correctness, which is each package's own responsibility.
 
