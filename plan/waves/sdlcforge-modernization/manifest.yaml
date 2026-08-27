@@ -53,7 +53,12 @@ waves:
           plans:
             core-cli: sdlcpilot-cli-rename
     - name: Dev-Core Consumer Migration
-      planGroups: []
+      planGroups:
+        - name: Migrate core-server to consume sdlcforge/dev-core
+          slug: dev-core-migration
+          description: core-server has not yet repointed from the four donor packages (liq-projects, liq-work, liq-orgs, plugable-projects-audit) that dev-core-consolidation already absorbed into @sdlcforge/dev-core. Swap all four explicitPlugins entries for a single @sdlcforge/dev-core entry per dev-core's own docs/consumer-migration.md handoff spec, which fully specifies the required edits per donor.
+          plans:
+            core-server: dev-core-migration
     - name: Compile-Time Plugin Manifest
       planGroups:
         - name: Implement compile-time plugin manifest framework
@@ -63,9 +68,10 @@ waves:
             plugable-express: compile-time-manifest
         - name: Define compile-time plugin manifest for core-server
           slug: compile-time-manifest-sdlc-server
-          description: Using the compile-time manifest framework from compile-time-manifest-framework (plugable-express), define core-server's own SDLC-specific plugin manifest declaring provides/requires/optional for its plugin set, replacing the current explicitPlugins runtime array's implicit ordering with a declared, checkable one. Fixes bug ynGa and closes the GITHUB_API credential-registration-order gap.
+          description: Using the compile-time manifest framework from compile-time-manifest-framework (plugable-express), define core-server's own SDLC-specific plugin manifest declaring provides/requires/optional for its plugin set, replacing the current explicitPlugins runtime array's implicit ordering with a declared, checkable one. Fixes bug ynGa and closes the GITHUB_API credential-registration-order gap. Depends on the dev-core-migration plan-group landing first so core-server's manifest work targets its post-migration plugin set (dev-core), not the four soon-to-be-retired donor packages.
           dependencies:
             - compile-time-manifest-framework
+            - dev-core-migration
           plans:
             core-server: sdlc-plugin-manifest
     - name: Unified CLI and MCP Binaries
