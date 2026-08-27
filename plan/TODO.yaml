@@ -30,7 +30,7 @@ phases:
             branch: plan/dev-core-migration-01-002
             commit:
                 - 792a80a
-            merge: null
+            merge: 40f2531114cb372ee5fbb6c9c2d8197bb148f122
         - number: 3
           slug: update-docs-and-stale-references
           title: Update Documentation And Stale In-Source Donor References
