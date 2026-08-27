@@ -16,3 +16,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: swap-explicit-plugins-atomically
+          title: Swap Four Donor Plugins For Dev-Core In One Atomic Commit
+          path: phase-01-dev-core-swap/002-swap-explicit-plugins-atomically.md
+          done: false
+          tier: opus-med
+          git:
+            branch: null
+            commit: []
+            merge: null
