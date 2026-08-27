@@ -49,6 +49,7 @@ phases:
           path: phase-01-dev-core-swap/004-verify-migration.md
           done: false
           tier: sonnet-high
+          digest: 'Ran the migration spec''s full verification checklist against the running swapped server. Every requirement passed with zero deviation from task 001''s baseline: clean startup, /projects/detail unchanged, full provenance correctness (112 routes under @sdlcforge/dev-core), GITHUB_API credential type still registers, all three test tiers green matching baseline counts exactly, and the full-tier-api-spec.json snapshot verified structurally as provenance-only across all 165 routes. Incidentally discovered a genuine, unrelated crash bug in /server/next-commands reaching credentials/:type/import (TypeError in liq-handlers-lib) -- confirmed to live entirely outside the four migrated donors and dev-core, flagged rather than fixed.'
           git:
             branch: plan/dev-core-migration-01-004
             commit:
