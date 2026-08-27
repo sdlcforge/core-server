@@ -45,9 +45,9 @@ bun run stop             # Stop server (via scripts/stop.sh)
 ### Plugin System
 The server uses a layered plugin architecture:
 
-1. **Core Server** (`src/lib/app-init.mjs`) configures a built-in (in-tree) plugin aggregate plus 8 explicit npm-dependency plugins, and delegates initialization to `@liquid-labs/plugable-express`
+1. **Core Server** (`src/lib/app-init.mjs`) configures a built-in (in-tree) plugin aggregate plus 5 explicit npm-dependency plugins, and delegates initialization to `@liquid-labs/plugable-express`
 2. **Built-in Plugins** (in-tree, aggregated by `src/lib/builtin-plugins.mjs` and registered under `@sdlcforge/core-server`'s own package identity via `plugable-express`'s `builtinPlugins` option): `src/controls/`, `src/credentials/`, `src/integrations-issues-github/`
-3. **Explicit Plugins** (installed as npm dependencies): liq-orgs, liq-projects, liq-work, plugable-projects-audit, and the sdlc-projects-* workflow/badges family
+3. **Explicit Plugins** (installed as npm dependencies): dev-core, and the sdlc-projects-* workflow/badges family
 4. **User Plugins** loaded from `${COMPLY_HOME}/plugins/server/`
 
 **Important**: During test runs with `NODE_ENV=test`, consider whether explicit plugin loading should be skipped to avoid network dependencies and timeouts.

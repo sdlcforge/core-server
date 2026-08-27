@@ -69,7 +69,7 @@ This document is the repository layout reference for `@sdlcforge/core-server`: w
 └── README.md
 ```
 
-`node_modules/` and `.yalc/` (a local yalc-linked copy of `@liquid-labs/plugable-express` and `@liquid-labs/liq-projects`, used for parallel local development) are also generated and gitignored; both are omitted from the tree above as build/dependency noise. Unlike `node_modules/`, `.yalc/` is **not** reproducible from a clean clone — a fresh checkout has no `.yalc/` at all, and `bun install` fails on its two `file:.yalc/…` dependencies until it is populated by copying it from a checkout that already has it (`scripts/provision-local-deps.sh` automates this).
+`node_modules/` and `.yalc/` (a local yalc-linked copy of `@liquid-labs/plugable-express` and `@sdlcforge/dev-core`, used for parallel local development) are also generated and gitignored; both are omitted from the tree above as build/dependency noise. Unlike `node_modules/`, `.yalc/` is **not** reproducible from a clean clone — a fresh checkout has no `.yalc/` at all, and `bun install` fails on its two `file:.yalc/…` dependencies until it is populated by copying it from a checkout that already has it (`scripts/provision-local-deps.sh` automates this).
 
 ## `src/`
 
