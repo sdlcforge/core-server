@@ -10,3 +10,7 @@ phases:
       slug: declare-in-tree-components
       title: Declare The In-Tree Component Manifests
       tasks: []
+    - number: 3
+      slug: third-party-coupling-coverage
+      title: Third-Party Coupling Coverage
+      tasks: []
