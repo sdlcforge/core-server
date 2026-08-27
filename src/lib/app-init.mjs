@@ -50,14 +50,11 @@ const checkSdlcEnv = (suffix, converter = (x) => x) => {
 // twice. That is a stronger reason for each entry's removal and the `builtin-plugins.mjs` wire-in
 // to always land together, not a weaker one.
 const explicitPlugins = [
-  '@liquid-labs/liq-orgs',
-  '@liquid-labs/liq-projects',
-  '@liquid-labs/liq-work',
-  '@liquid-labs/plugable-projects-audit',
   '@liquid-labs/sdlc-projects-badges-coverage',
   '@liquid-labs/sdlc-projects-badges-github-workflows',
   '@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd',
-  '@liquid-labs/sdlc-projects-workflow-local-node-build'
+  '@liquid-labs/sdlc-projects-workflow-local-node-build',
+  '@sdlcforge/dev-core'
 ]
 
 // `@liquid-labs/plugable-express` reads '<serverConfigRoot>/server-settings.yaml' during
