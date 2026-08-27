@@ -61,11 +61,11 @@ waves:
             plugable-express: compile-time-manifest
         - name: Define compile-time plugin manifest for core-server
           slug: compile-time-manifest-sdlc-server
-          description: Using the compile-time manifest framework from compile-time-manifest-framework, define core-server's own SDLC-specific plugin manifest declaring provides/requires/optional for its (by-then-consolidated) plugin set, replacing the current explicitPlugins runtime array in app-init.mjs. This is what actually fixes bug ynGa (appInit() crashes loading the real explicit-plugin set) and closes the GITHUB_API credential-registration-order gap flagged in Wave 2, by making those dependencies declared and checkable rather than implicit string-convention contracts.
+          description: Using the compile-time manifest framework from compile-time-manifest-framework (plugable-express), define core-server's own SDLC-specific plugin manifest declaring provides/requires/optional for its plugin set, replacing the current explicitPlugins runtime array's implicit ordering with a declared, checkable one. Fixes bug ynGa and closes the GITHUB_API credential-registration-order gap.
           dependencies:
             - compile-time-manifest-framework
           plans:
-            core-server: PLACEHOLDER
+            core-server: sdlc-plugin-manifest
     - name: Unified CLI and MCP Binaries
       planGroups:
         - name: Merge core-server and dev-core into sdlc-core
