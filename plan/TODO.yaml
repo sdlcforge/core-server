@@ -64,7 +64,7 @@ phases:
           slug: update-architecture-docs
           title: Update Architecture Docs
           path: phase-02-doc-updates/001-update-architecture-docs.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: Pure conformance-verification pass. Phase 1 task 003 plus the phase-boundary gate-fix commit had already brought docs/architecture.md and docs/architecture/plugin-loading-tiers.md fully into line with the five-package, dev-core-fronted explicit tier, including the subtler items (table row order, the two-package yalc Key-Decisions bullet, literal _liqOrgs/_liqProjects key names). docs/core-server-spec.md, the file this sweep uniquely covers, needed no edit -- it never named a donor package. No source, docs, or test file changed; only the task document's own Status section was added.
           git:
