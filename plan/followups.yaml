@@ -156,3 +156,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: docs/core-server-spec.md and docs/architecture.md both state Node.js 18-24 support; this host runs v26.5.0, and the migration spec discloses a pre-existing SlowBuffer load failure on Node >= 24 that dev-core inherits. Real doc-vs-reality gap, pre-existing, out of this plan-group's scope.
+    - title: docs/architecture.md's Test infrastructure se
+      id: tonW
+      date: "2026-08-27"
+      tags:
+        - type:ambiguity
+        - plan/phase:doc-updates
+        - plan/slug:dev-core-migration
+        - priority:unspecified
+        - effort:unspecified
+      text: docs/architecture.md's Test infrastructure section describes three test levels and omits full-tier-baseline.test.js/its checked-in snapshots, added by a later plan. Judgment call for a future doc pass; not acted on here.
