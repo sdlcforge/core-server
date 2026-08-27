@@ -26,3 +26,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 3
+          slug: update-docs-and-stale-references
+          title: Update Documentation And Stale In-Source Donor References
+          path: phase-01-dev-core-swap/003-update-docs-and-stale-references.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
