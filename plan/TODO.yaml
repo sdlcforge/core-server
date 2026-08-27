@@ -23,7 +23,7 @@ phases:
           slug: swap-explicit-plugins-atomically
           title: Swap Four Donor Plugins For Dev-Core In One Atomic Commit
           path: phase-01-dev-core-swap/002-swap-explicit-plugins-atomically.md
-          done: false
+          done: true
           tier: opus-med
           digest: Replaced liq-orgs/liq-projects/liq-work/plugable-projects-audit with a single @sdlcforge/dev-core entry across package.json and app-init.mjs's explicitPlugins (8→5), regenerated bun.lock, resynchronized provision-local-deps.sh's REQUIRED_YALC_PACKAGES, updated 3 donor test-fixture occurrences, and regenerated both full-tier snapshots — landed as one commit 792a80a. Unit tier identical to baseline (12/12, 40/40); EXPECTED_SETUP_METHODS/EXPECTED_APP_EXT_KEYS pass unregenerated, strong evidence of contract-equivalence. Snapshot diff is provenance-only across all 165 entries after normalizing for the legitimate load-order shift caused by appending dev-core alphabetically. finalize-task-commit.sh's yalc-override guard fired as documented; pre-staging package.json/bun.lock defeated it and the commit carries all 9 files together.
           git:
