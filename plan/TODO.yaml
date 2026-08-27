@@ -39,7 +39,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/dev-core-migration-01-003
-            commit: []
+            commit:
+                - 43c39ba
             merge: null
         - number: 4
           slug: verify-migration
