@@ -73,3 +73,19 @@ architectural_impact: false
 - `AGENTS.md`, Conventions section — the yalc workflow, and why `rm -f bun.lock && bun install` rather than a bare `bun install`.
 - `scripts/provision-local-deps.sh` — worktree provisioning; read it before running it, since its own required-package list is known stale.
 - `plan/followups.yaml` item `8lmN` — the one-time `bun link` a fresh worktree needs before `bun run test:local`.
+
+## Status
+
+**Outcome: succeeded.** Date: 2026-08-27.
+
+- Published `@sdlcforge/dev-core@1.0.0-alpha.0` into the global yalc store via `yalc publish --no-scripts` from `/Users/zane/playground/sdlcforge/dev-core`; that checkout's `git status --porcelain` showed only the pre-existing untracked `.flow/` afterward — no tracked file dirtied.
+- Linked it into this worktree via `yalc link @sdlcforge/dev-core` (no `package.json` write). `.yalc/@sdlcforge/dev-core/package.json` names `@sdlcforge/dev-core`; `dist/dev-core.js` is present on disk.
+- `scripts/provision-local-deps.sh` exited 1 as expected, reporting the already-stale `REQUIRED_YALC_PACKAGES` mismatch (drift D2: lists `http-smart-response`, no longer `file:`-resolved; omits `playground-monitor`, which is). Resolved by copying `.yalc/@liquid-labs/*` from the main checkout and running `bun install` directly (script itself left untouched, per task scope). Ran `bun link` once per follow-up `8lmN`.
+- Captured the full pre-swap baseline in `plan/notes/pre-swap-baseline.md`: all three test tiers green (unit 40/40 tests across 12 suites; local integration 7/7; Docker multi-Node 9 versions × 7/7, Node 18 through 26 — Docker was available, so the tier ran to completion rather than being marked "not runnable here"). `liq-work` loads without error on every Node version tested, including several past the disclosed `SlowBuffer` line. Recorded the yalc `file:` set (3 packages, matching drift D2 exactly), donor provenance counts in both full-tier and golden snapshots (matching drift D3's numbers exactly), and a live `200` `/projects/detail` response (with the `X-CWD` header it requires — `/projects/list` does not exist as a route) for task 004 to diff against post-swap.
+- No file outside `plan/` was modified; `package.json`, `bun.lock`, `src/`, and `test/` are untouched. `git status --porcelain` in this worktree shows only `plan/notes/pre-swap-baseline.md` (new) and this status update.
+
+Files created/modified (repo-relative, inside worktree):
+- `plan/notes/pre-swap-baseline.md` (new)
+- `plan/phase-01-dev-core-swap/001-provision-dev-core-link-and-baseline.md` (this status update)
+
+No assumptions from an `## Assumptions` section were relied on (the task doc has none); no scope deviations.
