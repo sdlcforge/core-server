@@ -2,3 +2,8 @@ version: 1
 plans:
     - slug: sdlc-plugin-manifest
       status: working
+      dependencies:
+        /Users/zane/playground/liquid-labs/plugable-express:
+            phase: all phases (1-5) of plan 'compile-time-manifest'
+            task: 'compile-time manifest framework: schema, graph-validation engine, validatePluginSet() API, CI-only static enforcement (no live appInit pre-flight; dynamic-plugin loading sources stay unchanged/out of gate scope)'
+            note: core-server's own manifest must be authored against the finalized public contract from this plan — capability grammar <kind>:<name>, five-phase qualifier (framework<load<handlers<setup<runtime), package.json 'plugable' block as the publish-safe primary form, plugable.host.builtins declaration for in-tree builtinPlugins aggregation, and the validatePluginSet()/CLI entry points from phase 3. See plugable-express plan/phases/*.md and plan/notes/*.md (plan slug compile-time-manifest, branch plan/compile-time-manifest) for the full design.
