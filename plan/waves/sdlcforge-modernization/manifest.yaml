@@ -52,6 +52,8 @@ waves:
           description: 'Rename @liquid-labs/sdlcpilot-cli to @sdlcforge/core-cli (GitHub org transfer + npm scope move, corrected mid-planning from an originally-assumed sdlc-cli target to the already-live core-cli name, confirmed by the user). UPDATE 2026-08-15: COMPLETE. All 5 phase-1 tasks landed (GitHub identity verified, package.json/bun.lock identity updated, build artifacts and self-references renamed including a manager-approved fix for an unrelated pre-existing @liquid-labs/plugable-defaults PLUGABLE_REGISTRY export removal, version bumped to 1.0.0-alpha.11, directory relocated to sdlcforge/core-cli), phase-review gate passed (one trivial minor finding fixed via follow-up dispatch), plan finalized and merged to main. The project-index slug for this participant changed from sdlcpilot-cli to core-cli as a result; the plans map key below was updated to match. Remaining open item (tracked in this project''s own plan/followups.yaml, not blocking): npm publish --access public --tag alpha for @sdlcforge/core-cli@1.0.0-alpha.11 still needs to be run manually by the user - blocked in this environment by the Claude Code permission classifier and an npm registry 401 credential issue, matching the sibling pluggable-defaults-rename plan''s own precedent. Separate from the CLI/server binary-unification question raised for a later wave - this was just the rename/relocation.'
           plans:
             core-cli: sdlcpilot-cli-rename
+    - name: Dev-Core Consumer Migration
+      planGroups: []
     - name: Compile-Time Plugin Manifest
       planGroups:
         - name: Implement compile-time plugin manifest framework
@@ -80,5 +82,3 @@ waves:
             - sdlc-core-unification
           plans:
             sdlcpilot-cli: PLACEHOLDER
-    - name: Dev-Core Consumer Migration
-      planGroups: []
