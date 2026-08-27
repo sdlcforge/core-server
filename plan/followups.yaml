@@ -166,3 +166,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: docs/architecture.md's Test infrastructure section describes three test levels and omits full-tier-baseline.test.js/its checked-in snapshots, added by a later plan. Judgment call for a future doc pass; not acted on here.
+    - title: This task's own Validation grep bullet is wor
+      id: 862M
+      date: "2026-08-27"
+      tags:
+        - type:ambiguity
+        - plan/phase:doc-updates
+        - plan/slug:dev-core-migration
+        - priority:unspecified
+        - effort:unspecified
+      text: This task's own Validation grep bullet is worded more strictly than task 003's equivalent (which carved out legitimate historical-context hits); recommend future plan-doc-authoring carry the same carve-out phrasing to avoid a false validation-miss read.
