@@ -53,7 +53,12 @@ waves:
           plans:
             core-cli: sdlcpilot-cli-rename
     - name: Dev-Core Consumer Migration
-      planGroups: []
+      planGroups:
+        - name: Migrate core-server to consume sdlcforge/dev-core
+          slug: dev-core-migration
+          description: core-server has not yet repointed from the four donor packages (liq-projects, liq-work, liq-orgs, plugable-projects-audit) that dev-core-consolidation already absorbed into @sdlcforge/dev-core. Swap all four explicitPlugins entries for a single @sdlcforge/dev-core entry per dev-core's own docs/consumer-migration.md handoff spec, which fully specifies the required edits per donor.
+          plans:
+            core-server: dev-core-migration
     - name: Compile-Time Plugin Manifest
       planGroups:
         - name: Implement compile-time plugin manifest framework
