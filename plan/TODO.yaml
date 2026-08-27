@@ -35,7 +35,7 @@ phases:
           slug: update-docs-and-stale-references
           title: Update Documentation And Stale In-Source Donor References
           path: phase-01-dev-core-swap/003-update-docs-and-stale-references.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: Brought every prose/count/donor reference into line with task 002's landed swap (4 donors -> 1 @sdlcforge/dev-core, 8->5 explicit plugins) across docs/architecture.md, docs/architecture/plugin-loading-tiers.md (collapsed four-donor table into one dev-core row), docs/project-structure.md, test/README.md, CLAUDE.md, and AGENTS.md (re-derived CI-policy yalc bullet against regenerated bun.lock, dropped stale transitive clause). Corrected six stale in-source comments across three test files describing donors as still-external, comment-only (no code/assertion changes). All 12 suites / 40 tests passed identically; no snapshot moved.
           git:
