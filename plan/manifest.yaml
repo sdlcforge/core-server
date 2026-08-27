@@ -12,3 +12,6 @@ plans:
         leadProject: core-server
     - slug: dev-core-migration
       status: working
+      wave:
+        slug: sdlcforge-modernization
+        leadProject: core-server
