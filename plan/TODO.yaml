@@ -1,0 +1,8 @@
+slug: sdlc-plugin-manifest
+version: 1
+title: ""
+phases:
+    - number: 1
+      slug: framework-uptake-and-host-declaration
+      title: Framework Uptake And Host Declaration
+      tasks: []
