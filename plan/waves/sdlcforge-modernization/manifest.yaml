@@ -80,3 +80,5 @@ waves:
             - sdlc-core-unification
           plans:
             sdlcpilot-cli: PLACEHOLDER
+    - name: Dev-Core Consumer Migration
+      planGroups: []
