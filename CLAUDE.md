@@ -17,7 +17,7 @@ make                    # Direct build
 ### Testing
 ```bash
 bun run test                      # Unit tests (Jest)
-bun run test:integration          # Full Docker-based multi-version tests (18-24)
+bun run test:integration          # Full Docker-based multi-version tests (18-26)
 TEST_SINGLE_VERSION=22 bun run test:integration  # Test single Node version
 bun run test:local                # Quick local integration test
 ./test/test-ci.sh                 # CI-style test
@@ -92,7 +92,7 @@ Configuration via `@liquid-labs/comply-defaults`:
 
 3. **Docker Multi-Version Tests** (`test/run-integration-tests.sh`)
    - **Primary Purpose**: Verify that explicitPlugins are automatically loaded on first server startup
-   - Tests across Node 18-24
+   - Tests across Node 18-26
    - Ubuntu container with nvm pre-installed
    - Results in `test-staging/integration-results/test-results-node-*.json`
    - Use `TEST_SINGLE_VERSION=X` to test specific version

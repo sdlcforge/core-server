@@ -30,7 +30,7 @@ flowchart TB
 
 ## Tech stack
 
-- **Runtime:** Node.js, `>=18.0.0` (validated across 18–24 by the Docker multi-version test suite).
+- **Runtime:** Node.js, `>=18.0.0` (validated across 18–26 by the Docker multi-version test suite).
 - **Language:** ES6+ source, transpiled to CommonJS via Babel for the published artifacts.
 - **Package management:** Bun (`bun install`, `bun.lock`) installs the dependency tree; Node and npm remain required on a contributor's `PATH` for the Catalyst build/lint/test toolchain — `npm explore` resolves each tool's config path, and every Catalyst CLI is itself a Node-targeted tool regardless of which package manager populated `node_modules`.
 - **HTTP framework:** Express, via `@liquid-labs/plugable-express`.
@@ -56,7 +56,7 @@ The build is Makefile-driven (Catalyst framework), not a bare `npm run build`/`b
 
 ### Test infrastructure
 
-Three test levels give increasing confidence at increasing cost: Jest unit tests (`src/lib/test/*.test.js`) validate app initialization and library exports in isolation; a local integration pass (`test/test-server.js`) starts the real server on the current Node version and exercises its core endpoints; a Docker-based multi-version pass (`test/run-integration-tests.sh`) runs the same kind of check across every supported Node version (18–24) inside Ubuntu containers provisioned with nvm. The Docker pass exists primarily to catch explicit-plugin loading regressions — the 5-package npm-dependency install is the part of startup most exposed to Node-version and network variance — rather than to re-verify unit-level correctness already covered by Jest.
+Three test levels give increasing confidence at increasing cost: Jest unit tests (`src/lib/test/*.test.js`) validate app initialization and library exports in isolation; a local integration pass (`test/test-server.js`) starts the real server on the current Node version and exercises its core endpoints; a Docker-based multi-version pass (`test/run-integration-tests.sh`) runs the same kind of check across every supported Node version (18–26) inside Ubuntu containers provisioned with nvm. The Docker pass exists primarily to catch explicit-plugin loading regressions — the 5-package npm-dependency install is the part of startup most exposed to Node-version and network variance — rather than to re-verify unit-level correctness already covered by Jest.
 
 ## Key decisions
 
