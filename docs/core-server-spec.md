@@ -56,7 +56,7 @@ It covers the server's use cases, cross-cutting behavioral requirements, and ext
 
 - **Actor:** a developer or CI system.
 - **Action:** runs the project's test suites (`bun run test` for unit tests; `bun run test:local` for a quick local integration pass; `bun run test:integration` for the full Docker-based multi-version pass).
-- **Outcome:** unit tests validate app initialization and library exports; local integration tests validate the running server's endpoints on the current Node version; Docker multi-version tests validate — primarily — that explicit plugins load correctly on first server startup across every supported Node version (18 through 24).
+- **Outcome:** unit tests validate app initialization and library exports; local integration tests validate the running server's endpoints on the current Node version; Docker multi-version tests validate — primarily — that explicit plugins load correctly on first server startup across every supported Node version (18 through 26).
 
 ## General features
 
@@ -85,7 +85,7 @@ Beyond the fixed core endpoints above, every loaded plugin is expected to regist
 
 ## Constraints and assumptions
 
-- **Node.js `>=18.0.0`** is the minimum supported runtime, per the package's declared `engines` constraint; the Docker multi-version test suite validates behavior across Node 18 through 24.
+- **Node.js `>=18.0.0`** is the minimum supported runtime, per the package's declared `engines` constraint; the Docker multi-version test suite validates behavior across Node 18 through 26.
 - **Explicit and dynamic plugin installation may require network access** (fetching plugin packages), and a network-constrained environment (e.g. a sandboxed CI container) can affect first-startup plugin loading.
 - **User-supplied plugins depend on a configured `${COMPLY_HOME}`.** The third plugin tier only loads plugins found under `${COMPLY_HOME}/plugins/server/`; if that location is unset or empty, only the core and explicit tiers are active.
 - **Designed as a companion to the SDLC CLI.** While the HTTP API is usable by any client, the server's capability set and command-discovery endpoints (`/server/next-commands`, `/server/api`) are shaped around driving the companion CLI's workflow.

@@ -18,7 +18,7 @@ bun run build               # runs `make`; produces dist/sdlcforge-server.js (li
 ```bash
 bun run test                        # unit tests (Jest + Supertest), coverage to qa/coverage/ (or `make test`)
 bun run test:local                  # quick local integration pass against the current Node version
-bun run test:integration            # full Docker-based multi-version pass (Node 18-24)
+bun run test:integration            # full Docker-based multi-version pass (Node 18-26)
 TEST_SINGLE_VERSION=22 bun run test:integration   # test a single Node version
 ./test/test-ci.sh                   # CI-style test
 ```
