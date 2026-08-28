@@ -146,16 +146,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'New finding, not a documented pre-existing defect: GET /server/next-commands?command=credentials/ (and any completion path reaching the credentials/:type/import path variable) crashes the running server process with TypeError: e.map is not a function at node_modules/@liquid-labs/liq-handlers-lib/dist/liq-handlers-lib.js:570, reached via plugable-express''s next-commands.mjs -> _lib/next-options.mjs. Confirmed unrelated to this migration -- the crashing code lives in liq-handlers-lib and liq-credentials-db/credentials-db-plugin-github, none of which are among the four swapped donors or dev-core. Recommend a follow-up item to investigate/fix in liq-handlers-lib or the credentials plugin''s optionsFetcher.'
-    - title: docs/core-server-spec.md and docs/architectur
-      id: uJIy
-      date: "2026-08-27"
-      tags:
-        - type:ambiguity
-        - plan/phase:doc-updates
-        - plan/slug:dev-core-migration
-        - priority:unspecified
-        - effort:unspecified
-      text: docs/core-server-spec.md and docs/architecture.md both state Node.js 18-24 support; this host runs v26.5.0, and the migration spec discloses a pre-existing SlowBuffer load failure on Node >= 24 that dev-core inherits. Real doc-vs-reality gap, pre-existing, out of this plan-group's scope.
     - title: docs/architecture.md's Test infrastructure se
       id: tonW
       date: "2026-08-27"
