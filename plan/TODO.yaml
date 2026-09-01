@@ -52,7 +52,7 @@ phases:
             branch: plan/dev-core-plugin-manifest-01-004
             commit:
                 - eb2ead7
-            merge: null
+            merge: e2b7840d60a3a9b6e4978ef698ed8cc7e9f8810e
     - number: 2
       slug: doc-updates
       title: Documentation Updates
