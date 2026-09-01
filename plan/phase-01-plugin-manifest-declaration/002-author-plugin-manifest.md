@@ -103,3 +103,35 @@ architectural_impact: true
 - After the `work` and `projects` components are declared and the reader accepts them — the two bug-class declarations, the core of the task.
 - After the `orgs` and `projects-audit` components are declared and all four records parse.
 - After the README paragraph documenting the form choice, the deferrals, and the `components:`-order-is-load-order rule.
+
+## Status
+
+**Outcome: succeeded.** Date: 2026-09-01.
+
+Files changed (exactly two, `src/` untouched):
+
+- [`package.json`](../../package.json) — new top-level `"plugable"` block: `plugableManifestVersion: 1`, `npmName: "@sdlcforge/dev-core"`, and a four-entry `components:` array in the normative order `projects`, `orgs`, `work`, `projects-audit`.
+- [`README.md`](../../README.md) — new `## The plugin manifest` section between `## How it loads` and `## Build and test`, covering the form choice, the `components:`-order-is-load-order rule, both deliberate deferrals, the three expected-unsatisfied requirements, and the `credentialType:GITHUB_API` naming commitment.
+
+### The `GITHUB_API` credential-kind decision
+
+Declared as a `provides` on the `projects` component at `load` phase, spelled **`credentialType:GITHUB_API`**, with a `via` naming `setupCredentials()` from `@liquid-labs/credentials-db-plugin-github` at `src/projects/setup.mjs:8`. The schema's capability grammar (`kind := [a-z][a-zA-Z0-9]*`) sanctions `credentialType` as an open/vendor kind, and the reader normalizes it to `exclusive: false` with no diagnostic. `credentialType` was preferred over `credential`/`credentialKind` because `setupCredentials()` registers a credential *type* on the DB rather than a credential value. This is a cross-package naming commitment: any requiring half must spell the string identically.
+
+### Census disagreement found against current `src/`
+
+One material omission in [`plan/notes/capability-census.md`](../notes/capability-census.md) — not a tree movement, a gap in the census itself. The `work` table omits **`requires appExt:_liqProjects.playgroundMonitor @ runtime`**, which `src/` and this project's own README both establish plainly (24 unguarded reads across 12 request-path modules; the README calls it "the single most important thing to know about this submodule"). Source was preferred over the census and the requirement is declared. Everything else in the census reconciled line-for-line against `src/`, with one immaterial line-number slip: the census's `controls/getQuestionControls` grounding column cites `submit-lib.mjs:95,104` while the real sites are `:94` (`hasHook`) and `:103` (`callHook`) — the census's own surrounding prose already gives the correct numbers.
+
+### Validation results
+
+| Check | Result |
+|---|---|
+| `package.json` parses; exactly one top-level `"plugable"` key | passed |
+| No `plugable.yaml` / `.yml` / `.json` at package root | passed |
+| `resolvePluginManifest({dir, pkg})` returns four normalized records, no throw, no diagnostics | passed — `diagnostics: []` on all four |
+| Component names/order are `projects`, `orgs`, `work`, `projects-audit` | passed |
+| Grammar: lowerCamel kinds; explicit `phase` on every `appExt:`/open-kind `provides`; no `order: first`/`last` alongside a `setupMethod:` `requires` | passed (asserted against both the literal JSON and the normalized records) |
+| `git diff` touches exactly `package.json` and `README.md`; `git diff --stat -- src` empty | passed |
+| `make build` succeeds; `dist/dev-core.js` exports `handlers` (58 entries) and `setup` (function) | passed |
+| Scoped test `make test TEST=test/index.test.js` (the aggregator suite) | passed — 7/7; no full-suite run made, baseline untouched |
+
+Informational, beyond the required checks: `validatePluginGraph({records})` over the four records (it folds in `FRAMEWORK_MANIFEST` itself) yields exactly the intended shape — every framework-provided and intra-package edge resolves clean, and the only findings are the three expected cross-package gaps at `error` (`appExt:credentialsDB` from `projects` and from `work`; `appExt:_liqOrgs.orgSetupMethods` from `orgs`) plus the one `info`-severity unsatisfied optional (`integrationHook:controls/getQuestionControls`). `credentialType:GITHUB_API` produces no finding at all, as predicted for an unmatched `provides`.
