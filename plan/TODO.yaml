@@ -18,7 +18,7 @@ phases:
             branch: plan/dev-core-plugin-manifest-01-001
             commit:
                 - "4583323"
-            merge: null
+            merge: bc3b3bd6262477fd6b7868e841eb7df0f268b845
         - number: 2
           slug: author-plugin-manifest
           title: Author Plugin Manifest
