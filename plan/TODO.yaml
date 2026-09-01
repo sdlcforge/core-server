@@ -5,6 +5,7 @@ phases:
     - number: 1
       slug: plugin-manifest-declaration
       title: Plugin Manifest Declaration
+      diff_base: d92fa6d0007aaed310c92bce7f392e64eceb01cd
       tasks:
         - number: 1
           slug: add-plugable-express-dev-dependency
