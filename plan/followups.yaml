@@ -149,16 +149,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Census correction needed: plan/notes/capability-census.md''s work table is missing ''requires appExt:_liqProjects.playgroundMonitor @ runtime'' (declared in manifest from source; census note should be updated so tasks 003/004 don''t flag it as undeclared drift).'
-    - title: appExt:_liqOrgs.orgSetupMethods produces a 4t
-      id: VHhM
-      date: "2026-09-01"
-      tags:
-        - type:ambiguity
-        - plan/phase:plugin-manifest-declaration
-        - plan/slug:dev-core-plugin-manifest
-        - priority:unspecified
-        - effort:unspecified
-      text: 'appExt:_liqOrgs.orgSetupMethods produces a 4th error-severity finding against unmanifested liq-policy, one more than manifest-scope-and-tooling.md''s declare-now list anticipated -- same shape/justification as the accepted appExt:credentialsDB gaps (task doc''s declare-everything-the-census-establishes rule covers it; only the six integrationHook: entries were listed as deferrals), documented in README; manager should confirm this was intended.'
     - title: Pre-existing defects observed, untouched, all
       id: B2hv
       date: "2026-09-01"
