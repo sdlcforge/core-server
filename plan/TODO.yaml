@@ -45,7 +45,7 @@ phases:
           slug: add-manifest-drift-guard-test
           title: Add Manifest Drift Guard Test
           path: phase-01-plugin-manifest-declaration/004-add-manifest-drift-guard-test.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: Added src/test/plugin-manifest.test.mjs, a 17-test Jest suite proving dev-core's plugable block parses to 4 correctly-ordered records and that every framework-facing and intra-package requirement resolves satisfied against plugable-express's real exports, while explicitly asserting the three genuine cross-package gaps remain unsatisfied and nothing else does. Verified empirically that validatePluginGraph({records}) already folds in FRAMEWORK_MANIFEST (encoded as its own test). Proved the guard fires via a reverted mutation. Baseline comparison shows the pre-existing 7-test project-lifecycle.test.mjs failure unchanged. make build and git diff --stat single-file check both pass.
           git:
