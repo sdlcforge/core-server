@@ -149,3 +149,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Census correction needed: plan/notes/capability-census.md''s work table is missing ''requires appExt:_liqProjects.playgroundMonitor @ runtime'' (declared in manifest from source; census note should be updated so tasks 003/004 don''t flag it as undeclared drift).'
+    - title: 'Input for task 004''s drift guard test: valida'
+      id: TUB7
+      date: "2026-09-01"
+      tags:
+        - type:ambiguity
+        - plan/phase:plugin-manifest-declaration
+        - plan/slug:dev-core-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Input for task 004''s drift guard test: validatePluginGraph({records}) implicitly folds in FRAMEWORK_MANIFEST already -- passing it explicitly alongside resolved records produces ~18 spurious exclusivity-disagreement errors. Test must pass only dev-core''s own records; expected finding set is exactly 4 (3 error-severity unsatisfied: appExt:credentialsDB x2, appExt:_liqOrgs.orgSetupMethods x1; 1 info-severity unsatisfied optional: integrationHook:controls/getQuestionControls).'
