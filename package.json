@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/sdlcforge/dev-core#readme",
   "devDependencies": {
+    "@liquid-labs/plugable-express": "^1.0.0-alpha.59",
     "@liquid-labs/sdlc-resource-babel-and-rollup": "^1.0.0-alpha.5",
     "@liquid-labs/sdlc-resource-eslint": "^1.0.0-alpha.2",
     "@liquid-labs/sdlc-resource-jest": "^1.0.0-alpha.5"
