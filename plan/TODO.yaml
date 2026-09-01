@@ -5,4 +5,14 @@ phases:
     - number: 1
       slug: plugin-manifest-declaration
       title: Plugin Manifest Declaration
-      tasks: []
+      tasks:
+        - number: 1
+          slug: add-plugable-express-dev-dependency
+          title: Add Plugable Express Dev Dependency
+          path: phase-01-plugin-manifest-declaration/001-add-plugable-express-dev-dependency.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
