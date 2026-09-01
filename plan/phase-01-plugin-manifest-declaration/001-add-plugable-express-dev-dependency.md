@@ -40,6 +40,15 @@ Scope is exactly one `devDependency` addition plus the lockfile refresh it impli
 - The npm registry is reachable from the execution environment. If it is not, halt and report rather than falling back to a local `file:`/yalc link — the fallback path (driving the CLI directly from the sibling `@liquid-labs/plugable-express` checkout's already-built `dist/`) is documented in `plan/notes/manifest-scope-and-tooling.md` and is a manager decision, not this task's to take unilaterally.
 - dev-core's `package.json` still carries no `files` allowlist. If one has appeared since planning, note it — it does not change this task, but it confirms the form choice task 002 makes.
 
+## Status
+
+- **Outcome:** succeeded — 2026-09-01.
+- Added `@liquid-labs/plugable-express` (`^1.0.0-alpha.59`) to `devDependencies` in `package.json`, alphabetically placed ahead of the two existing `@liquid-labs/sdlc-resource-*` entries. Ran `npm install` to refresh `package-lock.json`; `git diff --stat` shows exactly `package.json` and `package-lock.json` changed, nothing else.
+- Installed CLI resolves and runs: `node_modules/@liquid-labs/plugable-express/package.json` reports version `1.0.0-alpha.59` (satisfies the declared range), and `node_modules/.bin/plugable-express-validate --help` produces the expected usage line on stderr with exit code 2 (unrecognized-flag path, as the task doc anticipated).
+- `make build` succeeds and regenerates `dist/dev-core.js` (gitignored, not part of the diff), confirming the Babel/Rollup toolchain is undisturbed.
+- `npm audit` after install reports 24 vulnerabilities (18 moderate, 6 high) — same count as the audit surface for the affected packages pre-change. Verified by diffing `package-lock.json` package-version entries for every package `npm audit --json` names as vulnerable (`@liquid-labs/credentials-db-plugin-github`, `@liquid-labs/github-toolkit`, `@liquid-labs/liq-credentials-db`, `@liquid-labs/octocache`, `@liquid-labs/sdlc-resource-babel-and-rollup`, `@liquid-labs/sdlc-resource-eslint`, the `@octokit/*` family, `octokit`, `@rollup/plugin-terser`, `serialize-javascript`) against the pre-change lockfile: every one is version-identical before and after. `@liquid-labs/plugable-express` and its transitive tree introduce no new advisory. Per Requirement 5, no new findings surfaced, so nothing was added to `plan/followups.yaml`.
+- Affected files: `package.json`, `package-lock.json`.
+
 ## References
 
 - [manifest scope and tooling](../notes/manifest-scope-and-tooling.md) — why the dependency is absent, why `devDependency` is the right kind, and the documented fallback if this task cannot proceed.
