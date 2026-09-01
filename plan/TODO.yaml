@@ -39,7 +39,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/dev-core-plugin-manifest-01-003
-            commit: []
+            commit:
+                - cbd5d25
             merge: null
         - number: 4
           slug: add-manifest-drift-guard-test
