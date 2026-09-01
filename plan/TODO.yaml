@@ -1,0 +1,8 @@
+slug: dev-core-plugin-manifest
+version: 1
+title: ""
+phases:
+    - number: 1
+      slug: plugin-manifest-declaration
+      title: Plugin Manifest Declaration
+      tasks: []
