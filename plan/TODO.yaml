@@ -16,3 +16,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: author-plugin-manifest
+          title: Author Plugin Manifest
+          path: phase-01-plugin-manifest-declaration/002-author-plugin-manifest.md
+          done: false
+          tier: opus-med
+          git:
+            branch: null
+            commit: []
+            merge: null
