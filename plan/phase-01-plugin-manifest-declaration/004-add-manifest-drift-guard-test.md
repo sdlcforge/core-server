@@ -75,3 +75,46 @@ A second, weaker assertion is worth adding alongside: that the out-of-package un
 - After assertion 1 (manifest parses to four ordered records) passes.
 - After assertions 2 and 3 (framework-facing and intra-package satisfaction) pass with the scoping comment in place.
 - After the deliberate-mutation proof that the guard actually fires.
+
+## Status
+
+**Outcome: succeeded.** Date: 2026-09-01.
+
+Added [`src/test/plugin-manifest.test.mjs`](../../src/test/plugin-manifest.test.mjs) — the only file changed (`git diff --stat` against the task's start commit shows exactly this one file, 140 insertions; `src/` otherwise untouched). It composes `resolvePluginManifest`, `validatePluginGraph`, and `FRAMEWORK_MANIFEST` from `@liquid-labs/plugable-express` (a `devDependency`, imported only from this test):
+
+- Assertion 1: `resolvePluginManifest({ dir, pkg })` returns exactly four records, `component` order `projects`, `orgs`, `work`, `projects-audit`.
+- Assertion 2: every framework-facing requirement (`appExt:serverConfigRoot` ×2, `appExt:constants`, `appExt:setupMethods`, `appExt:integrations`, `setupArg:registerPathVar` ×3) resolves satisfied.
+- Assertion 3: every intra-package requirement (`appExt:_liqProjects.playgroundMonitor` ×3, `pathVar:projectName`, `pathVar:parameterKey` same-plugin handlers/handlers) resolves satisfied.
+- Scoping rule: the suite explicitly asserts `result.ok === false` and that the unsatisfied-findings set is *exactly* the three expected out-of-package capabilities (`appExt:credentialsDB` ×2, `appExt:_liqOrgs.orgSetupMethods`, plus the one `info`-severity optional `integrationHook:controls/getQuestionControls`) — never an overall-clean graph — with an in-file comment explaining why, per the task's hard scoping rule.
+
+### Correction to the task doc's requirement 2, applied per dispatch guidance
+
+The task doc's literal text says to "feed dev-core's records plus `FRAMEWORK_MANIFEST` into `validatePluginGraph()`." Empirically confirmed (and consistent with task 002's own report) that `validatePluginGraph({ records })` already implicitly folds `FRAMEWORK_MANIFEST` in — passing it a second time, concatenated into `records`, duplicates the framework node and produces ~18 spurious `exclusivity-disagreement` errors. The suite calls `validatePluginGraph({ records })` with only dev-core's own four records, and asserts the implicit fold-in directly (a dedicated test confirms the framework node appears in `result.nodes` even though it is never in `records`). This is recorded here since it corrects the task doc's own wording, not because a followup is required.
+
+### Mutation proof that the guard actually fires
+
+Temporarily renamed `work`'s `appExt:serverConfigRoot` requirement (in `package.json`'s `"plugable"` block) to `appExt:serverConfigRootMUTATED`, re-ran `make test TEST=test/plugin-manifest.test.js`: the suite went from 17/17 passing to 1 failing (`the unsatisfied set is exactly the three expected out-of-package capabilities, nothing else` — the findings list gained an unexpected fourth error, `appExt:serverConfigRootMUTATED <- @sdlcforge/dev-core#work@load (error)`, matching the exact `serverConfigRoot`-rename bug class this plan exists to catch). Reverted the mutation; `git diff --stat -- package.json` returned empty and the suite passed 17/17 again.
+
+### Baseline comparison
+
+Force-cleaned `test-staging`/`qa` (mtime-gated `make` otherwise silently reuses stale compiled output after a source file is removed/restored) and ran full `make test` both without and with the new test file:
+
+- Before (new test file removed from the working tree): 14 suites (13 passed, 1 failed), 82 tests (75 passed, 7 failed).
+- After (new test file restored): 15 suites (14 passed, 1 failed), 99 tests (92 passed, 7 failed) — 99 = 82 + 17 (the new suite).
+- The 7 failing test names are byte-identical in both runs, all in `src/projects/handlers/_lib/test/project-lifecycle.test.mjs` (followup `2aMD`, the known-red `serverHome`/`serverConfigRoot` mismatch) — untouched, not incidentally fixed, not newly broken.
+
+### Validation results
+
+| Check | Result |
+|---|---|
+| `make test TEST=test/plugin-manifest.test.js` green | passed — 17/17 |
+| Guard genuinely guards (mutation-and-revert proof) | passed — see above |
+| No overall-clean assertion; in-file scoping comment present | passed |
+| `make build` succeeds; `dist/dev-core.js` exports `handlers` (58 entries, array) and `setup` (function) | passed |
+| Baseline comparison (before/after full-suite failure lists identical apart from the added suite) | passed |
+| `git diff --stat` shows only the new test file | passed |
+
+### Assumptions applied
+
+- Tasks 001 and 002 had landed before this task started (confirmed: `@liquid-labs/plugable-express@^1.0.0-alpha.59` is an installed `devDependency`, and `package.json` carries the four-component `"plugable"` block from task 002).
+- Task 003 (validate manifest against source) was running concurrently in a sibling worktree against the same plan branch; this task's own worktree's `"plugable"` block was not observed to change during this task's execution (confirmed via `git status`/`git diff` immediately before finalizing — no incoming changes were present in this worktree at any point, since task 003 operates in its own separate worktree and had not yet been merged back to the plan branch as of this task's completion). Per the task doc's own Assumptions section, if task 003's reconciliation later changes the `"plugable"` block, this suite should be re-run — flagged for the manager below.
