@@ -42,7 +42,7 @@ phases:
             branch: plan/dev-core-plugin-manifest-01-003
             commit:
                 - cbd5d25
-            merge: null
+            merge: 172ede8ceb9ce78e7d95103b58b10135dd243802
         - number: 4
           slug: add-manifest-drift-guard-test
           title: Add Manifest Drift Guard Test
