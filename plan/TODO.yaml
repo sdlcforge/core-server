@@ -26,3 +26,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 3
+          slug: validate-manifest-against-source
+          title: Validate Manifest Against Source
+          path: phase-01-plugin-manifest-declaration/003-validate-manifest-against-source.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
