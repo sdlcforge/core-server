@@ -149,13 +149,3 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Census correction needed: plan/notes/capability-census.md''s work table is missing ''requires appExt:_liqProjects.playgroundMonitor @ runtime'' (declared in manifest from source; census note should be updated so tasks 003/004 don''t flag it as undeclared drift).'
-    - title: Pre-existing defects observed, untouched, all
-      id: B2hv
-      date: "2026-09-01"
-      tags:
-        - type:ambiguity
-        - plan/phase:plugin-manifest-declaration
-        - plan/slug:dev-core-plugin-manifest
-        - priority:unspecified
-        - effort:unspecified
-      text: 'Pre-existing defects observed, untouched, all already tracked: ''pull requests'' plural typo at answer-set-to-md.mjs:74 (followup OmUC), orgs handlers model-argument bug (followup jY7C), create-lib.mjs serverConfigRoot vs test mock serverHome (followup 2aMD).'
