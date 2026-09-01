@@ -37,6 +37,7 @@ phases:
           path: phase-01-plugin-manifest-declaration/003-validate-manifest-against-source.md
           done: false
           tier: sonnet-high
+          digest: Ran plugable-express-validate's --diff-manifest and --suggest against dev-core's task-002 manifest and reconciled all 20 reported divergences. Corrected an invented capability kind (credentialType:GITHUB_API -> credential:GITHUB_API, per the framework's own migration guide canonical spelling) and declared the previously-missing requiring half. Added two low-value-but-correct setupArg completeness declarations. All other divergences were scanner limitations or the six already-documented integrationHook deferrals (including the known pull-requests typo, reported not fixed, not added to followups per task instruction). make build succeeds, git diff --stat -- src is empty, reader accepts the corrected manifest cleanly before and after.
           git:
             branch: plan/dev-core-plugin-manifest-01-003
             commit:
