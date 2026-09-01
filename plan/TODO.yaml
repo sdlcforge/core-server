@@ -11,11 +11,13 @@ phases:
           slug: add-plugable-express-dev-dependency
           title: Add Plugable Express Dev Dependency
           path: phase-01-plugin-manifest-declaration/001-add-plugable-express-dev-dependency.md
-          done: false
+          done: true
           tier: sonnet-med
+          digest: Added @liquid-labs/plugable-express@^1.0.0-alpha.59 as a devDependency, refreshed package-lock.json, confirmed plugable-express-validate CLI ships in node_modules/.bin. make build passed. No new npm audit findings.
           git:
-            branch: null
-            commit: []
+            branch: plan/dev-core-plugin-manifest-01-001
+            commit:
+                - "4583323"
             merge: null
         - number: 2
           slug: author-plugin-manifest
