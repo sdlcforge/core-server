@@ -36,3 +36,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 4
+          slug: add-manifest-drift-guard-test
+          title: Add Manifest Drift Guard Test
+          path: phase-01-plugin-manifest-declaration/004-add-manifest-drift-guard-test.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
