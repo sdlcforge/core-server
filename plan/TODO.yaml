@@ -30,7 +30,7 @@ phases:
             branch: plan/dev-core-plugin-manifest-01-002
             commit:
                 - c058fff
-            merge: null
+            merge: e36c7141b26de1758bc4da8d6384019436e5838d
         - number: 3
           slug: validate-manifest-against-source
           title: Validate Manifest Against Source
