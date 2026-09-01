@@ -95,7 +95,7 @@
             "via": "registerPathVar('projectName') from src/projects/setup.mjs:21"
           },
           {
-            "capability": "credentialType:GITHUB_API",
+            "capability": "credential:GITHUB_API",
             "phase": "load",
             "via": "setupCredentials() from @liquid-labs/credentials-db-plugin-github, called at src/projects/setup.mjs:8; registers the GITHUB_API credential type onto the shared app.ext.credentialsDB"
           }
@@ -111,7 +111,14 @@
             "phase": "runtime",
             "reason": "src/projects/handlers/_lib/create-lib.mjs:91"
           },
-          "setupArg:registerPathVar"
+          {
+            "capability": "credential:GITHUB_API",
+            "phase": "runtime",
+            "reason": "task 003 reconciliation: credentialsDB.getToken('GITHUB_API') at handlers/_lib/archive-lib.mjs:33, destroy-lib.mjs:48, rename-lib.mjs:121, releases/_lib/do-github-release.mjs:11 -- resolves against this same component's own credential:GITHUB_API provides"
+          },
+          "setupArg:registerPathVar",
+          "setupArg:app",
+          "setupArg:reporter"
         ]
       },
       {
@@ -174,7 +181,9 @@
             "reason": "src/orgs/setup.mjs:46, inside 'process org setup'; the array is populated by liq-policy, outside this package"
           },
           "pathVar:parameterKey",
-          "setupArg:registerPathVar"
+          "setupArg:registerPathVar",
+          "setupArg:app",
+          "setupArg:reporter"
         ]
       },
       {
@@ -218,6 +227,13 @@
             "reason": "9 callHook/hasHook sites in src/work/handlers/_lib/submit-lib.mjs and answer-set-to-md.mjs"
           },
           "setupArg:registerPathVar",
+          "setupArg:app",
+          "setupArg:reporter",
+          {
+            "capability": "credential:GITHUB_API",
+            "phase": "runtime",
+            "reason": "task 003 reconciliation: credentialsDB.getToken('GITHUB_API') at handlers/_lib/clean-lib.mjs:25, close-lib.mjs:17, start-lib.mjs:74, status-lib.mjs:11, issues/_lib/add-lib.mjs:14,59, issues/_lib/remove-lib.mjs:25, projects/_lib/add-lib.mjs:13,38 -- resolves against the projects component's credential:GITHUB_API provides"
+          },
           {
             "capability": "integrationHook:controls/getQuestionControls",
             "phase": "runtime",
