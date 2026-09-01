@@ -27,7 +27,8 @@ phases:
           tier: opus-med
           git:
             branch: plan/dev-core-plugin-manifest-01-002
-            commit: []
+            commit:
+                - c058fff
             merge: null
         - number: 3
           slug: validate-manifest-against-source
