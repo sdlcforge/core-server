@@ -23,11 +23,13 @@ phases:
           slug: author-plugin-manifest
           title: Author Plugin Manifest
           path: phase-01-plugin-manifest-declaration/002-author-plugin-manifest.md
-          done: false
+          done: true
           tier: opus-med
+          digest: Authored dev-core's compile-time plugin manifest as a package.json plugable block, four components in src/index.mjs order, all parsing cleanly through resolvePluginManifest with zero diagnostics. Both bug-class declarations in place (appExt:serverConfigRoot rename detection, appExt:credentialsDB ordering). credentialType:GITHUB_API declared and recorded in README as a cross-package naming commitment for core-server. One census omission (work requires appExt:_liqProjects.playgroundMonitor @ runtime, 24 call sites) found and declared from source. Runtime-inert; src/ untouched.
           git:
-            branch: null
-            commit: []
+            branch: plan/dev-core-plugin-manifest-01-002
+            commit:
+                - c058fff
             merge: null
         - number: 3
           slug: validate-manifest-against-source
