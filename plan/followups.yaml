@@ -159,3 +159,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Input for task 004''s drift guard test: validatePluginGraph({records}) implicitly folds in FRAMEWORK_MANIFEST already -- passing it explicitly alongside resolved records produces ~18 spurious exclusivity-disagreement errors. Test must pass only dev-core''s own records; expected finding set is exactly 4 (3 error-severity unsatisfied: appExt:credentialsDB x2, appExt:_liqOrgs.orgSetupMethods x1; 1 info-severity unsatisfied optional: integrationHook:controls/getQuestionControls).'
+    - title: appExt:_liqOrgs.orgSetupMethods produces a 4t
+      id: VHhM
+      date: "2026-09-01"
+      tags:
+        - type:ambiguity
+        - plan/phase:plugin-manifest-declaration
+        - plan/slug:dev-core-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: 'appExt:_liqOrgs.orgSetupMethods produces a 4th error-severity finding against unmanifested liq-policy, one more than manifest-scope-and-tooling.md''s declare-now list anticipated -- same shape/justification as the accepted appExt:credentialsDB gaps (task doc''s declare-everything-the-census-establishes rule covers it; only the six integrationHook: entries were listed as deferrals), documented in README; manager should confirm this was intended.'
