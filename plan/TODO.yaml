@@ -20,6 +20,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: declare-credentials-component-manifest
+          title: Declare Credentials Component Manifest
+          path: phase-02-declare-in-tree-components/002-declare-credentials-component-manifest.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 3
       slug: third-party-coupling-coverage
       title: Third-Party Coupling Coverage
