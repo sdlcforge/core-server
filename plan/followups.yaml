@@ -126,3 +126,16 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Four pre-existing defects inherited as-is (D11: no behavior change during absorption) from @liquid-labs/plugable-projects-audit into @sdlcforge/dev-core''s src/projects-audit/ submodule (absorbed by the dev-core-consolidation plan, phase-12 task 002): (1) the two implied endpoints advertise a projectName parameter they cannot use — getAuditEndpointParameters/getAuditFixEndpointParameters spread commonAuditPathParameters for both the named and implied variants, but the implied paths carry no :projectName; the project comes from the X-CWD header instead. (2) A typo drops one parameter''s help text from the API spec: audit-fix-lib.mjs''s removePackages parameter object spells its key "dascription" rather than "description". (3) An unknown project name yields a 500, not a 404 — both libs immediately destructure the result of getProjectData(projectName), which returns undefined for an unknown name, so the destructuring throws a TypeError. (4) Four prose typos are published in user-facing help text: "Auidts" (audit-lib.mjs''s summary), and "reomved", "pacagkes", "specificatinos" (audit-fix-lib.mjs''s description/parameter help), plus a double space in "${workDesc} project  security". A fifth, purely internal item: all four handlers assign reporter = reporter.isolate() and never read it — dead code, no user-visible effect. Fixing (1) or (2) changes the generated API spec, which is why D11 barred fixing them during consolidation. dev-core/README.md''s "Known defects (projects-audit submodule)" subsection references this followup by id.'
+    - title: providerFor typo breaks pull-request hook
+      id: OmUC
+      date: "2026-09-01"
+      tags:
+        - type:bug
+        - priority:low
+        - effort:unspecified
+      text: |-
+        `src/work/handlers/_lib/answer-set-to-md.mjs:74` calls `app.ext.integrations` with `providerFor: 'pull requests'` (plural), while every other call site in the codebase uses the singular `'pull request'`. `IntegrationsManager.callHook`/`hasHook` match on exact `providerFor` string, so this mismatched entry throws `No provider found` at request time instead of resolving the registered provider — a live, reachable defect, not merely cosmetic.
+
+        Surfaced during the `dev-core-plugin-manifest` plan's `analyze-change-request` pass (task doc `002-author-plugin-manifest.md`'s research), which noted independent corroboration: `@liquid-labs/plugable-express`'s own `diff-manifest.js` header cites this exact typo as its motivating example for why manifest-derivation tooling matters.
+
+        Out of scope for the plugin-manifest plan (runtime code, not manifest declarations). Fix: change `'pull requests'` to `'pull request'` at that call site, plus a regression test asserting the hook resolves.
