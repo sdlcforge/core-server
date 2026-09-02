@@ -139,13 +139,3 @@ items:
         Surfaced during the `dev-core-plugin-manifest` plan's `analyze-change-request` pass (task doc `002-author-plugin-manifest.md`'s research), which noted independent corroboration: `@liquid-labs/plugable-express`'s own `diff-manifest.js` header cites this exact typo as its motivating example for why manifest-derivation tooling matters.
 
         Out of scope for the plugin-manifest plan (runtime code, not manifest declarations). Fix: change `'pull requests'` to `'pull request'` at that call site, plus a regression test asserting the hook resolves.
-    - title: 'Task 003 is running concurrently against the '
-      id: aOKj
-      date: "2026-09-01"
-      tags:
-        - type:ambiguity
-        - plan/phase:plugin-manifest-declaration
-        - plan/slug:dev-core-plugin-manifest
-        - priority:unspecified
-        - effort:unspecified
-      text: Task 003 is running concurrently against the same plan branch and may reconcile/correct the plugable block after this task's commit lands. If it does, this suite should be re-run against the reconciled manifest before the plan is considered fully closed -- no action needed now, but worth tracking at merge time.
