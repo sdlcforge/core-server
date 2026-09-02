@@ -16,6 +16,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: declare-plugable-host-block
+          title: Declare Plugable Host Block
+          path: phase-01-framework-uptake-and-host-declaration/002-declare-plugable-host-block.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 2
       slug: declare-in-tree-components
       title: Declare The In-Tree Component Manifests
