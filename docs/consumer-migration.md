@@ -340,4 +340,4 @@ Four defects travel with this donor into `dev-core`, none introduced by the cons
 - `audit-fix-lib.mjs`'s `removePackages` parameter object uses the key `dascription` instead of `description`, so its explanation is silently dropped from the API spec.
 - An unknown project name produces a `500`, not a `404`: `getProjectData` returns `undefined` for a name it doesn't recognize, and both library functions destructure that result immediately.
 
-`dev-core`'s own [README](./README.md#projects-audit-submodule) — the `projects-audit submodule` section, following the pattern of its existing `projects submodule`, `work submodule`, and `orgs submodule` sections — has the fuller account, including exact source locations. This handoff states them briefly so a consumer swapping packages isn't the last to know.
+`dev-core`'s own [README](../README.md#projects-audit-submodule) — the `projects-audit submodule` section, following the pattern of its existing `projects submodule`, `work submodule`, and `orgs submodule` sections — has the fuller account, including exact source locations. This handoff states them briefly so a consumer swapping packages isn't the last to know.
