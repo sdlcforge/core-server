@@ -128,3 +128,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 4
+          slug: assert-third-party-ordering-regression
+          title: Assert Third-Party Ordering Regression
+          path: phase-04-validation-gate-and-regression/004-assert-third-party-ordering-regression.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
