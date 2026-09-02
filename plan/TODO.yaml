@@ -13,7 +13,17 @@ phases:
     - number: 3
       slug: third-party-coupling-coverage
       title: Third-Party Coupling Coverage
-      tasks: []
+      tasks:
+        - number: 1
+          slug: verify-third-party-requiring-edges-satisfied
+          title: Verify Dev-Core's Third-Party Requiring Edges Resolve Satisfied
+          path: phase-03-third-party-coupling-coverage/001-verify-third-party-requiring-edges-satisfied.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 4
       slug: validation-gate-and-regression
       title: Validation Gate And Regression Coverage
