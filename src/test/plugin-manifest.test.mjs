@@ -23,11 +23,22 @@ import { FRAMEWORK_MANIFEST, resolvePluginManifest, validatePluginGraph } from '
 const repoRoot = fsPath.resolve(__dirname, '..', '..')
 const pkg = JSON.parse(fs.readFileSync(fsPath.join(repoRoot, 'package.json'), 'utf8'))
 
+// Computed once at module scope and shared by every describe block below: resolvePluginManifest
+// and validatePluginGraph are deterministic pure reads over the same package.json input, and none
+// of the assertions across this file depend on state introduced by a preceding test. Recomputing
+// per describe block would re-parse/re-normalize the same manifest and re-run the same
+// graph-satisfaction resolution three (two) times for an identical result.
+//
+// validatePluginGraph({ records }) implicitly folds FRAMEWORK_MANIFEST in on its own -- confirmed
+// empirically against this export. Passing FRAMEWORK_MANIFEST a second time, concatenated into the
+// records array, duplicates the framework node and produces ~18 spurious 'exclusivity-disagreement'
+// findings. Do not add FRAMEWORK_MANIFEST to `records`.
+const records = resolvePluginManifest({ dir : repoRoot, pkg })
+const result = validatePluginGraph({ records })
+
 describe('dev-core plugin manifest (drift guard)', () => {
   describe('assertion 1: the manifest parses', () => {
     test('resolvePluginManifest returns exactly four normalized records, in src/index.mjs order', () => {
-      const records = resolvePluginManifest({ dir : repoRoot, pkg })
-
       expect(Array.isArray(records)).toBe(true)
       expect(records).toHaveLength(4)
       expect(records.map(({ component }) => component))
@@ -36,13 +47,6 @@ describe('dev-core plugin manifest (drift guard)', () => {
   })
 
   describe('assertions 2 and 3: satisfaction against the framework and against dev-core itself', () => {
-    // validatePluginGraph({ records }) implicitly folds FRAMEWORK_MANIFEST in on its own --
-    // confirmed empirically against this export. Passing FRAMEWORK_MANIFEST a second time,
-    // concatenated into the records array, duplicates the framework node and produces ~18
-    // spurious 'exclusivity-disagreement' findings. Do not add FRAMEWORK_MANIFEST to `records`.
-    const records = resolvePluginManifest({ dir : repoRoot, pkg })
-    const result = validatePluginGraph({ records })
-
     // A finding is how validatePluginGraph reports an *unsatisfied* requirement; a requirement
     // that resolves cleanly produces no finding at all. So "is this specific requirement
     // satisfied" is asserted as "no finding names this exact (capability, requirer, phase)
@@ -115,8 +119,7 @@ describe('dev-core plugin manifest (drift guard)', () => {
     // visible (plan/notes/manifest-scope-and-tooling.md), so it is asserted explicitly here
     // rather than treated as a graph failure -- a future reader must not "fix" this suite by
     // tightening it into an overall-clean assertion.
-    const records = resolvePluginManifest({ dir : repoRoot, pkg })
-    const result = validatePluginGraph({ records })
+    // (`records`/`result` reused from module scope above -- see the comment there.)
 
     test('the graph is not overall-clean (the out-of-package gap is real and expected)', () => {
       expect(result.ok).toBe(false)
