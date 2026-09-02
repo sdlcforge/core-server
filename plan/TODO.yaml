@@ -118,3 +118,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 3
+          slug: assert-serverconfigroot-rename-regression
+          title: Assert ServerConfigRoot Rename Regression
+          path: phase-04-validation-gate-and-regression/003-assert-serverconfigroot-rename-regression.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
