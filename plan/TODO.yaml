@@ -108,3 +108,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: assert-absorbed-donor-conflict-regression
+          title: Assert Absorbed-Donor Conflict Regression
+          path: phase-04-validation-gate-and-regression/002-assert-absorbed-donor-conflict-regression.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
