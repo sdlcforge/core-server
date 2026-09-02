@@ -166,3 +166,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: This task's own Validation grep bullet is worded more strictly than task 003's equivalent (which carved out legitimate historical-context hits); recommend future plan-doc-authoring carry the same carve-out phrasing to avoid a false validation-miss read.
+    - title: '[load-bearing/plan-scope] plan/sdlc-plugin-ma'
+      id: YJdc
+      date: "2026-09-02"
+      tags:
+        - type:ambiguity
+        - plan/phase:framework-uptake-and-host-declaration
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: '[load-bearing/plan-scope] plan/sdlc-plugin-manifest (and every task branch cut from it) was forked from main before the dev-core-migration plan-group merged into main. The task''s premise (and plan/notes/2026-09-01-blocker-reverification.md) assumes @sdlcforge/dev-core is already core-server''s real dependency/explicit-plugin — true on main, false on this plan branch. Manager needs to decide how to reconcile: rebase/merge main forward into plan/sdlc-plugin-manifest (and re-cut this task''s worktree afterward), or some other resolution — before this task or any later task in the plan can proceed.'
