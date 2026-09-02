@@ -26,6 +26,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 3
+          slug: add-host-declaration-drift-guard
+          title: Add Host Declaration Drift Guard
+          path: phase-01-framework-uptake-and-host-declaration/003-add-host-declaration-drift-guard.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 2
       slug: declare-in-tree-components
       title: Declare The In-Tree Component Manifests
