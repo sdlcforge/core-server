@@ -71,4 +71,4 @@ phases:
             branch: plan/dev-core-plugin-manifest-02-001
             commit:
                 - 2b3019c
-            merge: null
+            merge: d6331736e515e98a637c2bfb4206e1b1d21bf58d
