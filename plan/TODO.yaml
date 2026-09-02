@@ -5,6 +5,7 @@ phases:
     - number: 1
       slug: framework-uptake-and-host-declaration
       title: Framework Uptake And Host Declaration
+      diff_base: 92c5be5881f3fcc7c436abe88e214bb006d8f9ea
       tasks:
         - number: 1
           slug: verify-and-refresh-framework-dependencies
