@@ -13,28 +13,25 @@ Every figure here was re-derived from this worktree's source on 2026-08-26 rathe
 | Source | What `core-server` supplies | Statically resolvable? |
 |---|---|---|
 | `builtinPlugins` | **one** entry, `@sdlcforge/core-server`, aggregating **three** in-tree submodules | Only if declared as data |
-| Server Package Root — explicit filter | **eight** package names in the `explicitPlugins` array literal | Only if declared as data |
+| Server Package Root — explicit filter | **five** package names in the `explicitPlugins` array literal | Only if declared as data |
 | Server Package Root — keyword discovery | **zero** plugins | n/a — contributes nothing |
 | `dynamicPluginInstallDir` / `pluginPaths` | `dynamicPluginInstallDir: COMPLY_HOME()`; no `pluginPaths` | Out of the gate's guarantee by upstream design |
 
 The two mechanisms carrying the entire real plugin set are precisely the two that are not scan-discoverable. That is why `plugable.host` is a prerequisite for this plan rather than a convenience.
 
-### The eight explicit-tier plugins
+### The five explicit-tier plugins
 
 Verbatim from `src/lib/app-init.mjs`, in array order:
 
-1. `@liquid-labs/liq-orgs`
-2. `@liquid-labs/liq-projects`
-3. `@liquid-labs/liq-work`
-4. `@liquid-labs/plugable-projects-audit`
-5. `@liquid-labs/sdlc-projects-badges-coverage`
-6. `@liquid-labs/sdlc-projects-badges-github-workflows`
-7. `@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd`
-8. `@liquid-labs/sdlc-projects-workflow-local-node-build`
+1. `@liquid-labs/sdlc-projects-badges-coverage`
+2. `@liquid-labs/sdlc-projects-badges-github-workflows`
+3. `@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd`
+4. `@liquid-labs/sdlc-projects-workflow-local-node-build`
+5. `@sdlcforge/dev-core`
 
-**Eight, not eleven.** The "eleven" figure in earlier wave notes counted the three absorbed donors — `liq-controls`, `liq-credentials`, `liq-integrations-issues-github` — which are now in-tree submodules and are deliberately absent from `explicitPlugins`. The comment block at `src/lib/app-init.mjs:40-51` documents their removal and what a double-load would cost.
+**Five, not eight, not eleven.** Earlier notes counted eight explicit-tier plugins — `@liquid-labs/liq-orgs`, `@liquid-labs/liq-projects`, `@liquid-labs/liq-work`, and `@liquid-labs/plugable-projects-audit` as four separate entries alongside the four `sdlc-projects-*` names — before the completed `dev-core-consolidation` plan-group folded those four into a single `@sdlcforge/dev-core` package dependency, collapsing the array from eight names to five. The still-earlier "eleven" figure in even older wave notes counted the three absorbed donors — `liq-controls`, `liq-credentials`, `liq-integrations-issues-github` — which are in-tree submodules and are deliberately absent from `explicitPlugins`. The comment block at `src/lib/app-init.mjs:40-51` documents their removal and what a double-load would cost.
 
-**Array order is not load order.** `loadPlugins` runs `findPlugins` with a membership filter and receives filesystem scan order back. The upstream host-declaration reader states this explicitly for `plugable.host.explicitPlugins`: "Order is **not** load order... the resolver must not treat this array's order as an ordering fact." Any same-phase edge between two of these eight is therefore `order-unprovable`, by construction, and no manifest this plan authors can change that.
+**Array order is not load order.** `loadPlugins` runs `findPlugins` with a membership filter and receives filesystem scan order back. The upstream host-declaration reader states this explicitly for `plugable.host.explicitPlugins`: "Order is **not** load order... the resolver must not treat this array's order as an ordering fact." Any same-phase edge between two of these five is therefore `order-unprovable`, by construction, and no manifest this plan authors can change that.
 
 ### The three in-tree submodules
 
@@ -44,7 +41,7 @@ All three register under `@sdlcforge/core-server`'s own npm identity, by deliber
 
 ### `.yalc`-linked dependencies
 
-`package.json` resolves two direct dependencies through yalc today: `@liquid-labs/plugable-express` and `@liquid-labs/liq-projects`. `@liquid-labs/http-smart-response` comes through as a yalc-resolved transitive. `AGENTS.md` warns this set is version-sensitive and should be re-derived with `grep -n 'file:\.yalc' bun.lock` rather than treated as permanent.
+`package.json` resolves two direct dependencies through yalc today: `@liquid-labs/plugable-express` and `@sdlcforge/dev-core` — the latter superseding the pre-consolidation `@liquid-labs/liq-projects` yalc link now that `liq-projects` is folded into `dev-core`. `@liquid-labs/http-smart-response` comes through as a yalc-resolved transitive. `AGENTS.md` warns this set is version-sensitive and should be re-derived with `grep -n 'file:\.yalc' bun.lock` rather than treated as permanent.
 
 ## Derived declarations for what `core-server` owns
 
@@ -55,7 +52,7 @@ They are shown here as the `plugable.host.builtins` inline form, because that is
 ```yaml
 plugableManifestVersion: 1
 host:
-  explicitPlugins: [ ...the eight above... ]
+  explicitPlugins: [ ...the five above... ]
   builtins:
     - npmName: '@sdlcforge/core-server'
       components:                       # ORDER IS NORMATIVE LOAD ORDER — mirrors `submodules`
@@ -93,8 +90,12 @@ host:
         - component: issues-github
           provides:
             - setupMethod:register github issues integrations
-            - { capability: 'integration:tickets',      phase: setup, exclusive: false }
-            - { capability: 'integration:pull request', phase: setup, exclusive: false }
+            - { capability: 'integration:tickets',      phase: setup, exclusive: false,
+                conditional: true,
+                via: "setup method 'register github issues integrations' (providerTest: usesGitHubIssues)" }
+            - { capability: 'integration:pull request', phase: setup, exclusive: false,
+                conditional: true,
+                via: "setup method 'register github issues integrations' (providerTest: usesGitHubIssues)" }
             - { capability: 'integrationHook:tickets/getCurrentIntegrationUser', phase: setup,
                 exclusive: false }
             - { capability: 'integrationHook:tickets/getIssueURL',   phase: setup, exclusive: false }
@@ -131,7 +132,7 @@ host:
 
 ### Two caveats this plan must carry, not hide
 
-**The `integration:tickets` / `integration:pull request` provides over-claim.** Both are registered with `providerTest: usesGitHubIssues`, so they are provided only for projects that use GitHub issues. A static `provides` asserts them unconditionally. The graph will close and `No provider found for 'tickets'` will still fire at request time for a non-GitHub project. The upstream schema note raises this as gap `G8` and its recommended `conditional:` marker was **not** adopted into the decided grammar. The honest options for this plan are to accept the over-claim and document it, or to omit those provides entirely; the choice belongs in the task that authors the block, and the reasoning must land in a comment beside the declaration.
+**The `integration:tickets` / `integration:pull request` provides over-claim — resolved.** Both are registered with `providerTest: usesGitHubIssues`, so they are provided only for projects that use GitHub issues. A bare, unconditional `provides` would over-claim: the graph would close and `No provider found for 'tickets'` could still fire at request time for a non-GitHub project. As of this note's original writing (2026-08-26) the upstream schema had not yet adopted its proposed `conditional:` marker into the decided grammar. It has since shipped: `plugable-express`'s `docs/plugin-manifest-schema.md` `### conditional` section (merged 2026-08-28) documents `conditional: true` plus a `via:` note, with `core-server`'s own `integration:tickets` case as its worked example. Both provides are declared `conditional: true` per [2026-09-01-blocker-reverification.md](./2026-09-01-blocker-reverification.md)'s Q3 finding — no choice between an accepted over-claim and an omission is needed.
 
 **`credential:GITHUB_API` is registered by `liq-projects`, not by `credentials`.** The upstream shakedown established the chain by reading built output: `src/credentials/setup.mjs` constructs an **empty** `CredentialsDB` and registers no credential type; `@liquid-labs/liq-projects`' `setup()` calls `setupCredentials({ credentialsDB: app.ext.credentialsDB })`, imported from `@liquid-labs/credentials-db-plugin-github` (an ordinary `dependencies` entry of `liq-projects`), and that is what registers `GITHUB_API` and `GITHUB_SSH`. So `core-server` must **not** declare a provide it does not perform. Whether the requirement is left dangling, covered by `plugable.host.assumeProvided`, or covered by a real `liq-projects` manifest is the open question in [manifest-ownership-boundary.md](./manifest-ownership-boundary.md).
 
