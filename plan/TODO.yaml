@@ -9,7 +9,17 @@ phases:
     - number: 2
       slug: declare-in-tree-components
       title: Declare The In-Tree Component Manifests
-      tasks: []
+      tasks:
+        - number: 1
+          slug: declare-controls-component-manifest
+          title: Declare Controls Component Manifest
+          path: phase-02-declare-in-tree-components/001-declare-controls-component-manifest.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 3
       slug: third-party-coupling-coverage
       title: Third-Party Coupling Coverage
