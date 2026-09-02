@@ -97,4 +97,14 @@ phases:
     - number: 4
       slug: validation-gate-and-regression
       title: Validation Gate And Regression Coverage
-      tasks: []
+      tasks:
+        - number: 1
+          slug: wire-plugin-graph-build-gate
+          title: Wire Plugin Graph Build Gate
+          path: phase-04-validation-gate-and-regression/001-wire-plugin-graph-build-gate.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
