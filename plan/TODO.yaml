@@ -138,3 +138,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 5
+          slug: confirm-no-regressions-and-coverage-boundary
+          title: Confirm No Regressions And State Coverage Boundary
+          path: phase-04-validation-gate-and-regression/005-confirm-no-regressions-and-coverage-boundary.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
