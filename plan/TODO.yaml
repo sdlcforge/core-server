@@ -30,6 +30,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 3
+          slug: declare-issues-github-component-manifest
+          title: Declare Issues-Github Component Manifest
+          path: phase-02-declare-in-tree-components/003-declare-issues-github-component-manifest.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 3
       slug: third-party-coupling-coverage
       title: Third-Party Coupling Coverage
