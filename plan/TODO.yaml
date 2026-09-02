@@ -5,7 +5,17 @@ phases:
     - number: 1
       slug: framework-uptake-and-host-declaration
       title: Framework Uptake And Host Declaration
-      tasks: []
+      tasks:
+        - number: 1
+          slug: verify-and-refresh-framework-dependencies
+          title: Verify And Refresh Framework Dependencies
+          path: phase-01-framework-uptake-and-host-declaration/001-verify-and-refresh-framework-dependencies.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 2
       slug: declare-in-tree-components
       title: Declare The In-Tree Component Manifests
