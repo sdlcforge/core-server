@@ -176,3 +176,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: '[load-bearing/plan-scope] plan/sdlc-plugin-manifest (and every task branch cut from it) was forked from main before the dev-core-migration plan-group merged into main. The task''s premise (and plan/notes/2026-09-01-blocker-reverification.md) assumes @sdlcforge/dev-core is already core-server''s real dependency/explicit-plugin — true on main, false on this plan branch. Manager needs to decide how to reconcile: rebase/merge main forward into plan/sdlc-plugin-manifest (and re-cut this task''s worktree afterward), or some other resolution — before this task or any later task in the plan can proceed.'
+    - title: bun.lock's regenerated content (from the succ
+      id: K3cL
+      date: "2026-09-02"
+      tags:
+        - type:ambiguity
+        - plan/phase:framework-uptake-and-host-declaration
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: 'bun.lock''s regenerated content (from the successful Requirement 4 provisioning step) is sitting uncommitted in this worktree; finalize-task-commit.sh refused to commit it, citing a local yalc file: override mixed into the file. Whoever re-runs or continues this task after branch-reconciliation should be aware bun.lock will very likely need to be regenerated again anyway once the branch is brought current with main.'
