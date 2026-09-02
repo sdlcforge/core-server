@@ -65,28 +65,33 @@ The same asymmetry already shapes `src/lib/app-init.mjs`, which resolves its own
 
 ## Dependency refresh
 
+**Updated 2026-09-01** ([2026-09-01-blocker-reverification.md](./2026-09-01-blocker-reverification.md)): this section originally described a single-package (`plugable-express`-only) refresh. As of the re-verification pass, **two** local `.yalc`-linked packages are stale and both must be refreshed together before Phase 1's downstream tasks can run against real APIs: `@liquid-labs/plugable-express` (local `alpha.58` vs. published `alpha.59`) and `@sdlcforge/dev-core` (local snapshot dated 2026-08-27, predating dev-core's own `"plugable"` manifest block that merged 2026-09-01). `scripts/provision-local-deps.sh`'s `REQUIRED_YALC_PACKAGES` list already names both packages — it was updated as part of the dev-core-consolidation landing — so no script edit is needed, only the push-and-reinstall sequence below.
+
 ### The rule
 
 `AGENTS.md` and `CLAUDE.md` both state it, and it is not optional:
 
 > After any `yalc push` that changed the linked package's own `dependencies`, run `rm -f bun.lock && bun install` (or `./scripts/provision-local-deps.sh --refresh-lock`).
 
-The reason is a Bun behavior with no workaround: once `bun.lock` holds a resolved entry for a `file:` spec, a bare `bun install` re-copies the linked package's **content** but does not re-resolve its own **dependency list**. `--force`, `--no-cache`, and a version bump are all equally ineffective. A newly added transitive dependency simply never materializes while `bun install` reports success.
+The reason is a Bun behavior with no workaround: once `bun.lock` holds a resolved entry for a `file:` spec, a bare `bun install` re-copies the linked package's **content** but does not re-resolve its own **dependency list**. `--force`, `--no-cache`, and a version bump are all equally ineffective. A newly added transitive dependency simply never materializes while `bun install` reports success. This applies identically to both stale packages — a single `rm -f bun.lock && bun install` (or one `--refresh-lock` run) after both `yalc push`es covers both at once; it does not need to run twice.
 
 ### Why it is load-bearing for this plan specifically
 
-The framework build this plan consumes adds, at minimum, a `bin` entry (`plugable-express-validate` → `./dist/plugable-express-validate.js`). A `bin` is not a dependency, but the same task may add dependencies, and the failure mode is silent success — the worst kind to debug through a `make` failure. The refresh is cheap and the diagnosis is not, so this plan treats it as a required step rather than a conditional one.
+The `plugable-express` build this plan consumes adds, at minimum, a `bin` entry (`plugable-express-validate` → `./dist/plugable-express-validate.js`). A `bin` is not a dependency, but the same task may add dependencies, and the failure mode is silent success — the worst kind to debug through a `make` failure. The `dev-core` refresh is load-bearing for a different reason: without it, `node_modules/@sdlcforge/dev-core/package.json` carries no `"plugable"` block at all, which Phase 3's verification work depends on being present and correct. The refresh is cheap and the diagnosis is not, so this plan treats it as a required step rather than a conditional one.
 
-**Symptom to expect if it is skipped:** the `plugable-express-validate` bin is absent from `node_modules/.bin/`, or `import { validatePluginSet } from '@liquid-labs/plugable-express'` resolves to `undefined`, while `bun install` reported success and `.yalc/@liquid-labs/plugable-express/dist/` visibly contains the new code.
+**Symptom to expect if the `plugable-express` half is skipped:** the `plugable-express-validate` bin is absent from `node_modules/.bin/`, or `import { validatePluginSet } from '@liquid-labs/plugable-express'` resolves to `undefined`, while `bun install` reported success and `.yalc/@liquid-labs/plugable-express/dist/` visibly contains the new code.
+
+**Symptom to expect if the `dev-core` half is skipped:** `node_modules/@sdlcforge/dev-core/package.json` has no `"plugable"` key, while `bun install` reported success and the real `dev-core` checkout's `package.json` visibly has one.
 
 ### The sequence
 
-1. In `plugable-express`: land the framework, then `yalc push`. Its `prepack` runs `make build`, so the pushed `dist/` is freshly built — no separate build step is needed on that side.
-2. In `core-server`: `rm -f bun.lock && bun install`, or `./scripts/provision-local-deps.sh --refresh-lock`.
-3. Verify the uptake rather than assuming it — the bin is present in `node_modules/.bin/`, and the package exports `validatePluginSet` and `verifyHostDeclaration`.
-4. `bun run build` to confirm nothing regressed.
+1. In `plugable-express`: `yalc push`. Its `prepack` runs `make build`, so the pushed `dist/` is freshly built — no separate build step is needed on that side. The framework itself is already merged and published; nothing to land first.
+2. In `dev-core`: `yalc push`, the same way — its `"plugable"` manifest block is already merged on `main`.
+3. In `core-server`: `rm -f bun.lock && bun install`, or `./scripts/provision-local-deps.sh --refresh-lock` — one pass covers both packages pushed in steps 1-2.
+4. Verify the uptake rather than assuming it, for **both** packages — the `plugable-express-validate` bin is present in `node_modules/.bin/`, the `@liquid-labs/plugable-express` package exports `validatePluginSet` and `verifyHostDeclaration`, and `node_modules/@sdlcforge/dev-core/package.json` carries a `"plugable"` key.
+5. `bun run build` to confirm nothing regressed.
 
-Step 3 is the one worth insisting on. It is the same check the prerequisite-verification task at the head of Phase 1 performs, and it is cheap enough to repeat.
+Step 4 is the one worth insisting on, for both packages. It is the same check the prerequisite-verification task at the head of Phase 1 performs, and it is cheap enough to repeat.
 
 ### Task-worktree provisioning
 
