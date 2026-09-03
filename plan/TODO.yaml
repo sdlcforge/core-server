@@ -35,7 +35,7 @@ phases:
           slug: add-host-declaration-drift-guard
           title: Add Host Declaration Drift Guard
           path: phase-01-framework-uptake-and-host-declaration/003-add-host-declaration-drift-guard.md
-          done: false
+          done: true
           tier: sonnet-med
           digest: Exported explicitPlugins from app-init.mjs and added host-declaration.test.js wiring verifyHostDeclaration() against real explicitPlugins/builtinPlugins vs package.json's plugable.host block. Verified guard is non-tautological via a deliberate-mismatch check that correctly failed with host-declaration-explicit-stale, then reverted. Full suite passes (41 tests, 13 suites); diffs scoped exactly as required.
           git:
