@@ -46,7 +46,7 @@ Plan-group `compile-time-manifest-sdlc-server` ("Define compile-time plugin mani
 
 ## Current status
 
-**Planning complete.** All four phases are decomposed into 13 registered tasks (`plan/TODO.yaml`), each with a full task document. Ready for execution via `execute-implementation-plan`. No source file in this project has been modified.
+**Phases 1–3 complete and merged; Phase 4 remaining.** All four phases were decomposed into 13 registered tasks (`plan/TODO.yaml`), each with a full task document. Phase 1 (framework uptake and host declaration), Phase 2 (in-tree component manifests), and Phase 3 (third-party coupling verification) have landed on this plan branch, gated and merged task-by-task. Phase 4 (validation gate and regression coverage, 5 tasks) is next.
 
 ### The two original blockers — both resolved during re-verification (2026-09-01)
 
