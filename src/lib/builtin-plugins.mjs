@@ -18,7 +18,13 @@
 //    submodule's own `handlers`/`setup` individually addressable. Do not "simplify" this.
 // 2. `submodules` order is load order. It fixes the position of the absorbed routes in
 //    `app.ext.handlers`, and therefore their position in the API spec and its snapshots. Keep it
-//    stable, and add to the end rather than reordering.
+//    stable, and add to the end rather than reordering. `package.json`'s
+//    `plugable.host.builtins[0].components` array must be kept in the same order as this
+//    `submodules` array -- `package.json` is static data with no computation, so that agreement
+//    cannot be structurally derived from this source. `verifyHostDeclaration()`'s Jest assertion
+//    (task 003) is the enforcement mechanism that keeps the two from silently drifting apart; it
+//    is not a derivation, so this array is still the one place a human edits when adding a
+//    submodule.
 // 3. `plugable-express` threads a SINGLE `setupData` into every handler registered under one
 //    `builtinPlugins` entry (`registerHandlers` passes it to each handler's
 //    `func({ ..., setupData })`). A submodule that ever needs its own distinct `setupData` -- or

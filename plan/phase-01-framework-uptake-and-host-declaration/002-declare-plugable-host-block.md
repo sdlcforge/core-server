@@ -92,3 +92,21 @@ This task assumes [001](./001-verify-and-refresh-framework-dependencies.md) has 
 - [`plan/notes/plugin-set-inventory.md`](../notes/plugin-set-inventory.md) — the verified in-tree composition and per-component citations Phase 2 will draw on; its own `explicitPlugins` figure (eight names) is stale and must not be used by this task (see Requirement 1).
 - [`plan/notes/2026-09-01-blocker-reverification.md`](../notes/2026-09-01-blocker-reverification.md) — the finding that corrected the `explicitPlugins` count from eight to five.
 - `src/lib/app-init.mjs`, `src/lib/builtin-plugins.mjs` — the real arrays this declaration mirrors.
+
+## Status
+
+**Outcome:** succeeded (2026-09-02).
+
+Re-derived `explicitPlugins` directly from `src/lib/app-init.mjs` at task time (5 names, matching this doc's grounding) and `submodules` order directly from `src/lib/builtin-plugins.mjs` (`controls`, `credentials`, `issuesGitHub` — matching this doc's required `controls`/`credentials`/`issues-github` component order). Added the top-level `plugable.host` block to `package.json` per Requirement 2, with all component `provides`/`requires` left empty per Requirement 4. Extended the existing comment block above `src/lib/builtin-plugins.mjs`'s `submodules` declaration (fact 2) to record the order-agreement relationship with `package.json`'s `plugable.host.builtins[0].components`, naming task 003's `verifyHostDeclaration()` Jest assertion as the enforcement mechanism.
+
+Validation:
+- `package.json` remains valid JSON — confirmed via `node -e "JSON.parse(...)"`.
+- The Requirement 6 sanity-check script reports `hostDeclared: true`, `explicitCount: 5`, `builtinRecordCount: 3`, `diagnostics: []` — exactly as required.
+- `git diff -- package.json` shows only the added `plugable` key.
+- `src/lib/builtin-plugins.mjs`'s comment now states the order-agreement relationship and points at the drift guard (task 003) as its enforcement mechanism.
+- No file under `src/controls/`, `src/credentials/`, or `src/integrations-issues-github/` was touched.
+- `make test`: 12 suites / 40 tests, all passing (no drift guard exists yet, as expected).
+
+Affected source files:
+- `package.json`
+- `src/lib/builtin-plugins.mjs`
