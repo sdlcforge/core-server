@@ -108,7 +108,7 @@ phases:
           done: false
           tier: sonnet-low
           git:
-            branch: null
+            branch: plan/sdlc-plugin-manifest-03-002
             commit: []
             merge: null
     - number: 4
