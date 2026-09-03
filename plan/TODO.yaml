@@ -97,7 +97,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/sdlc-plugin-manifest-03-001
-            commit: []
+            commit:
+                - 09028a6
             merge: null
         - number: 2
           slug: record-third-party-coverage-outcome
