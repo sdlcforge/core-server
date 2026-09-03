@@ -159,8 +159,8 @@ describe('Full-tier baseline characterization', () => {
       fsPath.join(os.tmpdir(), 'comply-server-full-tier-playground-' + Math.round(Math.random() * 10000000000000000))
     await fs.mkdir(playgroundHome, { recursive : true })
 
-    // `PLUGABLE_PLAYGROUND` isolation is mandatory, not optional: `liq-projects`'
-    // `setupPlayground()` otherwise defaults to `${HOME}/playground`, creates it if
+    // `PLUGABLE_PLAYGROUND` isolation is mandatory, not optional: `dev-core`'s `projects`
+    // submodule's `setupPlayground()` otherwise defaults to `${HOME}/playground`, creates it if
     // absent, and hands it to a `PlaygroundMonitor` that scans it -- emitting roughly
     // 9,500 lines of stray console.log output on a developer host and side-effecting the
     // user's home directory. The observable surface is verified byte-identical either
@@ -186,7 +186,7 @@ describe('Full-tier baseline characterization', () => {
 
     ({ app, cache } = await appInit({
       serverConfigRoot : serverHome,
-      // No `skipCorePlugins` here: this harness loads the real, full eleven-package
+      // No `skipCorePlugins` here: this harness loads the real, full five-package
       // explicit-plugin tier so the resulting surface can be recorded as the absorption
       // baseline. `golden-api-spec.test.js` already covers core-server's own
       // framework-level surface in isolation via `skipCorePlugins: true`; that test is

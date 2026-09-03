@@ -17,7 +17,7 @@ make                    # Direct build
 ### Testing
 ```bash
 bun run test                      # Unit tests (Jest)
-bun run test:integration          # Full Docker-based multi-version tests (18-24)
+bun run test:integration          # Full Docker-based multi-version tests (18-26)
 TEST_SINGLE_VERSION=22 bun run test:integration  # Test single Node version
 bun run test:local                # Quick local integration test
 ./test/test-ci.sh                 # CI-style test
@@ -45,9 +45,9 @@ bun run stop             # Stop server (via scripts/stop.sh)
 ### Plugin System
 The server uses a layered plugin architecture:
 
-1. **Core Server** (`src/lib/app-init.mjs`) configures a built-in (in-tree) plugin aggregate plus 8 explicit npm-dependency plugins, and delegates initialization to `@liquid-labs/plugable-express`
+1. **Core Server** (`src/lib/app-init.mjs`) configures a built-in (in-tree) plugin aggregate plus 5 explicit npm-dependency plugins, and delegates initialization to `@liquid-labs/plugable-express`
 2. **Built-in Plugins** (in-tree, aggregated by `src/lib/builtin-plugins.mjs` and registered under `@sdlcforge/core-server`'s own package identity via `plugable-express`'s `builtinPlugins` option): `src/controls/`, `src/credentials/`, `src/integrations-issues-github/`
-3. **Explicit Plugins** (installed as npm dependencies): liq-orgs, liq-projects, liq-work, plugable-projects-audit, and the sdlc-projects-* workflow/badges family
+3. **Explicit Plugins** (installed as npm dependencies): dev-core, and the sdlc-projects-* workflow/badges family
 4. **User Plugins** loaded from `${COMPLY_HOME}/plugins/server/`
 
 **Important**: During test runs with `NODE_ENV=test`, consider whether explicit plugin loading should be skipped to avoid network dependencies and timeouts.
@@ -92,7 +92,7 @@ Configuration via `@liquid-labs/comply-defaults`:
 
 3. **Docker Multi-Version Tests** (`test/run-integration-tests.sh`)
    - **Primary Purpose**: Verify that explicitPlugins are automatically loaded on first server startup
-   - Tests across Node 18-24
+   - Tests across Node 18-26
    - Ubuntu container with nvm pre-installed
    - Results in `test-staging/integration-results/test-results-node-*.json`
    - Use `TEST_SINGLE_VERSION=X` to test specific version

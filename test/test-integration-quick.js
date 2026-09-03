@@ -56,7 +56,7 @@ async function runQuickTest() {
         
         // Check if our explicit plugins are loaded
         const explicitPlugins = [
-          '@liquid-labs/liq-projects'
+          '@sdlcforge/dev-core'
         ]
 
         let foundExplicitPlugins = 0
@@ -80,7 +80,7 @@ async function runQuickTest() {
 
         // Check if explicit plugins are mentioned in the response
         const explicitPlugins = [
-          '@liquid-labs/liq-projects'
+          '@sdlcforge/dev-core'
         ]
 
         let foundExplicitPlugins = 0

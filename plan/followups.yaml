@@ -136,3 +136,53 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'npm publish blocked: `npm publish --access public --tag alpha`, run from this project''s root after package.json''s version was bumped to 1.0.0-alpha.16 (committed; bun.lock unaffected since it does not track the root workspace''s own version field), failed with `npm error code E404` / "404 Not Found - PUT https://registry.npmjs.org/@sdlcforge%2fcore-server - Not found... you do not have permission to access it" against the live https://registry.npmjs.org/ registry. This is the same registry-auth-class block (401/404) that liq-controls''s and liq-credentials''s own npm publish/deprecate attempts hit in this same session — neither donor has actually been deprecated on the live registry either, so no installability gap has opened yet. Manual action needed: run `npm publish --access public --tag alpha` from the @sdlcforge/core-server project root with valid registry credentials, then verify via `npm view @sdlcforge/core-server versions` (expect 1.0.0-alpha.16 with the alpha dist-tag pointing at it). Sequencing: complete this publish before running any donor''s recorded deprecate command, so the replacement is live before any donor is marked deprecated.'
+    - title: New finding, not a documented pre-existing de
+      id: NEJt
+      date: "2026-08-27"
+      tags:
+        - type:ambiguity
+        - plan/phase:dev-core-swap
+        - plan/slug:dev-core-migration
+        - priority:unspecified
+        - effort:unspecified
+      text: 'New finding, not a documented pre-existing defect: GET /server/next-commands?command=credentials/ (and any completion path reaching the credentials/:type/import path variable) crashes the running server process with TypeError: e.map is not a function at node_modules/@liquid-labs/liq-handlers-lib/dist/liq-handlers-lib.js:570, reached via plugable-express''s next-commands.mjs -> _lib/next-options.mjs. Confirmed unrelated to this migration -- the crashing code lives in liq-handlers-lib and liq-credentials-db/credentials-db-plugin-github, none of which are among the four swapped donors or dev-core. Recommend a follow-up item to investigate/fix in liq-handlers-lib or the credentials plugin''s optionsFetcher.'
+    - title: docs/architecture.md's Test infrastructure se
+      id: tonW
+      date: "2026-08-27"
+      tags:
+        - type:ambiguity
+        - plan/phase:doc-updates
+        - plan/slug:dev-core-migration
+        - priority:unspecified
+        - effort:unspecified
+      text: docs/architecture.md's Test infrastructure section describes three test levels and omits full-tier-baseline.test.js/its checked-in snapshots, added by a later plan. Judgment call for a future doc pass; not acted on here.
+    - title: This task's own Validation grep bullet is wor
+      id: 862M
+      date: "2026-08-27"
+      tags:
+        - type:ambiguity
+        - plan/phase:doc-updates
+        - plan/slug:dev-core-migration
+        - priority:unspecified
+        - effort:unspecified
+      text: This task's own Validation grep bullet is worded more strictly than task 003's equivalent (which carved out legitimate historical-context hits); recommend future plan-doc-authoring carry the same carve-out phrasing to avoid a false validation-miss read.
+    - title: '[load-bearing/plan-scope] plan/sdlc-plugin-ma'
+      id: YJdc
+      date: "2026-09-02"
+      tags:
+        - type:ambiguity
+        - plan/phase:framework-uptake-and-host-declaration
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: '[load-bearing/plan-scope] plan/sdlc-plugin-manifest (and every task branch cut from it) was forked from main before the dev-core-migration plan-group merged into main. The task''s premise (and plan/notes/2026-09-01-blocker-reverification.md) assumes @sdlcforge/dev-core is already core-server''s real dependency/explicit-plugin — true on main, false on this plan branch. Manager needs to decide how to reconcile: rebase/merge main forward into plan/sdlc-plugin-manifest (and re-cut this task''s worktree afterward), or some other resolution — before this task or any later task in the plan can proceed.'
+    - title: bun.lock's regenerated content (from the succ
+      id: K3cL
+      date: "2026-09-02"
+      tags:
+        - type:ambiguity
+        - plan/phase:framework-uptake-and-host-declaration
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: 'bun.lock''s regenerated content (from the successful Requirement 4 provisioning step) is sitting uncommitted in this worktree; finalize-task-commit.sh refused to commit it, citing a local yalc file: override mixed into the file. Whoever re-runs or continues this task after branch-reconciliation should be aware bun.lock will very likely need to be regenerated again anyway once the branch is brought current with main.'
