@@ -116,6 +116,7 @@ phases:
     - number: 4
       slug: validation-gate-and-regression
       title: Validation Gate And Regression Coverage
+      diff_base: 147391902323cf119d30a04955722f42edf0b710
       tasks:
         - number: 1
           slug: wire-plugin-graph-build-gate
