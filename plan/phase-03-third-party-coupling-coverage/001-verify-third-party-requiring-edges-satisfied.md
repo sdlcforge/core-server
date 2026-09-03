@@ -47,3 +47,61 @@ No new capability declarations are authored by this task. This is a verification
 - [`plan/notes/manifest-ownership-boundary.md`](../notes/manifest-ownership-boundary.md) — the original ownership-boundary analysis and the four-option decision this verification either confirms moot or reopens.
 - [`plan/notes/build-wiring-and-dependency-refresh.md`](../notes/build-wiring-and-dependency-refresh.md) — the `packageRoot` hazard and the validator's exit-code contract.
 - `/Users/zane/playground/sdlcforge/dev-core/package.json`'s `"plugable"` block — the real, shipped manifest this task verifies against (reference only; not modified by this task).
+
+## Status
+
+**Outcome:** succeeded (2026-09-02). Verification-only; no `package.json`/`"plugable"` block was touched.
+
+**Requirement 1 (dependency prerequisite re-check):** both checks passed fresh in this worktree —
+- `node -e "const m = require('@liquid-labs/plugable-express'); console.log('validatePluginSet' in m)"` → `true`
+- `grep -q '"plugable"' node_modules/@sdlcforge/dev-core/package.json` → present
+
+**Requirement 2 (run the validator):** ran `validatePluginSet({ packageRoot: process.cwd() })` (repo root, not `test-staging/`) via a throwaway script committed as evidence at [`plan/resources/validate-check.mjs`](../resources/validate-check.mjs), with full raw output captured at [`plan/resources/validator-output.json`](../resources/validator-output.json). Top-level result: `"outcome": "validation-failure"`, `"exitCode": 1` — a legible, non-crashing result per this task's own `## Validation` contract (exit `0`/`1` both legible; only exit `2` — resolution failure — would need separate diagnosis, and did not occur).
+
+**Requirement 3 (the two target edges) — both confirmed satisfied:**
+
+1. `@sdlcforge/dev-core#projects` requires `appExt:credentialsDB @ load` (the GITHUB_API-ordering gap's requiring side). Matched edge in the validator's raw `engineResult.edges`:
+   ```json
+   {
+     "from": "@sdlcforge/core-server#credentials",
+     "to": "@sdlcforge/dev-core#projects",
+     "capability": "appExt:credentialsDB",
+     "samePhase": true,
+     "providerPhase": "load",
+     "requirerPhase": "load",
+     "optional": false,
+     "orderVerdict": "satisfied-by-source-order"
+   }
+   ```
+   Literal verdict: `"satisfied-by-source-order"` — matches the task doc's expected verdict exactly.
+
+2. `@sdlcforge/dev-core#work` requires `appExt:serverConfigRoot @ load` (`ynGa`'s third-party half). Matched edge:
+   ```json
+   {
+     "from": "@liquid-labs/plugable-express",
+     "to": "@sdlcforge/dev-core#work",
+     "capability": "appExt:serverConfigRoot",
+     "samePhase": false,
+     "providerPhase": "framework",
+     "requirerPhase": "load",
+     "optional": false,
+     "orderVerdict": null
+   }
+   ```
+   Note on literal text for this one: the validator's schema only writes a string `orderVerdict` (`satisfied-by-source-order`, `satisfied-by-setup-queue-simulation`, `violated-by-source-order`, etc.) when the provider and requirer share the same phase and an order check is meaningful. Here `samePhase: false` (provider is at the `framework` phase, which unconditionally precedes every plugin phase including `load`), so no order-check literal applies — the field is `null` by schema design, not a failure marker. Satisfaction is confirmed by two facts taken together, both checked directly against the raw output: (a) the edge exists at all — plugable-express's framework manifest is a recognized provider for this exact capability/phase pair, appearing in `engineResult.nodes` as `"nodeId": "@liquid-labs/plugable-express", "source": "framework", "manifested": true`; (b) `engineResult.findings` (the complete list of every error/warning/info/debug the run produced) contains no entry naming `appExt:serverConfigRoot` or `@sdlcforge/dev-core#work` as `unsatisfied`, `unsatisfied-phase`, or `order-unprovable` — the only two `error`-severity findings in the whole run concern an unrelated capability (`_liqOrgs.orgSetupMethods`) and an unrelated order violation between `@sdlcforge/core-server#controls` and `@sdlcforge/dev-core#orgs`; see below. No verdict other than satisfaction was reported for this edge, so Requirement 6's halt condition does not apply, but the exact string differs from a literal `"satisfied"` token and that distinction is recorded here verbatim rather than papered over, since task 002 depends on reading it precisely.
+
+**Requirement 4 (coverage-boundary statement):** captured verbatim from the run's `coverage` object (full text in `validator-output.json`):
+- `sourcesSearched`: `["builtin", "serverPackageRoot"]` (searched); `outOfScope`: `["dynamicPluginInstallDir", "pluginPaths"]`.
+- Note field, quoted exactly: `"'dynamicPluginInstallDir' and 'pluginPaths' (the runtime options, distinct from a host-declared 'searchPaths' entry) are outside this gate's guarantee - a plugin loaded only from one of those sources at runtime is not accounted for here."`
+
+**Requirement 5 (unrelated `orgs`/`projects-audit` findings, noted not blocking):** the run's only two `error`-severity findings, both inside `@sdlcforge/dev-core`'s `orgs` component and both out of this plan-group's `plans: {core-server: ...}` participant set per `manifest-ownership-boundary.md`:
+1. `[unsatisfied]` — `@sdlcforge/dev-core#orgs` requires `appExt:_liqOrgs.orgSetupMethods @ setup`, with no candidate provider; dev-core's own manifest comment traces this array's population to `liq-policy`, a package entirely outside `core-server`'s plugin set — exactly the "traces to a package outside core-server's own plugin set" example this task's Requirement 5 names.
+2. `[violated-by-source-order]` — `@sdlcforge/core-server#controls` requires `appExt:_liqOrgs.orgs` from `@sdlcforge/dev-core#orgs` at the same phase (`setup`), but `dev-core#orgs` (source `serverPackageRoot`, load position 5) loads after `core-server#controls` (source `builtin`, load position 0). This is a load-order question between an in-tree builtin and dev-core's own `orgs` component; it does not touch either of this task's two target edges (`projects`/`credentialsDB` or `work`/`serverConfigRoot`) and is `@sdlcforge/dev-core`'s own concern per the same ownership-boundary rationale.
+
+Four further `debug`-severity findings note the four `sdlc-projects-*` packages as unmanifested nodes — expected, pre-existing, and covered by the coverage-boundary statement above, not new to this task.
+
+**Requirement 6 (halt condition):** did not trigger. Neither target edge reported `unsatisfied`, `unsatisfied-phase`, `order-unprovable`, or any verdict other than `satisfied`/`satisfied-by-source-order` (see Requirement 3 above for the literal-text caveat on the second edge, which is a schema-representation nuance, not a reported failure verdict).
+
+**Requirement 7 (evidence left for task 002):** the throwaway script and its full raw JSON output are committed at `plan/resources/validate-check.mjs` and `plan/resources/validator-output.json`; this `## Status` section quotes the load-bearing excerpts directly.
+
+Affected files: this task document (`## Status` addition), `plan/resources/validate-check.mjs` (new), `plan/resources/validator-output.json` (new). No source file under `src/` and no `package.json` `"plugable"` block were modified.
