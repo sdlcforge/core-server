@@ -59,7 +59,7 @@ phases:
             branch: plan/sdlc-plugin-manifest-02-001
             commit:
                 - 923eaf7
-            merge: null
+            merge: af3aaab
         - number: 2
           slug: declare-credentials-component-manifest
           title: Declare Credentials Component Manifest
