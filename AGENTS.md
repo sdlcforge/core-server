@@ -46,7 +46,7 @@ On startup the server loads its plugin set — core plugins built into `@liquid-
 - `src/lib/app-init.mjs` — core initialization; configures the built-in-plugin aggregate and the explicit-plugin list, and delegates to `@liquid-labs/plugable-express`.
 - `src/lib/builtin-plugins.mjs` — aggregates the built-in (in-tree) `controls`, `credentials`, and `integrations-issues-github` submodules into the single plugin module registered via `plugable-express`'s `builtinPlugins` option.
 - `src/controls/`, `src/credentials/`, `src/integrations-issues-github/` — built-in (in-tree) plugin submodules, siblings of `src/lib/` and `src/cli/`.
-- `src/lib/index.js` — library exports (`appInit`, `explicitPlugins`, `Reporter`, `name`, `summary`).
+- `src/lib/index.js` — library exports (`appInit`, `Reporter`, `name`, `summary`).
 - `src/lib/test/*.test.js` — unit tests (Jest).
 - `make/` — modular makefiles, numbered by build priority (`10-locations.mk`, `20-js-src-finder.mk`, `50-sdlcforge-server-js.mk`, `55-lint.mk`, `95-final-targets.mk`, etc.).
 - `test/` — integration test scripts: `test-server.js` (local integration), `run-integration-tests.sh` (Docker multi-version), `test-ci.sh` (CI-style).
