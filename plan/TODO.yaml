@@ -54,6 +54,7 @@ phases:
           path: phase-02-declare-in-tree-components/001-declare-controls-component-manifest.md
           done: false
           tier: sonnet-med
+          digest: Populated controls component entry with 4 provides and 8 requires, all traced to real source. JSON valid, plugable-express-validate passes the task's own success criterion (no manifest-invalid naming controls). One cross-package violated-by-source-order finding surfaced against dev-core#orgs, correctly reflecting real load-order composition; out of this task's scope to fix.
           git:
             branch: plan/sdlc-plugin-manifest-02-001
             commit:
