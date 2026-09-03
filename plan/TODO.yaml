@@ -87,6 +87,7 @@ phases:
     - number: 3
       slug: third-party-coupling-coverage
       title: Third-Party Coupling Coverage
+      diff_base: c434a202ce6e98634a77e6b2aa603860d9e820d3
       tasks:
         - number: 1
           slug: verify-third-party-requiring-edges-satisfied
