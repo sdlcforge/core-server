@@ -100,7 +100,7 @@ phases:
             branch: plan/sdlc-plugin-manifest-03-001
             commit:
                 - 09028a6
-            merge: null
+            merge: bcf814f
         - number: 2
           slug: record-third-party-coverage-outcome
           title: Record Third-Party Coupling Coverage Outcome
