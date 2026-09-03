@@ -66,7 +66,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/sdlc-plugin-manifest-02-002
-            commit: []
+            commit:
+                - 825fee6
             merge: null
         - number: 3
           slug: declare-issues-github-component-manifest
