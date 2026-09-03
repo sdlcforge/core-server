@@ -74,6 +74,7 @@ phases:
           path: phase-02-declare-in-tree-components/003-declare-issues-github-component-manifest.md
           done: false
           tier: sonnet-med
+          digest: Populated issues-github component entry with 10 provides, 6 requires, re-derived from src/integrations-issues-github/index.js and handler modules. Both integration:tickets and integration:pull request declared conditional:true per now-settled schema. credential:GITHUB_API requirement uses correct spelling, optional:true with reason. Only issues-github entry touched; sibling stub entries left untouched. plugable-express-validate surfaced only expected findings.
           git:
             branch: plan/sdlc-plugin-manifest-02-003
             commit:
