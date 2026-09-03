@@ -64,6 +64,7 @@ phases:
           path: phase-02-declare-in-tree-components/002-declare-credentials-component-manifest.md
           done: false
           tier: sonnet-med
+          digest: 'Populated credentials component entry: 2 provides (appExt:credentialsDB @ load, pathVar:credential @ load), 5 requires (setupArg:app/cache/registerPathVar/serverConfigRoot, appExt:serverConfigRoot @ runtime). Deliberately omitted credential:GITHUB_API and appExt:serverConfigRoot provides per task doc''s ownership analysis. Added CredentialsDB construction-site comment documenting liq-credentials-db transitive coverage. Validated via plugable-express-validate; only unrelated dev-core findings surfaced.'
           git:
             branch: plan/sdlc-plugin-manifest-02-002
             commit:
