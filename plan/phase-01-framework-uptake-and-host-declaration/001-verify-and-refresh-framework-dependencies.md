@@ -76,3 +76,24 @@ Refresh `core-server`'s two stale local `.yalc`-linked dependencies — `@liquid
 - [`plan/notes/upstream-framework-readiness.md`](../notes/upstream-framework-readiness.md) — the original (now-superseded for delivery status, still accurate for the API surface) readiness analysis for `@liquid-labs/plugable-express`.
 - `scripts/provision-local-deps.sh` — the provisioning script this task runs against its own worktree, including the "already-present `.yalc/` is left as-is" behavior this task must account for.
 - `AGENTS.md` / `CLAUDE.md` — the project's documented yalc/Bun refresh rule.
+
+## Status
+
+**Outcome:** succeeded (2026-09-02).
+
+This is a retry of a prior attempt that halted at Requirement 5's third check because `node_modules/@sdlcforge/dev-core` did not exist at all in that attempt's worktree — root-caused to the plan branch having been cut before the `dev-core-migration` plan-group merged into `main`. The manager subsequently merged `main` forward into the plan branch and re-cut this task's worktree. Re-verified as part of Requirement 1's environment check, ahead of this run: `package.json` in this worktree lists `@sdlcforge/dev-core: file:.yalc/@sdlcforge/dev-core` as a dependency, and `src/lib/app-init.mjs` line 57 references `'@sdlcforge/dev-core'` in its explicit-plugins list — the fix is confirmed real.
+
+All requirements executed fresh, in order, from this brand-new worktree:
+
+- Requirement 1: confirmed filesystem access to both sibling repos (`/Users/zane/playground/liquid-labs/plugable-express`, `/Users/zane/playground/sdlcforge/dev-core`).
+- Requirement 2: ran `yalc push` in both sibling repos. `plugable-express` published `1.0.0-alpha.59` and auto-pushed into the main checkout's `node_modules`; `dev-core` published `1.0.0-alpha.0` and auto-linked likewise.
+- Requirement 3: confirmed the main checkout's `.yalc/` received both pushes — `plugable-express` version reads `1.0.0-alpha.59`, and `dev-core`'s `package.json` carries a `"plugable"` key.
+- Requirement 4: this fresh task worktree had no pre-existing `.yalc/`, so the "stale copy left as-is" hazard did not apply; ran `rm -rf .yalc && ./scripts/provision-local-deps.sh --refresh-lock` regardless, which copied `.yalc/` from the (now-updated) main checkout, dropped `bun.lock`, and reinstalled (882 packages).
+- Requirement 5: all three uptake checks passed — `node_modules/.bin/plugable-express-validate` is present and executable; `require('@liquid-labs/plugable-express')` exposes both `validatePluginSet` and `verifyHostDeclaration`; `node_modules/@sdlcforge/dev-core/package.json` carries a `"plugable"` key. This is the exact check that failed in the prior attempt — now green.
+- Requirement 6: `scripts/provision-local-deps.sh`'s `REQUIRED_YALC_PACKAGES` already names both packages, and `bun.lock` resolves exactly those same two `file:.yalc/...` entries — no script edit was needed.
+- Requirement 7: `bun run build` completed without error (both rollup bundles built successfully).
+- Requirement 8: `bun.lock` is the only tracked file changed in this worktree (`git diff --stat`: 1 file, 34 insertions/34 deletions); `dist/` is gitignored and not part of the diff. No file under `src/` was touched.
+
+Validation: all six checks in `## Validation` passed (see the implementation report's `validation_results` for the exact commands and output).
+
+Affected files: `bun.lock` (regenerated lockfile), this task document (`## Status` addition). No source files under `src/` were modified.
