@@ -196,3 +196,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: finalize-task-commit.sh's yalc-override exclusion guard (check 3) is a generic heuristic assuming any package.json/lockfile diff adding a .yalc/ line is unwanted; this task's explicit purpose was committing exactly that. Consider a per-task/per-project opt-out for yalc-refresh-and-commit tasks so future agents don't need to work around it by hand.
+    - title: 'Pre-existing repo-wide bun run lint failures '
+      id: UPHX
+      date: "2026-09-03"
+      tags:
+        - type:ambiguity
+        - plan/phase:framework-uptake-and-host-declaration
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: Pre-existing repo-wide bun run lint failures (230 problems, unrelated to any file this task touched) — not in this task's Validation scope, informational only.
