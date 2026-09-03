@@ -65,7 +65,7 @@ phases:
           done: false
           tier: sonnet-med
           git:
-            branch: null
+            branch: plan/sdlc-plugin-manifest-02-002
             commit: []
             merge: null
         - number: 3
