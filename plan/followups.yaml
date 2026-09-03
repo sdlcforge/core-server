@@ -186,3 +186,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'bun.lock''s regenerated content (from the successful Requirement 4 provisioning step) is sitting uncommitted in this worktree; finalize-task-commit.sh refused to commit it, citing a local yalc file: override mixed into the file. Whoever re-runs or continues this task after branch-reconciliation should be aware bun.lock will very likely need to be regenerated again anyway once the branch is brought current with main.'
+    - title: finalize-task-commit.sh's yalc-override exclu
+      id: xsRt
+      date: "2026-09-03"
+      tags:
+        - type:ambiguity
+        - plan/phase:framework-uptake-and-host-declaration
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: finalize-task-commit.sh's yalc-override exclusion guard (check 3) is a generic heuristic assuming any package.json/lockfile diff adding a .yalc/ line is unwanted; this task's explicit purpose was committing exactly that. Consider a per-task/per-project opt-out for yalc-refresh-and-commit tasks so future agents don't need to work around it by hand.
