@@ -11,11 +11,13 @@ phases:
           slug: verify-and-refresh-framework-dependencies
           title: Verify And Refresh Framework Dependencies
           path: phase-01-framework-uptake-and-host-declaration/001-verify-and-refresh-framework-dependencies.md
-          done: false
+          done: true
           tier: sonnet-med
+          digest: Retry succeeded after manager merged main forward into the plan branch and re-cut the worktree. Re-verified dev-core dependency presence, ran yalc push from both sibling repos (plugable-express 1.0.0-alpha.59, dev-core 1.0.0-alpha.0), refreshed .yalc/ and bun.lock via provision-local-deps.sh --refresh-lock, verified uptake for both packages (previously-failing check now passes), and confirmed bun run build succeeds. Two commits on task branch; only bun.lock and the task doc's own Status note changed; no src/ file touched.
           git:
-            branch: null
-            commit: []
+            branch: plan/sdlc-plugin-manifest-01-001
+            commit:
+                - f3f5527
             merge: null
         - number: 2
           slug: declare-plugable-host-block
