@@ -266,3 +266,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Manifest-ownership-boundary four-option decision (A-D) confirmed moot - both headline bugs closed via ordinary mechanism, no cross-repo manifest authoring needed.
+    - title: Task 002 should read the Status section's ful
+      id: hXi1
+      date: "2026-09-03"
+      tags:
+        - type:ambiguity
+        - plan/phase:third-party-coupling-coverage
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: Task 002 should read the Status section's full explanation for the second edge rather than grep for a literal satisfied string.
