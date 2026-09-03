@@ -41,3 +41,13 @@ This task adds one new Jest test file plus the minimal source export the test ne
 - `/Users/zane/playground/liquid-labs/plugable-express/src/lib/verify-host-declaration.js` — the real implementation, useful for understanding exactly which finding kind fires for which disagreement.
 - `src/lib/test/app-init.test.js`, `src/lib/test/builtin-plugins.test.js` — existing conventions this new test file follows (package.json read pattern, `builtinPluginsFor` usage).
 - [`plan/notes/build-wiring-and-dependency-refresh.md`](../notes/build-wiring-and-dependency-refresh.md) — confirms this task's test reaches `make test`/`make qa` through existing wiring, with no `make/` fragment needed until Phase 4.
+
+## Status
+
+- **Outcome:** succeeded
+- **Date:** 2026-09-02
+- **Validation:** `bun run test` (`make test`) passes, 13 suites / 41 tests, including the new `src/lib/test/host-declaration.test.js`. The Requirement 4 deliberate-mismatch check was performed (temporarily commenting out `@liquid-labs/sdlc-projects-workflow-local-node-build` from `explicitPlugins` in `src/lib/app-init.mjs`), confirmed a `host-declaration-explicit-stale` finding fired and the test failed, then reverted — `git diff -- src/lib/app-init.mjs` shows only the new export. `package.json`'s `plugable` block is unchanged (`git diff -- package.json` empty). `grep -n "explicitPlugins" src/lib/index.js src/lib/app-init.mjs` confirms the export is reachable via `../app-init`.
+- **Affected source files:**
+  - `src/lib/app-init.mjs` — added `explicitPlugins` to the existing `export` statement; no other change.
+  - `src/lib/test/host-declaration.test.js` — new Jest test wiring `verifyHostDeclaration()` against the real `builtinPlugins`/`explicitPlugins` arrays and `package.json`'s `plugable.host` block.
+- **Assumptions relied on:** both `## Assumptions` entries — task 001 (framework refresh, `verifyHostDeclaration` resolves) and task 002 (`plugable.host` block present in `package.json`) were confirmed already landed in this worktree before implementation began.
