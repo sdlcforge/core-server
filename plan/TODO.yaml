@@ -76,7 +76,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/sdlc-plugin-manifest-02-003
-            commit: []
+            commit:
+                - 12e4371
             merge: null
     - number: 3
       slug: third-party-coupling-coverage
