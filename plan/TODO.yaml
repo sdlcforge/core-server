@@ -71,7 +71,7 @@ phases:
             branch: plan/sdlc-plugin-manifest-02-002
             commit:
                 - 825fee6
-            merge: null
+            merge: 676aa76
         - number: 3
           slug: declare-issues-github-component-manifest
           title: Declare Issues-Github Component Manifest
