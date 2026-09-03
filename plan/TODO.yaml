@@ -93,7 +93,7 @@ phases:
           slug: verify-third-party-requiring-edges-satisfied
           title: Verify Dev-Core's Third-Party Requiring Edges Resolve Satisfied
           path: phase-03-third-party-coupling-coverage/001-verify-third-party-requiring-edges-satisfied.md
-          done: false
+          done: true
           tier: sonnet-med
           digest: 'Ran validatePluginSet against real package root. Both target edges resolved cleanly: dev-core#projects requires appExt:credentialsDB @ load -> satisfied-by-source-order; dev-core#work requires appExt:serverConfigRoot @ load -> satisfied via edge-present + no-failure-finding inference (orderVerdict null due to cross-phase precedence). No halt condition triggered. Verification-only task; no package.json or source file modified.'
           git:
