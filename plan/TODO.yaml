@@ -112,7 +112,7 @@ phases:
             branch: plan/sdlc-plugin-manifest-03-002
             commit:
                 - 15cdda1
-            merge: null
+            merge: e3fe558
     - number: 4
       slug: validation-gate-and-regression
       title: Validation Gate And Regression Coverage
