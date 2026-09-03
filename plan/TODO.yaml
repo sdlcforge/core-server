@@ -18,7 +18,7 @@ phases:
             branch: plan/sdlc-plugin-manifest-01-001
             commit:
                 - f3f5527
-            merge: null
+            merge: ae7c5d1
         - number: 2
           slug: declare-plugable-host-block
           title: Declare Plugable Host Block
