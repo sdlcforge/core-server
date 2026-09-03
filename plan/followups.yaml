@@ -226,3 +226,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Pre-existing unrelated make lint failures (230 errors) elsewhere in repo, untouched by this task.
+    - title: plugable-express-validate surfaces one unsati
+      id: CNMB
+      date: "2026-09-03"
+      tags:
+        - type:ambiguity
+        - plan/phase:declare-in-tree-components
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: plugable-express-validate surfaces one unsatisfied error and one info finding against dev-core#orgs/#work, pre-existing and outside this task's scope.
