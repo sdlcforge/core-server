@@ -23,7 +23,7 @@ phases:
           slug: declare-plugable-host-block
           title: Declare Plugable Host Block
           path: phase-01-framework-uptake-and-host-declaration/002-declare-plugable-host-block.md
-          done: false
+          done: true
           tier: sonnet-med
           digest: Added plugable.host block to package.json declaring 5-name explicitPlugins and one builtins entry with 3 components (controls, credentials, issues-github) mirroring submodules order exactly, empty provides/requires. Extended builtin-plugins.mjs comment noting task 003's verifyHostDeclaration() as enforcement. Sanity-check against real readHostDeclaration reader passed exactly. Full Jest suite (40 tests) passes unchanged.
           git:
