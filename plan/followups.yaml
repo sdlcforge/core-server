@@ -206,3 +206,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Pre-existing repo-wide bun run lint failures (230 problems, unrelated to any file this task touched) — not in this task's Validation scope, informational only.
+    - title: Task agent did not append a Status section to
+      id: 5jw7
+      date: "2026-09-03"
+      tags:
+        - type:ambiguity
+        - plan/phase:declare-in-tree-components
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: Task agent did not append a Status section to the task doc, believing it lived only in the plan worktree not the task worktree; task doc Status update may need separate handling.
