@@ -37,3 +37,14 @@ This task assumes Phase 1 has already landed the empty, structure-only `componen
 - [2026-09-01-blocker-reverification.md](../notes/2026-09-01-blocker-reverification.md) — confirms `appExt:serverConfigRoot` resolves against the framework's intrinsic manifest, not against this component, and that `@sdlcforge/dev-core`'s `projects`/`work` components are the real consumers on the other side of `appExt:credentialsDB`/`appExt:serverConfigRoot`.
 - `/Users/zane/playground/sdlcforge/dev-core/package.json` `"plugable"` block — the authoritative reference for exact capability names (`appExt:credentialsDB`, `appExt:serverConfigRoot`, `credential:GITHUB_API`) as consumed on the other side of this declaration.
 - `@liquid-labs/plugable-express`'s `docs/plugin-manifest-schema.md` — `### components:`, `## Reserved kinds and their defaults`, `### supersedes` (context for why `appExt:serverHome` is not the name to require).
+
+## Status
+
+- **Outcome:** succeeded
+- **Date:** 2026-09-02
+- **Summary:** Populated the `"component": "credentials"` entry of `plugable.host.builtins[0].components` in `package.json` with `provides` (`appExt:credentialsDB @ load`, `pathVar:credential @ load`, both with `via` citing `src/credentials/setup.mjs`) and `requires` (`setupArg:app`, `setupArg:cache`, `setupArg:registerPathVar`, `setupArg:serverConfigRoot`, and `appExt:serverConfigRoot @ runtime` with a `reason` citing `src/credentials/handlers/credentials/import.mjs:31`). No `credential:GITHUB_API` or `appExt:serverConfigRoot` provide was added, per the task's explicit prohibitions. Added a comment at the `CredentialsDB` construction site in `src/credentials/setup.mjs` recording the `liq-credentials-db` transitive-coverage relationship.
+- **Affected files:**
+  - `package.json`
+  - `src/credentials/setup.mjs`
+- **Validation:** `package.json` parses as valid JSON; the finished `credentials` entry traces every `provides`/`requires` capability to `src/credentials/setup.mjs` and `src/credentials/handlers/credentials/import.mjs:31` (confirmed the exact runtime-read site is `handlers/credentials/import.mjs`, one path segment more specific than the draft's `handlers/import.mjs`); grep for `credential:GITHUB_API` and `appExt:serverConfigRoot` under this component's `provides` returns no match; `node_modules/.bin/plugable-express-validate --package-root . --format text` ran clean with respect to `credentials` — its one error/info finding names unrelated `@sdlcforge/dev-core#orgs`/`#work` capabilities, not `credentials`, `controls`, or `issues-github`.
+- **Assumptions applied:** Phase 1's host-block structure (the empty, structure-only `components` array) was already present in this worktree's `package.json`, as the task's Purpose and scope assumes.
