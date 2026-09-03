@@ -79,7 +79,43 @@
         {
           "npmName": "@sdlcforge/core-server",
           "components": [
-            { "component": "controls", "provides": [], "requires": [] },
+            {
+              "component": "controls",
+              "provides": [
+                {
+                  "capability": "setupMethod:load org controls",
+                  "phase": "setup",
+                  "via": "pushed onto app.ext.setupMethods in src/controls/setup.mjs (func: loadControls)"
+                },
+                {
+                  "capability": "setupMethod:load controls integrations",
+                  "phase": "setup",
+                  "via": "pushed onto app.ext.setupMethods in src/controls/setup.mjs (func: registerControlsIntegrations)"
+                },
+                {
+                  "capability": "integration:controls",
+                  "phase": "setup",
+                  "exclusive": false,
+                  "via": "setup method 'load controls integrations'"
+                },
+                {
+                  "capability": "integrationHook:controls/getQuestionControls",
+                  "phase": "setup",
+                  "exclusive": false,
+                  "via": "registered via app.ext.integrations.register in setup method 'load controls integrations' (src/controls/integrations/register-controls-integrations.mjs)"
+                }
+              ],
+              "requires": [
+                { "capability": "appExt:setupMethods", "phase": "load" },
+                "setupMethod:load orgs",
+                "setupMethod:setup integrations",
+                { "capability": "appExt:integrations", "phase": "setup" },
+                { "capability": "appExt:_liqOrgs", "phase": "setup" },
+                { "capability": "appExt:_liqOrgs", "phase": "runtime" },
+                { "capability": "appExt:_liqProjects", "phase": "runtime" },
+                "pathVar:orgKey"
+              ]
+            },
             { "component": "credentials", "provides": [], "requires": [] },
             { "component": "issues-github", "provides": [], "requires": [] }
           ]
