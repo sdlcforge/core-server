@@ -1,0 +1,718 @@
+{
+  "outcome": "validation-failure",
+  "exitCode": 1,
+  "engineResult": {
+    "ok": false,
+    "counts": {
+      "error": 2,
+      "warning": 0,
+      "info": 0
+    },
+    "nodes": [
+      {
+        "nodeId": "@liquid-labs/plugable-express",
+        "npmName": "@liquid-labs/plugable-express",
+        "source": "framework",
+        "manifested": true,
+        "origin": {
+          "form": "inline"
+        }
+      },
+      {
+        "nodeId": "@sdlcforge/core-server#controls",
+        "npmName": "@sdlcforge/core-server",
+        "component": "controls",
+        "source": "builtin",
+        "loadIndex": 0,
+        "manifested": true,
+        "origin": {
+          "form": "inline",
+          "path": "/Users/zane/playground/sdlcforge/core-server/worktrees/plan/sdlc-plugin-manifest-03-001/package.json"
+        }
+      },
+      {
+        "nodeId": "@sdlcforge/core-server#credentials",
+        "npmName": "@sdlcforge/core-server",
+        "component": "credentials",
+        "source": "builtin",
+        "loadIndex": 1,
+        "manifested": true,
+        "origin": {
+          "form": "inline",
+          "path": "/Users/zane/playground/sdlcforge/core-server/worktrees/plan/sdlc-plugin-manifest-03-001/package.json"
+        }
+      },
+      {
+        "nodeId": "@sdlcforge/core-server#issues-github",
+        "npmName": "@sdlcforge/core-server",
+        "component": "issues-github",
+        "source": "builtin",
+        "loadIndex": 2,
+        "manifested": true,
+        "origin": {
+          "form": "inline",
+          "path": "/Users/zane/playground/sdlcforge/core-server/worktrees/plan/sdlc-plugin-manifest-03-001/package.json"
+        }
+      },
+      {
+        "nodeId": "@liquid-labs/sdlc-projects-badges-coverage",
+        "npmName": "@liquid-labs/sdlc-projects-badges-coverage",
+        "source": "serverPackageRoot",
+        "loadIndex": 0,
+        "manifested": false,
+        "origin": {
+          "path": "/Users/zane/playground/sdlcforge/core-server/worktrees/plan/sdlc-plugin-manifest-03-001/node_modules/@liquid-labs/sdlc-projects-badges-coverage"
+        }
+      },
+      {
+        "nodeId": "@liquid-labs/sdlc-projects-badges-github-workflows",
+        "npmName": "@liquid-labs/sdlc-projects-badges-github-workflows",
+        "source": "serverPackageRoot",
+        "loadIndex": 1,
+        "manifested": false,
+        "origin": {
+          "path": "/Users/zane/playground/sdlcforge/core-server/worktrees/plan/sdlc-plugin-manifest-03-001/node_modules/@liquid-labs/sdlc-projects-badges-github-workflows"
+        }
+      },
+      {
+        "nodeId": "@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd",
+        "npmName": "@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd",
+        "source": "serverPackageRoot",
+        "loadIndex": 2,
+        "manifested": false,
+        "origin": {
+          "path": "/Users/zane/playground/sdlcforge/core-server/worktrees/plan/sdlc-plugin-manifest-03-001/node_modules/@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd"
+        }
+      },
+      {
+        "nodeId": "@liquid-labs/sdlc-projects-workflow-local-node-build",
+        "npmName": "@liquid-labs/sdlc-projects-workflow-local-node-build",
+        "source": "serverPackageRoot",
+        "loadIndex": 3,
+        "manifested": false,
+        "origin": {
+          "path": "/Users/zane/playground/sdlcforge/core-server/worktrees/plan/sdlc-plugin-manifest-03-001/node_modules/@liquid-labs/sdlc-projects-workflow-local-node-build"
+        }
+      },
+      {
+        "nodeId": "@sdlcforge/dev-core#projects",
+        "npmName": "@sdlcforge/dev-core",
+        "component": "projects",
+        "source": "serverPackageRoot",
+        "loadIndex": 4,
+        "manifested": true,
+        "origin": {
+          "form": "packageJson",
+          "path": "/Users/zane/playground/sdlcforge/core-server/worktrees/plan/sdlc-plugin-manifest-03-001/node_modules/@sdlcforge/dev-core/package.json"
+        }
+      },
+      {
+        "nodeId": "@sdlcforge/dev-core#orgs",
+        "npmName": "@sdlcforge/dev-core",
+        "component": "orgs",
+        "source": "serverPackageRoot",
+        "loadIndex": 5,
+        "manifested": true,
+        "origin": {
+          "form": "packageJson",
+          "path": "/Users/zane/playground/sdlcforge/core-server/worktrees/plan/sdlc-plugin-manifest-03-001/node_modules/@sdlcforge/dev-core/package.json"
+        }
+      },
+      {
+        "nodeId": "@sdlcforge/dev-core#work",
+        "npmName": "@sdlcforge/dev-core",
+        "component": "work",
+        "source": "serverPackageRoot",
+        "loadIndex": 6,
+        "manifested": true,
+        "origin": {
+          "form": "packageJson",
+          "path": "/Users/zane/playground/sdlcforge/core-server/worktrees/plan/sdlc-plugin-manifest-03-001/node_modules/@sdlcforge/dev-core/package.json"
+        }
+      },
+      {
+        "nodeId": "@sdlcforge/dev-core#projects-audit",
+        "npmName": "@sdlcforge/dev-core",
+        "component": "projects-audit",
+        "source": "serverPackageRoot",
+        "loadIndex": 7,
+        "manifested": true,
+        "origin": {
+          "form": "packageJson",
+          "path": "/Users/zane/playground/sdlcforge/core-server/worktrees/plan/sdlc-plugin-manifest-03-001/node_modules/@sdlcforge/dev-core/package.json"
+        }
+      }
+    ],
+    "findings": [
+      {
+        "kind": "unsatisfied",
+        "severity": "error",
+        "capability": {
+          "full": "appExt:_liqOrgs.orgSetupMethods",
+          "kind": "appExt",
+          "name": "_liqOrgs.orgSetupMethods"
+        },
+        "requirer": {
+          "nodeId": "@sdlcforge/dev-core#orgs",
+          "phase": "setup",
+          "origin": {
+            "form": "packageJson",
+            "path": "/Users/zane/playground/sdlcforge/core-server/worktrees/plan/sdlc-plugin-manifest-03-001/node_modules/@sdlcforge/dev-core/package.json"
+          },
+          "optional": false,
+          "reason": "src/orgs/setup.mjs:46, inside 'process org setup'; the array is populated by liq-policy, outside this package"
+        },
+        "providers": [],
+        "supersededBy": null,
+        "unmanifestedNodes": [
+          "@liquid-labs/sdlc-projects-badges-coverage",
+          "@liquid-labs/sdlc-projects-badges-github-workflows",
+          "@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd",
+          "@liquid-labs/sdlc-projects-workflow-local-node-build"
+        ],
+        "sourcesSearched": [
+          "framework",
+          "builtin",
+          "serverPackageRoot"
+        ],
+        "orderVerdict": null,
+        "cycle": null
+      },
+      {
+        "kind": "violated-by-source-order",
+        "severity": "error",
+        "capability": {
+          "full": "appExt:_liqOrgs.orgs",
+          "kind": "appExt",
+          "name": "_liqOrgs.orgs"
+        },
+        "requirer": {
+          "nodeId": "@sdlcforge/core-server#controls",
+          "phase": "setup",
+          "origin": {
+            "form": "inline",
+            "path": "/Users/zane/playground/sdlcforge/core-server/worktrees/plan/sdlc-plugin-manifest-03-001/package.json"
+          },
+          "optional": false,
+          "source": "builtin",
+          "loadIndex": 0
+        },
+        "providers": [
+          {
+            "nodeId": "@sdlcforge/dev-core#orgs",
+            "phase": "setup",
+            "origin": {
+              "form": "packageJson",
+              "path": "/Users/zane/playground/sdlcforge/core-server/worktrees/plan/sdlc-plugin-manifest-03-001/node_modules/@sdlcforge/dev-core/package.json"
+            },
+            "source": "serverPackageRoot",
+            "loadIndex": 5
+          }
+        ],
+        "supersededBy": null,
+        "unmanifestedNodes": [],
+        "sourcesSearched": [],
+        "orderVerdict": "violated-by-source-order",
+        "cycle": null
+      },
+      {
+        "kind": "unmanifested-node",
+        "severity": "debug",
+        "capability": null,
+        "requirer": null,
+        "providers": [],
+        "supersededBy": null,
+        "unmanifestedNodes": [],
+        "sourcesSearched": [],
+        "orderVerdict": null,
+        "cycle": null,
+        "nodeId": "@liquid-labs/sdlc-projects-badges-coverage"
+      },
+      {
+        "kind": "unmanifested-node",
+        "severity": "debug",
+        "capability": null,
+        "requirer": null,
+        "providers": [],
+        "supersededBy": null,
+        "unmanifestedNodes": [],
+        "sourcesSearched": [],
+        "orderVerdict": null,
+        "cycle": null,
+        "nodeId": "@liquid-labs/sdlc-projects-badges-github-workflows"
+      },
+      {
+        "kind": "unmanifested-node",
+        "severity": "debug",
+        "capability": null,
+        "requirer": null,
+        "providers": [],
+        "supersededBy": null,
+        "unmanifestedNodes": [],
+        "sourcesSearched": [],
+        "orderVerdict": null,
+        "cycle": null,
+        "nodeId": "@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd"
+      },
+      {
+        "kind": "unmanifested-node",
+        "severity": "debug",
+        "capability": null,
+        "requirer": null,
+        "providers": [],
+        "supersededBy": null,
+        "unmanifestedNodes": [],
+        "sourcesSearched": [],
+        "orderVerdict": null,
+        "cycle": null,
+        "nodeId": "@liquid-labs/sdlc-projects-workflow-local-node-build"
+      }
+    ],
+    "edges": [
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/core-server#controls",
+        "capability": "appExt:setupMethods",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "load",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@sdlcforge/dev-core#orgs",
+        "to": "@sdlcforge/core-server#controls",
+        "capability": "setupMethod:load orgs",
+        "samePhase": true,
+        "providerPhase": "setup",
+        "requirerPhase": "setup",
+        "optional": false,
+        "orderVerdict": "satisfied-by-setup-queue-simulation"
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/core-server#controls",
+        "capability": "setupMethod:setup integrations",
+        "samePhase": true,
+        "providerPhase": "setup",
+        "requirerPhase": "setup",
+        "optional": false,
+        "orderVerdict": "satisfied-by-setup-queue-simulation"
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/core-server#controls",
+        "capability": "appExt:integrations",
+        "samePhase": true,
+        "providerPhase": "setup",
+        "requirerPhase": "setup",
+        "optional": false,
+        "orderVerdict": "satisfied-by-source-order"
+      },
+      {
+        "from": "@sdlcforge/dev-core#orgs",
+        "to": "@sdlcforge/core-server#controls",
+        "capability": "appExt:_liqOrgs.orgs",
+        "samePhase": true,
+        "providerPhase": "setup",
+        "requirerPhase": "setup",
+        "optional": false,
+        "orderVerdict": "violated-by-source-order"
+      },
+      {
+        "from": "@sdlcforge/dev-core#orgs",
+        "to": "@sdlcforge/core-server#controls",
+        "capability": "appExt:_liqOrgs.orgs",
+        "samePhase": false,
+        "providerPhase": "setup",
+        "requirerPhase": "runtime",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@sdlcforge/dev-core#projects",
+        "to": "@sdlcforge/core-server#controls",
+        "capability": "appExt:_liqProjects.playgroundMonitor",
+        "samePhase": false,
+        "providerPhase": "load",
+        "requirerPhase": "runtime",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@sdlcforge/dev-core#orgs",
+        "to": "@sdlcforge/core-server#controls",
+        "capability": "pathVar:orgKey",
+        "samePhase": false,
+        "providerPhase": "load",
+        "requirerPhase": "handlers",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/core-server#credentials",
+        "capability": "setupArg:app",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "load",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/core-server#credentials",
+        "capability": "setupArg:cache",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "load",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/core-server#credentials",
+        "capability": "setupArg:registerPathVar",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "load",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/core-server#credentials",
+        "capability": "setupArg:serverConfigRoot",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "load",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/core-server#credentials",
+        "capability": "appExt:serverConfigRoot",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "runtime",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/core-server#issues-github",
+        "capability": "appExt:setupMethods",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "load",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/core-server#issues-github",
+        "capability": "setupMethod:setup integrations",
+        "samePhase": true,
+        "providerPhase": "setup",
+        "requirerPhase": "setup",
+        "optional": false,
+        "orderVerdict": "satisfied-by-setup-queue-simulation"
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/core-server#issues-github",
+        "capability": "appExt:integrations",
+        "samePhase": true,
+        "providerPhase": "setup",
+        "requirerPhase": "setup",
+        "optional": false,
+        "orderVerdict": "satisfied-by-source-order"
+      },
+      {
+        "from": "@sdlcforge/core-server#credentials",
+        "to": "@sdlcforge/core-server#issues-github",
+        "capability": "appExt:credentialsDB",
+        "samePhase": false,
+        "providerPhase": "load",
+        "requirerPhase": "runtime",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@sdlcforge/dev-core#projects",
+        "to": "@sdlcforge/core-server#issues-github",
+        "capability": "credential:GITHUB_API",
+        "samePhase": false,
+        "providerPhase": "load",
+        "requirerPhase": "runtime",
+        "optional": true,
+        "orderVerdict": null
+      },
+      {
+        "from": "@sdlcforge/dev-core#projects",
+        "to": "@sdlcforge/core-server#issues-github",
+        "capability": "appExt:_liqProjects.playgroundMonitor",
+        "samePhase": false,
+        "providerPhase": "load",
+        "requirerPhase": "runtime",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@sdlcforge/core-server#credentials",
+        "to": "@sdlcforge/dev-core#projects",
+        "capability": "appExt:credentialsDB",
+        "samePhase": true,
+        "providerPhase": "load",
+        "requirerPhase": "load",
+        "optional": false,
+        "orderVerdict": "satisfied-by-source-order"
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/dev-core#projects",
+        "capability": "appExt:serverConfigRoot",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "runtime",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/dev-core#projects",
+        "capability": "setupArg:registerPathVar",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "load",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/dev-core#projects",
+        "capability": "setupArg:app",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "load",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/dev-core#projects",
+        "capability": "setupArg:reporter",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "load",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/dev-core#orgs",
+        "capability": "appExt:setupMethods",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "load",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@sdlcforge/dev-core#projects",
+        "to": "@sdlcforge/dev-core#orgs",
+        "capability": "appExt:_liqProjects.playgroundMonitor",
+        "samePhase": false,
+        "providerPhase": "load",
+        "requirerPhase": "setup",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/dev-core#orgs",
+        "capability": "setupArg:registerPathVar",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "load",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/dev-core#orgs",
+        "capability": "setupArg:app",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "load",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/dev-core#orgs",
+        "capability": "setupArg:reporter",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "load",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/dev-core#work",
+        "capability": "appExt:serverConfigRoot",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "load",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/dev-core#work",
+        "capability": "appExt:constants",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "load",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@sdlcforge/dev-core#projects",
+        "to": "@sdlcforge/dev-core#work",
+        "capability": "appExt:_liqProjects.playgroundMonitor",
+        "samePhase": false,
+        "providerPhase": "load",
+        "requirerPhase": "runtime",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@sdlcforge/core-server#credentials",
+        "to": "@sdlcforge/dev-core#work",
+        "capability": "appExt:credentialsDB",
+        "samePhase": false,
+        "providerPhase": "load",
+        "requirerPhase": "runtime",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/dev-core#work",
+        "capability": "appExt:integrations",
+        "samePhase": false,
+        "providerPhase": "setup",
+        "requirerPhase": "runtime",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/dev-core#work",
+        "capability": "setupArg:registerPathVar",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "load",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/dev-core#work",
+        "capability": "setupArg:app",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "load",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@liquid-labs/plugable-express",
+        "to": "@sdlcforge/dev-core#work",
+        "capability": "setupArg:reporter",
+        "samePhase": false,
+        "providerPhase": "framework",
+        "requirerPhase": "load",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@sdlcforge/dev-core#projects",
+        "to": "@sdlcforge/dev-core#work",
+        "capability": "credential:GITHUB_API",
+        "samePhase": false,
+        "providerPhase": "load",
+        "requirerPhase": "runtime",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@sdlcforge/core-server#controls",
+        "to": "@sdlcforge/dev-core#work",
+        "capability": "integrationHook:controls/getQuestionControls",
+        "samePhase": false,
+        "providerPhase": "setup",
+        "requirerPhase": "runtime",
+        "optional": true,
+        "orderVerdict": null
+      },
+      {
+        "from": "@sdlcforge/dev-core#projects",
+        "to": "@sdlcforge/dev-core#projects-audit",
+        "capability": "appExt:_liqProjects.playgroundMonitor",
+        "samePhase": false,
+        "providerPhase": "load",
+        "requirerPhase": "runtime",
+        "optional": false,
+        "orderVerdict": null
+      },
+      {
+        "from": "@sdlcforge/dev-core#projects",
+        "to": "@sdlcforge/dev-core#projects-audit",
+        "capability": "pathVar:projectName",
+        "samePhase": false,
+        "providerPhase": "load",
+        "requirerPhase": "handlers",
+        "optional": false,
+        "orderVerdict": null
+      }
+    ],
+    "sourcesSearched": [
+      "framework",
+      "builtin",
+      "serverPackageRoot"
+    ]
+  },
+  "coverage": {
+    "hostDeclared": true,
+    "sourcesSearched": [
+      "builtin",
+      "serverPackageRoot"
+    ],
+    "searchPathsWalked": [
+      {
+        "source": "serverPackageRoot",
+        "path": "/Users/zane/playground/sdlcforge/core-server/worktrees/plan/sdlc-plugin-manifest-03-001",
+        "explicitCandidateCount": 5,
+        "keywordCandidateCount": 0
+      }
+    ],
+    "unmanifestedNodes": [
+      "@liquid-labs/sdlc-projects-badges-coverage",
+      "@liquid-labs/sdlc-projects-badges-github-workflows",
+      "@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd",
+      "@liquid-labs/sdlc-projects-workflow-local-node-build"
+    ],
+    "outOfScope": [
+      "dynamicPluginInstallDir",
+      "pluginPaths"
+    ],
+    "notes": [
+      "'dynamicPluginInstallDir' and 'pluginPaths' (the runtime options, distinct from a host-declared 'searchPaths' entry) are outside this gate's guarantee - a plugin loaded only from one of those sources at runtime is not accounted for here."
+    ]
+  },
+  "report": "2 error(s), 0 warning(s), 0 info; 12 resolved plugin node(s), 4 unmanifested plugin node(s).\nSearched: framework, builtin, serverPackageRoot. Note: 'dynamicPluginInstallDir' and 'pluginPaths' are outside this gate's guarantee - a plugin loaded only from one of those sources is not accounted for here.\n\nERROR (2):\n- [unsatisfied] @sdlcforge/dev-core#orgs requires the `app.ext` key `_liqOrgs.orgSetupMethods` at phase 'setup', but no candidate provides it. Searched: framework, builtin, serverPackageRoot. Possible cause: @liquid-labs/sdlc-projects-badges-coverage, @liquid-labs/sdlc-projects-badges-github-workflows, @liquid-labs/sdlc-projects-workflow-github-node-jest-cicd, and @liquid-labs/sdlc-projects-workflow-local-node-build have no readable manifest and could not be checked for this capability.\n- [violated-by-source-order] @sdlcforge/core-server#controls requires the `app.ext` key `_liqOrgs.orgs` from @sdlcforge/dev-core#orgs at the same phase ('setup'), but @sdlcforge/dev-core#orgs (source 'serverPackageRoot', load position 5) is registered after @sdlcforge/core-server#controls (source 'builtin', load position 0). Fix by moving @sdlcforge/dev-core#orgs into 'builtinPlugins' ahead of @sdlcforge/core-server#controls - the one source whose order is caller-controlled - changing its position within that array, or reordering the aggregating entry's components.\n\nDEBUG (4):\n- [unmanifested-node] '@liquid-labs/sdlc-projects-badges-coverage' carries no readable plugin manifest; its declarations, if any (it may have none), are invisible to this validator. Not an error - manifest it when convenient. See docs/plugin-manifest-schema.md#the-transition-window.\n- [unmanifested-node] '@liquid-labs/sdlc-projects-badges-github-workflows' carries no readable plugin manifest; its declarations, if any (it may have none), are invisible to this validator. Not an error - manifest it when convenient. See docs/plugin-manifest-schema.md#the-transition-window.\n- [unmanifested-node] '@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd' carries no readable plugin manifest; its declarations, if any (it may have none), are invisible to this validator. Not an error - manifest it when convenient. See docs/plugin-manifest-schema.md#the-transition-window.\n- [unmanifested-node] '@liquid-labs/sdlc-projects-workflow-local-node-build' carries no readable plugin manifest; its declarations, if any (it may have none), are invisible to this validator. Not an error - manifest it when convenient. See docs/plugin-manifest-schema.md#the-transition-window."
+}
