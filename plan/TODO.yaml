@@ -81,7 +81,7 @@ phases:
             branch: plan/sdlc-plugin-manifest-02-003
             commit:
                 - 12e4371
-            merge: null
+            merge: 6d1b14d
     - number: 3
       slug: third-party-coupling-coverage
       title: Third-Party Coupling Coverage
