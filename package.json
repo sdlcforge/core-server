@@ -116,8 +116,43 @@
                 "pathVar:orgKey"
               ]
             },
-            { "component": "credentials", "provides": [], "requires": [] },
-            { "component": "issues-github", "provides": [], "requires": [] }
+            {
+              "component": "credentials",
+              "provides": [
+                { "capability": "appExt:credentialsDB", "phase": "load", "via": "src/credentials/setup.mjs — app.ext.credentialsDB = <bare assignment>" },
+                { "capability": "pathVar:credential", "phase": "load", "via": "src/credentials/setup.mjs — registerPathVar('credential')" }
+              ],
+              "requires": [
+                "setupArg:app",
+                "setupArg:cache",
+                "setupArg:registerPathVar",
+                "setupArg:serverConfigRoot",
+                { "capability": "appExt:serverConfigRoot", "phase": "runtime", "reason": "handlers/credentials/import.mjs reads it" }
+              ]
+            },
+            {
+              "component": "issues-github",
+              "provides": [
+                "setupMethod:register github issues integrations",
+                { "capability": "integration:tickets", "phase": "setup", "exclusive": false, "conditional": true, "via": "setup method 'register github issues integrations' (providerTest: usesGitHubIssues)" },
+                { "capability": "integration:pull request", "phase": "setup", "exclusive": false, "conditional": true, "via": "setup method 'register github issues integrations' (providerTest: usesGitHubIssues)" },
+                { "capability": "integrationHook:tickets/getCurrentIntegrationUser", "phase": "setup", "exclusive": false },
+                { "capability": "integrationHook:tickets/getIssueURL", "phase": "setup", "exclusive": false },
+                { "capability": "integrationHook:tickets/getProjectURL", "phase": "setup", "exclusive": false },
+                { "capability": "integrationHook:pull request/createOrUpdatePullRequest", "phase": "setup", "exclusive": false },
+                { "capability": "integrationHook:pull request/getCurrentIntegrationUser", "phase": "setup", "exclusive": false },
+                { "capability": "integrationHook:pull request/getPullRequestURLsByHead", "phase": "setup", "exclusive": false },
+                { "capability": "integrationHook:pull request/getQALinkFileIndex", "phase": "setup", "exclusive": false }
+              ],
+              "requires": [
+                { "capability": "appExt:setupMethods", "phase": "load" },
+                "setupMethod:setup integrations",
+                { "capability": "appExt:integrations", "phase": "setup" },
+                { "capability": "appExt:credentialsDB", "phase": "runtime" },
+                { "capability": "credential:GITHUB_API", "phase": "runtime", "optional": true, "reason": "GitHub hooks fail at call time without it; the server is otherwise healthy" },
+                { "capability": "appExt:_liqProjects", "phase": "runtime" }
+              ]
+            }
           ]
         }
       ],

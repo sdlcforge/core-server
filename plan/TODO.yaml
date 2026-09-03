@@ -52,32 +52,38 @@ phases:
           slug: declare-controls-component-manifest
           title: Declare Controls Component Manifest
           path: phase-02-declare-in-tree-components/001-declare-controls-component-manifest.md
-          done: false
+          done: true
           tier: sonnet-med
+          digest: Populated controls component entry with 4 provides and 8 requires, all traced to real source. JSON valid, plugable-express-validate passes the task's own success criterion (no manifest-invalid naming controls). One cross-package violated-by-source-order finding surfaced against dev-core#orgs, correctly reflecting real load-order composition; out of this task's scope to fix.
           git:
-            branch: null
-            commit: []
+            branch: plan/sdlc-plugin-manifest-02-001
+            commit:
+                - 923eaf7
             merge: null
         - number: 2
           slug: declare-credentials-component-manifest
           title: Declare Credentials Component Manifest
           path: phase-02-declare-in-tree-components/002-declare-credentials-component-manifest.md
-          done: false
+          done: true
           tier: sonnet-med
+          digest: 'Populated credentials component entry: 2 provides (appExt:credentialsDB @ load, pathVar:credential @ load), 5 requires (setupArg:app/cache/registerPathVar/serverConfigRoot, appExt:serverConfigRoot @ runtime). Deliberately omitted credential:GITHUB_API and appExt:serverConfigRoot provides per task doc''s ownership analysis. Added CredentialsDB construction-site comment documenting liq-credentials-db transitive coverage. Validated via plugable-express-validate; only unrelated dev-core findings surfaced.'
           git:
-            branch: null
-            commit: []
-            merge: null
+            branch: plan/sdlc-plugin-manifest-02-002
+            commit:
+                - 825fee6
+            merge: 676aa76
         - number: 3
           slug: declare-issues-github-component-manifest
           title: Declare Issues-Github Component Manifest
           path: phase-02-declare-in-tree-components/003-declare-issues-github-component-manifest.md
-          done: false
+          done: true
           tier: sonnet-med
+          digest: Populated issues-github component entry with 10 provides, 6 requires, re-derived from src/integrations-issues-github/index.js and handler modules. Both integration:tickets and integration:pull request declared conditional:true per now-settled schema. credential:GITHUB_API requirement uses correct spelling, optional:true with reason. Only issues-github entry touched; sibling stub entries left untouched. plugable-express-validate surfaced only expected findings.
           git:
-            branch: null
-            commit: []
-            merge: null
+            branch: plan/sdlc-plugin-manifest-02-003
+            commit:
+                - 12e4371
+            merge: 6d1b14d
     - number: 3
       slug: third-party-coupling-coverage
       title: Third-Party Coupling Coverage
