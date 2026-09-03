@@ -30,7 +30,7 @@ phases:
             branch: plan/sdlc-plugin-manifest-01-002
             commit:
                 - 2bf870a
-            merge: null
+            merge: d09cfa9
         - number: 3
           slug: add-host-declaration-drift-guard
           title: Add Host Declaration Drift Guard
