@@ -80,7 +80,20 @@
           "npmName": "@sdlcforge/core-server",
           "components": [
             { "component": "controls", "provides": [], "requires": [] },
-            { "component": "credentials", "provides": [], "requires": [] },
+            {
+              "component": "credentials",
+              "provides": [
+                { "capability": "appExt:credentialsDB", "phase": "load", "via": "src/credentials/setup.mjs — app.ext.credentialsDB = <bare assignment>" },
+                { "capability": "pathVar:credential", "phase": "load", "via": "src/credentials/setup.mjs — registerPathVar('credential')" }
+              ],
+              "requires": [
+                "setupArg:app",
+                "setupArg:cache",
+                "setupArg:registerPathVar",
+                "setupArg:serverConfigRoot",
+                { "capability": "appExt:serverConfigRoot", "phase": "runtime", "reason": "handlers/credentials/import.mjs reads it" }
+              ]
+            },
             {
               "component": "issues-github",
               "provides": [
