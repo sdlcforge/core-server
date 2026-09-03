@@ -15,7 +15,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/sdlc-plugin-manifest-01-001
-            commit: []
+            commit:
+                - f3f5527
             merge: null
         - number: 2
           slug: declare-plugable-host-block
