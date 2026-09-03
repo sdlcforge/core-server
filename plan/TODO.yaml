@@ -105,11 +105,13 @@ phases:
           slug: record-third-party-coverage-outcome
           title: Record Third-Party Coupling Coverage Outcome
           path: phase-03-third-party-coupling-coverage/002-record-third-party-coverage-outcome.md
-          done: false
+          done: true
           tier: sonnet-low
+          digest: 'Wrote up task 001''s validator evidence as durable outputs: third-party-coupling-coverage.md gained Verified outcome section (literal verdicts, closes both headline bugs, mechanism explanation, coverage boundary, unrelated findings noted); manifest-ownership-boundary.md gained closing Resolution note, A-D analysis untouched. No source file outside plan/ touched.'
           git:
-            branch: null
-            commit: []
+            branch: plan/sdlc-plugin-manifest-03-002
+            commit:
+                - 15cdda1
             merge: null
     - number: 4
       slug: validation-gate-and-regression
