@@ -107,6 +107,7 @@ phases:
           path: phase-03-third-party-coupling-coverage/002-record-third-party-coverage-outcome.md
           done: false
           tier: sonnet-low
+          digest: 'Wrote up task 001''s validator evidence as durable outputs: third-party-coupling-coverage.md gained Verified outcome section (literal verdicts, closes both headline bugs, mechanism explanation, coverage boundary, unrelated findings noted); manifest-ownership-boundary.md gained closing Resolution note, A-D analysis untouched. No source file outside plan/ touched.'
           git:
             branch: plan/sdlc-plugin-manifest-03-002
             commit:
