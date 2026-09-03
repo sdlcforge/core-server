@@ -42,7 +42,7 @@ phases:
             branch: plan/sdlc-plugin-manifest-01-003
             commit:
                 - 62c494f
-            merge: null
+            merge: "3784924"
     - number: 2
       slug: declare-in-tree-components
       title: Declare The In-Tree Component Manifests
