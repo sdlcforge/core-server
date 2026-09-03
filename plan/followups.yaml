@@ -236,3 +236,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: plugable-express-validate surfaces one unsatisfied error and one info finding against dev-core#orgs/#work, pre-existing and outside this task's scope.
+    - title: plugable-express-validate reports a real viol
+      id: Pwdb
+      date: "2026-09-03"
+      tags:
+        - type:ambiguity
+        - plan/phase:declare-in-tree-components
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: 'plugable-express-validate reports a real violated-by-source-order finding: @sdlcforge/core-server#controls requires appExt:_liqOrgs@setup from @sdlcforge/dev-core#orgs, but dev-core#orgs (Server Package Root, load position 5) loads after core-server''s builtins (load position 0). Not resolvable within this task''s scope; manager/plan should track whether a later phase (Phase 3 third-party coupling coverage, or the manifest-ownership-boundary note) is meant to address it.'
