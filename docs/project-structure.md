@@ -26,7 +26,7 @@ This document is the repository layout reference for `@sdlcforge/core-server`: w
 │   ├── lib/                 #   Core library: app init, plugin wiring, library exports
 │   │   ├── app-init.mjs     #     Configures built-in + explicit plugins, delegates to plugable-express
 │   │   ├── builtin-plugins.mjs #  Aggregates the built-in (in-tree) submodules below into one plugin
-│   │   ├── index.js         #     Library exports (appInit, Reporter, name, summary)
+│   │   ├── index.js         #     Library exports (appInit, explicitPlugins, Reporter, name, summary)
 │   │   └── test/            #     Jest unit tests for the lib
 │   ├── controls/            #   Built-in (in-tree) plugin: policy controls
 │   ├── credentials/         #   Built-in (in-tree) plugin: credential storage/retrieval
@@ -73,7 +73,7 @@ This document is the repository layout reference for `@sdlcforge/core-server`: w
 
 ## `src/`
 
-The server's own source, intentionally minimal since nearly all behavior is delegated to `@liquid-labs/plugable-express`. `src/cli/index.js` is the CLI entry point that starts the server as a standalone executable. `src/lib/app-init.mjs` is the core initialization module — it assembles the built-in-plugin aggregate, the explicit-plugin list, and configuration, and hands off to `plugable-express`. `src/lib/builtin-plugins.mjs` aggregates `core-server`'s own built-in (in-tree) plugin submodules — `src/controls/`, `src/credentials/`, and `src/integrations-issues-github/`, siblings of `src/lib/` and `src/cli/` — into the single already-imported plugin module `app-init.mjs` registers through `plugable-express`'s `builtinPlugins` option. `src/lib/index.js` is the library's public export surface (`appInit`, `Reporter`, `name`, `summary`). `src/lib/test/` holds the Jest unit tests for this library code. Written in ES6+ and transpiled to CommonJS at build time; the resulting dual artifacts land in `dist/`.
+The server's own source, intentionally minimal since nearly all behavior is delegated to `@liquid-labs/plugable-express`. `src/cli/index.js` is the CLI entry point that starts the server as a standalone executable. `src/lib/app-init.mjs` is the core initialization module — it assembles the built-in-plugin aggregate, the explicit-plugin list, and configuration, and hands off to `plugable-express`. `src/lib/builtin-plugins.mjs` aggregates `core-server`'s own built-in (in-tree) plugin submodules — `src/controls/`, `src/credentials/`, and `src/integrations-issues-github/`, siblings of `src/lib/` and `src/cli/` — into the single already-imported plugin module `app-init.mjs` registers through `plugable-express`'s `builtinPlugins` option. `src/lib/index.js` is the library's public export surface (`appInit`, `explicitPlugins`, `Reporter`, `name`, `summary`). `src/lib/test/` holds the Jest unit tests for this library code. Written in ES6+ and transpiled to CommonJS at build time; the resulting dual artifacts land in `dist/`.
 
 ## `test/`
 
