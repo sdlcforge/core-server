@@ -46,6 +46,7 @@ phases:
     - number: 2
       slug: declare-in-tree-components
       title: Declare The In-Tree Component Manifests
+      diff_base: 3b77796e6fc3fbff0cc5a4515e2c728d529b2ad4
       tasks:
         - number: 1
           slug: declare-controls-component-manifest
