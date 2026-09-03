@@ -286,3 +286,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Two unrelated dev-core#orgs findings noted per Requirement 5, no action taken - out of this plan-group's participant set.
+    - title: plan/notes/plugin-set-inventory.md still read
+      id: sVnp
+      date: "2026-09-03"
+      tags:
+        - type:ambiguity
+        - plan/phase:third-party-coupling-coverage
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: plan/notes/plugin-set-inventory.md still reads as an open question in two places; out of this task's edit scope per Requirement 3 which explicitly named it off-limits.
