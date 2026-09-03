@@ -110,9 +110,9 @@
                 "setupMethod:load orgs",
                 "setupMethod:setup integrations",
                 { "capability": "appExt:integrations", "phase": "setup" },
-                { "capability": "appExt:_liqOrgs", "phase": "setup" },
-                { "capability": "appExt:_liqOrgs", "phase": "runtime" },
-                { "capability": "appExt:_liqProjects", "phase": "runtime" },
+                { "capability": "appExt:_liqOrgs.orgs", "phase": "setup" },
+                { "capability": "appExt:_liqOrgs.orgs", "phase": "runtime" },
+                { "capability": "appExt:_liqProjects.playgroundMonitor", "phase": "runtime" },
                 "pathVar:orgKey"
               ]
             },
@@ -150,7 +150,7 @@
                 { "capability": "appExt:integrations", "phase": "setup" },
                 { "capability": "appExt:credentialsDB", "phase": "runtime" },
                 { "capability": "credential:GITHUB_API", "phase": "runtime", "optional": true, "reason": "GitHub hooks fail at call time without it; the server is otherwise healthy" },
-                { "capability": "appExt:_liqProjects", "phase": "runtime" }
+                { "capability": "appExt:_liqProjects.playgroundMonitor", "phase": "runtime" }
               ]
             }
           ]
