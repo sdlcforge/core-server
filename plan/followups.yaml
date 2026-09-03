@@ -246,3 +246,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'plugable-express-validate reports a real violated-by-source-order finding: @sdlcforge/core-server#controls requires appExt:_liqOrgs@setup from @sdlcforge/dev-core#orgs, but dev-core#orgs (Server Package Root, load position 5) loads after core-server''s builtins (load position 0). Not resolvable within this task''s scope; manager/plan should track whether a later phase (Phase 3 third-party coupling coverage, or the manifest-ownership-boundary note) is meant to address it.'
+    - title: Task doc's own Validation section cites a non
+      id: AkKx
+      date: "2026-09-03"
+      tags:
+        - type:ambiguity
+        - plan/phase:declare-in-tree-components
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: Task doc's own Validation section cites a nonexistent path src/controls/_lib/list-lib.mjs; real file is src/controls/handlers/orgs/controls/_lib/list-lib.mjs. Content traced correctly; only the doc citation is stale.
