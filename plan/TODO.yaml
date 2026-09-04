@@ -66,3 +66,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 7
+          slug: update-orgs-defect-documentation
+          title: Update Orgs Defect Documentation
+          path: phase-01-orgs-remediation/007-update-orgs-defect-documentation.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
