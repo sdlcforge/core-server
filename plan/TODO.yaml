@@ -141,7 +141,7 @@ phases:
             branch: plan/sdlc-plugin-manifest-04-002
             commit:
                 - 11d4e1d
-            merge: null
+            merge: 3c4e80b
         - number: 3
           slug: assert-serverconfigroot-rename-regression
           title: Assert ServerConfigRoot Rename Regression
