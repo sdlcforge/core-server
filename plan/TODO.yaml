@@ -5,4 +5,14 @@ phases:
     - number: 1
       slug: orgs-remediation
       title: Orgs Submodule Remediation
-      tasks: []
+      tasks:
+        - number: 1
+          slug: harden-org-settings-prototype-pollution
+          title: Harden Org Settings Against Prototype Pollution
+          path: phase-01-orgs-remediation/001-harden-org-settings-prototype-pollution.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
