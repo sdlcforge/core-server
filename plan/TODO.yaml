@@ -148,6 +148,7 @@ phases:
           path: phase-04-validation-gate-and-regression/003-assert-serverconfigroot-rename-regression.md
           done: false
           tier: sonnet-med
+          digest: 'Added plugin-graph-serverconfigroot-rename.test.js proving supersedes: rename-affordance fires for a future serverConfigRoot rename. Deep-clones real FRAMEWORK_MANIFEST via structuredClone, renames both capability forms to synthetic V2 with supersedes: back to originals, asserts unsatisfied findings with supersededBy naming new capability, plus negative control on unmodified manifest, plus unmutated-source assertion. Non-vacuousness verified manually. Full suite passes (15 suites/49 tests).'
           git:
             branch: plan/sdlc-plugin-manifest-04-003
             commit:
