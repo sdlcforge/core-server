@@ -89,15 +89,22 @@ const loadCredentialsRenameTargets = () => {
 }
 
 describe('plugin graph: serverConfigRoot rename regression (the "ynGa" shape)', () => {
-  test("credentials's real requires include at least one of the two serverConfigRoot capabilities this test renames", () => {
-    const { renameTargets } = loadCredentialsRenameTargets()
+  // `loadCredentialsRenameTargets()` re-reads and re-parses `core-server`'s real `package.json`
+  // from disk and rebuilds the host declaration -- input that never changes within this file.
+  // Resolve it once, shared read-only across the three tests below that need it, rather than
+  // re-reading `package.json` from disk on every one of them.
+  let hostDeclaration
+  let renameTargets
 
+  beforeAll(() => {
+    ({ hostDeclaration, renameTargets } = loadCredentialsRenameTargets())
+  })
+
+  test("credentials's real requires include at least one of the two serverConfigRoot capabilities this test renames", () => {
     expect(renameTargets.length).toBeGreaterThan(0)
   })
 
   test('a synthetic future rename of serverConfigRoot is caught as an unsatisfied finding naming the new capability as supersededBy', () => {
-    const { hostDeclaration, renameTargets } = loadCredentialsRenameTargets()
-
     const modifiedFrameworkManifest = cloneFrameworkManifestWithRename()
 
     const result = validatePluginGraph({
@@ -127,8 +134,6 @@ describe('plugin graph: serverConfigRoot rename regression (the "ynGa" shape)', 
   })
 
   test('negative control: the unmodified FRAMEWORK_MANIFEST still resolves these requirements satisfied', () => {
-    const { hostDeclaration, renameTargets } = loadCredentialsRenameTargets()
-
     const result = validatePluginGraph({ records : hostDeclaration.builtins })
 
     const regressionFindings = result.findings.filter((finding) =>

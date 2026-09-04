@@ -20,11 +20,17 @@ import { resolveCoreServerPackageRoot } from './helpers/resolve-plugin-set'
 // real package root. Passing the wrong root yields a `resolution-failure` (exit code `2`) that
 // looks like a framework bug and is not -- see 'plan/notes/build-wiring-and-dependency-refresh.md'.
 describe('plugin graph third-party ordering regression (appExt:credentialsDB / appExt:serverConfigRoot)', () => {
-  test("dev-core#projects' appExt:credentialsDB @ load requirement resolves satisfied-by-source-order", async() => {
+  // A single, shared `validatePluginSet()` call: all three tests below only read different slices
+  // of one invariant result over the real, unmodified graph -- none mutates it, so one resolution
+  // serves all three assertions rather than repeating the real filesystem/graph work three times.
+  let result
+
+  beforeAll(async() => {
     const packageRoot = resolveCoreServerPackageRoot(__dirname)
+    result = await validatePluginSet({ packageRoot })
+  })
 
-    const result = await validatePluginSet({ packageRoot })
-
+  test("dev-core#projects' appExt:credentialsDB @ load requirement resolves satisfied-by-source-order", () => {
     // Confirmed against the real result (not assumed): the provider-side node is the builtin
     // `@sdlcforge/core-server#credentials` component ('from'); the consumer/requirer-side node
     // is `@sdlcforge/dev-core#projects` ('to'). Both sit at the 'load' phase, so this is a
@@ -44,11 +50,7 @@ describe('plugin graph third-party ordering regression (appExt:credentialsDB / a
     expect(edge.orderVerdict).toBe('satisfied-by-source-order')
   })
 
-  test("dev-core#work's appExt:serverConfigRoot @ load requirement resolves satisfied against the framework's own intrinsic manifest", async() => {
-    const packageRoot = resolveCoreServerPackageRoot(__dirname)
-
-    const result = await validatePluginSet({ packageRoot })
-
+  test("dev-core#work's appExt:serverConfigRoot @ load requirement resolves satisfied against the framework's own intrinsic manifest", () => {
     // Confirmed against the real result (not assumed): the provider-side node is the
     // framework's own intrinsic manifest ('@liquid-labs/plugable-express', 'from'); the
     // consumer/requirer-side node is `@sdlcforge/dev-core#work` ('to'). The provider's phase is
@@ -71,11 +73,7 @@ describe('plugin graph third-party ordering regression (appExt:credentialsDB / a
     expect(edge.orderVerdict).toBe(null)
   })
 
-  test('neither target edge is named by an unsatisfied/unsatisfied-phase/order-unprovable/violated-by-source-order finding', async() => {
-    const packageRoot = resolveCoreServerPackageRoot(__dirname)
-
-    const result = await validatePluginSet({ packageRoot })
-
+  test('neither target edge is named by an unsatisfied/unsatisfied-phase/order-unprovable/violated-by-source-order finding', () => {
     // Second, independent check using the vocabulary Phase 3's own verification task already
     // used ('isUnsatisfied'-style) -- confirm no finding of any of these kinds names either of
     // this plan-group's two chartered {capability, nodeId, phase} triples at the 'load' phase.

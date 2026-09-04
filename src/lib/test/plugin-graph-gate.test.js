@@ -48,11 +48,17 @@ const isAllowlisted = (finding) =>
     && allowed.requirerNodeId === finding.requirer?.nodeId)
 
 describe('plugin graph build gate (make test / make qa)', () => {
-  test("core-server's real, full plugin graph resolves with only the allowlisted, already-triaged dev-core#orgs findings", async() => {
+  // A single, shared `validatePluginSet()` call: the four tests below only read different slices
+  // of one invariant result over the real, unmodified graph -- none mutates it, so one resolution
+  // serves all four assertions rather than repeating the real filesystem/graph work four times.
+  let result
+
+  beforeAll(async() => {
     const packageRoot = resolveCoreServerPackageRoot(__dirname)
+    result = await validatePluginSet({ packageRoot })
+  })
 
-    const result = await validatePluginSet({ packageRoot })
-
+  test("core-server's real, full plugin graph resolves with only the allowlisted, already-triaged dev-core#orgs findings", () => {
     const errorFindings = result.engineResult.findings.filter((finding) => finding.severity === 'error')
 
     if (errorFindings.length !== ALLOWLISTED_ERROR_FINDINGS.length || errorFindings.some((f) => !isAllowlisted(f))) {
@@ -70,11 +76,7 @@ describe('plugin graph build gate (make test / make qa)', () => {
     expect(result.exitCode).toBe(1)
   })
 
-  test('the two edges this plan-group chartered resolve satisfied', async() => {
-    const packageRoot = resolveCoreServerPackageRoot(__dirname)
-
-    const result = await validatePluginSet({ packageRoot })
-
+  test('the two edges this plan-group chartered resolve satisfied', () => {
     // '@sdlcforge/dev-core#projects' requires 'appExt:credentialsDB @ load' from
     // '@sdlcforge/core-server#credentials' -- Phase 3 verified this resolves
     // 'satisfied-by-source-order' (a literal string verdict, since provider and requirer share
@@ -104,11 +106,7 @@ describe('plugin graph build gate (make test / make qa)', () => {
     expect(serverConfigRootFailureFindings).toEqual([])
   })
 
-  test('the coverage boundary is stated: core/builtin sources searched, dynamic sources explicitly out of scope', async() => {
-    const packageRoot = resolveCoreServerPackageRoot(__dirname)
-
-    const result = await validatePluginSet({ packageRoot })
-
+  test('the coverage boundary is stated: core/builtin sources searched, dynamic sources explicitly out of scope', () => {
     // The real field name the validator's `coverage` object uses is `'builtin'`, not
     // `'builtinPlugins'` -- confirmed against the live result rather than assumed.
     expect(result.coverage.sourcesSearched).toEqual(expect.arrayContaining(['builtin', 'serverPackageRoot']))
@@ -121,11 +119,7 @@ describe('plugin graph build gate (make test / make qa)', () => {
     expect(result.coverage.outOfScope).toEqual(expect.arrayContaining(['dynamicPluginInstallDir', 'pluginPaths']))
   })
 
-  test('the resolved graph is non-trivial, not a vacuously empty result', async() => {
-    const packageRoot = resolveCoreServerPackageRoot(__dirname)
-
-    const result = await validatePluginSet({ packageRoot })
-
+  test('the resolved graph is non-trivial, not a vacuously empty result', () => {
     const nodeIds = result.engineResult.nodes.map((node) => node.nodeId)
 
     expect(nodeIds.length).toBeGreaterThan(1)

@@ -43,25 +43,32 @@ describe('plugin graph: absorbed donor re-introduction is a detected conflict', 
   // `liq-integrations-issues-github`'s real-world double-load silent today).
   const cases = [
     {
-      donorNpmName        : '@liquid-labs/liq-credentials',
-      collidingCapability : 'pathVar:credential',
-      realProviderNodeId  : '@sdlcforge/core-server#credentials'
+      donorNpmName         : '@liquid-labs/liq-credentials',
+      collidingCapability  : 'pathVar:credential',
+      realProviderNodeId   : '@sdlcforge/core-server#credentials',
+      // `pathVar:` duplication is caught only by the engine's general provider-index-based
+      // conflict detector -- exactly one finding.
+      expectedFindingCount : 1
     },
     {
-      donorNpmName        : '@liquid-labs/liq-controls',
-      collidingCapability : 'setupMethod:load org controls',
-      realProviderNodeId  : '@sdlcforge/core-server#controls'
+      donorNpmName         : '@liquid-labs/liq-controls',
+      collidingCapability  : 'setupMethod:load org controls',
+      realProviderNodeId   : '@sdlcforge/core-server#controls',
+      // `setupMethod:` duplication is caught twice: once by the general conflict detector, once
+      // by the setup-queue model's own duplicate-setup-method-name detector -- exactly two.
+      expectedFindingCount : 2
     },
     {
-      donorNpmName        : '@liquid-labs/liq-integrations-issues-github',
-      collidingCapability : 'setupMethod:register github issues integrations',
-      realProviderNodeId  : '@sdlcforge/core-server#issues-github'
+      donorNpmName         : '@liquid-labs/liq-integrations-issues-github',
+      collidingCapability  : 'setupMethod:register github issues integrations',
+      realProviderNodeId   : '@sdlcforge/core-server#issues-github',
+      expectedFindingCount : 2
     }
   ]
 
   test.each(cases)(
     're-introducing $donorNpmName duplicates $collidingCapability as a conflict finding',
-    ({ donorNpmName, collidingCapability, realProviderNodeId }) => {
+    ({ donorNpmName, collidingCapability, realProviderNodeId, expectedFindingCount }) => {
       // A minimal, in-memory synthetic donor `pkg`, carrying a package.json-block-form `plugable` declaration --
       // the same form `resolvePluginManifest` reads for any ordinary plugin. `dir` does not need to exist on
       // disk: `resolvePluginManifest` only calls `existsSync(path.join(dir, 'plugable.yaml'))` to check for the
@@ -96,7 +103,6 @@ describe('plugin graph: absorbed donor re-introduction is a detected conflict', 
       // component's `exclusive` value wrong (re-check against `docs/plugin-manifest-schema.md`'s reserved-kinds
       // table rather than loosening this check).
       expect(collidingFindings.every((finding) => finding.kind === 'conflict')).toBe(true)
-      expect(collidingFindings.length).toBeGreaterThanOrEqual(1)
 
       // A `pathVar:` capability (the `liq-credentials` case) surfaces exactly one `conflict` finding, from the
       // engine's general provider-index-based conflict detector (`plugin-graph/conflicts.js`). A `setupMethod:`
@@ -104,10 +110,10 @@ describe('plugin graph: absorbed donor re-introduction is a detected conflict', 
       // `conflict` finding on top of that one, from the setup-queue model's own duplicate-setup-method-name
       // detector (`plugin-graph/setup-queue-model.js#findDuplicateNameConflicts`) -- `setupMethod:` capabilities
       // are tracked by bare name in `DependencyRunner`'s own setup queue, a second, independent place a
-      // duplicate is caught. Both findings are real and correct, not a bug in this test: asserting a bare
-      // "exactly one" count here would be wrong for two of the three donors. Every one of the (one or two)
-      // findings still independently confirms detection, agrees on `kind: 'conflict'` (never
-      // `exclusivity-disagreement`), and names exactly the same two providers.
+      // duplicate is caught. Both findings are real and correct, not a bug in this test. Asserting the exact,
+      // kind-specific count (rather than a bare lower bound) means a future, unrelated third detector firing on
+      // the same capability would fail this test rather than pass silently.
+      expect(collidingFindings.length).toBe(expectedFindingCount)
       for (const finding of collidingFindings) {
         const providerNodeIds = finding.providers.map((provider) => provider.nodeId)
 
