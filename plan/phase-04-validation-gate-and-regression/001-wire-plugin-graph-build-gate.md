@@ -66,9 +66,32 @@ must land first; tasks 002, 003, and 004 are parallel-eligible with each other o
    - Call `validatePluginSet({ packageRoot: <resolved via the helper above> })` with no other options (default
      `strictOptional`/`strictOrder`/`checkLock`, matching what `make/56-plugin-graph.mk`'s gate should enforce
      day-to-day — do not silently tighten the gate beyond what the plan's declarations were authored against).
-   - Assert `result.outcome === 'ok'` and `result.exitCode === 0`. If the real graph is *not* clean at this
-     point, that is a real defect in Phases 1-3's declarations (or in the dependency refresh) — do not weaken
-     this assertion to make the task pass; halt and report instead, naming the actual findings.
+   - **Scope decision (manager, 2026-09-03), superseding this Requirement's original unconditional assertion
+     below.** A first attempt at this task found the real graph is not fully clean: `validatePluginSet()`
+     returns exactly 2 error-severity findings, both inside `@sdlcforge/dev-core#orgs` and unrelated to
+     `core-server`'s own declarations — `[unsatisfied] appExt:_liqOrgs.orgSetupMethods` (traces to an
+     out-of-tree `liq-policy` package) and `[violated-by-source-order] appExt:_liqOrgs.orgs` (a load-order
+     fact about `dev-core#orgs` vs. `core-server#controls`, not a defect in either component's own
+     declaration). Phase 3 already found and explicitly scoped both as `@sdlcforge/dev-core`'s own concern,
+     outside this plan-group's `plans: {core-server: ...}` participant set (see
+     [`plan/notes/manifest-ownership-boundary.md`](../notes/manifest-ownership-boundary.md)). Rather than
+     asserting unconditional `outcome === 'ok'` (which would make `make test`/`make qa` permanently red for a
+     condition this plan-group has decided not to fix from `core-server`'s side) or silently weakening the
+     assertion to pass anything, assert an **explicit allowlist**: exactly these 2 known error-severity
+     findings are permitted, matched by their finding-type + the specific capability/component names above —
+     any additional or different error-severity finding must still fail the gate. This keeps the gate strict
+     against any real regression (including a future change to `dev-core#orgs` that alters this specific
+     finding set, which should force a fresh look rather than silently continuing to pass) while not blocking
+     on an already-triaged, out-of-plan-group issue. In addition to the allowlist check:
+     - Assert the two edges this plan-group actually chartered and Phase 3 verified —
+       `@sdlcforge/dev-core#projects`'s `appExt:credentialsDB @ load` requirement and `@sdlcforge/dev-core#work`'s
+       `appExt:serverConfigRoot @ load` requirement — both resolve satisfied (per Phase 3's own verified verdict
+       shapes: literal `orderVerdict: 'satisfied-by-source-order'` for the first; edge-present-plus-no-failure-
+       finding for the second, whose `orderVerdict` is `null` by schema design for that cross-phase pair — do not
+       flatten this into asserting a literal `'satisfied'` string for the second edge).
+     - Assert `result.exitCode === 1` (not `0`) given the allowlisted findings remain present, and record this
+       explicitly as the expected steady-state exit code in a comment, so a future reader does not mistake `1`
+       for an unexpected failure.
    - Assert the **stated coverage boundary**: `result.coverage.sourcesSearched` should include `'builtinPlugins'`
      and `'serverPackageRoot'` and should **not** claim coverage of `dynamicPluginInstallDir`/`pluginPaths` — read
      the actual shape `resolvePluginSet`'s `coverage` object returns (via `result.coverage`) before writing this
@@ -102,8 +125,9 @@ must land first; tasks 002, 003, and 004 are parallel-eligible with each other o
   (`ls qa/.plugin-graph.passed` after a `make test` run, or equivalent evidence).
 - `bun run test` and `bun run qa` (the `package.json` script aliases named in `plan/overview.md`'s Inputs)
   both pass.
-- `src/lib/test/plugin-graph-gate.test.js` passes and asserts `outcome`/`exitCode`/coverage boundary/non-empty
-  node set as specified above.
+- `src/lib/test/plugin-graph-gate.test.js` passes and asserts the allowlisted-findings check, `exitCode === 1`,
+  the two target edges' satisfied verdicts, coverage boundary, and non-empty node set as specified above
+  (superseding the original unconditional `outcome === 'ok'` assertion per the 2026-09-03 scope decision).
 - The demonstrated-red proof (Requirement 4) is recorded in this section, verbatim: what was broken, the exact
   `make test` failure output (or a representative excerpt), and confirmation of the clean revert.
 - `src/lib/test/helpers/resolve-plugin-set.mjs` exists, is imported successfully by
@@ -116,8 +140,13 @@ must land first; tasks 002, 003, and 004 are parallel-eligible with each other o
 
 - Phases 1-3 have already landed: `package.json` carries a complete `plugable.host` block with all three
   in-tree components populated, `@sdlcforge/dev-core`'s own manifest is refreshed and installed, and Phase 3
-  has already confirmed (as a one-off, non-permanent check) that the real graph resolves clean. If any of this
-  is not true, halt and report rather than authoring a gate against a graph that isn't real yet.
+  has already confirmed the two target edges (`credentialsDB`, `serverConfigRoot`) resolve satisfied. The real
+  graph is **not** fully clean beyond that — it carries exactly 2 known, already-triaged, out-of-plan-group
+  error findings inside `@sdlcforge/dev-core#orgs` (see the 2026-09-03 scope decision under Requirement 3
+  above) — the gate's allowlist accounts for this; do not treat those 2 findings as a new blocker. If any
+  *other* precondition above is not true (e.g. the `plugable.host` block is missing or incomplete, or the two
+  target edges themselves do not resolve satisfied), halt and report rather than authoring a gate against a
+  graph that isn't real yet.
 - `.yalc/` is populated in this task's own worktree (`create-worktree.sh --no-install-deps` +
   `scripts/provision-local-deps.sh`, per this plan's hard constraints) — the gate test needs a real, working
   `@liquid-labs/plugable-express` and `@sdlcforge/dev-core` install to run at all.
