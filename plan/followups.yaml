@@ -316,3 +316,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Task 001's plugin-graph-gate.test.js already asserts materially the same two-edge facts under its 2026-09-03 scope revision; not literally redundant but manager may want to note overlap or decide whether to trim later.
+    - title: Reconfirms task 001's already-flagged pre-exi
+      id: oY1B
+      date: "2026-09-04"
+      tags:
+        - type:ambiguity
+        - plan/phase:validation-gate-and-regression
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: Reconfirms task 001's already-flagged pre-existing lint failures, unaffected by this task.
