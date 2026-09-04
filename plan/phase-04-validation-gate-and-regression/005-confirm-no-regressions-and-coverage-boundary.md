@@ -106,3 +106,99 @@ Depends on tasks 001, 002, 003, and 004 all being landed.
   confirms are unmoved.
 - `@liquid-labs/plugable-express`'s `src/lib/plugin-graph-renderer.js` — the renderer whose coverage-boundary
   output this task inspects (read-only; not modified by this plan-group).
+
+## Status
+
+**Outcome: succeeded (2026-09-04).**
+
+**Requirement 1 (full-suite regression confirmation).** `make test` (fresh, markers cleared first): 17 test
+suites / 55 tests, all pass, including all four of this phase's new `plugin-graph-*.test.js` files.
+`git diff --stat 79b318f..HEAD -- test/__snapshots__/golden-api-spec.json test/__snapshots__/full-tier-api-spec.json
+test/__snapshots__/full-tier-plugins-list.json test/__snapshots__/full-tier-integrations-list.json` (79b318f is
+this plan branch's merge-base with `main`) shows **no output** — all four checked-in golden/baseline snapshots
+are byte-identical to their pre-plan state. `src/lib/test/golden-api-spec.test.js`, `app-init.test.js`,
+`builtin-plugins.test.js`, and `index.test.js` carry zero diff across the whole plan-group;
+`full-tier-baseline.test.js` carries exactly task 004's own recorded one-comment addition (confirmed
+comment-only via `git diff`). `src/lib/builtin-plugins.mjs`'s only diff across the plan-group is a
+comment-only expansion (confirmed via `git diff`) explaining the `submodules`/`plugable.host.builtins`
+ordering-agreement contract task 003 (phase 1) enforces. `src/lib/app-init.mjs`'s diff is one line:
+`export { appInit }` → `export { appInit, explicitPlugins }`, landed by phase-01 task-003
+("add-host-declaration-drift-guard") so `src/lib/test/host-declaration.test.js` can import the real
+`explicitPlugins` array to verify it against `package.json`'s declarations. `appInit()`'s own function body is
+byte-identical; only the module's export list gained one additional named export. This is additive-only (no
+existing caller's behavior changes) but is not literally "comment-only" as this Requirement's validation text
+states — flagged below for the manager's awareness rather than silently waved through.
+
+**Requirement 2 (coverage-boundary statement).** Ran `validatePluginSet({ packageRoot: '.' })` directly
+against this worktree's real, full graph and captured `result.report` (text format, the default):
+
+```
+2 error(s), 0 warning(s), 0 info; 12 resolved plugin node(s), 4 unmanifested plugin node(s).
+Searched: framework, builtin, serverPackageRoot. Note: 'dynamicPluginInstallDir' and 'pluginPaths' are outside this gate's guarantee - a plugin loaded only from one of those sources is not accounted for here.
+```
+
+`result.coverage` (JSON): `sourcesSearched: ["builtin", "serverPackageRoot"]`,
+`outOfScope: ["dynamicPluginInstallDir", "pluginPaths"]`, plus a `notes` entry restating the boundary in
+prose. **Verdict: the statement adequately states the coverage boundary.** It plainly names the sources
+searched (`framework`, `builtin`, `serverPackageRoot`) and explicitly calls out `dynamicPluginInstallDir` and
+`pluginPaths` as outside the gate's guarantee, in prose a reader does not have to infer — a live,
+non-hypothetical distinction for `core-server`, which passes `dynamicPluginInstallDir: COMPLY_HOME()`
+(`src/lib/app-init.mjs`). No gap to flag; the upstream renderer already says this plainly.
+
+**Requirement 3 (mutation self-check, all four, one at a time, each reverted before the next):**
+
+1. `plugin-graph-gate.test.js` (task 001): in `package.json`, renamed `controls`'s `requires` entry
+   `"pathVar:orgKey"` → `"pathVar:orgKey_BROKEN_FOR_DEMO"` (a `requires`-side mutation, deliberately different
+   from task 001's own recorded `provides`-side break, to broaden coverage). Ran `TEST=plugin-graph-gate make
+   test`: the allowlist-count assertion failed as expected (`Expected: 2, Received: 3` error-severity
+   findings; 1 failed / 3 passed of 4 tests), traceable specifically to `plugin-graph-gate.test.js`. Reverted
+   via `git checkout -- package.json`; re-ran `TEST=plugin-graph-gate make test`: 4/4 pass again.
+2. `plugin-graph-absorbed-donor-conflicts.test.js` (task 002): changed the `liq-controls` case's
+   `collidingCapability` from `'setupMethod:load org controls'` to a non-colliding
+   `'setupMethod:load org controls_MUTATION_SELF_CHECK_NONCOLLIDING'`. Ran
+   `TEST=plugin-graph-absorbed-donor-conflicts make test`: exactly that parameterized case failed (1 failed / 2
+   passed of 3). Reverted via `git checkout --`; re-ran: 3/3 pass again.
+3. `plugin-graph-serverconfigroot-rename.test.js` (task 003): the task doc's own permanent-negative-control
+   check (verifying task 003 didn't already leave this as a standing assertion) — none exists; the `supersedes:`
+   line lives only inside the file's `cloneFrameworkManifestWithRename()` helper, added fresh at test-run time,
+   not as a separate always-on negative-control test. Temporarily removed the `supersedes: [renameEntry.removed]`
+   field from that helper's generated clone entry. Ran `TEST=plugin-graph-serverconfigroot-rename make test`:
+   the `supersededBy` assertion failed specifically (`expect(finding.supersededBy).toBeTruthy()` → received
+   `null`), while `result.ok === false` and the negative control both still passed (1 failed / 3 passed of 4) —
+   exactly the isolated failure this assertion is supposed to guard against being vacuous. Reverted; re-ran:
+   4/4 pass again.
+4. `plugin-graph-third-party-ordering.test.js` (task 004): changed the `appExt:credentialsDB` edge's expected
+   `orderVerdict` from `'satisfied-by-source-order'` to an incorrect
+   `'satisfied-by-source-order-MUTATION_SELF_CHECK_WRONG'`. Ran `TEST=plugin-graph-third-party-ordering make
+   test`: exactly that assertion failed (`Expected: "...WRONG", Received: "satisfied-by-source-order"`; 1
+   failed / 2 passed of 3). Reverted; re-ran: 3/3 pass again.
+
+**No defect found in any of the four sibling tasks' own tests** — every mutation produced the expected,
+specific failure and only that failure; per this task's own Assumptions, there is nothing to fix inline.
+
+**Requirement 4 (final housekeeping).** After all four mutate/revert cycles, `git status --short` produced no
+output (confirmed twice — once immediately after the fourth revert, and again after the final fresh `make
+test` run below) — no leftover mutation artifacts.
+
+**Final validation run:** cleared `qa/.unit-test.passed`/`qa/.plugin-graph.passed`/`qa/unit-test.txt` and ran
+`make test` fresh: 17 suites / 55 tests, all pass, `qa/.plugin-graph.passed` present. `bun run test`: passes
+(no-op on the immediately-following invocation since the marker was already fresh). `bun run qa`: **fails**,
+but only at the `lint` stage — `make lint` reports the same 233 pre-existing errors tasks 001/002/004 already
+flagged, confined to `test/test-basic.js`, `test/test-server.js`, `test/test-integration-quick.js`,
+`test/get-node-versions.js`, and `plan/resources/validate-check.mjs`, none of which this task touches. This
+matches the dispatch context's own confirmed-pre-existing, tracked-as-followup condition; not treated as a
+Requirement-1 failure of `make qa`, per that context. `git status --short` is clean at the end of this run.
+
+Affected files: this task document (`## Status` addition) only. No source, test, or `package.json` file
+carries any net change from this task — every mutation performed for Requirement 3 was reverted before the
+next step, and Requirement 1's confirmed diffs (`app-init.mjs`, `builtin-plugins.mjs`,
+`full-tier-baseline.test.js`) all predate this task, landed by phase-01 task-003 and phase-04 task-004
+respectively.
+
+**Flagged for the manager:**
+- `src/lib/app-init.mjs`'s export-list change (`export { appInit }` → `export { appInit, explicitPlugins }`,
+  landed by phase-01 task-003) is not literally "comment-only" as this task's own Requirement 1 / Validation
+  text specifies, though it does not alter `appInit()`'s own observable behavior (function body byte-identical)
+  and is required plumbing for `host-declaration.test.js`'s drift guard. Worth a one-time acknowledgment that
+  this task's Requirement 1 wording was slightly stricter than what the plan-group's own prior, legitimate work
+  actually produced.
