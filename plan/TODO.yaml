@@ -126,7 +126,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/sdlc-plugin-manifest-04-001
-            commit: []
+            commit:
+                - 98ca0fa
             merge: null
         - number: 2
           slug: assert-absorbed-donor-conflict-regression
