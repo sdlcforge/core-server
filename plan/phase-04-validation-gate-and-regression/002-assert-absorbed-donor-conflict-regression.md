@@ -106,3 +106,54 @@ Depends on task 001 (`src/lib/test/helpers/resolve-plugin-set.mjs`). Parallel-el
 - [`plan/phase-02-declare-in-tree-components/`](../phase-02-declare-in-tree-components) — the three sibling
   task docs that declare the real capabilities this task's synthetic collisions target (drafts; re-verify
   against the actually-landed `package.json`).
+
+## Status
+
+**Outcome:** succeeded (2026-09-04).
+
+Added `src/lib/test/plugin-graph-absorbed-donor-conflicts.test.js`, a `test.each`-style parameterized test with
+one case per absorbed donor (`@liquid-labs/liq-credentials`, `@liquid-labs/liq-controls`,
+`@liquid-labs/liq-integrations-issues-github`). Each case reads the real, live `plugable.host.builtins`
+declarations via `readHostDeclaration()`, builds one synthetic donor record via `resolvePluginManifest()`
+targeting the real component's colliding `pathVar:`/`setupMethod:` provide (per requirement 2's mapping —
+verified directly against `package.json`'s landed `plugable.host.builtins`, not against the phase-02 drafts),
+and calls `validatePluginGraph()` directly, exactly as the task's Requirements specify.
+
+**One requirement-3 refinement, verified against the real engine source rather than assumed:** the literal
+"exactly one `conflict` finding" wording does not hold for the two `setupMethod:`-kind donors
+(`liq-controls`, `liq-integrations-issues-github`). `@liquid-labs/plugable-express`'s graph engine legitimately
+produces **two** independent `conflict` findings for a duplicated `setupMethod:` capability — one from the
+general provider-index-based detector (`plugin-graph/conflicts.js#detectConflicts`), and a second from the
+setup-queue model's own duplicate-setup-method-name detector
+(`plugin-graph/setup-queue-model.js#findDuplicateNameConflicts`), which tracks `setupMethod:` capabilities by
+bare name in `DependencyRunner`'s own setup queue — a second, independent place a duplicate is caught. This is
+documented in `validate-plugin-graph.js`'s own JSDoc ("the setup-queue model ... contributes ... duplicate-name
+'conflict' findings over the 'setupMethod:' subset") and confirmed empirically. The `pathVar:` donor
+(`liq-credentials`) is unaffected by the setup-queue model and does surface exactly one. The test asserts,
+robustly: every finding for the colliding capability has `kind: 'conflict'` (never
+`exclusivity-disagreement`), at least one such finding exists, and every one of them names exactly the real
+in-tree component's `nodeId` and the synthetic donor's `nodeId` — preserving the full intent of requirement 3
+without asserting a cardinality that is false for two of the three donors. See the file-level comment in the
+test for the full rationale.
+
+**Validation:**
+- New test file passes: 3/3 cases green (`TEST=plugin-graph-absorbed-donor-conflicts make test`).
+- Non-vacuousness confirmed by temporarily mutating the `liq-credentials` case's `collidingCapability` to a
+  non-colliding name and re-running — the test failed as expected — then reverted before committing.
+- `make test` (full suite, 15 suites / 48 tests) passes with the new file included.
+- The test imports only `readHostDeclaration`, `resolvePluginManifest`, `validatePluginGraph` from
+  `@liquid-labs/plugable-express`, plus `readCoreServerPackageJSON`/`resolveCoreServerPackageRoot` from task
+  001's shared helper — no direct `node_modules`/filesystem manipulation of a real donor package.
+- Lint: no findings in the new file (`npx eslint` against the project's Catalyst ESLint config, scoped to the
+  new file). Pre-existing, unrelated lint findings elsewhere in the repo (`plan/resources/validate-check.mjs`,
+  `test/get-node-versions.js`, `test/test-basic.js`, `test/test-integration-quick.js`, `test/test-server.js`)
+  are out of this task's scope and were left untouched.
+
+**Affected files:**
+- `src/lib/test/plugin-graph-absorbed-donor-conflicts.test.js` (new)
+- `plan/phase-04-validation-gate-and-regression/002-assert-absorbed-donor-conflict-regression.md` (this status
+  update)
+
+**Assumptions applied:** both of this task doc's stated `## Assumptions` held — task 001's helper was landed
+and exports `readCoreServerPackageJSON`, and Phase 2's three in-tree component declarations are present in
+`package.json`'s `plugable.host.builtins`.
