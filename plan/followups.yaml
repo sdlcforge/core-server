@@ -186,3 +186,193 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'bun.lock''s regenerated content (from the successful Requirement 4 provisioning step) is sitting uncommitted in this worktree; finalize-task-commit.sh refused to commit it, citing a local yalc file: override mixed into the file. Whoever re-runs or continues this task after branch-reconciliation should be aware bun.lock will very likely need to be regenerated again anyway once the branch is brought current with main.'
+    - title: finalize-task-commit.sh's yalc-override exclu
+      id: xsRt
+      date: "2026-09-03"
+      tags:
+        - type:ambiguity
+        - plan/phase:framework-uptake-and-host-declaration
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: finalize-task-commit.sh's yalc-override exclusion guard (check 3) is a generic heuristic assuming any package.json/lockfile diff adding a .yalc/ line is unwanted; this task's explicit purpose was committing exactly that. Consider a per-task/per-project opt-out for yalc-refresh-and-commit tasks so future agents don't need to work around it by hand.
+    - title: 'Pre-existing repo-wide bun run lint failures '
+      id: UPHX
+      date: "2026-09-03"
+      tags:
+        - type:ambiguity
+        - plan/phase:framework-uptake-and-host-declaration
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: Pre-existing repo-wide bun run lint failures (230 problems, unrelated to any file this task touched) — not in this task's Validation scope, informational only.
+    - title: Task agent did not append a Status section to
+      id: 5jw7
+      date: "2026-09-03"
+      tags:
+        - type:ambiguity
+        - plan/phase:declare-in-tree-components
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: Task agent did not append a Status section to the task doc, believing it lived only in the plan worktree not the task worktree; task doc Status update may need separate handling.
+    - title: Pre-existing unrelated make lint failures (23
+      id: emWj
+      date: "2026-09-03"
+      tags:
+        - type:ambiguity
+        - plan/phase:declare-in-tree-components
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: Pre-existing unrelated make lint failures (230 errors) elsewhere in repo, untouched by this task.
+    - title: plugable-express-validate surfaces one unsati
+      id: CNMB
+      date: "2026-09-03"
+      tags:
+        - type:ambiguity
+        - plan/phase:declare-in-tree-components
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: plugable-express-validate surfaces one unsatisfied error and one info finding against dev-core#orgs/#work, pre-existing and outside this task's scope.
+    - title: plugable-express-validate reports a real viol
+      id: Pwdb
+      date: "2026-09-03"
+      tags:
+        - type:ambiguity
+        - plan/phase:declare-in-tree-components
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: 'plugable-express-validate reports a real violated-by-source-order finding: @sdlcforge/core-server#controls requires appExt:_liqOrgs@setup from @sdlcforge/dev-core#orgs, but dev-core#orgs (Server Package Root, load position 5) loads after core-server''s builtins (load position 0). Not resolvable within this task''s scope; manager/plan should track whether a later phase (Phase 3 third-party coupling coverage, or the manifest-ownership-boundary note) is meant to address it.'
+    - title: Task doc's own Validation section cites a non
+      id: AkKx
+      date: "2026-09-03"
+      tags:
+        - type:ambiguity
+        - plan/phase:declare-in-tree-components
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: Task doc's own Validation section cites a nonexistent path src/controls/_lib/list-lib.mjs; real file is src/controls/handlers/orgs/controls/_lib/list-lib.mjs. Content traced correctly; only the doc citation is stale.
+    - title: Manifest-ownership-boundary four-option decis
+      id: bkRk
+      date: "2026-09-03"
+      tags:
+        - type:ambiguity
+        - plan/phase:third-party-coupling-coverage
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: Manifest-ownership-boundary four-option decision (A-D) confirmed moot - both headline bugs closed via ordinary mechanism, no cross-repo manifest authoring needed.
+    - title: Task 002 should read the Status section's ful
+      id: hXi1
+      date: "2026-09-03"
+      tags:
+        - type:ambiguity
+        - plan/phase:third-party-coupling-coverage
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: Task 002 should read the Status section's full explanation for the second edge rather than grep for a literal satisfied string.
+    - title: Two unrelated dev-core#orgs findings noted pe
+      id: 9PxP
+      date: "2026-09-03"
+      tags:
+        - type:ambiguity
+        - plan/phase:third-party-coupling-coverage
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: Two unrelated dev-core#orgs findings noted per Requirement 5, no action taken - out of this plan-group's participant set.
+    - title: plan/notes/plugin-set-inventory.md still read
+      id: sVnp
+      date: "2026-09-03"
+      tags:
+        - type:ambiguity
+        - plan/phase:third-party-coupling-coverage
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: plan/notes/plugin-set-inventory.md still reads as an open question in two places; out of this task's edit scope per Requirement 3 which explicitly named it off-limits.
+    - title: bun run qa / make qa fail at lint stage due t
+      id: mLm3
+      date: "2026-09-04"
+      tags:
+        - type:ambiguity
+        - plan/phase:validation-gate-and-regression
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: bun run qa / make qa fail at lint stage due to 233 pre-existing ESLint errors across 5 files, confirmed byte-identical to main, unrelated to this task. This task's own new files introduce zero lint findings. Outside this task's scope to fix.
+    - title: 'Task 001''s plugin-graph-gate.test.js already '
+      id: W7f6
+      date: "2026-09-04"
+      tags:
+        - type:ambiguity
+        - plan/phase:validation-gate-and-regression
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: Task 001's plugin-graph-gate.test.js already asserts materially the same two-edge facts under its 2026-09-03 scope revision; not literally redundant but manager may want to note overlap or decide whether to trim later.
+    - title: Reconfirms task 001's already-flagged pre-exi
+      id: oY1B
+      date: "2026-09-04"
+      tags:
+        - type:ambiguity
+        - plan/phase:validation-gate-and-regression
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: Reconfirms task 001's already-flagged pre-existing lint failures, unaffected by this task.
+    - title: 'Task doc Requirement 3''s exactly-one-finding '
+      id: rB9S
+      date: "2026-09-04"
+      tags:
+        - type:ambiguity
+        - plan/phase:validation-gate-and-regression
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: Task doc Requirement 3's exactly-one-finding assertion is factually incorrect for setupMethod:-kind donors; manager may want to update wording for future readers.
+    - title: make lint-fix auto-modified 5 pre-existing un
+      id: 2wxr
+      date: "2026-09-04"
+      tags:
+        - type:ambiguity
+        - plan/phase:validation-gate-and-regression
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: make lint-fix auto-modified 5 pre-existing unrelated files with residual errors; reverted, out of scope. Same pre-existing lint debt already tracked.
+    - title: make lint-fix surfaced pre-existing lint erro
+      id: KNaG
+      date: "2026-09-04"
+      tags:
+        - type:ambiguity
+        - plan/phase:validation-gate-and-regression
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: make lint-fix surfaced pre-existing lint errors in 5 unrelated files, reverted, out of scope. Same pre-existing lint debt already tracked from prior tasks.
+    - title: app-init.mjs's export-list change is technica
+      id: wSLZ
+      date: "2026-09-04"
+      tags:
+        - type:ambiguity
+        - plan/phase:validation-gate-and-regression
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: app-init.mjs's export-list change is technically not comment-only as Requirement 1 wording specifies, though it doesn't change appInit()'s observable behavior - minor wording-vs-reality gap, not a regression.
+    - title: plugin-loading-tiers.md stale re manifest
+      id: yIza
+      date: "2026-09-04"
+      tags:
+        - plan/phase:validation-gate-and-regression
+        - plan/slug:sdlc-plugin-manifest
+        - type:documentation
+        - priority:unspecified
+        - effort:unspecified
+      text: docs/architecture/plugin-loading-tiers.md:61 states the compile-time plugin manifest is "expected to eventually supersede the runtime explicitPlugins array" — this plan-group has now landed and enforced that manifest (package.json's plugable.host block, validated by make/56-plugin-graph.mk), but it coexists with explicitPlugins rather than superseding it. The "expected to eventually" framing is stale. Needs a decision on how to update this doc's status language (landed-and-enforced, not-yet-scheduled-to-supersede) — flagged by the Phase 4 gate reviewer as a plan-closeout judgment call, not a mechanical fix.
