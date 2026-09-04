@@ -236,16 +236,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Task doc's own Validation section cites a nonexistent path src/controls/_lib/list-lib.mjs; real file is src/controls/handlers/orgs/controls/_lib/list-lib.mjs. Content traced correctly; only the doc citation is stale.
-    - title: Manifest-ownership-boundary four-option decis
-      id: bkRk
-      date: "2026-09-03"
-      tags:
-        - type:ambiguity
-        - plan/phase:third-party-coupling-coverage
-        - plan/slug:sdlc-plugin-manifest
-        - priority:unspecified
-        - effort:unspecified
-      text: Manifest-ownership-boundary four-option decision (A-D) confirmed moot - both headline bugs closed via ordinary mechanism, no cross-repo manifest authoring needed.
     - title: plan/notes/plugin-set-inventory.md still read
       id: sVnp
       date: "2026-09-03"
