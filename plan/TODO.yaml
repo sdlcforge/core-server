@@ -138,7 +138,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/sdlc-plugin-manifest-04-002
-            commit: []
+            commit:
+                - 11d4e1d
             merge: null
         - number: 3
           slug: assert-serverconfigroot-rename-regression
