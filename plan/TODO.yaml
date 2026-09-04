@@ -46,3 +46,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 5
+          slug: finish-orgs-create-handler
+          title: Finish And Secure Orgs Create Handler
+          path: phase-01-orgs-remediation/005-finish-orgs-create-handler.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
