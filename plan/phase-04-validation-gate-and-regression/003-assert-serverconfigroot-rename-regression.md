@@ -98,3 +98,46 @@ Depends on task 001 (`src/lib/test/helpers/resolve-plugin-set.mjs`). Parallel-el
 - [`plan/notes/manifest-ownership-boundary.md`](../notes/manifest-ownership-boundary.md) — the original `ynGa`
   bug analysis and the `liq-credentials-db` transitive-coverage relationship (context only; not directly
   exercised by this task).
+
+## Status
+
+**Outcome:** succeeded (2026-09-04).
+
+Added `src/lib/test/plugin-graph-serverconfigroot-rename.test.js`. Confirmed against the real, landed
+`package.json` that `credentials` requires both `setupArg:serverConfigRoot` (bare shorthand, fixed
+`framework`-phase provide / fixed `load`-phase require) and `{ capability: appExt:serverConfigRoot, phase:
+runtime }` — matching the Phase 2 draft. The test deep-clones the real `FRAMEWORK_MANIFEST` (imported from
+`@liquid-labs/plugable-express`) via `structuredClone`, renames both provides entries in the clone only to
+`appExt:serverConfigRootV2` / `setupArg:serverConfigRootV2` carrying `supersedes: [<removed capability>]`,
+and calls `validatePluginGraph({ records: hostDeclaration.builtins, frameworkManifest: <clone> })` against
+`readHostDeclaration()`'s real, landed `builtins` (the three in-tree component records).
+
+Assertions (all passing):
+- `result.ok === false` against the modified clone.
+- For each of the two renamed capabilities: an `unsatisfied`/`unsatisfied-phase` finding whose
+  `requirer.nodeId` is `@sdlcforge/core-server#credentials` and `capability.full` is the removed name, with
+  `finding.supersededBy.capability` naming the synthetic new capability.
+- Negative control: the same call with the real, unmodified `FRAMEWORK_MANIFEST` (no override) produces no
+  `unsatisfied` finding naming `@sdlcforge/core-server#credentials` for either capability.
+- `FRAMEWORK_MANIFEST` itself is unchanged after the clone-based tests ran (`toEqual` against a
+  pre-test `structuredClone` snapshot).
+
+Manually confirmed the `supersededBy` assertion is not vacuous: temporarily removed the `supersedes:` field
+from the synthetic clone's provides entries, re-ran the test, confirmed the positive test failed specifically
+on `expect(finding.supersededBy).toBeTruthy()` (the `ok === false` and negative-control assertions still
+passed, since the capability still went unsatisfied — only the rename-affordance assertion failed), then
+restored `supersedes:` before committing.
+
+Ran `make lint-fix` per role responsibility #4; it auto-aligned this new file's object-literal colon spacing
+to match the project's existing style (see `host-declaration.test.js`, `plugin-graph-gate.test.js`). It also
+touched five unrelated pre-existing files (`plan/resources/validate-check.mjs`,
+`test/get-node-versions.js`, `test/test-basic.js`, `test/test-integration-quick.js`,
+`test/test-server.js`) with formatting/lint-fix changes unrelated to this task's scope and reported
+pre-existing lint errors in those same files (`no-mixed-operators`, `no-unused-vars`,
+`no-return-assign`) that predate this task; those five files' changes were reverted (`git checkout --`)
+to keep this task's diff scoped to the new test file, and the pre-existing lint errors were left
+unaddressed as out of scope.
+
+`make test` (full suite): 15 suites / 49 tests, all passed, including the new file.
+
+Files touched: `src/lib/test/plugin-graph-serverconfigroot-rename.test.js` (new).
