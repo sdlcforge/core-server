@@ -306,3 +306,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: bun run qa / make qa fail at lint stage due to 233 pre-existing ESLint errors across 5 files, confirmed byte-identical to main, unrelated to this task. This task's own new files introduce zero lint findings. Outside this task's scope to fix.
+    - title: 'Task 001''s plugin-graph-gate.test.js already '
+      id: W7f6
+      date: "2026-09-04"
+      tags:
+        - type:ambiguity
+        - plan/phase:validation-gate-and-regression
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: Task 001's plugin-graph-gate.test.js already asserts materially the same two-edge facts under its 2026-09-03 scope revision; not literally redundant but manager may want to note overlap or decide whether to trim later.
