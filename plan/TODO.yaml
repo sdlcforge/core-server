@@ -26,3 +26,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 3
+          slug: fix-orgs-read-handlers
+          title: Fix Orgs Read Handlers And Tighten parameterKey
+          path: phase-01-orgs-remediation/003-fix-orgs-read-handlers.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
