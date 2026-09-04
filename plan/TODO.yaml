@@ -153,7 +153,7 @@ phases:
             branch: plan/sdlc-plugin-manifest-04-003
             commit:
                 - 1a6f372
-            merge: null
+            merge: 41e9031
         - number: 4
           slug: assert-third-party-ordering-regression
           title: Assert Third-Party Ordering Regression
