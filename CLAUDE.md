@@ -109,7 +109,7 @@ Configuration via `@liquid-labs/comply-defaults`:
 - `src/lib/app-init.mjs` - Core initialization, delegates to plugable-express with builtinPlugins and explicitPlugins configuration
 - `src/lib/builtin-plugins.mjs` - Aggregates the built-in (in-tree) controls/credentials/integrations-issues-github submodules into one plugin
 - `src/controls/`, `src/credentials/`, `src/integrations-issues-github/` - Built-in (in-tree) plugin submodules, siblings of `src/lib/` and `src/cli/`
-- `src/lib/index.js` - Library exports (appInit, Reporter, name, summary)
+- `src/lib/index.js` - Library exports (appInit, explicitPlugins, Reporter, name, summary)
 
 ## Important Development Notes
 

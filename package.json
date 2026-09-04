@@ -64,5 +64,101 @@
   },
   "_comply": {
     "orgKey": "@liquid-labs"
+  },
+  "plugable": {
+    "plugableManifestVersion": 1,
+    "host": {
+      "explicitPlugins": [
+        "@liquid-labs/sdlc-projects-badges-coverage",
+        "@liquid-labs/sdlc-projects-badges-github-workflows",
+        "@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd",
+        "@liquid-labs/sdlc-projects-workflow-local-node-build",
+        "@sdlcforge/dev-core"
+      ],
+      "builtins": [
+        {
+          "npmName": "@sdlcforge/core-server",
+          "components": [
+            {
+              "component": "controls",
+              "provides": [
+                {
+                  "capability": "setupMethod:load org controls",
+                  "phase": "setup",
+                  "via": "pushed onto app.ext.setupMethods in src/controls/setup.mjs (func: loadControls)"
+                },
+                {
+                  "capability": "setupMethod:load controls integrations",
+                  "phase": "setup",
+                  "via": "pushed onto app.ext.setupMethods in src/controls/setup.mjs (func: registerControlsIntegrations)"
+                },
+                {
+                  "capability": "integration:controls",
+                  "phase": "setup",
+                  "exclusive": false,
+                  "via": "setup method 'load controls integrations'"
+                },
+                {
+                  "capability": "integrationHook:controls/getQuestionControls",
+                  "phase": "setup",
+                  "exclusive": false,
+                  "via": "registered via app.ext.integrations.register in setup method 'load controls integrations' (src/controls/integrations/register-controls-integrations.mjs)"
+                }
+              ],
+              "requires": [
+                { "capability": "appExt:setupMethods", "phase": "load" },
+                "setupMethod:load orgs",
+                "setupMethod:setup integrations",
+                { "capability": "appExt:integrations", "phase": "setup" },
+                { "capability": "appExt:_liqOrgs.orgs", "phase": "setup" },
+                { "capability": "appExt:_liqOrgs.orgs", "phase": "runtime" },
+                { "capability": "appExt:_liqProjects.playgroundMonitor", "phase": "runtime" },
+                "pathVar:orgKey"
+              ]
+            },
+            {
+              "component": "credentials",
+              "provides": [
+                { "capability": "appExt:credentialsDB", "phase": "load", "via": "src/credentials/setup.mjs — app.ext.credentialsDB = <bare assignment>" },
+                { "capability": "pathVar:credential", "phase": "load", "via": "src/credentials/setup.mjs — registerPathVar('credential')" }
+              ],
+              "requires": [
+                "setupArg:app",
+                "setupArg:cache",
+                "setupArg:registerPathVar",
+                "setupArg:serverConfigRoot",
+                { "capability": "appExt:serverConfigRoot", "phase": "runtime", "reason": "handlers/credentials/import.mjs reads it" }
+              ]
+            },
+            {
+              "component": "issues-github",
+              "provides": [
+                "setupMethod:register github issues integrations",
+                { "capability": "integration:tickets", "phase": "setup", "exclusive": false, "conditional": true, "via": "setup method 'register github issues integrations' (providerTest: usesGitHubIssues)" },
+                { "capability": "integration:pull request", "phase": "setup", "exclusive": false, "conditional": true, "via": "setup method 'register github issues integrations' (providerTest: usesGitHubIssues)" },
+                { "capability": "integrationHook:tickets/getCurrentIntegrationUser", "phase": "setup", "exclusive": false },
+                { "capability": "integrationHook:tickets/getIssueURL", "phase": "setup", "exclusive": false },
+                { "capability": "integrationHook:tickets/getProjectURL", "phase": "setup", "exclusive": false },
+                { "capability": "integrationHook:pull request/createOrUpdatePullRequest", "phase": "setup", "exclusive": false },
+                { "capability": "integrationHook:pull request/getCurrentIntegrationUser", "phase": "setup", "exclusive": false },
+                { "capability": "integrationHook:pull request/getPullRequestURLsByHead", "phase": "setup", "exclusive": false },
+                { "capability": "integrationHook:pull request/getQALinkFileIndex", "phase": "setup", "exclusive": false }
+              ],
+              "requires": [
+                { "capability": "appExt:setupMethods", "phase": "load" },
+                "setupMethod:setup integrations",
+                { "capability": "appExt:integrations", "phase": "setup" },
+                { "capability": "appExt:credentialsDB", "phase": "runtime" },
+                { "capability": "credential:GITHUB_API", "phase": "runtime", "optional": true, "reason": "GitHub hooks fail at call time without it; the server is otherwise healthy" },
+                { "capability": "appExt:_liqProjects.playgroundMonitor", "phase": "runtime" }
+              ]
+            }
+          ]
+        }
+      ],
+      "providedCapabilities": [],
+      "assumeProvided": [],
+      "searchPaths": []
+    }
   }
 }

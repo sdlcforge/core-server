@@ -102,4 +102,4 @@ const appInit = async(options) => {
   })
 }
 
-export { appInit }
+export { appInit, explicitPlugins }
