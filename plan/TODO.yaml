@@ -76,3 +76,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 8
+          slug: close-and-file-orgs-followups
+          title: Close And File Orgs Follow-Ups
+          path: phase-01-orgs-remediation/008-close-and-file-orgs-followups.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
