@@ -174,5 +174,6 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/sdlc-plugin-manifest-04-005
-            commit: []
+            commit:
+                - 6300bb0
             merge: null
