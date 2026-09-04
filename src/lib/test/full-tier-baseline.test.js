@@ -259,6 +259,14 @@ describe('Full-tier baseline characterization', () => {
     expect(Object.keys(app.ext).sort()).toEqual(EXPECTED_APP_EXT_KEYS)
   })
 
+  // `app.ext.credentialsDB`'s load-ordering contract: the builtin `src/credentials/` component
+  // provides `appExt:credentialsDB @ load`, and `@sdlcforge/dev-core`'s `projects` component
+  // requires it at the same phase -- provable only because `builtinPlugins` is always load
+  // source #1. This runtime characterization test only proves the method set exists once
+  // `appInit()` has already succeeded; it says nothing about *why* the ordering holds. The
+  // build-time-enforced form of that same contract -- asserted statically against the real
+  // graph, before any test in this file ever runs `appInit()` -- lives in
+  // `src/lib/test/plugin-graph-third-party-ordering.test.js`.
   test('app.ext.credentialsDB exposes the recorded method set', () => {
     expect(app.ext.credentialsDB).toBeDefined()
     for (const method of EXPECTED_CREDENTIALS_DB_METHODS) {
