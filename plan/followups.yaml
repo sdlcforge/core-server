@@ -366,3 +366,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: app-init.mjs's export-list change is technically not comment-only as Requirement 1 wording specifies, though it doesn't change appInit()'s observable behavior - minor wording-vs-reality gap, not a regression.
+    - title: plugin-loading-tiers.md stale re manifest
+      id: yIza
+      date: "2026-09-04"
+      tags:
+        - plan/phase:validation-gate-and-regression
+        - plan/slug:sdlc-plugin-manifest
+        - type:documentation
+        - priority:unspecified
+        - effort:unspecified
+      text: docs/architecture/plugin-loading-tiers.md:61 states the compile-time plugin manifest is "expected to eventually supersede the runtime explicitPlugins array" — this plan-group has now landed and enforced that manifest (package.json's plugable.host block, validated by make/56-plugin-graph.mk), but it coexists with explicitPlugins rather than superseding it. The "expected to eventually" framing is stale. Needs a decision on how to update this doc's status language (landed-and-enforced, not-yet-scheduled-to-supersede) — flagged by the Phase 4 gate reviewer as a plan-closeout judgment call, not a mechanical fix.
