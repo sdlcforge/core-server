@@ -161,7 +161,7 @@ phases:
             branch: plan/sdlc-plugin-manifest-04-004
             commit:
                 - 9233bea
-            merge: null
+            merge: d997f7b
         - number: 5
           slug: confirm-no-regressions-and-coverage-boundary
           title: Confirm No Regressions And State Coverage Boundary
