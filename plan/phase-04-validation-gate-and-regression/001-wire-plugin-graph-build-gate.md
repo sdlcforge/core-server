@@ -176,3 +176,101 @@ must land first; tasks 002, 003, and 004 are parallel-eligible with each other o
 - After `make/56-plugin-graph.mk` is authored and `make test` passes with the marker present (before writing
   the demonstrated-red proof).
 - After the demonstrated-red proof is recorded and reverted.
+
+## Status
+
+**Outcome: succeeded (2026-09-04), resumed attempt.** A prior attempt (2026-09-02) completed Requirement 2
+(the shared helper) and halted on Requirements 1/3/4 because Requirement 3's original text demanded an
+unconditional `outcome === 'ok'` assertion that conflicted with 2 pre-existing, out-of-scope error findings
+inside `@sdlcforge/dev-core#orgs`. The manager revised Requirement 3 (2026-09-03 scope decision, see the
+Requirement 3 text above) to specify an explicit allowlist instead of the unconditional assertion. This
+attempt implements Requirements 1, 3, and 4 against that revised text; Requirement 2's helper was verified
+still present and correct and was not re-authored.
+
+**Requirement 1 (`make/56-plugin-graph.mk`):** authored, mirroring the upstream precedent
+(`/Users/zane/playground/liquid-labs/plugable-express/make/56-plugin-graph.mk`) and this plan's own recipe.
+`CATALYST_PLUGIN_GRAPH_MARKER:=$(QA)/.plugin-graph.passed`, appended to `TEST_TARGETS` (confirmed via
+`grep TEST_TARGETS make/56-plugin-graph.mk`), depends only on `make/55-test.mk`'s
+`$(CATALYST_TEST_PASS_MARKER)`, no `dist/` dependency, and carries the required inverted "hand-authored, not
+Catalyst-generated" banner.
+
+**Requirement 2 (shared helper):** re-verified present and unmodified at
+[`src/lib/test/helpers/resolve-plugin-set.mjs`](../../src/lib/test/helpers/resolve-plugin-set.mjs), exporting
+`resolveCoreServerPackageRoot(testFileDirname, walkUpCount = 3)` and `readCoreServerPackageJSON(repoRoot)`.
+Now actually imported and exercised for the first time, by this task's own
+`src/lib/test/plugin-graph-gate.test.js` (all four of its tests pass).
+
+**Requirement 3 (`src/lib/test/plugin-graph-gate.test.js`):** authored per the revised text. Ran
+`validatePluginSet({ packageRoot: <resolved via the helper> })` against this worktree's real, full plugin
+graph directly (outside Jest, via a throwaway Node script) to confirm the exact shape before writing
+assertions:
+- `outcome: "validation-failure"`, `exitCode: 1`, exactly 2 error-severity findings, 0 warnings — matching
+  Phase 3's own captured evidence
+  ([`phase-03-third-party-coupling-coverage/001-...md`](../phase-03-third-party-coupling-coverage/001-verify-third-party-requiring-edges-satisfied.md))
+  byte-for-byte: `[unsatisfied] appExt:_liqOrgs.orgSetupMethods` (requirer `@sdlcforge/dev-core#orgs`) and
+  `[violated-by-source-order] appExt:_liqOrgs.orgs` (requirer `@sdlcforge/core-server#controls`).
+- The gate test asserts an explicit allowlist matching exactly these 2 findings by `kind` +
+  `capability.full` + `requirer.nodeId`; any additional or different error-severity finding fails the count
+  check.
+- The two chartered edges both confirmed satisfied against the live result: `appExt:credentialsDB` (from
+  `@sdlcforge/core-server#credentials` to `@sdlcforge/dev-core#projects`) has literal `orderVerdict:
+  "satisfied-by-source-order"`; `appExt:serverConfigRoot` (from the framework to
+  `@sdlcforge/dev-core#work`) has `orderVerdict: null` (schema design — `samePhase: false`, provider phase
+  `"framework"`), confirmed satisfied via edge-presence plus absence of any failure finding naming that
+  capability/node, per Phase 3's own verified verdict shape — not flattened into a literal `'satisfied'`
+  string.
+- `result.exitCode === 1` is asserted explicitly, with an in-file comment recording it as the expected
+  steady-state code.
+- Coverage-boundary assertion: read the real `result.coverage` shape before writing the assertion, per the
+  task doc's own instruction not to guess field names. The actual field value is `sourcesSearched: ["builtin",
+  "serverPackageRoot"]` — literally `"builtin"`, not `"builtinPlugins"` as the task doc's own prose paraphrased
+  it — and `outOfScope: ["dynamicPluginInstallDir", "pluginPaths"]`. The test asserts
+  `sourcesSearched` contains `builtin`/`serverPackageRoot` and does not contain
+  `dynamicPluginInstallDir`/`pluginPaths`, and that `outOfScope` names both.
+- Non-trivial node-set assertion: `engineResult.nodes` includes `@sdlcforge/core-server#controls`,
+  `@sdlcforge/core-server#credentials`, `@sdlcforge/core-server#issues-github`, and
+  `@sdlcforge/dev-core#projects` (confirmed `nodeId` format is `npmName#component` against the live result).
+
+**Requirement 4 (demonstrated red, manual, not a permanent change):**
+- **Break:** temporarily edited `package.json`, renaming the `credentials` component's
+  `provides[].capability` from `"appExt:credentialsDB"` to `"appExt:credentialsDB_BROKEN_FOR_DEMO"` (the
+  `via` field and every `requires` entry left untouched, so this purely breaks the provided-capability name).
+- **Observed failure:** ran `make test`. Output: `Test Suites: 1 failed, 13 passed, 14 total`,
+  `Tests: 2 failed, 43 passed, 45 total`, `FAIL lib/test/plugin-graph-gate.test.js`, with `make` itself
+  failing at `make/55-test.mk:36: qa/unit-test.txt`. The captured finding dump (from the test's own
+  `console.log` on assertion failure) showed two new `[unsatisfied] appExt:credentialsDB` error findings — one
+  against requirer `@sdlcforge/core-server#issues-github` (runtime phase), one against requirer
+  `@sdlcforge/dev-core#projects` (load phase) — pushing the error-finding count from 2 to 4 and failing both
+  the allowlist-count assertion and the `credentialsDBEdge` existence assertion. The failure is unambiguously
+  traceable to the plugin-graph gate specifically: `plugin-graph-gate.test.js` is the only failing suite, and
+  every other of the 14 suites passed unchanged.
+- **Revert:** `git checkout -- package.json` restored the original `"appExt:credentialsDB"` capability name.
+  Re-ran `make test`: `Test Suites: 14 passed, 14 total`, `Tests: 45 passed, 45 total` — green again. `git
+  status --short` confirmed `package.json` carries no diff before proceeding; the temporary break was never
+  committed.
+
+**Validation run (final):**
+- `grep TEST_TARGETS make/56-plugin-graph.mk` — matches (see Requirement 1 above).
+- `make test`: 14 test suites / 45 tests pass; `qa/.plugin-graph.passed` exists after the run.
+- `bun run test`: passes (no-op on a second consecutive run since the marker was already fresh; the full run
+  above already exercised it).
+- `bun run qa`: **fails**, but only at the `lint` stage (`qa: test lint`) — `make lint` reports 233
+  pre-existing errors, all inside `test/test-basic.js`, `test/test-server.js`,
+  `test/test-integration-quick.js`, `test/get-node-versions.js`, and `plan/resources/validate-check.mjs`, none
+  of which this task touches. Confirmed via `git stash` (isolating this task's own new/untracked files) plus
+  a `git show main:<path>` diff against the tracked originals that these files are byte-identical to `main`
+  and the same 233 errors reproduce — this lint failure predates this entire plan and is wholly unrelated to the
+  plugin-graph gate. `bun run qa`'s `test` half (i.e. `make test`) passes cleanly; the `lint` half was already
+  broken before this task started. Flagged for the manager below rather than fixed, since bringing 5
+  unrelated files with 233 findings to lint-clean is far outside this task's scope.
+- `src/lib/test/helpers/resolve-plugin-set.mjs` exists, is imported successfully by
+  `plugin-graph-gate.test.js` (confirmed via the passing test run), and its in-file comment documents it as
+  the shared helper tasks 002-004 will also import.
+- No existing test's behavior changed: the full `make test` run (post-revert) shows the same 14 suites / 45
+  tests that passed before this task's `plugin-graph-gate.test.js` was added (13 suites / 41 tests before,
+  now 14 suites / 45 tests — the 1 new suite and its 4 new tests are exactly this task's own addition).
+
+Affected files: `make/56-plugin-graph.mk` (new), `src/lib/test/plugin-graph-gate.test.js` (new), this task
+document (`## Status` replacement). `src/lib/test/helpers/resolve-plugin-set.mjs` (pre-existing from the prior
+attempt) was read but not modified. `package.json` was temporarily edited for the Requirement 4 demonstration
+and fully reverted before the final commit — `git status --short` shows no diff against it.
