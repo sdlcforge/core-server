@@ -306,16 +306,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Task doc Requirement 3's exactly-one-finding assertion is factually incorrect for setupMethod:-kind donors; manager may want to update wording for future readers.
-    - title: make lint-fix auto-modified 5 pre-existing un
-      id: 2wxr
-      date: "2026-09-04"
-      tags:
-        - type:ambiguity
-        - plan/phase:validation-gate-and-regression
-        - plan/slug:sdlc-plugin-manifest
-        - priority:unspecified
-        - effort:unspecified
-      text: make lint-fix auto-modified 5 pre-existing unrelated files with residual errors; reverted, out of scope. Same pre-existing lint debt already tracked.
     - title: make lint-fix surfaced pre-existing lint erro
       id: KNaG
       date: "2026-09-04"
