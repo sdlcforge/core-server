@@ -172,6 +172,7 @@ phases:
           path: phase-04-validation-gate-and-regression/005-confirm-no-regressions-and-coverage-boundary.md
           done: false
           tier: sonnet-med
+          digest: 'Confirmed no regressions across the whole plan-group: 17 suites/55 tests pass, all 4 golden/baseline snapshots byte-identical to pre-plan state, appInit()''s function body unchanged. Gate''s real text report plainly states coverage boundary (framework/builtin/serverPackageRoot searched, dynamicPluginInstallDir/pluginPaths out of scope) - no gap to flag. All 4 mutation self-checks performed, each broke exactly the expected assertion, none vacuous, all reverted cleanly. git status clean before final commit.'
           git:
             branch: plan/sdlc-plugin-manifest-04-005
             commit:
