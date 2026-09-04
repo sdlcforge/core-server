@@ -36,3 +36,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 4
+          slug: fix-orgs-parameters-set-handler
+          title: Fix Orgs Parameters Set Handler
+          path: phase-01-orgs-remediation/004-fix-orgs-parameters-set-handler.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
