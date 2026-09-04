@@ -124,6 +124,7 @@ phases:
           path: phase-04-validation-gate-and-regression/001-wire-plugin-graph-build-gate.md
           done: false
           tier: sonnet-med
+          digest: 'Authored make/56-plugin-graph.mk and plugin-graph-gate.test.js implementing the manager''s revised explicit-allowlist gate: exactly 2 known dev-core#orgs findings permitted, both chartered edges (credentialsDB, serverConfigRoot) asserted satisfied per Phase 3''s exact verdict shapes, exitCode===1 asserted as expected steady state, coverage boundary and non-trivial node set asserted. Demonstrated-red proof performed and recorded. make test/bun run test fully green (14 suites/45 tests); make qa/bun run qa fail only at pre-existing unrelated lint stage.'
           git:
             branch: plan/sdlc-plugin-manifest-04-001
             commit:
