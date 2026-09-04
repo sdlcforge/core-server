@@ -154,7 +154,7 @@ phases:
           slug: assert-third-party-ordering-regression
           title: Assert Third-Party Ordering Regression
           path: phase-04-validation-gate-and-regression/004-assert-third-party-ordering-regression.md
-          done: false
+          done: true
           tier: sonnet-med
           digest: 'Added plugin-graph-third-party-ordering.test.js with 3 tests asserting the full edge (provider+requirer) for both chartered couplings against the real, unmodified graph. credentialsDB edge: satisfied-by-source-order. serverConfigRoot edge: orderVerdict null by schema design, confirmed via edge-presence + no-failure-finding. Third test independently confirms no failure finding names either triple. Added cross-reference comment in full-tier-baseline.test.js. No runtime source touched. make test passes (15 suites/48 tests).'
           git:
