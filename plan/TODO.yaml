@@ -134,11 +134,13 @@ phases:
           slug: assert-absorbed-donor-conflict-regression
           title: Assert Absorbed-Donor Conflict Regression
           path: phase-04-validation-gate-and-regression/002-assert-absorbed-donor-conflict-regression.md
-          done: false
+          done: true
           tier: sonnet-med
+          digest: 'Added plugin-graph-absorbed-donor-conflicts.test.js, test.each regression proving all 3 absorbed donors caught as conflict findings via synthetic donor records built from exported framework functions only. Discovered and corrected a factually-wrong cardinality assumption in the task doc (setupMethod: donors produce 2 conflict findings, not 1) while preserving full intent. Non-vacuousness verified. Full suite passes (15 suites/48 tests), new file lint-clean.'
           git:
-            branch: null
-            commit: []
+            branch: plan/sdlc-plugin-manifest-04-002
+            commit:
+                - 11d4e1d
             merge: null
         - number: 3
           slug: assert-serverconfigroot-rename-regression
@@ -154,12 +156,14 @@ phases:
           slug: assert-third-party-ordering-regression
           title: Assert Third-Party Ordering Regression
           path: phase-04-validation-gate-and-regression/004-assert-third-party-ordering-regression.md
-          done: false
+          done: true
           tier: sonnet-med
+          digest: 'Added plugin-graph-third-party-ordering.test.js with 3 tests asserting the full edge (provider+requirer) for both chartered couplings against the real, unmodified graph. credentialsDB edge: satisfied-by-source-order. serverConfigRoot edge: orderVerdict null by schema design, confirmed via edge-presence + no-failure-finding. Third test independently confirms no failure finding names either triple. Added cross-reference comment in full-tier-baseline.test.js. No runtime source touched. make test passes (15 suites/48 tests).'
           git:
-            branch: null
-            commit: []
-            merge: null
+            branch: plan/sdlc-plugin-manifest-04-004
+            commit:
+                - 9233bea
+            merge: d997f7b
         - number: 5
           slug: confirm-no-regressions-and-coverage-boundary
           title: Confirm No Regressions And State Coverage Boundary
