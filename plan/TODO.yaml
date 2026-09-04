@@ -177,4 +177,4 @@ phases:
             branch: plan/sdlc-plugin-manifest-04-005
             commit:
                 - 6300bb0
-            merge: null
+            merge: 9481bbb
