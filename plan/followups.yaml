@@ -326,3 +326,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Reconfirms task 001's already-flagged pre-existing lint failures, unaffected by this task.
+    - title: 'Task doc Requirement 3''s exactly-one-finding '
+      id: rB9S
+      date: "2026-09-04"
+      tags:
+        - type:ambiguity
+        - plan/phase:validation-gate-and-regression
+        - plan/slug:sdlc-plugin-manifest
+        - priority:unspecified
+        - effort:unspecified
+      text: Task doc Requirement 3's exactly-one-finding assertion is factually incorrect for setupMethod:-kind donors; manager may want to update wording for future readers.
