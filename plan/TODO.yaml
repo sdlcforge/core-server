@@ -134,7 +134,7 @@ phases:
           slug: assert-absorbed-donor-conflict-regression
           title: Assert Absorbed-Donor Conflict Regression
           path: phase-04-validation-gate-and-regression/002-assert-absorbed-donor-conflict-regression.md
-          done: false
+          done: true
           tier: sonnet-med
           digest: 'Added plugin-graph-absorbed-donor-conflicts.test.js, test.each regression proving all 3 absorbed donors caught as conflict findings via synthetic donor records built from exported framework functions only. Discovered and corrected a factually-wrong cardinality assumption in the task doc (setupMethod: donors produce 2 conflict findings, not 1) while preserving full intent. Non-vacuousness verified. Full suite passes (15 suites/48 tests), new file lint-clean.'
           git:
