@@ -179,91 +179,98 @@ must land first; tasks 002, 003, and 004 are parallel-eligible with each other o
 
 ## Status
 
-**Outcome: blocked (2026-09-02).** Requirement 2 (the shared helper) is complete and verified. Requirements 1,
-3, and 4 are **not implemented** — halted per this task document's own explicit instructions in Requirement 3
-and in `## Assumptions`, because the real plugin graph is not clean and the two errors are not fixable within
-this task's scope.
+**Outcome: succeeded (2026-09-04), resumed attempt.** A prior attempt (2026-09-02) completed Requirement 2
+(the shared helper) and halted on Requirements 1/3/4 because Requirement 3's original text demanded an
+unconditional `outcome === 'ok'` assertion that conflicted with 2 pre-existing, out-of-scope error findings
+inside `@sdlcforge/dev-core#orgs`. The manager revised Requirement 3 (2026-09-03 scope decision, see the
+Requirement 3 text above) to specify an explicit allowlist instead of the unconditional assertion. This
+attempt implements Requirements 1, 3, and 4 against that revised text; Requirement 2's helper was verified
+still present and correct and was not re-authored.
 
-**What was verified before starting (the Requirement 3 / Assumptions precondition check):**
+**Requirement 1 (`make/56-plugin-graph.mk`):** authored, mirroring the upstream precedent
+(`/Users/zane/playground/liquid-labs/plugable-express/make/56-plugin-graph.mk`) and this plan's own recipe.
+`CATALYST_PLUGIN_GRAPH_MARKER:=$(QA)/.plugin-graph.passed`, appended to `TEST_TARGETS` (confirmed via
+`grep TEST_TARGETS make/56-plugin-graph.mk`), depends only on `make/55-test.mk`'s
+`$(CATALYST_TEST_PASS_MARKER)`, no `dist/` dependency, and carries the required inverted "hand-authored, not
+Catalyst-generated" banner.
 
-- `package.json` does carry a complete `plugable.host` block with all three in-tree components populated
-  (`controls`, `credentials`, `issues-github`) — the Requirement 3 precondition that gates writing the gate
-  test at all.
-- Ran `validatePluginSet({ packageRoot: process.cwd() })` directly (`@liquid-labs/plugable-express@1.0.0-alpha.59`,
-  matching the source checkout at `/Users/zane/playground/liquid-labs/plugable-express`) against this worktree's
-  real, installed plugin graph. Result: **`outcome: "validation-failure"`, `exitCode: 1`, 2 error-severity
-  findings, 0 warnings** — i.e. the real graph is **not** clean, contradicting the `## Assumptions` section's
-  premise ("Phase 3 has already confirmed... that the real graph resolves clean").
-- The 2 errors are exactly the same 2 errors Phase 3's own task
-  ([`phase-03-third-party-coupling-coverage/001-verify-third-party-requiring-edges-satisfied.md`](../phase-03-third-party-coupling-coverage/001-verify-third-party-requiring-edges-satisfied.md))
-  already found, captured, and explicitly ruled **out of scope / non-blocking** for this plan-group (see that
-  task's `## Status`, Requirement 5, and [`plan/phases/third-party-coupling-coverage.md`](../phases/third-party-coupling-coverage.md)'s
-  "Unrelated findings, noted but out of scope" paragraph):
-  1. `[unsatisfied]` — `@sdlcforge/dev-core#orgs` requires `appExt:_liqOrgs.orgSetupMethods @ setup`, with no
-     candidate provider; dev-core's own manifest comment traces this array's population to `liq-policy`, a
-     package entirely outside `core-server`'s plugin set.
-  2. `[violated-by-source-order]` — `@sdlcforge/core-server#controls` requires `appExt:_liqOrgs.orgs` from
-     `@sdlcforge/dev-core#orgs` at the same phase (`setup`), but `dev-core#orgs` (source `serverPackageRoot`,
-     load position 5) loads after `core-server#controls` (source `builtin`, load position 0).
-  - Both trace to `@sdlcforge/dev-core`'s own `orgs` component and, per Phase 3's own ownership-boundary
-    rationale (`plan/notes/manifest-ownership-boundary.md`), are `@sdlcforge/dev-core`'s concern, not
-    `core-server`'s — fixing either is outside this task's (and this plan-group's) scope.
-  - The two edges Requirement 3 actually cares about at the coverage-boundary/node-count level, and the two
-    edges Phase 3 verified and task 004 (`004-assert-third-party-ordering-regression.md`) will permanentize
-    (`appExt:credentialsDB @ load` and `appExt:serverConfigRoot @ load`), both resolve satisfied/
-    satisfied-by-source-order — unaffected by the two `orgs`-component errors above.
+**Requirement 2 (shared helper):** re-verified present and unmodified at
+[`src/lib/test/helpers/resolve-plugin-set.mjs`](../../src/lib/test/helpers/resolve-plugin-set.mjs), exporting
+`resolveCoreServerPackageRoot(testFileDirname, walkUpCount = 3)` and `readCoreServerPackageJSON(repoRoot)`.
+Now actually imported and exercised for the first time, by this task's own
+`src/lib/test/plugin-graph-gate.test.js` (all four of its tests pass).
 
-**The contradiction this creates:** Requirement 3 says, verbatim, "Assert `result.outcome === 'ok'` and
-`result.exitCode === 0`. If the real graph is *not* clean at this point, that is a real defect in Phases 1-3's
-declarations (or in the dependency refresh) — do not weaken this assertion to make the task pass; halt and
-report instead, naming the actual findings." The real graph is not clean, for the two reasons above, and
-those two reasons are not a Phase 1-3 defect within this plan-group's own remit to fix — they are `dev-core`'s
-own, already-triaged, deliberately out-of-scope concern. Writing the gate test as Requirement 3 literally
-specifies (`outcome === 'ok'`) would make `make test`/`make qa` permanently red for a condition this
-plan-group has already decided not to fix from `core-server`'s side. Weakening the assertion (e.g., asserting
-"no *new* errors" or filtering out `@sdlcforge/dev-core#orgs` findings) is exactly what Requirement 3
-forbids doing unilaterally. Per Requirement 3's and `## Assumptions`' own explicit instructions, halting and
-reporting the actual findings (above) is the correct action rather than guessing which way to resolve the
-contradiction.
+**Requirement 3 (`src/lib/test/plugin-graph-gate.test.js`):** authored per the revised text. Ran
+`validatePluginSet({ packageRoot: <resolved via the helper> })` against this worktree's real, full plugin
+graph directly (outside Jest, via a throwaway Node script) to confirm the exact shape before writing
+assertions:
+- `outcome: "validation-failure"`, `exitCode: 1`, exactly 2 error-severity findings, 0 warnings — matching
+  Phase 3's own captured evidence
+  ([`phase-03-third-party-coupling-coverage/001-...md`](../phase-03-third-party-coupling-coverage/001-verify-third-party-requiring-edges-satisfied.md))
+  byte-for-byte: `[unsatisfied] appExt:_liqOrgs.orgSetupMethods` (requirer `@sdlcforge/dev-core#orgs`) and
+  `[violated-by-source-order] appExt:_liqOrgs.orgs` (requirer `@sdlcforge/core-server#controls`).
+- The gate test asserts an explicit allowlist matching exactly these 2 findings by `kind` +
+  `capability.full` + `requirer.nodeId`; any additional or different error-severity finding fails the count
+  check.
+- The two chartered edges both confirmed satisfied against the live result: `appExt:credentialsDB` (from
+  `@sdlcforge/core-server#credentials` to `@sdlcforge/dev-core#projects`) has literal `orderVerdict:
+  "satisfied-by-source-order"`; `appExt:serverConfigRoot` (from the framework to
+  `@sdlcforge/dev-core#work`) has `orderVerdict: null` (schema design — `samePhase: false`, provider phase
+  `"framework"`), confirmed satisfied via edge-presence plus absence of any failure finding naming that
+  capability/node, per Phase 3's own verified verdict shape — not flattened into a literal `'satisfied'`
+  string.
+- `result.exitCode === 1` is asserted explicitly, with an in-file comment recording it as the expected
+  steady-state code.
+- Coverage-boundary assertion: read the real `result.coverage` shape before writing the assertion, per the
+  task doc's own instruction not to guess field names. The actual field value is `sourcesSearched: ["builtin",
+  "serverPackageRoot"]` — literally `"builtin"`, not `"builtinPlugins"` as the task doc's own prose paraphrased
+  it — and `outOfScope: ["dynamicPluginInstallDir", "pluginPaths"]`. The test asserts
+  `sourcesSearched` contains `builtin`/`serverPackageRoot` and does not contain
+  `dynamicPluginInstallDir`/`pluginPaths`, and that `outOfScope` names both.
+- Non-trivial node-set assertion: `engineResult.nodes` includes `@sdlcforge/core-server#controls`,
+  `@sdlcforge/core-server#credentials`, `@sdlcforge/core-server#issues-github`, and
+  `@sdlcforge/dev-core#projects` (confirmed `nodeId` format is `npmName#component` against the live result).
 
-**Decision needed from the manager/planner** — one of, non-exhaustively:
-- Accept a narrower Requirement 3 assertion (e.g., assert no *new* error-severity findings beyond the two
-  known, out-of-scope `dev-core#orgs` ones, or assert only the specific edges Phase 3/task 004 care about)
-  and re-dispatch with an updated task doc.
-- Have `core-server` declare the two `orgs`-component findings via `plugable.host.assumeProvided` (if that
-  is judged in-scope after all) so the real graph resolves clean from this host's side.
-- Defer this task's Requirement 3/4 to a follow-up, once `@sdlcforge/dev-core`'s own `orgs` manifest/ordering
-  is fixed upstream.
+**Requirement 4 (demonstrated red, manual, not a permanent change):**
+- **Break:** temporarily edited `package.json`, renaming the `credentials` component's
+  `provides[].capability` from `"appExt:credentialsDB"` to `"appExt:credentialsDB_BROKEN_FOR_DEMO"` (the
+  `via` field and every `requires` entry left untouched, so this purely breaks the provided-capability name).
+- **Observed failure:** ran `make test`. Output: `Test Suites: 1 failed, 13 passed, 14 total`,
+  `Tests: 2 failed, 43 passed, 45 total`, `FAIL lib/test/plugin-graph-gate.test.js`, with `make` itself
+  failing at `make/55-test.mk:36: qa/unit-test.txt`. The captured finding dump (from the test's own
+  `console.log` on assertion failure) showed two new `[unsatisfied] appExt:credentialsDB` error findings — one
+  against requirer `@sdlcforge/core-server#issues-github` (runtime phase), one against requirer
+  `@sdlcforge/dev-core#projects` (load phase) — pushing the error-finding count from 2 to 4 and failing both
+  the allowlist-count assertion and the `credentialsDBEdge` existence assertion. The failure is unambiguously
+  traceable to the plugin-graph gate specifically: `plugin-graph-gate.test.js` is the only failing suite, and
+  every other of the 14 suites passed unchanged.
+- **Revert:** `git checkout -- package.json` restored the original `"appExt:credentialsDB"` capability name.
+  Re-ran `make test`: `Test Suites: 14 passed, 14 total`, `Tests: 45 passed, 45 total` — green again. `git
+  status --short` confirmed `package.json` carries no diff before proceeding; the temporary break was never
+  committed.
 
-**What was implemented (in scope, unaffected by the above):**
+**Validation run (final):**
+- `grep TEST_TARGETS make/56-plugin-graph.mk` — matches (see Requirement 1 above).
+- `make test`: 14 test suites / 45 tests pass; `qa/.plugin-graph.passed` exists after the run.
+- `bun run test`: passes (no-op on a second consecutive run since the marker was already fresh; the full run
+  above already exercised it).
+- `bun run qa`: **fails**, but only at the `lint` stage (`qa: test lint`) — `make lint` reports 233
+  pre-existing errors, all inside `test/test-basic.js`, `test/test-server.js`,
+  `test/test-integration-quick.js`, `test/get-node-versions.js`, and `plan/resources/validate-check.mjs`, none
+  of which this task touches. Confirmed via `git stash` (isolating this task's own new/untracked files) plus
+  a `git show main:<path>` diff against the tracked originals that these files are byte-identical to `main`
+  and the same 233 errors reproduce — this lint failure predates this entire plan and is wholly unrelated to the
+  plugin-graph gate. `bun run qa`'s `test` half (i.e. `make test`) passes cleanly; the `lint` half was already
+  broken before this task started. Flagged for the manager below rather than fixed, since bringing 5
+  unrelated files with 233 findings to lint-clean is far outside this task's scope.
+- `src/lib/test/helpers/resolve-plugin-set.mjs` exists, is imported successfully by
+  `plugin-graph-gate.test.js` (confirmed via the passing test run), and its in-file comment documents it as
+  the shared helper tasks 002-004 will also import.
+- No existing test's behavior changed: the full `make test` run (post-revert) shows the same 14 suites / 45
+  tests that passed before this task's `plugin-graph-gate.test.js` was added (13 suites / 41 tests before,
+  now 14 suites / 45 tests — the 1 new suite and its 4 new tests are exactly this task's own addition).
 
-- [`src/lib/test/helpers/resolve-plugin-set.mjs`](../../src/lib/test/helpers/resolve-plugin-set.mjs) (new) —
-  Requirement 2's shared helper, exporting `resolveCoreServerPackageRoot(testFileDirname, walkUpCount = 3)`
-  and `readCoreServerPackageJSON(repoRoot)`. Verified directly (a throwaway `node --input-type=module -e`
-  script simulating a caller at `test-staging/lib/test/`, not committed) that
-  `resolveCoreServerPackageRoot()`'s default `walkUpCount = 3` resolves to this worktree's real root and that
-  `readCoreServerPackageJSON()` reads back `name: "@sdlcforge/core-server"` and a truthy `plugable.host`. Not
-  yet imported by any test file (`plugin-graph-gate.test.js`, blocked above, would have been the first
-  importer) — tasks 002-004 can import it once dispatched.
-- Confirmed `make lint`/`make lint-fix` report zero findings against the new file (233 pre-existing lint
-  errors remain in unrelated files across the repo — e.g. `test/test-server.js`, `test/test-basic.js` — none
-  introduced by this task; `make lint-fix`'s auto-fix pass reformatted several of those unrelated files in
-  place and its changes were reverted via `git checkout --` before finishing, since fixing them is outside
-  this task's scope).
-- Confirmed `make test` (full suite, 13 test suites / 41 tests) passes unchanged with the new helper file
-  present (it is compiled by Babel into `test-staging/lib/test/helpers/resolve-plugin-set.js` alongside every
-  other `src/` file, per the existing `CATALYST_ALL_JS_FILES_SRC` selector, but is not yet exercised by any
-  test).
-
-**Not implemented, pending the decision above:**
-- Requirement 1 (`make/56-plugin-graph.mk`) — deliberately not authored: its whole purpose is to gate on the
-  Jest test Requirement 3 would add, and landing the fragment without that test would either misrepresent it
-  as an active gate (when it would in fact only depend on the already-passing generic Jest marker) or need to
-  be revisited once Requirement 3 is resolved. Held to avoid a churn dependency between this fragment and
-  Requirement 3's resolution.
-- Requirement 3 (`src/lib/test/plugin-graph-gate.test.js`) and Requirement 4 (the demonstrated-red proof,
-  which depends on 1 and 3 being green first) — blocked per above.
-
-Affected files: `src/lib/test/helpers/resolve-plugin-set.mjs` (new), this task document (`## Status`
-addition). No other source file was modified; `plan/resources/validate-check.mjs` and the four `test/*.js`
-files `make lint-fix` incidentally reformatted were reverted before finishing.
+Affected files: `make/56-plugin-graph.mk` (new), `src/lib/test/plugin-graph-gate.test.js` (new), this task
+document (`## Status` replacement). `src/lib/test/helpers/resolve-plugin-set.mjs` (pre-existing from the prior
+attempt) was read but not modified. `package.json` was temporarily edited for the Requirement 4 demonstration
+and fully reverted before the final commit — `git status --short` shows no diff against it.
