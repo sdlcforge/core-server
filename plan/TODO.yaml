@@ -56,3 +56,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 6
+          slug: mark-org-setup-methods-requirement-optional
+          title: Mark orgSetupMethods Requirement Optional
+          path: phase-01-orgs-remediation/006-mark-org-setup-methods-requirement-optional.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
