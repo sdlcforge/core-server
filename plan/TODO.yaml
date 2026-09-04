@@ -16,3 +16,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: fix-organization-resource-and-org-lookup
+          title: Fix Organization Resource And Add Org Lookup Helper
+          path: phase-01-orgs-remediation/002-fix-organization-resource-and-org-lookup.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
