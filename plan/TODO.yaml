@@ -150,7 +150,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/sdlc-plugin-manifest-04-003
-            commit: []
+            commit:
+                - 1a6f372
             merge: null
         - number: 4
           slug: assert-third-party-ordering-regression
