@@ -52,7 +52,7 @@ phases:
             branch: plan/orgs-defects-remediation-01-004
             commit:
                 - d9e79e2
-            merge: null
+            merge: f8a0a5c632108cf756e872aa3b8a59ae791f6f7d
         - number: 5
           slug: finish-orgs-create-handler
           title: Finish And Secure Orgs Create Handler
