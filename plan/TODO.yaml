@@ -109,6 +109,7 @@ phases:
           path: phase-01-orgs-remediation/009-fix-phase-review-findings.md
           done: false
           tier: sonnet-high
+          digest: Fixed critical silent-empty-results defect in GET /orgs/:orgKey/parameters by adding Organization.settings getter (previously private field with no accessor meant listParameters always saw undefined against real instances). Rebuilt parameters-list/detail test mocks to use real Organization instances with real assertions. Closed symlink-based containment bypass in create.mjs via realpath resolution of nearest existing ancestor. Declared two previously-undeclared manifest requirements (appExt:_liqProjects.playgroundPath, appExt:_liqOrgs.orgs self-consumption) on orgs component, verified no new drift-guard finding. Full suite green apart from pre-existing 2aMD. Manager independently verified all three fixes (settings getter, realpath usage, manifest entries) present in the merged diff.
           git:
             branch: plan/orgs-defects-remediation-01-009
             commit:
