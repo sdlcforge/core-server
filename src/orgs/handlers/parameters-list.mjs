@@ -1,5 +1,6 @@
-import { commonOutputParams, formatOutput, getOrgFromKey } from '@liquid-labs/liq-handlers-lib'
+import { commonOutputParams, formatOutput } from '@liquid-labs/liq-handlers-lib'
 
+import { getOrg } from './_lib/get-org'
 import { listParameters } from './_lib/parameters-lib'
 
 const method = 'get'
@@ -19,15 +20,8 @@ const terminalFormatter = (parameters, title) =>
 const textFormatter = (parameters, title) =>
   parameters.map((p) => `- ${p.name}: ${p.value}`).join('\n') + '\n'
 
-const func = ({ model, reporter }) => (req, res) => {
-  // KNOWN BROKEN: plugable-express's load-plugins.js never passes `model` to plugin
-  // handlers (only { npmName, handlers, reporter, setupData, cache }), so `model` is
-  // always undefined here and this throws TypeError on every request. The org registry
-  // actually lives at app.ext._liqOrgs.orgs. Migrated as-is from the retired liq-orgs package
-  // (pre-existing defect, not introduced by the dev-core consolidation).
-  // Tracked: sdlcforge/dev-core plan/followups.yaml id jY7C.
-  const org = getOrgFromKey({ model, params : req.vars, res })
-  if (org === false) return
+const func = ({ app, reporter }) => (req, res) => {
+  const org = getOrg({ app, orgKey : req.vars.orgKey })
 
   const parameters = listParameters(org)
 
