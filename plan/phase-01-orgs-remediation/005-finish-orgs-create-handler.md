@@ -113,3 +113,24 @@ architectural_impact: false
 - After the containment check and its rejection tests.
 - After the response is built and the happy-path test passes.
 - After the comment cleanup and the full lint/test run.
+
+## Status
+
+**Outcome:** succeeded. Implemented 2026-09-04.
+
+- `src/orgs/handlers/create.mjs`: added the pre-`fs.mkdir` containment check (anchored on `app.ext._liqProjects.playgroundPath`, resolved via `fsPath.resolve`/`fsPath.relative`, rejecting with `createError.BadRequest` on escape without echoing the caller-supplied path), guarded the missing-`_liqProjects` case with `createError.InternalServerError` instead of a `TypeError`, switched `localDataRoot + '/org'` to `fsPath.join`, restored the `commonName`/`legalName`/`newOrgKey` destructures, built the `httpSmartResponse({ data, msg, req, res })` response (`data`: `commonName`, `legalName`, `newOrgKey`, `directory` — the resolved `org` subdirectory path), and removed the `KNOWN BROKEN`/bare `// TODO`/"pass lint" comment block.
+- `help.description`/`help.summary`: softened the false "root data element (`org.json`) is saved to `localDataRoot`" claim to describe what the handler actually does (creates the `org` data directory only), and fixed two pre-existing grammar typos in the same strings ("Creates a organization new organization locally" → "Creates a new organization locally"; "may or may tied to" → "may or may not be tied to") as a same-diff self-fix.
+- Added `src/orgs/handlers/test/create.test.mjs` covering: happy path (directory created, 2xx body with org fields, verified via `fs.stat`); containment rejection for an absolute out-of-tree path (`/tmp/escape`), a `..`-escape (`<playground>/../escape`), and a sibling-prefix path (`<playground>-evil`), each asserted 4xx and `fs.stat` confirming nothing was created; idempotent repeat call on an existing directory; and a missing-`app.ext._liqProjects` case asserting a non-`TypeError` 500.
+- Folded in an unrelated single-file lint fix in `src/test/plugin-manifest.test.mjs` (two `operator-linebreak` violations, auto-fixed via `make lint-fix`) so `make lint` is clean; this file is otherwise untouched by this task.
+- Manual reasoning check: with `localDataRoot=/etc` and a real `app.ext._liqProjects.playgroundPath` (e.g. `/Users/x/playground`), `fsPath.relative('/Users/x/playground', '/etc')` yields a string starting with `..`, so `isContained` is `false` and `createError.BadRequest` throws before the `fs.mkdir` call is reached (the mkdir call is textually and temporally after the containment check in `func`).
+- Gap not resolved by this task (flagged for task 008 / follow-up filing): the `localDataRoot` parameter's own `description` still says "in which to save `./orgs/org.json`", which remains inaccurate (the handler never writes `org.json`) — left unchanged per the task's "three declared parameters are unchanged" assumption; only `help.description`/`help.summary` were softened.
+
+### Validation
+
+- `make test TEST=create` — passed (1 suite, 6 tests; confirmed the pattern does not pull in `src/projects/handlers/` create tests).
+- `make lint` — clean (after folding in the unrelated `plugin-manifest.test.mjs` autofix noted above).
+- Full `make test` — 1 failed suite (`projects/handlers/_lib/test/project-lifecycle.test.js`, the pre-existing failure tracked as follow-up `2aMD`), 15 passed, no new failures.
+- `grep -n "KNOWN BROKEN\|// TODO\|pass lint" src/orgs/handlers/create.mjs` — no output.
+- `grep -n "localDataRoot + " src/orgs/handlers/create.mjs` — no output.
+- `src/test/index.test.mjs` — passed; route surface (`path`/`method`) unchanged.
+- `git status` in the task worktree shows only dev-core paths.

@@ -1,11 +1,16 @@
 import * as fs from 'node:fs/promises'
+import * as fsPath from 'node:path'
+
+import createError from 'http-errors'
+
+import { httpSmartResponse } from '@liquid-labs/http-smart-response'
 
 const help = {
   name        : 'Organization create',
-  summary     : 'Creates a organization new organization locally.',
-  description : `Creates a new, empty organization. An organization may or may tied to a legal entity, a club, department, etc. Organizations have an organization structure based on roles, staff associated to roles, projects, contracts, relationships with third-party vendors, etc.
+  summary     : 'Creates a new organization locally.',
+  description : `Creates a new, empty organization. An organization may or may not be tied to a legal entity, a club, department, etc. Organizations have an organization structure based on roles, staff associated to roles, projects, contracts, relationships with third-party vendors, etc.
 
-    The root data element (<code>org.json<rst>) is saved to <code>localDataRoot<rst> with sub-components saved in federated-json. It is expected (though not currently verified) that <code>localDataRoot<rst> is located in a git repository.`
+    This currently creates only the organization's <code>org<rst> data directory under <code>localDataRoot<rst>; it does not yet write <code>org.json<rst> or otherwise register the organization for discovery.`
 }
 
 const method = 'post'
@@ -28,17 +33,38 @@ const parameters = [
 ]
 
 const func = ({ app }) => async(req, res) => {
-  // commented out to pass lint until we rebuild 'create'
-  const { /* commonName, legalName, */localDataRoot /* newOrgKey */ } = req.vars
-  const localRootDir = localDataRoot + '/org'
+  const { commonName, legalName, localDataRoot, newOrgKey } = req.vars
+
+  const liqProjects = app.ext._liqProjects
+  if (liqProjects?.playgroundPath === undefined) {
+    throw createError.InternalServerError("Server is missing the 'projects' component's 'app.ext._liqProjects.playgroundPath'; cannot verify 'localDataRoot' containment.")
+  }
+
+  // Anchor containment on the playground root: it is both the security boundary (the only
+  // directory tree the server should ever be told to write into on a caller's say-so) and the
+  // correctness boundary (`orgs`' 'load orgs' setup method only discovers orgs by scanning this
+  // same tree, so a directory created outside it could never be found anyway).
+  const playgroundRoot = fsPath.resolve(liqProjects.playgroundPath)
+  const candidateRoot = fsPath.resolve(localDataRoot)
+  const relativeToPlayground = fsPath.relative(playgroundRoot, candidateRoot)
+  const isContained = !fsPath.isAbsolute(relativeToPlayground) && !relativeToPlayground.startsWith('..')
+
+  if (isContained === false) {
+    throw createError.BadRequest("'localDataRoot' must resolve to the playground root or a descendant of it.")
+  }
+
+  const localRootDir = fsPath.join(candidateRoot, 'org')
 
   await fs.mkdir(localRootDir, { recursive : true })
 
-  // KNOWN BROKEN: this handler never sends a response (falls through after fs.mkdir),
-  // so the request hangs until client timeout. Migrated as-is from the retired liq-orgs package
-  // (pre-existing defect, not introduced by the dev-core consolidation).
-  // Tracked: sdlcforge/dev-core plan/followups.yaml id jY7C.
-  // TODO
+  const data = { commonName, legalName, newOrgKey, directory : localRootDir }
+
+  httpSmartResponse({
+    data,
+    msg : `Created organization '${newOrgKey}' data directory at '${localRootDir}'.`,
+    req,
+    res
+  })
 }
 
 export { func, help, parameters, path, method }
