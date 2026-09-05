@@ -67,3 +67,18 @@ architectural_impact: false
 3. Convert both traversals to own-property tests.
 4. Extend the test file.
 5. Run `make test TEST=settings`, then `make lint`, then the full `make test`.
+
+## Status
+
+- **Outcome:** succeeded
+- **Date:** 2026-09-04
+- **Validation summary:**
+  - `make test TEST=settings` — passed (43/43, including the new `prototype pollution` describe block).
+  - `make lint` (project-wide) — fails, but solely on `src/test/plugin-manifest.test.mjs:55-56` (`operator-linebreak`), a pre-existing failure unrelated to this task and outside its two-file scope; confirmed pre-existing via `git stash` before this task's edits. `npx eslint` scoped to the two files this task touches (`src/orgs/resources/lib/settings.mjs`, `src/orgs/resources/lib/test/settings.test.mjs`) reports zero problems.
+  - `make test` (full) — 98 passed, 7 failed, all 7 failures confined to `projects/handlers/_lib/test/project-lifecycle.test.js`, matching the pre-existing failure named in this task's own Validation section (follow-up `2aMD`); no new failures introduced.
+  - Manual `node -e` check — confirmed `updateSetting`/`getSetting` throw on `__proto__`/`constructor`/`prototype` segments and `Object.prototype` gained no `POLLUTED` (or other) own property after a full exercise.
+  - `grep -rn "in workingData\|key in value" src/orgs/` — no matches.
+- **Affected source files:**
+  - `src/orgs/resources/lib/settings.mjs`
+  - `src/orgs/resources/lib/test/settings.test.mjs`
+- **Decisions:** see task agent's structured report `decisions_made`/`assumptions_applied` fields for the manager.
