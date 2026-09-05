@@ -199,3 +199,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Correcting liq-controls attribution in the orgs section creates a naming inconsistency with the rest of the repo (README's work/projects-audit sections, docs/architecture.md lines ~29/34/81/82/86, untouched parts of docs/consumer-migration.md) which still refer to liq-controls as external/unmanifested - all now stale relative to the merged core-server-domain-consolidation plan. Recommend a follow-up or a Phase 02 architecture-doc task addendum to sweep the rest of the repo for the same correction.
+    - title: docs/consumer-migration.md's own re-verified-
+      id: hks9
+      date: "2026-09-05"
+      tags:
+        - type:ambiguity
+        - plan/phase:orgs-remediation
+        - plan/slug:orgs-defects-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: docs/consumer-migration.md's own re-verified-against-core-server-main framing predates the core-server-domain-consolidation merge; its per-donor tables (out of this task's scope) may need a similar refresh.
