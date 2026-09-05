@@ -112,3 +112,27 @@ architectural_impact: false
 - After `get-org.mjs` and its test are green.
 - After the `Organization` `key` getter and its assertion.
 - After the `save()` override and its round-trip test.
+
+## Status
+
+- **Outcome:** succeeded
+- **Date:** 2026-09-04
+- **Validation summary:**
+  - `make test TEST=get-org` — passed (3 tests).
+  - `make test TEST=organization` — passed (2 tests).
+  - `make lint` — clean.
+  - Full `make test` — 97 passed, 7 failed, all 7 failures confined to the pre-existing `project-lifecycle.test.mjs` suite (follow-up `2aMD`); no new failures.
+  - `grep -rn "liq-handlers-lib" src/orgs/handlers/_lib/` — returns nothing.
+  - `git status` in the task worktree shows only paths under this dev-core checkout.
+  - Manual reasoning check: constructed a real `Organization` over a temp `settings.yaml` (`COMMON_NAME`/`LEGAL_NAME` set) and ran `lodash.pick(org, ['key','commonName','legalName'])` against the built `test-staging` module — result: `{"key":"@acme","commonName":"Acme Corp","legalName":"Acme Corporation, Inc."}`, confirming all three fields are defined, matching what `formatOutput` will see in `GET /orgs/list`'s JSON path.
+- **Affected source files:**
+  - `src/orgs/handlers/_lib/get-org.mjs` (new)
+  - `src/orgs/handlers/_lib/test/get-org.test.mjs` (new)
+  - `src/orgs/resources/organization.mjs`
+  - `src/orgs/resources/test/organization.test.mjs` (new)
+- **Assumptions applied:** `http-errors` and `js-yaml` were already direct dependencies (verified in `package.json`); no dependency change was made. `src/orgs/resources/lib/settings.mjs` was not touched (left for task 001).
+- **Decisions made:**
+  - `getOrg` guards a missing `app.ext._liqOrgs.orgs` container with a plain descriptive `Error` (not a `createError.NotFound`) since a missing registry is a setup/programming defect, not a client-facing 404; documented in the file's header comment.
+  - Constructor `catch` fix: chose to rethrow non-`ENOENT` errors (rather than defaulting `#settings` to `{}` unconditionally), preserving the existing `{}` default on the `ENOENT` path and surfacing real read failures instead of masking them.
+  - `organization.test.mjs` placed at `src/orgs/resources/test/organization.test.mjs` (sibling to `organization.mjs`, mirroring `src/projects/handlers/test/`'s convention), not under `resources/lib/test/`.
+  - `[folded-in]` Fixed two pre-existing `operator-linebreak` ESLint failures in `src/test/plugin-manifest.test.mjs` (unrelated to this task's diff, confined to that single file, auto-fixed via `eslint --fix`) — required to satisfy this task's own `make lint is clean` validation check, which is project-wide rather than scoped to this task's files.
