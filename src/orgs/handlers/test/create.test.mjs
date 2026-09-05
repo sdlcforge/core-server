@@ -95,6 +95,43 @@ describe('POST /orgs/create/:newOrgKey', () => {
 
       await expect(fs.stat(localDataRoot)).rejects.toMatchObject({ code : 'ENOENT' })
     })
+
+    describe('symlink escape', () => {
+      let symlinkEscapeRoot
+      let symlinkTarget
+      let evilLink
+
+      beforeAll(async() => {
+        // A real symlink planted under the playground root pointing *outside* it. A purely
+        // lexical containment check (string-comparing `fsPath.resolve`/`fsPath.relative` output)
+        // would see `evilLink` as lexically inside `playgroundPath` and let it through, even
+        // though following the symlink escapes the playground root entirely -- this is exactly
+        // the bypass the containment check must close.
+        symlinkEscapeRoot = await fs.mkdtemp(fsPath.join(os.tmpdir(), 'orgs-create-symlink-escape-'))
+        symlinkTarget = fsPath.join(symlinkEscapeRoot, 'outside-playground')
+        await fs.mkdir(symlinkTarget, { recursive : true })
+
+        evilLink = fsPath.join(playgroundPath, 'evil-link')
+        await fs.symlink(symlinkTarget, evilLink, 'dir')
+      })
+
+      afterAll(async() => {
+        await fs.rm(evilLink, { force : true })
+        await fs.rm(symlinkEscapeRoot, { force : true, recursive : true })
+      })
+
+      test('rejects a localDataRoot that resolves through a symlink escaping the playground', async() => {
+        const localDataRoot = fsPath.join(evilLink, '@evil', 'evil')
+        const req = reqMock({ commonName : 'Evil', legalName : 'Evil, Inc.', localDataRoot, newOrgKey : '@evil' })
+        const res = resMock()
+
+        await expect(func({ app : appMock() })(req, res)).rejects.toMatchObject({ status : 400 })
+
+        // Before the fix, this would have succeeded and created a directory at the symlink's real
+        // target, outside the fake playground root entirely.
+        await expect(fs.stat(fsPath.join(symlinkTarget, '@evil'))).rejects.toMatchObject({ code : 'ENOENT' })
+      })
+    })
   })
 
   test("produces a clear error, not a TypeError, when 'app.ext._liqProjects' is missing", async() => {

@@ -1,5 +1,11 @@
-/* global describe expect test */
+/* global afterAll beforeAll describe expect test */
+import * as fs from 'node:fs/promises'
+import * as fsPath from 'node:path'
+import * as os from 'node:os'
 
+import yaml from 'js-yaml'
+
+import { Organization } from '../../resources/organization'
 import { func } from '../parameters-detail'
 
 const resMock = () => {
@@ -26,11 +32,35 @@ const captureVarDef = ({ app }) => {
 }
 
 describe('GET /orgs/:orgKey/parameters/:parameterKey/detail', () => {
-  const org = { getSetting : (keyPath) => (keyPath === '.COMMON_NAME' ? 'Acme Corp' : undefined) }
-  const appMock = { ext : { _liqOrgs : { orgs : { '@acme' : org } } } }
+  let projectPath
+
+  beforeAll(async() => {
+    // A real `Organization` instance backed by a temp `settings.yaml`, matching the pattern
+    // `src/orgs/handlers/test/list.test.mjs` and `src/orgs/resources/test/organization.test.mjs`
+    // already use -- rather than a plain object literal carrying a `.getSetting`/`.settings`
+    // property directly, which let this suite pass even while the real production code path (a
+    // real `Organization` instance, whose `.settings` was previously `undefined`) was broken.
+    projectPath = await fs.mkdtemp(fsPath.join(os.tmpdir(), 'orgs-parameters-detail-test-'))
+    const settingsDir = fsPath.join(projectPath, 'data', 'org')
+    await fs.mkdir(settingsDir, { recursive : true })
+    await fs.writeFile(
+      fsPath.join(settingsDir, 'settings.yaml'),
+      yaml.dump({ COMMON_NAME : 'Acme Corp' }),
+      { encoding : 'utf8' }
+    )
+  })
+
+  afterAll(async() => {
+    await fs.rm(projectPath, { force : true, recursive : true })
+  })
+
+  const makeAppMock = () => {
+    const org = new Organization({ name : '@acme', pkgName : '@acme/acme', projectPath })
+    return { ext : { _liqOrgs : { orgs : { '@acme' : org } } } }
+  }
 
   test('returns { name, value } for application/json', () => {
-    const { handler } = captureVarDef({ app : appMock })
+    const { handler } = captureVarDef({ app : makeAppMock() })
     const req = { accepts : () => 'application/json', vars : { orgKey : '@acme', parameterKey : '.COMMON_NAME' } }
     const res = resMock()
 
@@ -40,7 +70,7 @@ describe('GET /orgs/:orgKey/parameters/:parameterKey/detail', () => {
   })
 
   test('returns the text/plain rendering', () => {
-    const { handler } = captureVarDef({ app : appMock })
+    const { handler } = captureVarDef({ app : makeAppMock() })
     const req = { accepts : () => 'text/plain', vars : { orgKey : '@acme', parameterKey : '.COMMON_NAME' } }
     const res = resMock()
 
@@ -50,7 +80,7 @@ describe('GET /orgs/:orgKey/parameters/:parameterKey/detail', () => {
   })
 
   test('returns the text/terminal rendering', () => {
-    const { handler } = captureVarDef({ app : appMock })
+    const { handler } = captureVarDef({ app : makeAppMock() })
     const req = { accepts : () => 'text/terminal', vars : { orgKey : '@acme', parameterKey : '.COMMON_NAME' } }
     const res = resMock()
 
@@ -60,7 +90,7 @@ describe('GET /orgs/:orgKey/parameters/:parameterKey/detail', () => {
   })
 
   test('responds 406 when req.accepts returns false', () => {
-    const { handler } = captureVarDef({ app : appMock })
+    const { handler } = captureVarDef({ app : makeAppMock() })
     const req = {
       accepts : () => false,
       get     : () => 'text/html',
@@ -74,7 +104,7 @@ describe('GET /orgs/:orgKey/parameters/:parameterKey/detail', () => {
   })
 
   test('an unknown orgKey throws a 404-bearing error', () => {
-    const { handler } = captureVarDef({ app : appMock })
+    const { handler } = captureVarDef({ app : makeAppMock() })
     const req = { accepts : () => 'application/json', vars : { orgKey : '@unknown', parameterKey : '.COMMON_NAME' } }
     const res = resMock()
 
@@ -92,22 +122,45 @@ describe('GET /orgs/:orgKey/parameters/:parameterKey/detail', () => {
 })
 
 describe("parameterKey's optionsFetcher", () => {
-  // `listParameters` walks `org.settings`; an empty object yields no parameters, which is enough
-  // to exercise the fetcher without depending on `_lib/parameters-lib`'s traversal shape here.
-  const org = { getSetting : () => undefined, settings : {} }
-  const appMock = { ext : { _liqOrgs : { orgs : { '@acme' : org } } } }
+  let projectPath
+
+  beforeAll(async() => {
+    projectPath = await fs.mkdtemp(fsPath.join(os.tmpdir(), 'orgs-parameters-detail-options-test-'))
+    const settingsDir = fsPath.join(projectPath, 'data', 'org')
+    await fs.mkdir(settingsDir, { recursive : true })
+    await fs.writeFile(
+      fsPath.join(settingsDir, 'settings.yaml'),
+      yaml.dump({ COMMON_NAME : 'Acme Corp', nested : { LEGAL_NAME : 'Acme Corp, Inc.' } }),
+      { encoding : 'utf8' }
+    )
+  })
+
+  afterAll(async() => {
+    await fs.rm(projectPath, { force : true, recursive : true })
+  })
+
+  const makeAppMock = () => {
+    const org = new Organization({ name : '@acme', pkgName : '@acme/acme', projectPath })
+    return { ext : { _liqOrgs : { orgs : { '@acme' : org } } } }
+  }
 
   test('an unknown orgKey yields an empty option list rather than throwing', () => {
-    const { varDef } = captureVarDef({ app : appMock })
+    const { varDef } = captureVarDef({ app : makeAppMock() })
 
     expect(() => varDef.optionsFetcher({ orgKey : '@unknown' })).not.toThrow()
     expect(varDef.optionsFetcher({ orgKey : '@unknown' })).toEqual([])
   })
 
-  test('a known orgKey yields its parameter names', () => {
-    const { varDef } = captureVarDef({ app : appMock })
+  test("a known orgKey yields its real parameter names, sourced from the org's real settings", () => {
+    const { varDef } = captureVarDef({ app : makeAppMock() })
 
-    expect(varDef.optionsFetcher({ orgKey : '@acme' })).toEqual([])
+    // Asserts real parameter names come back -- not just `toEqual([])`, which is exactly what the
+    // broken production code path (`listParameters` reading `org.settings` off a real
+    // `Organization` instance, previously `undefined`) would have silently produced.
+    expect(varDef.optionsFetcher({ orgKey : '@acme' })).toEqual(
+      expect.arrayContaining(['.COMMON_NAME', '.nested.LEGAL_NAME'])
+    )
+    expect(varDef.optionsFetcher({ orgKey : '@acme' })).toHaveLength(2)
   })
 })
 
