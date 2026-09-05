@@ -90,7 +90,7 @@ phases:
             branch: plan/orgs-defects-remediation-01-007
             commit:
                 - 7bb4a51
-            merge: null
+            merge: 77f905a78c528940344d4b5b736ed9de4f95e73a
         - number: 8
           slug: close-and-file-orgs-followups
           title: Close And File Orgs Follow-Ups
