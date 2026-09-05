@@ -123,3 +123,18 @@ architectural_impact: true
 - After the `package.json` edit and the observed new finding set is recorded.
 - After the suite assertion and comment are updated and green.
 - After the README section rewrite.
+
+## Status
+
+- **Outcome:** succeeded
+- **Date:** 2026-09-04
+- **Validation summary:**
+  - `make test TEST=plugin-manifest` — passed (17/17). `node_modules/@liquid-labs/plugable-express` was already present in this worktree (freshly provisioned), so no `npm install` was needed.
+  - `node -e "JSON.parse(...)"` — passed; `git diff <task_start_sha> -- package.json` shows only the one `requires`-entry change (adds `optional: true`, rewrites `reason`).
+  - `make lint` — clean. Fixed one pre-existing `operator-linebreak` violation (lines 55-56, present before this task at `task_start_sha`) via `eslint --fix` as a same-diff self-fix, since the file was already part of this task's diff.
+  - Full `make test` — 1 failed suite / 7 failed tests, all in `src/projects/handlers/_lib/test/project-lifecycle.test.mjs` (pre-existing, follow-up `2aMD`); no new failures.
+  - `grep -n "Three declared requirements\|the one optional hook\|the one \*guarded\* hook" README.md src/test/plugin-manifest.test.mjs` — no matches (clean).
+  - `grep -rn "orgSetupMethods" README.md docs/ package.json src/` — every remaining mention is consistent with the requirement now being optional (verified `docs/architecture.md:86` and `docs/consumer-migration.md:233` name no severity, per this task's Assumptions).
+  - `git status` — only `README.md` and `src/test/plugin-manifest.test.mjs` modified; no `core-server` or `plugable-express` paths.
+- **Files touched:** `package.json`, `src/test/plugin-manifest.test.mjs`, `README.md`.
+- **Assumptions applied:** all three `## Assumptions` entries held as stated; `docs/architecture.md:86` and `docs/dev-core-consolidation-contract.md` needed no edit (confirmed by grep, not just assumed).

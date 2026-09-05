@@ -12,6 +12,10 @@ const settings = {
   array : [1, 2, 3]
 }
 
+// baseline snapshot; the regression test at the bottom of this file confirms no test in the
+// suite left an enumerable own property on Object.prototype.
+const baselineProtoKeys = Object.getOwnPropertyNames(Object.prototype)
+
 const getTests = [
   ['undefined key', undefined, undefined],
   ['root access', 'foo', 'bar'],
@@ -94,4 +98,26 @@ describe('updateSetting', () => {
     undefined,
     null
   ])('refuses to store %p', (val) => expect(() => updateSetting({}, 'foo', val)).toThrow())
+})
+
+describe('prototype pollution', () => {
+  test.each([
+    ['leading-dot __proto__ segment', '.__proto__.POLLUTED'],
+    ['constructor.prototype segment', 'constructor.prototype.POLLUTED'],
+    ['bare prototype segment', 'prototype']
+  ])('updateSetting throws on %s: %p', (description, keyPath) => {
+    expect(() => updateSetting({}, keyPath, 'x')).toThrow()
+    expect(({}).POLLUTED).toBe(undefined)
+  })
+
+  test.each([
+    ['leading-dot __proto__', '.__proto__'],
+    ['bare constructor', 'constructor']
+  ])('getSetting throws on %s: %p', (description, keyPath) => {
+    expect(() => getSetting({}, keyPath)).toThrow()
+  })
+
+  test('Object.prototype gained no enumerable own property across the suite', () => {
+    expect(Object.getOwnPropertyNames(Object.prototype)).toEqual(baselineProtoKeys)
+  })
 })
