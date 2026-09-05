@@ -107,3 +107,25 @@ architectural_impact: false
 - After the `app.ext._liqOrgs` contract and path-variable notes.
 - After `docs/consumer-migration.md`.
 - After the sweep and anchor verification.
+
+## Status
+
+- **Outcome:** succeeded
+- **Date:** 2026-09-04
+- **Validation summary:**
+  - Sweep greps (`KNOWN BROKEN`, `getOrgFromKey`, bare `jY7C`, `non-functional|never sends a response|hangs until|do not work`) — all remaining hits outside `plan/` are confined to `README.md`'s and `docs/consumer-migration.md`'s own historical/past-tense framing of the now-fixed defects (verified each hit individually); no live-defect description survives. All other hits are inside this plan's own `plan/` task docs and notes, exempt per this task's own Validation wording.
+  - Intra-document anchor check (`](#...)` against actual headings, GitHub-slugger rules) — every link in `README.md` and `docs/consumer-migration.md` resolves, including the renamed `#repaired-defects-orgs-submodule` anchor and `docs/consumer-migration.md`'s two links into `README.md` (`#repaired-defects-orgs-submodule`, `#projects-audit-submodule`).
+  - `docs/architecture.md`'s links into `README.md` (`#the-projects-audit--projects-dependency`, `#the-plugin-manifest`, `#routes`) still resolve — unaffected, since none of those headings were touched.
+  - `make lint` — clean (doc-only change; no source files touched).
+  - Heading hierarchy and sentence-case convention preserved; no heading level skipped.
+  - `git status` — only `README.md` and `docs/consumer-migration.md` modified, both dev-core paths.
+- **Affected files:**
+  - `README.md` — `### orgs submodule` section: rewrote the route-table lead-in sentence; renamed `#### Known defects (orgs submodule)` to `#### Repaired defects (orgs submodule)` and rewrote it to describe what was wrong and what fixed it, including an explicit `**Correction —**` callout (house style) retracting the false "requires changing `getOrgFromKey`'s signature" claim; updated `#### The app.ext._liqOrgs contract`'s first bullet to add `orgs`' own handlers to the "read by" attribution and to correct the `liq-controls` attribution (see Decisions below); added a clause to the `parameterKey` path-variable note naming the prototype-pollution exclusion (`DGt0`(b)).
+  - `docs/consumer-migration.md` — retitled and rewrote the `#### Disclosure: the migrated /orgs endpoints do not work` section to state the defects were non-functional at the time of the swap and have since been repaired (dated, not rewritten as if they never existed), replaced the indirect smoke-test paragraph (`GET /orgs/list` is now a valid direct check), and removed the repeated `getOrgFromKey`/`model` and `create`-hang accounts per the task doc. Left line 236's route-inventory sentence and the section's other corrections/disclosures (e.g. the unrelated `projects-audit` disclosure) untouched, as scoped.
+- **Decisions made:**
+  - Chose the "rename the heading, keep a short account with an explicit correction" shape for the `Known defects` → `Repaired defects` section, per the task doc's recommended shape.
+  - **Resolved the `liq-controls` judgment call by correcting the attribution**, not leaving it as-is. Verified directly against a live, separate `@sdlcforge/core-server` checkout (`/Users/zane/playground/sdlcforge/core-server`, `main` branch) and the standalone `@liquid-labs/liq-controls` checkout (`/Users/zane/playground/liquid-labs/liq-controls`): `liq-controls`'s own `package.json` now reads `"description": "DEPRECATED: superseded by @sdlcforge/core-server..."`, and `core-server`'s `git log` shows a merged `core-server-domain-consolidation` plan (`git mv src/lib and src/schema to src/controls`) that moved the exact three files this plan's own research (`plan/notes/orgs-handler-defect-analysis.md`) already cited — `src/controls/resources/load-controls.mjs`, `src/controls/integrations/get-question-controls.mjs`, `src/controls/handlers/orgs/controls/_lib/list-lib.mjs` — in-tree. This is not ambiguous, so per the dispatch instruction I corrected the `#### The app.ext._liqOrgs contract` section's attribution from `liq-controls` to `@sdlcforge/core-server`'s in-tree `controls` submodule, naming the three correct in-tree paths, and added a short parenthetical noting it supersedes the now-deprecated `@liquid-labs/liq-controls` package.
+
+## References (task-agent addendum)
+
+- Live verification performed against `/Users/zane/playground/sdlcforge/core-server` (branch `main`) and `/Users/zane/playground/liquid-labs/liq-controls`, both separate checkouts outside this worktree, read-only, for the `liq-controls` attribution judgment call above.
