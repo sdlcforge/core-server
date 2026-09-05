@@ -87,7 +87,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/orgs-defects-remediation-01-007
-            commit: []
+            commit:
+                - 7bb4a51
             merge: null
         - number: 8
           slug: close-and-file-orgs-followups
