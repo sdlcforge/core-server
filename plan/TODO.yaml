@@ -39,7 +39,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/orgs-defects-remediation-01-003
-            commit: []
+            commit:
+                - 38ca2f5
             merge: null
         - number: 4
           slug: fix-orgs-parameters-set-handler
