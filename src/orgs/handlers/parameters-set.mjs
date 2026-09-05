@@ -1,4 +1,4 @@
-import { getOrgFromKey } from '@liquid-labs/liq-handlers-lib'
+import { getOrg } from './_lib/get-org'
 
 const method = 'put'
 const path = ['orgs', ':orgKey', 'parameters', ':parameterKey', 'set']
@@ -48,26 +48,31 @@ const parseBool = (value) => {
   throw new Error(`Could not parse value '${value}' as boolean. Try 'true' or 'false'.`)
 }
 
-const func = ({ app, model, reporter, registerPathVar }) => {
-  /* Already set in parameters-detail... we really need to approach this a different way
+const func = ({ app, reporter, registerPathVar }) => {
+  // Already set in parameters-detail's handler `func` -- plugable-express invokes a handler's
+  // `func` at route-registration time specifically to give it the chance to register its own
+  // path variables, and registering the same name twice throws (`registerPathVar` rejects a
+  // duplicate registration). See README.md's path-variable note for the full arrangement.
+  /*
   registerPathVar('parameterKey', {
     optionsFetcher: ({ orgKey }) => {
-      const org = model.orgs[orgKey]
+      const org = app.ext._liqOrgs.orgs[orgKey]
       const parameters = listParameters(org)
       return parameters.map((p) => p.name)
     },
     validationRe: '(?:[.][_a-zA-Z][_a-zA-Z0-9-]*)+'
   }) */
 
-  return (req, res) => {
-    // KNOWN BROKEN: plugable-express's load-plugins.js never passes `model` to plugin
-    // handlers (only { npmName, handlers, reporter, setupData, cache }), so `model` is
-    // always undefined here and this throws TypeError on every request. The org registry
-    // actually lives at app.ext._liqOrgs.orgs. Migrated as-is from the retired liq-orgs package
-    // (pre-existing defect, not introduced by the dev-core consolidation).
-    // Tracked: sdlcforge/dev-core plan/followups.yaml id jY7C.
-    const org = getOrgFromKey({ model, params : req.vars, res })
-    if (org === false) return
+  return async(req, res) => {
+    const org = getOrg({ app, orgKey : req.vars.orgKey })
+
+    const accepts = ['text/terminal', 'text/plain', 'application/json']
+    const responseType = req.accepts(accepts)
+    if (responseType === false) {
+      res.status(406).send(`Cannot provide response for '${req.get('content-type')}'; response can be provided in the following formats: ` + accepts.join(', '))
+      return
+    }
+    // else, let's respond!
 
     const { asBoolean, asInteger, asJSON, asNumber, parameterKey, setNull, setUndefined, value } = req.vars
     const parsedValue = setUndefined === true
@@ -85,15 +90,7 @@ const func = ({ app, model, reporter, registerPathVar }) => {
                 : value // it's a string!
 
     org.updateSetting(parameterKey, parsedValue)
-    org.save()
-
-    const accepts = ['text/terminal', 'text/plain', 'application/json']
-    const responseType = req.accepts(accepts)
-    if (responseType === false) {
-      res.status(406).send(`Cannot provide response for '${req.get('content-type')}'; response can be provided in the following formats: ` + accepts.join(', '))
-      return
-    }
-    // else, let's respond!
+    await org.save()
 
     res.type(responseType)
 

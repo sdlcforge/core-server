@@ -35,22 +35,26 @@ phases:
           slug: fix-orgs-read-handlers
           title: Fix Orgs Read Handlers And Tighten parameterKey
           path: phase-01-orgs-remediation/003-fix-orgs-read-handlers.md
-          done: false
+          done: true
           tier: sonnet-high
+          digest: Fixed all three model-argument-dependent read handlers (list.mjs, parameters-list.mjs, parameters-detail.mjs) to read org registry from app.ext._liqOrgs.orgs instead of never-populated model argument, using task 002's getOrg helper for single-org lookups. Removed dead org===false guards and KNOWN BROKEN comments. Fixed parameterKey's optionsFetcher via closure over app. Tightened parameterKey's validationRe to reject __proto__/constructor/prototype segments (closing DGt0(b) input half). Added three new handler-level test suites (27 tests). make test/make lint both clean; only pre-existing 2aMD failure remains.
           git:
-            branch: null
-            commit: []
+            branch: plan/orgs-defects-remediation-01-003
+            commit:
+                - 38ca2f5
             merge: null
         - number: 4
           slug: fix-orgs-parameters-set-handler
           title: Fix Orgs Parameters Set Handler
           path: phase-01-orgs-remediation/004-fix-orgs-parameters-set-handler.md
-          done: false
+          done: true
           tier: sonnet-high
+          digest: 'Fixed fourth and last jY7C handler: replaced getOrgFromKey({model,...}) with task 002''s getOrg({app,orgKey}), removed dead org===false guard and KNOWN BROKEN comment, dropped liq-handlers-lib import. Made handler async, awaited org.save(), reordered 406 check ahead of write. Kept commented-out registerPathVar block per validation requirement, fixed its stale reference. Added full test suite covering conversions, 404, 406-no-write, non-JSON renderings, save-rejection regression guard. No new test failures beyond 2aMD.'
           git:
-            branch: null
-            commit: []
-            merge: null
+            branch: plan/orgs-defects-remediation-01-004
+            commit:
+                - d9e79e2
+            merge: f8a0a5c632108cf756e872aa3b8a59ae791f6f7d
         - number: 5
           slug: finish-orgs-create-handler
           title: Finish And Secure Orgs Create Handler
