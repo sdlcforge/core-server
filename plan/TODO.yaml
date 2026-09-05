@@ -60,7 +60,7 @@ phases:
             branch: plan/orgs-defects-remediation-01-005
             commit:
                 - f9a3fa7
-            merge: null
+            merge: 96cbd30eedf3fc68c3ba74d7e420eabbc2170f72
         - number: 6
           slug: mark-org-setup-methods-requirement-optional
           title: Mark orgSetupMethods Requirement Optional
