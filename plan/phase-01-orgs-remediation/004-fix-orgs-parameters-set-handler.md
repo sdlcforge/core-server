@@ -104,3 +104,23 @@ architectural_impact: false
 - After the org-lookup conversion compiles and lints.
 - After the `await save()` change and its rejection-path test.
 - After the full test suite is green.
+
+## Status
+
+- **Outcome:** succeeded
+- **Date:** 2026-09-04
+- **Validation summary:**
+  - `make test TEST=parameters-set` — passed (12/12).
+  - `make lint` (project-wide) — clean, zero problems.
+  - `make test` (full) — 121 passed, 7 failed, all 7 confined to `projects/handlers/_lib/test/project-lifecycle.test.js`, matching the pre-existing failure named in this task's own Validation section (follow-up `2aMD`); no new failures.
+  - `grep -rn "getOrgFromKey\|model\.orgs\|KNOWN BROKEN" src/orgs/` — still matches `list.mjs`, `parameters-list.mjs`, `parameters-detail.mjs` (task 003's files, not yet landed in this worktree); `parameters-set.mjs` itself is clean of all three strings.
+  - `grep -n "registerPathVar('parameterKey'" src/orgs/handlers/parameters-set.mjs` — line still present, commented out.
+  - No `UnhandledPromiseRejection` warning observed in the full test run's captured output.
+  - `git status` in the task worktree shows only `src/orgs/handlers/parameters-set.mjs` (modified) and `src/orgs/handlers/test/parameters-set.test.mjs` (new), both dev-core paths.
+- **Affected source files:**
+  - `src/orgs/handlers/parameters-set.mjs`
+  - `src/orgs/handlers/test/parameters-set.test.mjs`
+- **Decisions:**
+  - Requirement 2's commented-out `registerPathVar` block was kept (not replaced with a one-line comment) and its stale `model.orgs[orgKey]` line was updated to `app.ext._liqOrgs.orgs[orgKey]`, because the Validation section's `grep -n "registerPathVar('parameterKey'"` check requires that literal call to remain present in the file — the one-line-comment alternative the Requirements text also permits would have made that grep check fail.
+  - The 406/`req.accepts`-false check was moved ahead of `updateSetting`/`save()` (previously it ran after an unconditional, unawaited `org.save()`), so that a 406 response never triggers a write — required to satisfy this task's own "406 handling ... and no write" test bullet; the 406 status code, message text, and all three success-path response renderings are otherwise byte-for-byte unchanged.
+  - **Flagged for manager:** the task doc's Requirements #5 test bullet "`setNull` stores `null`" cannot pass against the current, unmodified `settings.mjs`: `checkValue` only whitelists `boolean`/`number`/`string`/array, and `typeof null === 'object'` falls through that whitelist exactly like `undefined` does (confirmed empirically). This is the same class of pre-existing `checkValue` restriction Requirements #4 already calls out and defers for `setUndefined`/`undefined` (destined for a task 008 follow-up) — it just also applies to `setNull`/`null`, which the task doc did not anticipate. Per Requirements #4's own instruction not to fix this in `parameters-set.mjs`, the test suite documents the actual (rejecting) behavior instead of the doc's literal expectation; see the in-line `NOTE:` comment above that test in `parameters-set.test.mjs`. Recommend folding this into the same follow-up as the `setUndefined` case.
