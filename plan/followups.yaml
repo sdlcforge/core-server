@@ -221,16 +221,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: '`POST /orgs/create/:newOrgKey`''s 2xx response body''s `directory` field (`src/orgs/handlers/create.mjs`, response construction) echoes back the fully resolved absolute filesystem path (built from `fsPath.resolve(localDataRoot)`). When the caller supplies a relative `localDataRoot`, the response discloses the server''s absolute directory layout (e.g. the playground root''s absolute parent path) to the caller. Does not by itself enable an attack — the containment check restricts where the directory can actually be created regardless of what is echoed back — but is a minor server-filesystem-layout disclosure. If server filesystem layout is considered sensitive in this deployment context, return a playground-root-relative path instead, or omit the `directory` field and return only the caller-supplied `newOrgKey`.'
-    - title: architecture.md app.ext table stale cells
-      id: zaIa
-      date: "2026-09-05"
-      tags:
-        - type:documentation
-        - plan/slug:orgs-defects-remediation
-        - plan/phase:phase-01-orgs-remediation
-        - priority:unspecified
-        - effort:unspecified
-      text: '`docs/architecture.md`''s `app.ext` contracts table (lines ~79-84) is stale in two cells as a direct consequence of phase-01-orgs-remediation''s handler fixes: the `app.ext._liqOrgs` row''s "Read by (this package)" column lists `—` but should now include `orgs`'' own `list`/`parameters-*` handlers (via `_lib/get-org.mjs`), and the `app.ext._liqProjects` row''s "Read by (this package)" column should add `src/orgs/handlers/create.mjs` (new reader of `playgroundPath` for its containment check). Already correctly scoped to phase-02''s `update-architecture-docs` task per tasks 007/008''s own notes; this item sharpens the specific cells that task needs to close, including the two new manifest `requires` entries added for `appExt:_liqProjects.playgroundPath` and `appExt:_liqOrgs.orgs` on the `orgs` component.'
     - title: docs/dev-core-consolidation-contract.md:128 c
       id: dsdl
       date: "2026-09-05"
