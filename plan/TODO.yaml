@@ -128,5 +128,6 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/orgs-defects-remediation-02-001
-            commit: []
+            commit:
+                - "5978744"
             merge: null
