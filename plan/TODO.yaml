@@ -57,7 +57,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/orgs-defects-remediation-01-005
-            commit: []
+            commit:
+                - f9a3fa7
             merge: null
         - number: 6
           slug: mark-org-setup-methods-requirement-optional
