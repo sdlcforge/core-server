@@ -149,3 +149,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Confirmed (not new): once this change publishes, core-server''s plugin-graph-gate.test.js ALLOWLISTED_ERROR_FINDINGS length assertion will fail until core-server drops its appExt:_liqOrgs.orgSetupMethods entry - task 008''s follow-up to file, not addressed here.'
+    - title: The localDataRoot parameter's own description
+      id: z2bi
+      date: "2026-09-05"
+      tags:
+        - type:ambiguity
+        - plan/phase:orgs-remediation
+        - plan/slug:orgs-defects-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: The localDataRoot parameter's own description remains inaccurate (claims org.json is saved, which the handler never does) - left unchanged per task's assumption that declared parameters are unchanged; only handler-level help text was corrected. Residual half of scope-fence gap for task 008 to file as follow-up.
