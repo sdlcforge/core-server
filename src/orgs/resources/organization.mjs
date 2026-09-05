@@ -70,6 +70,10 @@ const Organization = class extends Model {
 
   get legalName() { return this.getSetting('LEGAL_NAME') }
 
+  // Read-only view: `structuredClone` so callers (e.g., `listParameters`) cannot mutate the
+  // private `#settings` field through the returned reference.
+  get settings() { return structuredClone(this.#settings) }
+
   getSetting(keyPath) {
     return getSetting(this.#settings, keyPath)
   }

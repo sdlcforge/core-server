@@ -1,5 +1,11 @@
-/* global describe expect test */
+/* global afterAll beforeAll describe expect test */
+import * as fs from 'node:fs/promises'
+import * as fsPath from 'node:path'
+import * as os from 'node:os'
 
+import yaml from 'js-yaml'
+
+import { Organization } from '../../resources/organization'
 import { func } from '../parameters-list'
 
 // `formatOutput` (`@liquid-labs/liq-handlers-lib`) is `async`, but for the plain JSON path it
@@ -9,10 +15,31 @@ import { func } from '../parameters-list'
 const flushMicrotasks = () => new Promise((resolve) => { resolve() })
 
 describe('GET /orgs/:orgKey/parameters/list', () => {
-  const org = { name : '@acme', settings : { COMMON_NAME : 'Acme Corp', nested : { LEGAL_NAME : 'Acme Corp, Inc.' } } }
-  const appMock = { ext : { _liqOrgs : { orgs : { '@acme' : org } } } }
+  let projectPath
+
+  beforeAll(async() => {
+    // A real `Organization` instance backed by a temp `settings.yaml`, matching the pattern
+    // `src/orgs/handlers/test/list.test.mjs` and `src/orgs/resources/test/organization.test.mjs`
+    // already use -- rather than a plain object literal carrying a `.settings` property directly,
+    // which let this suite pass even while the real production code path (a real `Organization`
+    // instance, whose `.settings` was previously `undefined`) was broken.
+    projectPath = await fs.mkdtemp(fsPath.join(os.tmpdir(), 'orgs-parameters-list-test-'))
+    const settingsDir = fsPath.join(projectPath, 'data', 'org')
+    await fs.mkdir(settingsDir, { recursive : true })
+    await fs.writeFile(
+      fsPath.join(settingsDir, 'settings.yaml'),
+      yaml.dump({ COMMON_NAME : 'Acme Corp', nested : { LEGAL_NAME : 'Acme Corp, Inc.' } }),
+      { encoding : 'utf8' }
+    )
+  })
+
+  afterAll(async() => {
+    await fs.rm(projectPath, { force : true, recursive : true })
+  })
 
   test("returns the org's parameters", async() => {
+    const org = new Organization({ name : '@acme', pkgName : '@acme/acme', projectPath })
+    const appMock = { ext : { _liqOrgs : { orgs : { '@acme' : org } } } }
     const reqMock = { accepts : () => 'application/json', vars : { orgKey : '@acme' } }
     let result
     const resMock = { json : (json) => { result = json } }
@@ -20,6 +47,9 @@ describe('GET /orgs/:orgKey/parameters/list', () => {
     func({ app : appMock, reporter : undefined })(reqMock, resMock)
     await flushMicrotasks()
 
+    // Assert real parameter names/values actually come back -- not just `toEqual([])`, which is
+    // exactly what the broken production code path (`org.settings` reading `undefined` off a
+    // real `Organization` instance) would have silently produced.
     expect(result).toEqual(expect.arrayContaining([
       { name : '.COMMON_NAME', value : 'Acme Corp' },
       { name : '.nested.LEGAL_NAME', value : 'Acme Corp, Inc.' }
@@ -28,6 +58,8 @@ describe('GET /orgs/:orgKey/parameters/list', () => {
   })
 
   test('an unknown orgKey throws a 404-bearing error', () => {
+    const org = new Organization({ name : '@acme', pkgName : '@acme/acme', projectPath })
+    const appMock = { ext : { _liqOrgs : { orgs : { '@acme' : org } } } }
     const reqMock = { accepts : () => 'application/json', vars : { orgKey : '@unknown' } }
     const resMock = { json : () => {} }
 
