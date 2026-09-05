@@ -67,7 +67,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/orgs-defects-remediation-01-006
-            commit: []
+            commit:
+                - 332a908
             merge: null
         - number: 7
           slug: update-orgs-defect-documentation
