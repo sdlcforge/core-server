@@ -151,3 +151,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: docs/consumer-migration.md's own re-verified-against-core-server-main framing predates the core-server-domain-consolidation merge; its per-donor tables (out of this task's scope) may need a similar refresh.
+    - title: core-server plugin-graph-gate allowlist
+      id: x6x1
+      date: "2026-09-05"
+      tags:
+        - type:documentation
+        - plan/slug:orgs-defects-remediation
+        - plan/phase:phase-01-orgs-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: '`@sdlcforge/core-server`''s `src/lib/test/plugin-graph-gate.test.js` declares a two-entry `ALLOWLISTED_ERROR_FINDINGS` array (lines 31-42) and asserts the live error-finding count equals that array''s length (line 69). The first entry — `{ kind: ''unsatisfied'', capabilityFull: ''appExt:_liqOrgs.orgSetupMethods'', requirerNodeId: ''@sdlcforge/dev-core#orgs'' }` — no longer describes an error-severity finding: `@sdlcforge/dev-core`''s `package.json` `plugable` block now declares that requirement `optional: true`, which the validator reports at `info` instead. The array should drop from two entries to one. The surviving entry — `{ kind: ''violated-by-source-order'', capabilityFull: ''appExt:_liqOrgs.orgs'', requirerNodeId: ''@sdlcforge/core-server#controls'' }` — stays: it is a known validator limitation, not a real defect, since `core-server`''s `src/controls/setup.mjs` pushes its `load org controls` setup method with `deps: [''load orgs'']`, and `DependencyRunner` guarantees the ordering that the raw source-order model flags as violated (tracked as core-server followup `Pwdb` and `@liquid-labs/plugable-express` followup `dN2a`). This is core-server''s own change to make, in core-server''s own plan; this item is dev-core''s durable record of the consequence its manifest change caused.'
