@@ -47,6 +47,7 @@ phases:
           path: phase-01-orgs-remediation/004-fix-orgs-parameters-set-handler.md
           done: false
           tier: sonnet-high
+          digest: 'Fixed fourth and last jY7C handler: replaced getOrgFromKey({model,...}) with task 002''s getOrg({app,orgKey}), removed dead org===false guard and KNOWN BROKEN comment, dropped liq-handlers-lib import. Made handler async, awaited org.save(), reordered 406 check ahead of write. Kept commented-out registerPathVar block per validation requirement, fixed its stale reference. Added full test suite covering conversions, 404, 406-no-write, non-JSON renderings, save-rejection regression guard. No new test failures beyond 2aMD.'
           git:
             branch: plan/orgs-defects-remediation-01-004
             commit:
