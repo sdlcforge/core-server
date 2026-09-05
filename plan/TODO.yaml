@@ -114,7 +114,7 @@ phases:
             branch: plan/orgs-defects-remediation-01-009
             commit:
                 - 21b0926
-            merge: null
+            merge: 216ea25092849e06cc39a31f3ea22173c8117672
     - number: 2
       slug: doc-updates
       title: Documentation Updates
