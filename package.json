@@ -178,7 +178,8 @@
           {
             "capability": "appExt:_liqOrgs.orgSetupMethods",
             "phase": "setup",
-            "reason": "src/orgs/setup.mjs:46, inside 'process org setup'; the array is populated by liq-policy, outside this package"
+            "optional": true,
+            "reason": "src/orgs/setup.mjs:6-10 unconditionally initializes the array empty, and 'process org setup' (src/orgs/setup.mjs:43-54) iterates it as a no-op enqueue when liq-policy -- the array's only writer, external to this package -- is not installed"
           },
           "pathVar:parameterKey",
           "setupArg:registerPathVar",

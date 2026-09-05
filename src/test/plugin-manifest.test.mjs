@@ -110,15 +110,18 @@ describe('dev-core plugin manifest (drift guard)', () => {
   })
 
   describe('the critical scoping rule: do not assert an overall-clean graph', () => {
-    // Requirements whose providers live outside dev-core -- appExt:credentialsDB
-    // (@sdlcforge/core-server's unmanifested src/credentials/ component), and
-    // appExt:_liqOrgs.orgSetupMethods (liq-policy, outside dev-core) -- legitimately report
-    // unsatisfied at 'error' severity against a dev-core-plus-framework graph, and the one
-    // optional hook (integrationHook:controls/getQuestionControls) reports unsatisfied at
-    // 'info' severity. This is the real, intended cross-package gap this plan wants left
-    // visible (plan/notes/manifest-scope-and-tooling.md), so it is asserted explicitly here
-    // rather than treated as a graph failure -- a future reader must not "fix" this suite by
-    // tightening it into an overall-clean assertion.
+    // Two requirements -- both appExt:credentialsDB (@sdlcforge/core-server's unmanifested
+    // src/credentials/ component, required by both projects and work) -- legitimately report
+    // unsatisfied at 'error' severity against a dev-core-plus-framework graph; their provider
+    // genuinely does not exist in this graph. Two more requirements are declared
+    // 'optional: true' -- integrationHook:controls/getQuestionControls (guarded by hasHook,
+    // src/work/handlers/_lib/submit-lib.mjs:94) and appExt:_liqOrgs.orgSetupMethods
+    // (unconditionally initialized to an empty array by 'prepare org dependencies' and only
+    // ever populated by the external, unmanifested liq-policy package) -- so both report
+    // unsatisfied at 'info' severity instead. This is the real, intended cross-package gap
+    // this plan wants left visible (plan/notes/manifest-scope-and-tooling.md), so it is
+    // asserted explicitly here rather than treated as a graph failure -- a future reader must
+    // not "fix" this suite by tightening it into an overall-clean assertion.
     // (`records`/`result` reused from module scope above -- see the comment there.)
 
     test('the graph is not overall-clean (the out-of-package gap is real and expected)', () => {
@@ -132,12 +135,12 @@ describe('dev-core plugin manifest (drift guard)', () => {
         .sort()
 
       expect(findingsShape).toEqual([
-        'appExt:_liqOrgs.orgSetupMethods <- @sdlcforge/dev-core#orgs@setup (error)',
+        'appExt:_liqOrgs.orgSetupMethods <- @sdlcforge/dev-core#orgs@setup (info)',
         'appExt:credentialsDB <- @sdlcforge/dev-core#projects@load (error)',
         'appExt:credentialsDB <- @sdlcforge/dev-core#work@runtime (error)',
         'integrationHook:controls/getQuestionControls <- @sdlcforge/dev-core#work@runtime (info)'
       ])
-      expect(result.counts).toEqual({ error : 3, warning : 0, info : 1 })
+      expect(result.counts).toEqual({ error : 2, warning : 0, info : 2 })
     })
   })
 })
