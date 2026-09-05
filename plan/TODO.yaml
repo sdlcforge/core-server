@@ -110,7 +110,7 @@ phases:
           done: false
           tier: sonnet-high
           git:
-            branch: null
+            branch: plan/orgs-defects-remediation-01-009
             commit: []
             merge: null
     - number: 2
