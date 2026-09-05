@@ -85,6 +85,7 @@ phases:
           path: phase-01-orgs-remediation/007-update-orgs-defect-documentation.md
           done: false
           tier: sonnet-high
+          digest: 'Rewrote README.md''s orgs submodule prose and docs/consumer-migration.md''s orgs disclosure section to describe the now-fixed reality from tasks 001-006. Corrected two false claims: the getOrgFromKey signature-change claim, and the stale liq-controls attribution (verified moved to core-server''s in-tree controls submodule). Full repo sweep confirms no stale defect language survives outside plan/. All anchor links verified. make lint clean.'
           git:
             branch: plan/orgs-defects-remediation-01-007
             commit:
