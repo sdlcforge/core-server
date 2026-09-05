@@ -23,7 +23,7 @@ phases:
           slug: fix-organization-resource-and-org-lookup
           title: Fix Organization Resource And Add Org Lookup Helper
           path: phase-01-orgs-remediation/002-fix-organization-resource-and-org-lookup.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: 'Added src/orgs/handlers/_lib/get-org.mjs as drop-in replacement for liq-handlers-lib''s getOrgFromKey, reading app.ext._liqOrgs.orgs[orgKey] directly, throwing createError.NotFound. Gave Organization a key getter (aliasing #name) and async save() override persisting #settings to settings.yaml via js-yaml, replacing the always-rejecting inherited Model.save(). Fixed constructor''s silent-swallow catch. Full test coverage added. Folded in unrelated pre-existing lint fix. No new test failures beyond 2aMD.'
           git:
