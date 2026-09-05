@@ -169,3 +169,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Task doc''s Requirement #5 test bullet ''setNull stores null'' cannot pass against current unmodified settings.mjs: checkValue whitelists only boolean/number/string/array; typeof null === object falls through it same as undefined. Same class of pre-existing checkValue restriction already called out for setUndefined (deferred to task 008). Did not touch settings.mjs (task 001''s file) or special-case null in handler per task doc instruction; test suite documents actual rejecting behavior with inline NOTE. Recommend folding into same follow-up as setUndefined gap (task 008).'
+    - title: Task doc's Validation grep for getOrgFromKey/
+      id: xehM
+      date: "2026-09-05"
+      tags:
+        - type:ambiguity
+        - plan/phase:orgs-remediation
+        - plan/slug:orgs-defects-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Task doc''s Validation grep for getOrgFromKey/model.orgs produces one incidental hit beyond parameters-set.mjs: a documentation comment in task 002''s already-landed get-org.mjs naming the retired getOrgFromKey helper for exposition. Not code-level usage; get-org.mjs is outside this task''s file scope so not edited. May want to reword that comment in a follow-up.'
