@@ -1,23 +1,5 @@
 version: 2
 items:
-    - title: Fix dead 'orgs' submodule endpoints
-      id: jY7C
-      date: "2026-08-18"
-      tags:
-        - type:bug
-        - plan/slug:dev-core-consolidation
-        - priority:unspecified
-        - effort:unspecified
-      text: |-
-        All 5 endpoints in the `orgs` submodule (absorbed from `@liquid-labs/liq-orgs` by the dev-core-consolidation plan) are non-functional pre-existing defects, migrated as-is per that plan's no-behavior-change scope fence. Each handler now carries an inline code comment documenting its specific defect (added during the absorb task) — this followup tracks actually fixing them, which requires changes outside dev-core's own scope.
-
-        1. `list`, `parameters-detail`, `parameters-list`, `parameters-set` — all throw `TypeError: Cannot read properties of undefined (reading 'orgs')` on every request. Each reads a `model` argument (`Object.values(model.orgs)`, or `getOrgFromKey({ model, ... })` from `@liquid-labs/liq-handlers-lib`, which does `model.orgs[orgKey]`), but `plugable-express`'s `load-plugins.js` never passes `model` to plugin handlers — only `{ npmName, handlers, reporter, setupData, cache }`. The org registry actually lives at `app.ext._liqOrgs.orgs` (which `liq-controls` reads correctly); these four handlers were never updated to look there after the migration off the retired `liq-core`/`model`-argument convention.
-
-           Real fix requires changing `getOrgFromKey`'s signature in `@liquid-labs/liq-handlers-lib` (outside dev-core) in addition to these four handlers, so it could not be done inside the dev-core-consolidation plan's own scope.
-
-        2. `create` — never sends a response; the request hangs until client timeout. `func` creates the org directory (`fs.mkdir`) then falls off the end of the function at a bare `// TODO` (some destructured fields are even commented out with the note "to pass lint until we rebuild 'create'"). Needs to be finished: build and return the org resource / an appropriate response.
-
-        None of these are reachable from a passing test today — `orgs`' test coverage is 100% concentrated on one unrelated pure module (`settings.mjs`); the handlers themselves are at 0% coverage, so fixing this should include adding real tests.
     - title: sdlc-resource-babel-and-rollup is deprecated
       id: AEsA
       date: "2026-08-18"
@@ -78,16 +60,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Security review (phase 2 gate) flagged: the liq-projects absorption''s dependency union added @liquid-labs/octocache (^1.0.0-alpha.4), which pins an octokit chain resolving to octokit<=3.1.1. npm audit --package-lock-only confirms an unpatched high-severity advisory GHSA-pwfr-8pq7-x9qv ("Unauthenticated Denial of Service in the octokit/webhooks library", CVSS 8.2) plus two moderate ReDoS advisories (GHSA-rmvr-2pp2-xj38 in @octokit/request, GHSA-xx4v-prfh-6cgc in @octokit/request-error). Also affects @liquid-labs/github-toolkit, @liquid-labs/credentials-db-plugin-github, and @liquid-labs/liq-credentials-db via the same root cause. Confirmed newly introduced by this diff (dev-core had no dependencies block before phase 2). Distinct from followups 0RpG (serialize-javascript/rollup-terser) and AEsA (sdlc-resource-babel-and-rollup deprecation) and from g23a (command injection) — do not conflate. Dev-core does not control @liquid-labs/octocache''s own octokit pin; a fix requires a semver-major bump upstream, out of scope for this phase. Reachability of the specific webhook-DoS code path from dev-core''s actual GitHub-integration usage (authenticated API calls, not inbound webhook processing) is unconfirmed and worth checking before prioritizing.'
-    - title: orgs create.mjs path traversal + proto risk
-      id: DGt0
-      date: "2026-08-18"
-      tags:
-        - plan/phase:phase-05-liq-orgs-migration
-        - plan/slug:dev-core-consolidation
-        - type:security
-        - priority:unspecified
-        - effort:unspecified
-      text: 'Security review (phase 5 gate) flagged two issues in the migrated liq-orgs handlers, both pre-existing (verbatim from the retired @liquid-labs/liq-orgs, first-time appearance in dev-core''s own history via this absorption): (1) [major/medium] src/orgs/handlers/create.mjs reads localDataRoot from req.vars with no validationRe/containment check and concatenates it unmodified into a filesystem path passed to fs.mkdir(recursive:true) — a caller can direct directory creation anywhere the server process can write. This executes before the handler''s already-tracked never-responds defect (jY7C) is hit, so it''s a live side effect regardless. (2) [minor/low, currently unreachable] parameters-detail.mjs/parameters-set.mjs''s parameterKey validationRe permits __proto__/constructor-shaped dotted segments, which flow into the new @liquid-labs/resource-model dependency''s org.updateSetting(parameterKey, ...) call — reachability is nil today only because both handlers already throw on the tracked model-argument TypeError (jY7C) before reaching that code. Recommend folding both fixes into jY7C''s eventual remediation scope (which already touches these same handler bodies via the getOrgFromKey signature change): add localDataRoot path containment validation, and tighten parameterKey''s regex (or confirm resource-model already guards against prototype-pollution-style keys) before jY7C''s fix makes these code paths reachable.'
     - title: Absorb task-doc template needs updates
       id: IxJv
       date: "2026-08-18"
@@ -139,3 +111,133 @@ items:
         Surfaced during the `dev-core-plugin-manifest` plan's `analyze-change-request` pass (task doc `002-author-plugin-manifest.md`'s research), which noted independent corroboration: `@liquid-labs/plugable-express`'s own `diff-manifest.js` header cites this exact typo as its motivating example for why manifest-derivation tooling matters.
 
         Out of scope for the plugin-manifest plan (runtime code, not manifest declarations). Fix: change `'pull requests'` to `'pull request'` at that call site, plus a regression test asserting the hook resolves.
+    - title: Task doc's Validation grep for getOrgFromKey/
+      id: xehM
+      date: "2026-09-05"
+      tags:
+        - type:ambiguity
+        - plan/phase:orgs-remediation
+        - plan/slug:orgs-defects-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Task doc''s Validation grep for getOrgFromKey/model.orgs produces one incidental hit beyond parameters-set.mjs: a documentation comment in task 002''s already-landed get-org.mjs naming the retired getOrgFromKey helper for exposition. Not code-level usage; get-org.mjs is outside this task''s file scope so not edited. May want to reword that comment in a follow-up.'
+    - title: parameters-list.mjs's mdFormatter/terminalFor
+      id: Jbaz
+      date: "2026-09-05"
+      tags:
+        - type:ambiguity
+        - plan/phase:orgs-remediation
+        - plan/slug:orgs-defects-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: parameters-list.mjs's mdFormatter/terminalFormatter/textFormatter use positional args (parameters, title) but formatOutput invokes non-JSON formatters with a single {data,title,fields} object - same category of pre-existing inconsistency the task doc explicitly calls out and defers for list.mjs's analogous mdFormatter. Left untouched (not required by this task, JSON-path-only test coverage) but flagging as a real bug if parameters-list is ever requested with format=md/txt/terminal.
+    - title: Correcting liq-controls attribution in the or
+      id: 4Q22
+      date: "2026-09-05"
+      tags:
+        - type:ambiguity
+        - plan/phase:orgs-remediation
+        - plan/slug:orgs-defects-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: Correcting liq-controls attribution in the orgs section creates a naming inconsistency with the rest of the repo (README's work/projects-audit sections, docs/architecture.md lines ~29/34/81/82/86, untouched parts of docs/consumer-migration.md) which still refer to liq-controls as external/unmanifested - all now stale relative to the merged core-server-domain-consolidation plan. Recommend a follow-up or a Phase 02 architecture-doc task addendum to sweep the rest of the repo for the same correction.
+    - title: docs/consumer-migration.md's own re-verified-
+      id: hks9
+      date: "2026-09-05"
+      tags:
+        - type:ambiguity
+        - plan/phase:orgs-remediation
+        - plan/slug:orgs-defects-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: docs/consumer-migration.md's own re-verified-against-core-server-main framing predates the core-server-domain-consolidation merge; its per-donor tables (out of this task's scope) may need a similar refresh.
+    - title: core-server plugin-graph-gate allowlist
+      id: x6x1
+      date: "2026-09-05"
+      tags:
+        - type:documentation
+        - plan/slug:orgs-defects-remediation
+        - plan/phase:phase-01-orgs-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: '`@sdlcforge/core-server`''s `src/lib/test/plugin-graph-gate.test.js` declares a two-entry `ALLOWLISTED_ERROR_FINDINGS` array (lines 31-42) and asserts the live error-finding count equals that array''s length (line 69). The first entry — `{ kind: ''unsatisfied'', capabilityFull: ''appExt:_liqOrgs.orgSetupMethods'', requirerNodeId: ''@sdlcforge/dev-core#orgs'' }` — no longer describes an error-severity finding: `@sdlcforge/dev-core`''s `package.json` `plugable` block now declares that requirement `optional: true`, which the validator reports at `info` instead. The array should drop from two entries to one. The surviving entry — `{ kind: ''violated-by-source-order'', capabilityFull: ''appExt:_liqOrgs.orgs'', requirerNodeId: ''@sdlcforge/core-server#controls'' }` — stays: it is a known validator limitation, not a real defect, since `core-server`''s `src/controls/setup.mjs` pushes its `load org controls` setup method with `deps: [''load orgs'']`, and `DependencyRunner` guarantees the ordering that the raw source-order model flags as violated (tracked as core-server followup `Pwdb` and `@liquid-labs/plugable-express` followup `dN2a`). This is core-server''s own change to make, in core-server''s own plan; this item is dev-core''s durable record of the consequence its manifest change caused.'
+    - title: resource-model Model.save() always rejects
+      id: Ymcf
+      date: "2026-09-05"
+      tags:
+        - type:bug
+        - plan/slug:orgs-defects-remediation
+        - plan/phase:phase-01-orgs-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: '`@liquid-labs/resource-model`''s `Model.save()` (`src/Model.mjs:74-80`, identical in the installed `dist/`) destructures `errors` off an un-awaited `async validate()` call, so `errors.length` throws and every `save()` call on a `Model` subclass rejects unconditionally. `@sdlcforge/dev-core`''s `src/orgs/resources/organization.mjs` works around this with its own `async save()` override that writes `#settings` directly rather than delegating to the base implementation; the upstream package itself is unfixed and remains broken for any other `Model` subclass, in this or any other consumer, that relies on the base `save()` without its own override.'
+    - title: orgs create.mjs creates directory only
+      id: ZkAv
+      date: "2026-09-05"
+      tags:
+        - type:enhancement
+        - plan/slug:orgs-defects-remediation
+        - plan/phase:phase-01-orgs-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: '`POST /orgs/create/:newOrgKey` (`src/orgs/handlers/create.mjs`) creates only the org''s data directory (`fs.mkdir` under `<localDataRoot>/org`); it writes no `org.json` or `settings.yaml`, constructs no `Organization`, and registers nothing into `app.ext._liqOrgs.orgs`, which is populated only by the `load orgs` setup method (`src/orgs/setup.mjs`) scanning the playground for a `package.json` carrying `liq.packageType === ''org''`. The endpoint''s `localDataRoot` parameter''s own `description` still reads "The local directory in which to save `./orgs/org.json`...", which the handler never does — left inaccurate because the parameter list itself was treated as unchanged when `help.description`/`help.summary` were separately corrected to describe current behavior. A follow-on task should either complete org creation (write `org.json`/`settings.yaml`, construct an `Organization`, register it into the runtime registry) or correct the `localDataRoot` parameter description to match what the handler actually does.'
+    - title: parameters-set setUndefined/setNull error
+      id: X7IU
+      date: "2026-09-05"
+      tags:
+        - type:bug
+        - plan/slug:orgs-defects-remediation
+        - plan/phase:phase-01-orgs-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: '`PUT /orgs/:orgKey/parameters/:parameterKey/set` (`src/orgs/handlers/parameters-set.mjs`) exposes `setUndefined` and `setNull` parameters whose value ladder produces `parsedValue === undefined` or `parsedValue === null` respectively. `updateSetting`''s `checkValue` (`src/orgs/resources/lib/settings.mjs`) only whitelists `boolean`/`number`/`string` and arrays of those, so both fall through the whitelist and `checkValue` throws — the documented `setUndefined` and `setNull` parameters always error instead of storing the value their own parameter `description` promises. Pre-existing contradiction between the endpoint''s declared parameters and the settings library''s storage constraints; deliberately left unfixed while the lookup/persistence path itself was repaired.'
+    - title: orgs list.mjs mdFormatter field mismatch
+      id: 2Zug
+      date: "2026-09-05"
+      tags:
+        - type:bug
+        - plan/slug:orgs-defects-remediation
+        - plan/phase:phase-01-orgs-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: '`src/orgs/handlers/list.mjs`''s `mdFormatter` renders `* ${o.name}` while the handler''s `defaultFields` is `[''key'', ''commonName'', ''legalName'']`, and the JSON/terminal/text formatters for the same endpoint all render `commonName`/`key`. The Markdown rendering disagrees with every other format for the same endpoint. Low severity: `name` is still a defined `Organization` property so the output is not broken, only inconsistent across formats.'
+    - title: Auto-filed followups from apply-task-report's
+      id: JFTT
+      date: "2026-09-05"
+      tags:
+        - type:ambiguity
+        - plan/phase:orgs-remediation
+        - plan/slug:orgs-defects-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: Auto-filed followups from apply-task-report's defer bucket (during tasks 003-007's individual applies) carried plan/phase:orgs-remediation (missing the phase-01- prefix) and type:ambiguity regardless of actual content category. Left Jbaz/xehM/4Q22/hks9 as-is since content was adequate, but this tag/type pattern is worth a look for future plans.
+    - title: create.mjs response discloses abs path
+      id: Hwdp
+      date: "2026-09-05"
+      tags:
+        - type:security
+        - plan/slug:orgs-defects-remediation
+        - plan/phase:phase-01-orgs-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: '`POST /orgs/create/:newOrgKey`''s 2xx response body''s `directory` field (`src/orgs/handlers/create.mjs`, response construction) echoes back the fully resolved absolute filesystem path (built from `fsPath.resolve(localDataRoot)`). When the caller supplies a relative `localDataRoot`, the response discloses the server''s absolute directory layout (e.g. the playground root''s absolute parent path) to the caller. Does not by itself enable an attack — the containment check restricts where the directory can actually be created regardless of what is echoed back — but is a minor server-filesystem-layout disclosure. If server filesystem layout is considered sensitive in this deployment context, return a playground-root-relative path instead, or omit the `directory` field and return only the caller-supplied `newOrgKey`.'
+    - title: architecture.md app.ext table stale cells
+      id: zaIa
+      date: "2026-09-05"
+      tags:
+        - type:documentation
+        - plan/slug:orgs-defects-remediation
+        - plan/phase:phase-01-orgs-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: '`docs/architecture.md`''s `app.ext` contracts table (lines ~79-84) is stale in two cells as a direct consequence of phase-01-orgs-remediation''s handler fixes: the `app.ext._liqOrgs` row''s "Read by (this package)" column lists `—` but should now include `orgs`'' own `list`/`parameters-*` handlers (via `_lib/get-org.mjs`), and the `app.ext._liqProjects` row''s "Read by (this package)" column should add `src/orgs/handlers/create.mjs` (new reader of `playgroundPath` for its containment check). Already correctly scoped to phase-02''s `update-architecture-docs` task per tasks 007/008''s own notes; this item sharpens the specific cells that task needs to close, including the two new manifest `requires` entries added for `appExt:_liqProjects.playgroundPath` and `appExt:_liqOrgs.orgs` on the `orgs` component.'
+    - title: docs/dev-core-consolidation-contract.md:128 c
+      id: dsdl
+      date: "2026-09-05"
+      tags:
+        - type:ambiguity
+        - plan/phase:doc-updates
+        - plan/slug:orgs-defects-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: docs/dev-core-consolidation-contract.md:128 carries the same stale liq-controls attribution (naming src/lib/resources/load-controls.mjs and src/lib/integrations/get-question-controls.mjs as external liq-controls readers), provably false by the same evidence cited in this report and task 007's report. Out of this task's file-scope (architecture.md only). Recommend a small follow-up task scoped to that one file.

@@ -1,2 +1,4 @@
 version: 1
-plans: []
+plans:
+    - slug: orgs-defects-remediation
+      status: working
