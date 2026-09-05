@@ -97,6 +97,7 @@ phases:
           path: phase-01-orgs-remediation/008-close-and-file-orgs-followups.md
           done: false
           tier: sonnet-med
+          digest: 'Phase 01 followups reconciliation complete. dev-core''s plan/followups.yaml now at 20 items: 13 original minus jY7C/DGt0 (both verified resolved by this phase''s tasks 001-007) minus 3 malformed auto-filed drafts (BNr7/z2bi/Bewc), plus 5 well-formed items (the 4 adequate auto-filed items retained, plus 5 newly filed with full file/symbol citations per the follow-up text rule). All new items carry plan/slug:orgs-defects-remediation and plan/phase:phase-01-orgs-remediation provenance tags.'
           git:
             branch: plan/orgs-defects-remediation-01-008
             commit:
