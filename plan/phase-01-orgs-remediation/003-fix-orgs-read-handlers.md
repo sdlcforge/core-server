@@ -118,3 +118,14 @@ architectural_impact: false
 - After `parameters-list.mjs` and its test.
 - After `parameters-detail.mjs`, the `optionsFetcher` fix, and its test.
 - After the `validationRe` tightening and its unit tests.
+
+## Status
+
+- **Outcome:** succeeded (2026-09-04).
+- `list.mjs`, `parameters-list.mjs`, `parameters-detail.mjs` all switched from the never-populated `model` argument to `app.ext._liqOrgs.orgs` (via task 002's `getOrg` in the two `getOrgFromKey`-importing handlers; `list.mjs` reads the registry directly since it needs every org, not one). All `if (org === false) return` guards and `KNOWN BROKEN` blocks were removed.
+- `parameters-detail.mjs`'s `parameterKey` `optionsFetcher` now reads `app.ext._liqOrgs.orgs` via the `app` closed over from `func`, and returns `[]` for an unknown `orgKey` instead of throwing.
+- `parameterKey`'s `validationRe` is tightened to `(?:[.](?!(?:__proto__|constructor|prototype)(?![_a-zA-Z0-9-]))[_a-zA-Z][_a-zA-Z0-9-]*)+` — rejects `__proto__`/`constructor`/`prototype` as exact segments via a per-segment negative lookahead bounded by "not followed by another identifier character" (not by `$`/end-of-string, since the pattern is embedded inside a larger route regex with a literal path segment, `/detail` or `/set`, following it — a literal `$` anchor there would have broken those routes). Verified standalone and embedded in a simulated `pathToRe`-style route regex before landing it.
+- Added `src/orgs/handlers/test/{list,parameters-list,parameters-detail}.test.mjs` per the task doc's coverage list, including direct `validationRe` unit tests against the registration captured via a `registerPathVar` spy.
+- Validation: `make test TEST=orgs/handlers` — 5 suites / 27 tests passed. `make lint` — clean (ran `make lint-fix` first per the Node Developer role, which reformatted the new `parameters-detail.test.mjs`'s object literal alignment; no other issues). Full `make test` — 20/21 suites passed; the only failure is the pre-existing `projects/handlers/_lib/test/project-lifecycle.test.mjs` (follow-up `2aMD`), unrelated to this task's files. All four `## Validation` grep checks ran; see the report's `flagged_for_manager` for a nuance on the `getOrgFromKey|model\.orgs` check.
+- Assumption confirmed: task 001's settings-hardening (`src/orgs/resources/lib/settings.mjs`) has already landed (own-property checks, reserved-segment rejection) — this task's `validationRe` fix was still implemented and verified independently of that, per the task doc's assumption.
+- Files touched: `src/orgs/handlers/list.mjs`, `src/orgs/handlers/parameters-list.mjs`, `src/orgs/handlers/parameters-detail.mjs`, `src/orgs/handlers/test/list.test.mjs`, `src/orgs/handlers/test/parameters-list.test.mjs`, `src/orgs/handlers/test/parameters-detail.test.mjs`.
