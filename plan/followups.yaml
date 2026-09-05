@@ -189,3 +189,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: parameters-list.mjs's mdFormatter/terminalFormatter/textFormatter use positional args (parameters, title) but formatOutput invokes non-JSON formatters with a single {data,title,fields} object - same category of pre-existing inconsistency the task doc explicitly calls out and defers for list.mjs's analogous mdFormatter. Left untouched (not required by this task, JSON-path-only test coverage) but flagging as a real bug if parameters-list is ever requested with format=md/txt/terminal.
+    - title: Correcting liq-controls attribution in the or
+      id: 4Q22
+      date: "2026-09-05"
+      tags:
+        - type:ambiguity
+        - plan/phase:orgs-remediation
+        - plan/slug:orgs-defects-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: Correcting liq-controls attribution in the orgs section creates a naming inconsistency with the rest of the repo (README's work/projects-audit sections, docs/architecture.md lines ~29/34/81/82/86, untouched parts of docs/consumer-migration.md) which still refer to liq-controls as external/unmanifested - all now stale relative to the merged core-server-domain-consolidation plan. Recommend a follow-up or a Phase 02 architecture-doc task addendum to sweep the rest of the repo for the same correction.
