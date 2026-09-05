@@ -111,16 +111,6 @@ items:
         Surfaced during the `dev-core-plugin-manifest` plan's `analyze-change-request` pass (task doc `002-author-plugin-manifest.md`'s research), which noted independent corroboration: `@liquid-labs/plugable-express`'s own `diff-manifest.js` header cites this exact typo as its motivating example for why manifest-derivation tooling matters.
 
         Out of scope for the plugin-manifest plan (runtime code, not manifest declarations). Fix: change `'pull requests'` to `'pull request'` at that call site, plus a regression test asserting the hook resolves.
-    - title: 'Task doc''s Requirement #5 test bullet ''setNul'
-      id: Bewc
-      date: "2026-09-05"
-      tags:
-        - type:ambiguity
-        - plan/phase:orgs-remediation
-        - plan/slug:orgs-defects-remediation
-        - priority:unspecified
-        - effort:unspecified
-      text: 'Task doc''s Requirement #5 test bullet ''setNull stores null'' cannot pass against current unmodified settings.mjs: checkValue whitelists only boolean/number/string/array; typeof null === object falls through it same as undefined. Same class of pre-existing checkValue restriction already called out for setUndefined (deferred to task 008). Did not touch settings.mjs (task 001''s file) or special-case null in handler per task doc instruction; test suite documents actual rejecting behavior with inline NOTE. Recommend folding into same follow-up as setUndefined gap (task 008).'
     - title: Task doc's Validation grep for getOrgFromKey/
       id: xehM
       date: "2026-09-05"
