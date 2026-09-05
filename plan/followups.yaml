@@ -231,3 +231,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: '`docs/architecture.md`''s `app.ext` contracts table (lines ~79-84) is stale in two cells as a direct consequence of phase-01-orgs-remediation''s handler fixes: the `app.ext._liqOrgs` row''s "Read by (this package)" column lists `—` but should now include `orgs`'' own `list`/`parameters-*` handlers (via `_lib/get-org.mjs`), and the `app.ext._liqProjects` row''s "Read by (this package)" column should add `src/orgs/handlers/create.mjs` (new reader of `playgroundPath` for its containment check). Already correctly scoped to phase-02''s `update-architecture-docs` task per tasks 007/008''s own notes; this item sharpens the specific cells that task needs to close, including the two new manifest `requires` entries added for `appExt:_liqProjects.playgroundPath` and `appExt:_liqOrgs.orgs` on the `orgs` component.'
+    - title: docs/dev-core-consolidation-contract.md:128 c
+      id: dsdl
+      date: "2026-09-05"
+      tags:
+        - type:ambiguity
+        - plan/phase:doc-updates
+        - plan/slug:orgs-defects-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: docs/dev-core-consolidation-contract.md:128 carries the same stale liq-controls attribution (naming src/lib/resources/load-controls.mjs and src/lib/integrations/get-question-controls.mjs as external liq-controls readers), provably false by the same evidence cited in this report and task 007's report. Out of this task's file-scope (architecture.md only). Recommend a small follow-up task scoped to that one file.
