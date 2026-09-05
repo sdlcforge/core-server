@@ -70,7 +70,7 @@ phases:
             branch: plan/orgs-defects-remediation-01-006
             commit:
                 - 332a908
-            merge: null
+            merge: ca282d4a1f6e0fbd54e5f57c938651d530319a97
         - number: 7
           slug: update-orgs-defect-documentation
           title: Update Orgs Defect Documentation
