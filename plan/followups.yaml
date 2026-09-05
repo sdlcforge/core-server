@@ -111,16 +111,6 @@ items:
         Surfaced during the `dev-core-plugin-manifest` plan's `analyze-change-request` pass (task doc `002-author-plugin-manifest.md`'s research), which noted independent corroboration: `@liquid-labs/plugable-express`'s own `diff-manifest.js` header cites this exact typo as its motivating example for why manifest-derivation tooling matters.
 
         Out of scope for the plugin-manifest plan (runtime code, not manifest declarations). Fix: change `'pull requests'` to `'pull request'` at that call site, plus a regression test asserting the hook resolves.
-    - title: The localDataRoot parameter's own description
-      id: z2bi
-      date: "2026-09-05"
-      tags:
-        - type:ambiguity
-        - plan/phase:orgs-remediation
-        - plan/slug:orgs-defects-remediation
-        - priority:unspecified
-        - effort:unspecified
-      text: The localDataRoot parameter's own description remains inaccurate (claims org.json is saved, which the handler never does) - left unchanged per task's assumption that declared parameters are unchanged; only handler-level help text was corrected. Residual half of scope-fence gap for task 008 to file as follow-up.
     - title: 'Task doc''s Requirement #5 test bullet ''setNul'
       id: Bewc
       date: "2026-09-05"
