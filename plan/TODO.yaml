@@ -49,7 +49,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/orgs-defects-remediation-01-004
-            commit: []
+            commit:
+                - d9e79e2
             merge: null
         - number: 5
           slug: finish-orgs-create-handler
