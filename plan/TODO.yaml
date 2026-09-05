@@ -124,7 +124,7 @@ phases:
           slug: update-architecture-docs
           title: Update Architecture Docs
           path: phase-02-doc-updates/001-update-architecture-docs.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: 'Corrected docs/architecture.md''s app.ext runtime-service-contracts table: _liqOrgs row now names orgs'' own list/parameters-* handlers as in-package readers; both _liqOrgs and _liqProjects rows corrected from deprecated liq-controls to core-server''s in-tree controls submodule with current file paths, verified against live core-server checkout, mirroring task 007''s identical README correction. Diagram and alt-text updated. Fixed adjacent stale claim exposed by the attribution fix. 58-endpoint count and manifest-intro paragraph verified accurate, left untouched. make lint clean.'
           git:
