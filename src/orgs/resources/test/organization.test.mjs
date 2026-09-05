@@ -1,4 +1,4 @@
-/* global afterAll describe expect test */
+/* global afterAll beforeAll describe expect test */
 
 import * as fs from 'node:fs/promises'
 import * as fsPath from 'node:path'
@@ -7,8 +7,20 @@ import * as os from 'node:os'
 import { Organization } from '../organization'
 
 describe('Organization', () => {
+  let keyTestProjectPath
+
+  beforeAll(async() => {
+    // A fresh temp dir with no 'data/org/settings.yaml' yet, so the constructor exercises the
+    // ENOENT ('no settings file') branch rather than any real settings content.
+    keyTestProjectPath = await fs.mkdtemp(fsPath.join(os.tmpdir(), 'organization-key-test-'))
+  })
+
+  afterAll(async() => {
+    await fs.rm(keyTestProjectPath, { force : true, recursive : true })
+  })
+
   test('key equals the constructor\'s name', () => {
-    const org = new Organization({ name : '@acme', pkgName : '@acme/acme', projectPath : '/dev/null' })
+    const org = new Organization({ name : '@acme', pkgName : '@acme/acme', projectPath : keyTestProjectPath })
     expect(org.key).toBe('@acme')
     expect(org.key).toBe(org.name)
   })

@@ -1,7 +1,7 @@
 import createError from 'http-errors'
 
-// Reads the org registry directly off `app.ext._liqOrgs.orgs` rather than importing
-// `@liquid-labs/liq-handlers-lib`'s `getOrgFromKey` (see plan/notes/orgs-handler-defect-analysis.md).
+// Reads the org registry directly off `app.ext._liqOrgs.orgs` rather than importing the shared
+// handlers library's `getOrgFromKey` helper (see plan/notes/orgs-handler-defect-analysis.md).
 // Modeled on `@sdlcforge/core-server`'s `src/controls/handlers/orgs/controls/_lib/list-lib.mjs`,
 // which reads the same registry the same way.
 //
