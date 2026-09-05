@@ -103,6 +103,16 @@ phases:
             commit:
                 - b91fbba
             merge: fa9bcdf6607f3b768b5b2401597a5341740d030a
+        - number: 9
+          slug: fix-phase-review-findings
+          title: Fix Phase Review Findings
+          path: phase-01-orgs-remediation/009-fix-phase-review-findings.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 2
       slug: doc-updates
       title: Documentation Updates
