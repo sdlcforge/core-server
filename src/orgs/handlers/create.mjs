@@ -1,11 +1,45 @@
 import * as fs from 'node:fs/promises'
+import * as fsPath from 'node:path'
+
+import createError from 'http-errors'
+
+import { httpSmartResponse } from '@liquid-labs/http-smart-response'
+
+// Resolves the realpath of the nearest *existing* ancestor of `candidatePath` (walking up from
+// `candidatePath` itself towards the filesystem root). `candidatePath` itself, and any number of
+// its trailing segments, may not exist yet -- `create.mjs` is about to `fs.mkdir` a new directory
+// tree -- but every existing ancestor's realpath must still be checked, because a symlink placed
+// anywhere along that ancestor chain can redirect the eventual `fs.mkdir` outside the intended
+// boundary even though the candidate path's own lexical string never leaves it.
+const realpathOfNearestExistingAncestor = async(candidatePath) => {
+  let current = candidatePath
+  // eslint-disable-next-line no-constant-condition -- walks up until it finds an existing
+  // ancestor or exhausts the path at the filesystem root.
+  while (true) {
+    try {
+      return await fs.realpath(current)
+    }
+    catch (e) {
+      if (e.code !== 'ENOENT') {
+        throw e
+      }
+      const parent = fsPath.dirname(current)
+      if (parent === current) {
+        // Reached the filesystem root without finding anything that exists; this should not
+        // happen on any real filesystem (the root always exists), but avoid an infinite loop.
+        throw e
+      }
+      current = parent
+    }
+  }
+}
 
 const help = {
   name        : 'Organization create',
-  summary     : 'Creates a organization new organization locally.',
-  description : `Creates a new, empty organization. An organization may or may tied to a legal entity, a club, department, etc. Organizations have an organization structure based on roles, staff associated to roles, projects, contracts, relationships with third-party vendors, etc.
+  summary     : 'Creates a new organization locally.',
+  description : `Creates a new, empty organization. An organization may or may not be tied to a legal entity, a club, department, etc. Organizations have an organization structure based on roles, staff associated to roles, projects, contracts, relationships with third-party vendors, etc.
 
-    The root data element (<code>org.json<rst>) is saved to <code>localDataRoot<rst> with sub-components saved in federated-json. It is expected (though not currently verified) that <code>localDataRoot<rst> is located in a git repository.`
+    This currently creates only the organization's <code>org<rst> data directory under <code>localDataRoot<rst>; it does not yet write <code>org.json<rst> or otherwise register the organization for discovery.`
 }
 
 const method = 'post'
@@ -28,17 +62,49 @@ const parameters = [
 ]
 
 const func = ({ app }) => async(req, res) => {
-  // commented out to pass lint until we rebuild 'create'
-  const { /* commonName, legalName, */localDataRoot /* newOrgKey */ } = req.vars
-  const localRootDir = localDataRoot + '/org'
+  const { commonName, legalName, localDataRoot, newOrgKey } = req.vars
+
+  const liqProjects = app.ext._liqProjects
+  if (liqProjects?.playgroundPath === undefined) {
+    throw createError.InternalServerError("Server is missing the 'projects' component's 'app.ext._liqProjects.playgroundPath'; cannot verify 'localDataRoot' containment.")
+  }
+
+  // Anchor containment on the playground root: it is both the security boundary (the only
+  // directory tree the server should ever be told to write into on a caller's say-so) and the
+  // correctness boundary (`orgs`' 'load orgs' setup method only discovers orgs by scanning this
+  // same tree, so a directory created outside it could never be found anyway).
+  //
+  // A purely lexical (`fsPath.resolve`/`fsPath.relative` string) comparison does not resolve
+  // symlinks: a pre-existing symlink anywhere under the playground root pointing outside it would
+  // let a `localDataRoot` that lexically resolves inside the playground root still cause
+  // `fs.mkdir(..., { recursive: true })` to create a directory at the symlink's real target,
+  // anywhere the server process can write. Resolve both sides to their real, symlink-free paths
+  // before comparing. `localDataRoot`'s own directory tree does not exist yet in the common case
+  // (this handler is about to create it), so walk up to the nearest existing ancestor and
+  // `realpath` that instead -- any symlink along that ancestor chain still redirects the eventual
+  // `fs.mkdir`, even though the candidate path's own lexical string never leaves the boundary.
+  const playgroundRoot = await fs.realpath(fsPath.resolve(liqProjects.playgroundPath))
+  const candidateRoot = fsPath.resolve(localDataRoot)
+  const candidateRealRoot = await realpathOfNearestExistingAncestor(candidateRoot)
+  const relativeToPlayground = fsPath.relative(playgroundRoot, candidateRealRoot)
+  const isContained = !fsPath.isAbsolute(relativeToPlayground) && !relativeToPlayground.startsWith('..')
+
+  if (isContained === false) {
+    throw createError.BadRequest("'localDataRoot' must resolve to the playground root or a descendant of it.")
+  }
+
+  const localRootDir = fsPath.join(candidateRoot, 'org')
 
   await fs.mkdir(localRootDir, { recursive : true })
 
-  // KNOWN BROKEN: this handler never sends a response (falls through after fs.mkdir),
-  // so the request hangs until client timeout. Migrated as-is from the retired liq-orgs package
-  // (pre-existing defect, not introduced by the dev-core consolidation).
-  // Tracked: sdlcforge/dev-core plan/followups.yaml id jY7C.
-  // TODO
+  const data = { commonName, legalName, newOrgKey, directory : localRootDir }
+
+  httpSmartResponse({
+    data,
+    msg : `Created organization '${newOrgKey}' data directory at '${localRootDir}'.`,
+    req,
+    res
+  })
 }
 
 export { func, help, parameters, path, method }

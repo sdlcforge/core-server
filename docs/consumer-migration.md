@@ -237,14 +237,14 @@ Every `/orgs` endpoint's recorded `npmName` becomes `@sdlcforge/dev-core` instea
 
 ### Corrections and disclosures
 
-#### Disclosure: the migrated `/orgs` endpoints do not work
+#### Disclosure: the migrated `/orgs` endpoints were non-functional at the time of this migration, since repaired
 
-A reasonable post-swap smoke test is `GET /orgs/list`. It will fail, and it failed identically before the swap — this is a pre-existing defect, not something the swap introduces or should be blamed for:
+At the time this donor swap was documented, all 5 `/orgs` endpoints were non-functional, inherited unchanged from the retired `@liquid-labs/liq-orgs` package — a pre-existing defect, not something the swap introduced:
 
-- `list`, `parameters-detail`, `parameters-list`, and `parameters-set` throw `TypeError: Cannot read properties of undefined (reading 'orgs')` on first request, because they read a `model` argument `plugable-express` no longer passes to plugin handlers (`load-plugins.js:36` omits it from the `registerHandlers` call) — the data these handlers actually need lives at `app.ext._liqOrgs.orgs`, not `model.orgs`. `dev-core`'s own `src/orgs/handlers/list.mjs` carries an inline `KNOWN BROKEN` comment documenting exactly this, migrated as-is from the retired `liq-orgs` package.
-- `POST /orgs/create/:newOrgKey` never sends a response and hangs — it creates the local directory (`fs.mkdir`) and then falls through with no `res` call, also carried over as-is and marked `KNOWN BROKEN` in `dev-core`'s `src/orgs/handlers/create.mjs`.
+- `list`, `parameters-detail`, `parameters-list`, and `parameters-set` threw `TypeError: Cannot read properties of undefined (reading 'orgs')` on first request, because they read a `model` argument `plugable-express` never actually passes to plugin handlers — the data these handlers need lives at `app.ext._liqOrgs.orgs`, not `model.orgs`.
+- `POST /orgs/create/:newOrgKey` never sent a response and hung until client timeout — it created the local directory (`fs.mkdir`) and then fell through with no `res` call.
 
-Use this positive check instead: the plugin loads without error, all 5 `/orgs` routes appear in the generated API spec under `@sdlcforge/dev-core`, and `app.ext._liqOrgs.orgs` is populated — observable indirectly through `liq-controls` continuing to work, since `load-controls.mjs` reads that same map on every request.
+Both defects have since been fixed in `dev-core` (2026-09-04); see [Repaired defects (`orgs` submodule)](../README.md#repaired-defects-orgs-submodule) for the full account of what was wrong and what fixed it. A consumer completing this swap today will not encounter either defect. `GET /orgs/list` is now a valid smoke test on its own: it succeeds and returns the populated org registry directly, with no indirect check needed.
 
 #### Correction: the consumer inventory beyond core-server is real for `liq-orgs` (C2)
 

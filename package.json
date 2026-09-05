@@ -178,7 +178,18 @@
           {
             "capability": "appExt:_liqOrgs.orgSetupMethods",
             "phase": "setup",
-            "reason": "src/orgs/setup.mjs:46, inside 'process org setup'; the array is populated by liq-policy, outside this package"
+            "optional": true,
+            "reason": "src/orgs/setup.mjs:6-10 unconditionally initializes the array empty, and 'process org setup' (src/orgs/setup.mjs:43-54) iterates it as a no-op enqueue when liq-policy -- the array's only writer, external to this package -- is not installed"
+          },
+          {
+            "capability": "appExt:_liqProjects.playgroundPath",
+            "phase": "runtime",
+            "reason": "src/orgs/handlers/create.mjs, containment check anchored on the playground root before fs.mkdir"
+          },
+          {
+            "capability": "appExt:_liqOrgs.orgs",
+            "phase": "runtime",
+            "reason": "src/orgs/handlers/list.mjs and _lib/get-org.mjs (consumed by parameters-{detail,list,set}.mjs) - resolves against this same component's own appExt:_liqOrgs.orgs provides"
           },
           "pathVar:parameterKey",
           "setupArg:registerPathVar",
