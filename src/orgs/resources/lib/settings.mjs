@@ -1,3 +1,17 @@
+const RESERVED_KEY_SEGMENTS = ['__proto__', 'constructor', 'prototype']
+
+// Rejects any key path whose '.'-split segments would traverse or write onto the prototype chain
+// (e.g. '__proto__', 'constructor', 'prototype'). Own-property checks alone are not sufficient
+// because 'workingData['__proto__'] = {}' still mutates the prototype rather than creating an own
+// property, so reserved segments are rejected outright rather than sanitized.
+const checkKeyPath = (keyPath) => {
+  for (const segment of keyPath.split('.')) {
+    if (RESERVED_KEY_SEGMENTS.includes(segment)) {
+      throw new Error(`Key path segment '${segment}' is reserved and cannot be used.`)
+    }
+  }
+}
+
 const checkValue = (value, invalidMsg, noArray = false) => {
   const type = typeof value
   switch (type) {
@@ -26,6 +40,8 @@ const getSetting = (data, keyPath) => {
     keyPath = keyPath.slice(1)
   }
 
+  checkKeyPath(keyPath)
+
   // check for process override
   let value = process.env[keyPath]
   if (value !== undefined) {
@@ -38,12 +54,10 @@ const getSetting = (data, keyPath) => {
   const pathBits = keyPath.split('.')
 
   for (const key of pathBits) {
-    if (key in value) {
-      value = value[key]
-    }
-    else {
+    if (value === null || typeof value !== 'object' || !Object.hasOwn(value, key)) {
       return undefined
     }
+    value = value[key]
   }
   checkValue(value, 'Data key is incomplete; all keys must lead to a leaf.')
   return structuredClone(value)
@@ -54,13 +68,15 @@ const updateSetting = (data, keyPath, value) => {
 
   if (keyPath.startsWith('.')) keyPath = keyPath.slice(1)
 
+  checkKeyPath(keyPath)
+
   return keyPath.split('.').reduce((workingData, key, i, arr) => {
     if ((i + 1) === arr.length) {
       workingData[key] = value
       return value
     }
     else {
-      if (!(key in workingData)) {
+      if (!Object.hasOwn(workingData, key)) {
         workingData[key] = {}
       }
       return workingData[key]

@@ -11,12 +11,14 @@ phases:
           slug: harden-org-settings-prototype-pollution
           title: Harden Org Settings Against Prototype Pollution
           path: phase-01-orgs-remediation/001-harden-org-settings-prototype-pollution.md
-          done: false
+          done: true
           tier: sonnet-high
+          digest: Hardened src/orgs/resources/lib/settings.mjs against prototype pollution - checkKeyPath guard rejects __proto__/constructor/prototype segments in both getSetting/updateSetting before traversal; converted in-based checks to Object.hasOwn own-property tests; explicit null/non-object guard in getSetting. Extended settings.test.mjs with prototype-pollution coverage. All task-scoped validation passes; make lint failure and project-lifecycle.test.mjs failure are both pre-existing/out-of-scope.
           git:
-            branch: null
-            commit: []
-            merge: null
+            branch: plan/orgs-defects-remediation-01-001
+            commit:
+                - b4f996c
+            merge: 53dfaba699aa10e3ab1e87f4f5f74db454e7eaf9
         - number: 2
           slug: fix-organization-resource-and-org-lookup
           title: Fix Organization Resource And Add Org Lookup Helper
@@ -51,22 +53,26 @@ phases:
           slug: finish-orgs-create-handler
           title: Finish And Secure Orgs Create Handler
           path: phase-01-orgs-remediation/005-finish-orgs-create-handler.md
-          done: false
+          done: true
           tier: sonnet-high
+          digest: 'Finished POST /orgs/create/:newOrgKey: added pre-mkdir containment validation anchored on app.ext._liqProjects.playgroundPath, switched to fsPath.join, restored destructures, wired up httpSmartResponse 2xx reply with commonName/legalName/newOrgKey/directory. Removed KNOWN BROKEN/TODO block causing hang. Softened help text. Added test suite covering happy path, containment rejections, idempotence, missing-_liqProjects guard. Folded in one unrelated pre-existing lint fix. No new test failures beyond 2aMD.'
           git:
-            branch: null
-            commit: []
+            branch: plan/orgs-defects-remediation-01-005
+            commit:
+                - f9a3fa7
             merge: null
         - number: 6
           slug: mark-org-setup-methods-requirement-optional
           title: Mark orgSetupMethods Requirement Optional
           path: phase-01-orgs-remediation/006-mark-org-setup-methods-requirement-optional.md
-          done: false
+          done: true
           tier: sonnet-high
+          digest: 'Declared appExt:_liqOrgs.orgSetupMethods optional: true in package.json''s plugable manifest, mirroring work component''s existing integrationHook precedent. Updated drift-guard suite''s pinned assertion (severity token flip, counts {error:2,info:2}) after observing actual post-edit shape. Corrected two now-false README statements in ## The plugin manifest section. Also fixed a pre-existing lint violation in the same file as a same-diff self-fix. All validation passes; only pre-existing 2aMD failure remains. No edits to core-server or plugable-express.'
           git:
-            branch: null
-            commit: []
-            merge: null
+            branch: plan/orgs-defects-remediation-01-006
+            commit:
+                - 332a908
+            merge: ca282d4a1f6e0fbd54e5f57c938651d530319a97
         - number: 7
           slug: update-orgs-defect-documentation
           title: Update Orgs Defect Documentation
