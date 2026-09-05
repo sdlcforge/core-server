@@ -65,6 +65,7 @@ phases:
           path: phase-01-orgs-remediation/006-mark-org-setup-methods-requirement-optional.md
           done: false
           tier: sonnet-high
+          digest: 'Declared appExt:_liqOrgs.orgSetupMethods optional: true in package.json''s plugable manifest, mirroring work component''s existing integrationHook precedent. Updated drift-guard suite''s pinned assertion (severity token flip, counts {error:2,info:2}) after observing actual post-edit shape. Corrected two now-false README statements in ## The plugin manifest section. Also fixed a pre-existing lint violation in the same file as a same-diff self-fix. All validation passes; only pre-existing 2aMD failure remains. No edits to core-server or plugable-express.'
           git:
             branch: plan/orgs-defects-remediation-01-006
             commit:
