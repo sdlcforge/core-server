@@ -18,7 +18,7 @@ phases:
             branch: plan/orgs-defects-remediation-01-001
             commit:
                 - b4f996c
-            merge: null
+            merge: 53dfaba699aa10e3ab1e87f4f5f74db454e7eaf9
         - number: 2
           slug: fix-organization-resource-and-org-lookup
           title: Fix Organization Resource And Add Org Lookup Helper
