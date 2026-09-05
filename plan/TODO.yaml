@@ -42,7 +42,7 @@ phases:
             branch: plan/orgs-defects-remediation-01-003
             commit:
                 - 38ca2f5
-            merge: null
+            merge: fb4d76bf3f1566efd18c088ea56aa8c3ca5eec19
         - number: 4
           slug: fix-orgs-parameters-set-handler
           title: Fix Orgs Parameters Set Handler
