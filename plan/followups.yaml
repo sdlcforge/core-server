@@ -161,3 +161,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: '`@sdlcforge/core-server`''s `src/lib/test/plugin-graph-gate.test.js` declares a two-entry `ALLOWLISTED_ERROR_FINDINGS` array (lines 31-42) and asserts the live error-finding count equals that array''s length (line 69). The first entry — `{ kind: ''unsatisfied'', capabilityFull: ''appExt:_liqOrgs.orgSetupMethods'', requirerNodeId: ''@sdlcforge/dev-core#orgs'' }` — no longer describes an error-severity finding: `@sdlcforge/dev-core`''s `package.json` `plugable` block now declares that requirement `optional: true`, which the validator reports at `info` instead. The array should drop from two entries to one. The surviving entry — `{ kind: ''violated-by-source-order'', capabilityFull: ''appExt:_liqOrgs.orgs'', requirerNodeId: ''@sdlcforge/core-server#controls'' }` — stays: it is a known validator limitation, not a real defect, since `core-server`''s `src/controls/setup.mjs` pushes its `load org controls` setup method with `deps: [''load orgs'']`, and `DependencyRunner` guarantees the ordering that the raw source-order model flags as violated (tracked as core-server followup `Pwdb` and `@liquid-labs/plugable-express` followup `dN2a`). This is core-server''s own change to make, in core-server''s own plan; this item is dev-core''s durable record of the consequence its manifest change caused.'
+    - title: resource-model Model.save() always rejects
+      id: Ymcf
+      date: "2026-09-05"
+      tags:
+        - type:bug
+        - plan/slug:orgs-defects-remediation
+        - plan/phase:phase-01-orgs-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: '`@liquid-labs/resource-model`''s `Model.save()` (`src/Model.mjs:74-80`, identical in the installed `dist/`) destructures `errors` off an un-awaited `async validate()` call, so `errors.length` throws and every `save()` call on a `Model` subclass rejects unconditionally. `@sdlcforge/dev-core`''s `src/orgs/resources/organization.mjs` works around this with its own `async save()` override that writes `#settings` directly rather than delegating to the base implementation; the upstream package itself is unfixed and remains broken for any other `Model` subclass, in this or any other consumer, that relies on the base `save()` without its own override.'
