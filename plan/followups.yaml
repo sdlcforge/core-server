@@ -1,23 +1,5 @@
 version: 2
 items:
-    - title: Fix dead 'orgs' submodule endpoints
-      id: jY7C
-      date: "2026-08-18"
-      tags:
-        - type:bug
-        - plan/slug:dev-core-consolidation
-        - priority:unspecified
-        - effort:unspecified
-      text: |-
-        All 5 endpoints in the `orgs` submodule (absorbed from `@liquid-labs/liq-orgs` by the dev-core-consolidation plan) are non-functional pre-existing defects, migrated as-is per that plan's no-behavior-change scope fence. Each handler now carries an inline code comment documenting its specific defect (added during the absorb task) — this followup tracks actually fixing them, which requires changes outside dev-core's own scope.
-
-        1. `list`, `parameters-detail`, `parameters-list`, `parameters-set` — all throw `TypeError: Cannot read properties of undefined (reading 'orgs')` on every request. Each reads a `model` argument (`Object.values(model.orgs)`, or `getOrgFromKey({ model, ... })` from `@liquid-labs/liq-handlers-lib`, which does `model.orgs[orgKey]`), but `plugable-express`'s `load-plugins.js` never passes `model` to plugin handlers — only `{ npmName, handlers, reporter, setupData, cache }`. The org registry actually lives at `app.ext._liqOrgs.orgs` (which `liq-controls` reads correctly); these four handlers were never updated to look there after the migration off the retired `liq-core`/`model`-argument convention.
-
-           Real fix requires changing `getOrgFromKey`'s signature in `@liquid-labs/liq-handlers-lib` (outside dev-core) in addition to these four handlers, so it could not be done inside the dev-core-consolidation plan's own scope.
-
-        2. `create` — never sends a response; the request hangs until client timeout. `func` creates the org directory (`fs.mkdir`) then falls off the end of the function at a bare `// TODO` (some destructured fields are even commented out with the note "to pass lint until we rebuild 'create'"). Needs to be finished: build and return the org resource / an appropriate response.
-
-        None of these are reachable from a passing test today — `orgs`' test coverage is 100% concentrated on one unrelated pure module (`settings.mjs`); the handlers themselves are at 0% coverage, so fixing this should include adding real tests.
     - title: sdlc-resource-babel-and-rollup is deprecated
       id: AEsA
       date: "2026-08-18"
