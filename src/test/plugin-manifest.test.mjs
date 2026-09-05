@@ -52,9 +52,9 @@ describe('dev-core plugin manifest (drift guard)', () => {
     // satisfied" is asserted as "no finding names this exact (capability, requirer, phase)
     // triple" -- the only vocabulary the graph result exposes for a positive satisfaction claim.
     const isUnsatisfied = ({ capability, nodeId, phase }) => result.findings.some((finding) =>
-      finding.capability.full === capability &&
-      finding.requirer.nodeId === nodeId &&
-      finding.requirer.phase === phase)
+      finding.capability.full === capability
+      && finding.requirer.nodeId === nodeId
+      && finding.requirer.phase === phase)
 
     const PROJECTS = '@sdlcforge/dev-core#projects'
     const ORGS = '@sdlcforge/dev-core#orgs'
