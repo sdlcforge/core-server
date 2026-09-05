@@ -27,7 +27,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/orgs-defects-remediation-01-002
-            commit: []
+            commit:
+                - b4f5f0f
             merge: null
         - number: 3
           slug: fix-orgs-read-handlers
