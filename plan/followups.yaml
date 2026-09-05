@@ -191,3 +191,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: '`PUT /orgs/:orgKey/parameters/:parameterKey/set` (`src/orgs/handlers/parameters-set.mjs`) exposes `setUndefined` and `setNull` parameters whose value ladder produces `parsedValue === undefined` or `parsedValue === null` respectively. `updateSetting`''s `checkValue` (`src/orgs/resources/lib/settings.mjs`) only whitelists `boolean`/`number`/`string` and arrays of those, so both fall through the whitelist and `checkValue` throws — the documented `setUndefined` and `setNull` parameters always error instead of storing the value their own parameter `description` promises. Pre-existing contradiction between the endpoint''s declared parameters and the settings library''s storage constraints; deliberately left unfixed while the lookup/persistence path itself was repaired.'
+    - title: orgs list.mjs mdFormatter field mismatch
+      id: 2Zug
+      date: "2026-09-05"
+      tags:
+        - type:bug
+        - plan/slug:orgs-defects-remediation
+        - plan/phase:phase-01-orgs-remediation
+        - priority:unspecified
+        - effort:unspecified
+      text: '`src/orgs/handlers/list.mjs`''s `mdFormatter` renders `* ${o.name}` while the handler''s `defaultFields` is `[''key'', ''commonName'', ''legalName'']`, and the JSON/terminal/text formatters for the same endpoint all render `commonName`/`key`. The Markdown rendering disagrees with every other format for the same endpoint. Low severity: `name` is still a defined `Organization` property so the output is not broken, only inconsistent across formats.'
