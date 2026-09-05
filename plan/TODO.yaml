@@ -37,6 +37,7 @@ phases:
           path: phase-01-orgs-remediation/003-fix-orgs-read-handlers.md
           done: false
           tier: sonnet-high
+          digest: Fixed all three model-argument-dependent read handlers (list.mjs, parameters-list.mjs, parameters-detail.mjs) to read org registry from app.ext._liqOrgs.orgs instead of never-populated model argument, using task 002's getOrg helper for single-org lookups. Removed dead org===false guards and KNOWN BROKEN comments. Fixed parameterKey's optionsFetcher via closure over app. Tightened parameterKey's validationRe to reject __proto__/constructor/prototype segments (closing DGt0(b) input half). Added three new handler-level test suites (27 tests). make test/make lint both clean; only pre-existing 2aMD failure remains.
           git:
             branch: plan/orgs-defects-remediation-01-003
             commit:
