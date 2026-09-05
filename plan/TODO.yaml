@@ -5,6 +5,7 @@ phases:
     - number: 1
       slug: orgs-remediation
       title: Orgs Submodule Remediation
+      diff_base: 9903d249f01de6abb6424add5c144bc37e4bcaa1
       tasks:
         - number: 1
           slug: harden-org-settings-prototype-pollution
