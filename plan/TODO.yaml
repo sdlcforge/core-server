@@ -13,6 +13,7 @@ phases:
           path: phase-01-orgs-remediation/001-harden-org-settings-prototype-pollution.md
           done: false
           tier: sonnet-high
+          digest: Hardened src/orgs/resources/lib/settings.mjs against prototype pollution - checkKeyPath guard rejects __proto__/constructor/prototype segments in both getSetting/updateSetting before traversal; converted in-based checks to Object.hasOwn own-property tests; explicit null/non-object guard in getSetting. Extended settings.test.mjs with prototype-pollution coverage. All task-scoped validation passes; make lint failure and project-lifecycle.test.mjs failure are both pre-existing/out-of-scope.
           git:
             branch: plan/orgs-defects-remediation-01-001
             commit:
