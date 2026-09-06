@@ -122,6 +122,7 @@ phases:
     - number: 3
       slug: wire-and-declare-seven-components
       title: Wire And Declare Seven Components
+      diff_base: 3bb1c25c574f52c0ad550c2ed5c9be2b51882a79
       tasks:
         - number: 1
           slug: wire-seven-components-and-retire-dev-core
