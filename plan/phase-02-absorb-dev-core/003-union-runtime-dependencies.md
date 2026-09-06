@@ -180,6 +180,12 @@ Write `plan/resources/dev-core-absorption-dependency-union.md`, modelled on the 
 - `make test` may be red at the end of this task and that is not this task's gate. Task 004 owns the build/test/lint gate, and at least one absorbed suite (`src/projects/handlers/_lib/test/project-lifecycle.test.mjs`) is a known inherited failure.
 - This task may run concurrently with task 002, which writes only `plan/followups.yaml` at the project root.
 
+## Status
+
+**Outcome:** succeeded. Date: 2026-09-06. Implemented on branch `plan/sdlc-core-unification-02-003`, worktree `worktrees/plan/sdlc-core-unification-02-003` (cut from `main`, post task-001 merge), as three commits: `39ec559` (package.json union), `bea6b93` (bun.lock refresh), `f7099c2` (record document `plan/resources/dev-core-absorption-dependency-union.md`). All ten `## Validation` checks passed. Both `## Assumptions` bullets about Task 001 / Phase 1's fix were confirmed true by inspection before any change was made. The `_npm-check-plus` block was deliberately not added, per the task doc's own recommendation. `make test`/build were not run, per the task doc's own Assumptions (Task 004's gate).
+
+Note: this Status section itself was applied by the manager, not the dispatched task agent — the agent's own worktree was cut from `main` before this plan's phase-02 task documents existed on that lineage, so it could not write here from inside its own worktree boundary.
+
 ## References
 
 - [`notes/dependency-union.md`](../notes/dependency-union.md) — the authority for every range, every classification, and the measurements behind the risk assessment. Its "Summary of things to act on" is this task's checklist.
