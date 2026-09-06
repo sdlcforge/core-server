@@ -529,3 +529,16 @@ items:
         POST /orgs/create/:newOrgKey's 2xx response body's directory field (src/orgs/handlers/create.mjs, response construction) echoes back the fully resolved absolute filesystem path (built from fsPath.resolve(localDataRoot)). When the caller supplies a relative localDataRoot, the response discloses the server's absolute directory layout (e.g. the playground root's absolute parent path) to the caller. Does not by itself enable an attack — the containment check restricts where the directory can actually be created regardless of what is echoed back — but is a minor server-filesystem-layout disclosure. If server filesystem layout is considered sensitive in this deployment context, return a playground-root-relative path instead, or omit the directory field and return only the caller-supplied newOrgKey.
 
         Originally filed against @sdlcforge/dev-core as followup Hwdp; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: octocache/octokit chain high-sev advisory
+      id: l2Ly
+      date: "2026-09-06"
+      tags:
+        - type:security
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        The liq-projects absorption's dependency union added @liquid-labs/octocache (^1.0.0-alpha.4, now @sdlcforge/core-server's own runtime dependency), which pins an octokit chain resolving to octokit&lt;=3.1.1. npm audit --package-lock-only confirmed an unpatched high-severity advisory GHSA-pwfr-8pq7-x9qv ("Unauthenticated Denial of Service in the octokit/webhooks library", CVSS 8.2) plus two moderate ReDoS advisories (GHSA-rmvr-2pp2-xj38 in @octokit/request, GHSA-xx4v-prfh-6cgc in @octokit/request-error). Also affects @liquid-labs/github-toolkit, @liquid-labs/credentials-db-plugin-github, and @liquid-labs/liq-credentials-db via the same root cause. Distinct from the separate serialize-javascript/rollup-terser RCE advisory, the sdlc-resource-babel-and-rollup deprecation note, and the command-injection followups covering the projects/work shell-outs — do not conflate. @liquid-labs/octocache does not control its own octokit pin directly; a fix requires a semver-major bump upstream. Reachability of the specific webhook-DoS code path from actual GitHub-integration usage (authenticated API calls, not inbound webhook processing) is unconfirmed and worth checking before prioritizing.
+
+        Originally filed against @sdlcforge/dev-core as followup pWxw; carried across when that package was absorbed into @sdlcforge/core-server.
