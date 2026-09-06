@@ -39,7 +39,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/sdlc-core-unification-01-003
-            commit: []
+            commit:
+                - 9a811f6
             merge: null
         - number: 4
           slug: author-dev-core-absorption-parity-contract
