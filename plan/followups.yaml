@@ -667,3 +667,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'plan/resources/pre-merge-root-blob-map.md cross-check disagreement resolved per the task doc''s own tie-break rule: map pinned at cbd19fd8, actual $PRE is 08e5ee10 (task 003''s work landed in between). Only the plan tree SHA differs (followups.yaml legitimately grew); all guarded critical paths matched exactly. Expected drift, not a hazard.'
+    - title: 'Assumptions section expected absorbed source '
+      id: s3T1
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Assumptions section expected absorbed source to produce new ESLint findings; directly verified it does not (148 files, 0 findings) -- a pleasant surprise worth noting for Phase 5's component-boundary lint work.
