@@ -78,6 +78,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 4
+          slug: repoint-sibling-plugin-graph-tests
+          title: Repoint Sibling Plugin-Graph Tests
+          path: phase-04-verify-parity-and-tighten-gate/004-repoint-sibling-plugin-graph-tests.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 5
       slug: component-boundary-hardening
       title: Component Boundary Hardening
