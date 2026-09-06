@@ -80,6 +80,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 3
+          slug: union-runtime-dependencies
+          title: Union Runtime Dependencies
+          path: phase-02-absorb-dev-core/003-union-runtime-dependencies.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 3
       slug: wire-and-declare-seven-components
       title: Wire And Declare Seven Components
