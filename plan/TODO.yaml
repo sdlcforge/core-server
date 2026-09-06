@@ -130,7 +130,7 @@ phases:
           done: false
           tier: opus-high
           git:
-            branch: null
+            branch: plan/sdlc-core-unification-03-001
             commit: []
             merge: null
         - number: 2
