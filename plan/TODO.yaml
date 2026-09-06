@@ -59,11 +59,13 @@ phases:
           slug: record-pre-merge-root-blob-map
           title: Record Pre-Merge Root Blob Map
           path: phase-01-pre-merge-baseline-and-drift-clearance/005-record-pre-merge-root-blob-map.md
-          done: false
+          done: true
           tier: haiku-med
+          digest: Recorded the pre-merge root blob/tree identities of all 17 root-level tracked paths at commit cbd19fd820183e3ef7b1a98aa7434ef431d2f7d9 in plan/resources/pre-merge-root-blob-map.md. Three critical paths (src/lib/index.js, bun.lock, .catalyst-data.yaml) that dev-core cannot touch are explicitly called out per the merge-arrival-inventory document. All validation checks passed; task makes no source, test, or dependency changes.
           git:
-            branch: null
-            commit: []
+            branch: plan/sdlc-core-unification-01-005
+            commit:
+                - 55e5151
             merge: null
     - number: 2
       slug: absorb-dev-core
