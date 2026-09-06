@@ -70,6 +70,7 @@ phases:
     - number: 2
       slug: absorb-dev-core
       title: Absorb Dev-Core
+      diff_base: 08e5ee10afd4ebffdee1919be32ba1f39bee388d
       tasks:
         - number: 1
           slug: execute-absorption-merge
