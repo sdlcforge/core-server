@@ -14,3 +14,7 @@ phases:
       slug: wire-and-declare-seven-components
       title: Wire And Declare Seven Components
       tasks: []
+    - number: 4
+      slug: verify-parity-and-tighten-gate
+      title: Verify Parity And Tighten Gate
+      tasks: []
