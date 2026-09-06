@@ -23,15 +23,17 @@ and ensure `TEST` and `UPDATE_FULL_TIER_BASELINE` are unset in the environment. 
 ### 2. Run the four commands
 
 - `make build` — must succeed, producing `dist/sdlcforge-server.js` and `dist/sdlcforge-server-exec.js` with their source maps.
-- `make test` — full, unscoped. Must be green across all suites, including the ~20 absorbed test suites Phase 2 brought in on top of `core-server`'s own 17.
+- `make test` — full, unscoped. Must be green across all suites except `N7cz` (see the correction above), including the ~20 absorbed test suites Phase 2 brought in on top of `core-server`'s own suites.
 - `make lint` — see requirement 3; a bare "green" is **not** achievable and is not the bar.
 - `bun run test:local` — the local integration run (`scripts/test.sh`), which rebuilds, starts a real server, and exercises `/heartbeat`, `/server/version`, `/server/api`, `/server/plugins/list`, `/server/next-commands`, an invalid endpoint, and a second `/heartbeat`. Confirm it stops the server afterward and leaves no `start-pid`.
 
 `GET /server/next-commands?command=credentials/` crashes inside `@liquid-labs/liq-handlers-lib` (followup `NEJt`). That is pre-existing and out of scope; if `test:local`'s `/server/next-commands` step trips it, record it as the known inherited defect rather than fixing it.
 
+**Correction (2026-09-06, applied after a real dispatch ran the full unscoped suite):** `make test` cannot be literally green. A fifth inherited, absorption-predating defect — `src/projects/handlers/_lib/test/project-lifecycle.test.mjs` (followup `N7cz`, donor `2aMD`) — was omitted from this document's original four-item fenced-off list. It has now been independently confirmed, by three separate task dispatches across Phases 2, 3, and this task, to be unrelated to the merge (an `app.ext.serverConfigRoot` vs. `serverHome` field-name mismatch in the suite's own mock, predating absorption). Treat it as a fifth fenced-off inherited defect alongside `uROI`/`b3hk`/`mLm3`/`NEJt` (see requirement 6 below): "green" for requirement 2 means every suite passes except this one, named and confirmed present, not fixed.
+
 ### 3. `make lint` — a delta check, not a green check
 
-`make lint` fails today and has for the life of this plan: 233 pre-existing ESLint errors across 5 files under `test/`, confirmed byte-identical to `main` (followups `b3hk`, `mLm3`). `make/55-lint.mk` runs ESLint under `set -e`, so any error fails the target. The phase document's "make lint green" wording cannot be satisfied literally, and chasing it would pull 233 out-of-scope fixes into this phase.
+`make lint` fails today and has for the life of this plan: 233 pre-existing ESLint errors, confirmed byte-identical to `main` (followups `b3hk`, `mLm3`) — **correction (2026-09-06): the 233 decomposes as 230 across four files under `test/` plus 3 under `src/`, not "5 files under `test/`"**, per a real dispatch's direct measurement. `make/55-lint.mk` runs ESLint under `set -e`, so any error fails the target. The phase document's "make lint green" wording cannot be satisfied literally, and chasing it would pull 233 out-of-scope fixes into this phase.
 
 The verifiable bar instead: **this phase's changes introduce no new lint finding.** Record the full finding set from `qa/lint.txt`, classify it by file, and assert that **no finding names a file tasks 002, 003, or 004 modified**. Report the total count and the file breakdown, and state explicitly whether the count moved relative to the recorded pre-existing baseline. If the count grew for a reason attributable to Phase 2's absorbed `src/` code rather than to this phase, say so and attribute it — do not fix it, and do not let it silently become this phase's number.
 
@@ -43,7 +45,7 @@ The verifiable bar instead: **this phase's changes introduce no new lint finding
 - **Route reordering within `app.ext.handlers`** — the absorbed components move into the builtin block ahead of the explicit tier; `controls` moves behind `credentials`/`projects`/`orgs`.
 - **The plugins list 6 → 5** and the `@sdlcforge/core-server` summary.
 - **The integrations list `npmName` re-identification** — predicted to be a no-op here, since both integration providers were already builtin.
-- **`GET /server/plugins/details/@sdlcforge%2Fdev-core` stops resolving**, while `GET /server/plugins/details/@sdlcforge%2Fcore-server` remains valid. Check both against the live server; a passing check needs both halves, since "everything 404s" would also satisfy the first alone.
+- **`GET /server/plugins/@sdlcforge%2Fdev-core/details` stops resolving**, while `GET /server/plugins/@sdlcforge%2Fcore-server/details` remains valid. **Correction (2026-09-06): the `details` segment is last, not first** — a real dispatch found the previously-written form (`.../details/@sdlcforge%2F…`) 404s for both packages, which would have produced a false pass on the dev-core half alone if only that half were checked. Check both against the live server using the corrected route form; a passing check needs both halves.
 - **`golden-api-spec.json` and `golden-plugins-list.json` byte-identical** throughout — re-confirm at phase end, not just at task 002's checkpoint.
 
 ### 5. Confirm the negative space
@@ -64,6 +66,7 @@ Four known defects are captured as deliberately-preserved present-day behavior. 
 - `uROI` — `IntegrationsManager.listInstalledPlugins()` collapsing the `tickets` and `pull request` providers because both `register()` calls omit `name`. Lives in `@liquid-labs/plugable-express`, out of scope. Absorption must not accidentally "fix" it by supplying a `name`; if `full-tier-integrations-list.json` now holds three entries rather than two, that is the accident, and it is a regression to report.
 - `b3hk` / `mLm3` — the 233 pre-existing ESLint errors (requirement 3).
 - `NEJt` — the `liq-handlers-lib` next-commands crash (requirement 2).
+- `N7cz` — added 2026-09-06 (see the requirement-2 correction above). `src/projects/handlers/_lib/test/project-lifecycle.test.mjs` fails on an `app.ext.serverConfigRoot` vs. `serverHome` mock mismatch, predating absorption. Confirm it is still present and unrepaired; do not fix it here.
 
 ### 7. Write the parity-verification record
 
@@ -83,10 +86,10 @@ The phase lists "the document set Phase 6 must cover" among its outputs. That se
 
 1. `qa/.unit-test.passed` and `qa/.plugin-graph.passed` were removed before the run, and `TEST` / `UPDATE_FULL_TIER_BASELINE` were unset; the `make test` run was full and unscoped.
 2. `make build` succeeds; both `dist/` artifacts and their `.js.map` files are produced.
-3. `make test` is green across every suite.
-4. `make lint`'s finding set names no file modified by tasks 002, 003, or 004; the total count and per-file breakdown are recorded, with any movement attributed.
+3. `make test` is green across every suite except `N7cz` (`project-lifecycle.test.mjs`), confirmed present and unrepaired.
+4. `make lint`'s finding set introduces no *new* finding relative to the standing baseline (the substantive bar); a finding in a file tasks 002/003/004 touched is acceptable only when proven pre-existing (present, identically, before that task's own diff) — record the total count and per-file breakdown, with any movement attributed.
 5. `bun run test:local` completes; the server is stopped and no `start-pid` survives.
-6. Against the live server: `GET /server/api` returns 165 routes with 118 under `@sdlcforge/core-server` and zero under `@sdlcforge/dev-core`; `GET /server/plugins/list` returns 5 entries; `GET /server/plugins/details/@sdlcforge%2Fdev-core` does not resolve while `…%2Fcore-server` does.
+6. Against the live server: `GET /server/api` returns 165 routes with 118 under `@sdlcforge/core-server` and zero under `@sdlcforge/dev-core`; `GET /server/plugins/list` returns 5 entries; `GET /server/plugins/@sdlcforge%2Fdev-core/details` does not resolve while `…/@sdlcforge%2Fcore-server/details` does.
 7. `git diff --stat -- test/__snapshots__/golden-api-spec.json test/__snapshots__/golden-plugins-list.json` is empty.
 8. All seven path variables are registered and `appInit()` completes without a duplicate-registration throw.
 9. `plan/resources/dev-core-absorption-parity-verification.md` exists in the plan worktree, has a verdict for every contract item, and states any item that did not hold near the top.
