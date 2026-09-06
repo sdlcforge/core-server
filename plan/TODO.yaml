@@ -82,7 +82,7 @@ phases:
             branch: plan/sdlc-core-unification-02-001
             commit:
                 - de663a7
-            merge: null
+            merge: ab7d443
         - number: 2
           slug: refile-dev-core-followups
           title: Refile Dev-Core Followups
