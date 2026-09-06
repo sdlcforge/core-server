@@ -700,3 +700,73 @@ items:
         docs/consumer-migration.md (lines 247, 343) and docs/dev-core-consolidation-contract.md (lines 128, 157) contain ../README.md#<anchor> links (#repaired-defects-orgs-submodule, #projects-audit-submodule, #the-plugin-manifest) that resolve to core-server's own README.md, which has no such sections -- these anchors match sections that exist only in the donor @sdlcforge/dev-core's own README.md and were never repointed when the merge landed both files ('--ours' kept them verbatim per task 001). The link target file exists (not a dangling forward-link), but the fragments are broken. Both docs' disposition is already deferred to the doc-updates phase; when that phase touches these files, repoint the anchors to wherever the referenced content lands in core-server's docs, or drop the anchors if the content isn't carried over.
 
         Found during Phase 2's boundary-gate documentation link-chain check.
+    - title: 'Unexpected pre-existing test failure, out of '
+      id: X1KA
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Unexpected pre-existing test failure, out of scope and not fixed: src/projects/handlers/_lib/test/project-lifecycle.test.mjs (7 tests) -- proven independent of this task''s diff. Root cause: appMock.ext.serverHome vs create-lib.mjs''s app.ext.serverConfigRoot read, an inherited defect from Phase 2''s absorption. Makes make test permanently red independent of Phase 4''s work -- needs a followup and probably a phase assignment.'
+    - title: 'make test''s pass marker is filter-blind: TEST'
+      id: uMj8
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'make test''s pass marker is filter-blind: TEST=builtin-plugins make test touches qa/.unit-test.passed, and a subsequent unfiltered make test then reports Nothing to be done and exits 0 -- a filtered green run masquerading as a full green run. Worth a followup on make/55-test.mk.'
+    - title: bun run test:local cannot run in a bare workt
+      id: yipP
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'bun run test:local cannot run in a bare worktree without a PATH shim: test/test-server.js spawns the bare binary name sdlcforge-server, not resolvable via node_modules/.bin or global install. Validation 6 is not reproducible in a fresh worktree as written.'
+    - title: Phase 4's handoff is narrower than the task d
+      id: YQ8P
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Phase 4''s handoff is narrower than the task doc predicted: plugin-graph-absorbed-donor-conflicts.test.js, plugin-graph-serverconfigroot-rename.test.js, and full-tier-baseline.test.js''s full-tier-integrations-list.json snapshot all pass unchanged. Phase 4 should re-scope rather than assume those need repointing.'
+    - title: Stale dev-core references left in place per t
+      id: MXGO
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Stale dev-core references left in place per task doc''s own instruction: test/test-basic.js:52, test/test-integration-quick.js:59,83, test/README.md:109, plus AGENTS.md/CLAUDE.md/docs/architecture.md/docs/architecture/plugin-loading-tiers.md/docs/consumer-migration.md/docs/project-structure.md/docs/dev-core-consolidation-contract.md all still describe dev-core as an explicit npm plugin -- Phase 6''s.'
+    - title: .yalc/@sdlcforge/dev-core and node_modules/@s
+      id: phtr
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: .yalc/@sdlcforge/dev-core and node_modules/@sdlcforge/dev-core still physically present, deliberately left per task doc (optional/untracked), harmless per the 0-dev-core-route measurement.
+    - title: strictOptional must stay at default false for
+      id: bz9g
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: strictOptional must stay at default false for Phase 4 (surviving appExt:_liqOrgs.orgSetupMethods info promotes to error under strictOptional:true); conversely strictOrder:true is now free (ok, same counts) if Phase 4 wants to opt in.
