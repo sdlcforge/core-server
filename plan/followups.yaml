@@ -877,3 +877,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Per Requirement 6, strictOrder:true measured as a genuine free improvement (ok, zero order-unprovable edges) but deliberately not adopted here -- flagging per task doc's own instruction as a follow-up candidate.
+    - title: Filename mismatch (task doc's own flagged dec
+      id: 6bMp
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Filename mismatch (task doc''s own flagged decision): plugin-graph-third-party-ordering.test.js''s filename still says third-party though content no longer describes cross-package coupling. Renaming outside this task''s sweep, left as-is per task doc instruction.'
