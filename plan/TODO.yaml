@@ -68,6 +68,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 3
+          slug: delete-error-allowlist-and-tighten-gate
+          title: Delete Error Allowlist And Tighten Gate
+          path: phase-04-verify-parity-and-tighten-gate/003-delete-error-allowlist-and-tighten-gate.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 5
       slug: component-boundary-hardening
       title: Component Boundary Hardening
