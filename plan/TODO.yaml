@@ -78,7 +78,7 @@ phases:
           done: false
           tier: opus-med
           git:
-            branch: null
+            branch: plan/sdlc-core-unification-02-001
             commit: []
             merge: null
         - number: 2
