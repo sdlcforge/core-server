@@ -131,7 +131,8 @@ phases:
           tier: opus-high
           git:
             branch: plan/sdlc-core-unification-03-001
-            commit: []
+            commit:
+                - a4cd7ab
             merge: null
         - number: 2
           slug: assert-component-order-agreement
