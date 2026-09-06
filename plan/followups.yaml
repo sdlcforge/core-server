@@ -857,3 +857,23 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Explicit confirmation: none of the ''not predicted'' regression triggers (integrations-list diff, golden-snapshot diff, EXPECTED_* constant failure) fired -- reporting the absence explicitly per the dispatch''s halt condition.'
+    - title: make lint (whole-repo, read-only investigatio
+      id: fgaF
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: make lint (whole-repo, read-only investigation) reports 236 pre-existing errors including an identical pre-existing 'beforeAll is not defined (no-undef)' finding on this task's file plus task 004's two sibling files -- a repo-wide eslint-config gap (jest globals not recognized for plugin-graph test files) predating this task, reproduced identically against pre-change content via git show HEAD, unrelated to and unaffected by this task's edits. Worth a follow-up to add jest globals recognition for src/lib/test/**.
+    - title: 'Per Requirement 6, strictOrder:true measured '
+      id: PokV
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Per Requirement 6, strictOrder:true measured as a genuine free improvement (ok, zero order-unprovable edges) but deliberately not adopted here -- flagging per task doc's own instruction as a follow-up candidate.
