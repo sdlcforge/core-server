@@ -141,6 +141,7 @@ phases:
           path: phase-03-wire-and-declare-seven-components/002-assert-component-order-agreement.md
           done: false
           tier: sonnet-high
+          digest: Added the missing runtime-vs-declared component-order drift guard to host-declaration.test.js as three independent Jest tests (ordered agreement, literal DAG-order pin, non-vacuity/index-alignment). All three mutations performed, confirmed to produce exactly the predicted failure, and fully reverted. No production-file edit needed since task 001 already left the builtin-plugins.mjs comment naming this mechanism correctly.
           git:
             branch: plan/sdlc-core-unification-03-002
             commit:
