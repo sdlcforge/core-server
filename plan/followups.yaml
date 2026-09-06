@@ -790,3 +790,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: project-lifecycle.test.js fails in this worktree (7/7 tests), confirmed via A/B stash testing to be identical with/without this task's diff -- pre-existing, unrelated to component ordering, same root cause already flagged by task 001 (app.ext.serverConfigRoot). Not pre-declared in this task's own Assumptions section (unlike the plugin-graph-*/full-tier-baseline suites) -- may already be covered by task 001's flagged followup.
+    - title: Of the three sibling plugin-graph-*.test.js s
+      id: f6AA
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Of the three sibling plugin-graph-*.test.js suites the Assumptions section expects red, only two were actually red (plugin-graph-gate.test.js, plugin-graph-third-party-ordering.test.js); plugin-graph-serverconfigroot-rename.test.js and plugin-graph-absorbed-donor-conflicts.test.js are green -- consistent with task 001's own flagged note that Phase 4's handoff is narrower than predicted.
