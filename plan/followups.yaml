@@ -770,3 +770,43 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: strictOptional must stay at default false for Phase 4 (surviving appExt:_liqOrgs.orgSetupMethods info promotes to error under strictOptional:true); conversely strictOrder:true is now free (ok, same counts) if Phase 4 wants to opt in.
+    - title: Assertion 4's 'setup absent'/'handlers length
+      id: UqSX
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Assertion 4's 'setup absent'/'handlers length 4' checks, written at the source per the task doc's own instruction, do not turn red under the task doc's own named mutation ('remove projectsAudit from submodules') -- only assertion 3 and the pre-existing aggregation test do. The suite still goes red as the Validation section actually requires ('every mutation must turn the suite red'), just via a different assertion than the doc's per-mutation mapping predicted. No corrective action needed; flagging in case the manager wants the task doc's Validation wording corrected.
+    - title: project-lifecycle.test.js fails in this workt
+      id: WdhE
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: project-lifecycle.test.js fails in this worktree (7/7 tests), confirmed via A/B stash testing to be identical with/without this task's diff -- pre-existing, unrelated to component ordering, same root cause already flagged by task 001 (app.ext.serverConfigRoot). Not pre-declared in this task's own Assumptions section (unlike the plugin-graph-*/full-tier-baseline suites) -- may already be covered by task 001's flagged followup.
+    - title: Of the three sibling plugin-graph-*.test.js s
+      id: f6AA
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Of the three sibling plugin-graph-*.test.js suites the Assumptions section expects red, only two were actually red (plugin-graph-gate.test.js, plugin-graph-third-party-ordering.test.js); plugin-graph-serverconfigroot-rename.test.js and plugin-graph-absorbed-donor-conflicts.test.js are green -- consistent with task 001's own flagged note that Phase 4's handoff is narrower than predicted.
+    - title: Measured pre-existing lint baseline is 236, n
+      id: M21N
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Measured pre-existing lint baseline is 236, not the ~233 the task doc's Assumptions cite -- confirmed unaffected either way, informational only.
