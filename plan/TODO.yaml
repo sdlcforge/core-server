@@ -168,7 +168,7 @@ phases:
           slug: measure-post-merge-plugin-graph
           title: Measure Post-Merge Plugin Graph
           path: phase-04-verify-parity-and-tighten-gate/001-measure-post-merge-plugin-graph.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: 'Prediction matched cleanly on every observable. Both hazards checked and found absent: explicitPlugins carries exactly the four sdlc-projects-* packages with no live dev-core declaration anywhere, and all four dev-core-sourced component bodies are byte-identical to dev-core''s main-HEAD source including orgs'' three source-only markers. validatePluginSet() returned outcome:''ok'', exitCode:0, counts{error:0,warning:0,info:1}, exactly 5 findings matching prediction verbatim, 12 resolved nodes with seven builtins at contiguous loadIndex 0-6 in correct DAG order, 42 edges, coverage fields exact. No source file touched.'
           git:
