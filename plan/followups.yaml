@@ -647,3 +647,43 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Task document update could not be performed inside this task's own worktree since the assigned task doc does not exist there (branch cut from main, before this plan's phase-02 docs existed on that lineage) -- only at plan_worktree_path. Manager should apply the Status section to plan/phase-02-absorb-dev-core/003-union-runtime-dependencies.md directly.
+    - title: 'Suite-count baseline stale by one (same root '
+      id: pO8X
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Suite-count baseline stale by one (same root cause as the already-flagged conflict-count staleness): task doc says core-server ran 17 suites pre-merge, but direct measurement at $PRE shows 18 (three suites added by earlier phase-1/plan work after merge-arrival-inventory''s ''17'' figure was captured). Net collected suites is 38, not 37 -- documentation staleness, not a merge defect.'
+    - title: plan/resources/pre-merge-root-blob-map.md cro
+      id: Hbhh
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'plan/resources/pre-merge-root-blob-map.md cross-check disagreement resolved per the task doc''s own tie-break rule: map pinned at cbd19fd8, actual $PRE is 08e5ee10 (task 003''s work landed in between). Only the plan tree SHA differs (followups.yaml legitimately grew); all guarded critical paths matched exactly. Expected drift, not a hazard.'
+    - title: 'Assumptions section expected absorbed source '
+      id: s3T1
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Assumptions section expected absorbed source to produce new ESLint findings; directly verified it does not (148 files, 0 findings) -- a pleasant surprise worth noting for Phase 5's component-boundary lint work.
+    - title: The task-001 merge commit message also carrie
+      id: KWV0
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: The task-001 merge commit message also carries the stale '17' suite-count figure forward.
