@@ -687,3 +687,16 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: The task-001 merge commit message also carries the stale '17' suite-count figure forward.
+    - title: Stale README anchors in kept dev-core docs
+      id: O9g2
+      date: "2026-09-06"
+      tags:
+        - type:documentation
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        docs/consumer-migration.md (lines 247, 343) and docs/dev-core-consolidation-contract.md (lines 128, 157) contain ../README.md#<anchor> links (#repaired-defects-orgs-submodule, #projects-audit-submodule, #the-plugin-manifest) that resolve to core-server's own README.md, which has no such sections -- these anchors match sections that exist only in the donor @sdlcforge/dev-core's own README.md and were never repointed when the merge landed both files ('--ours' kept them verbatim per task 001). The link target file exists (not a dangling forward-link), but the fragments are broken. Both docs' disposition is already deferred to the doc-updates phase; when that phase touches these files, repoint the anchors to wherever the referenced content lands in core-server's docs, or drop the anchors if the content isn't carried over.
+
+        Found during Phase 2's boundary-gate documentation link-chain check.
