@@ -730,3 +730,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'bun run test:local cannot run in a bare worktree without a PATH shim: test/test-server.js spawns the bare binary name sdlcforge-server, not resolvable via node_modules/.bin or global install. Validation 6 is not reproducible in a fresh worktree as written.'
+    - title: Phase 4's handoff is narrower than the task d
+      id: YQ8P
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Phase 4''s handoff is narrower than the task doc predicted: plugin-graph-absorbed-donor-conflicts.test.js, plugin-graph-serverconfigroot-rename.test.js, and full-tier-baseline.test.js''s full-tier-integrations-list.json snapshot all pass unchanged. Phase 4 should re-scope rather than assume those need repointing.'
