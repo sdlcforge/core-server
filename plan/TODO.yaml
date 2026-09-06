@@ -24,6 +24,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: assert-component-order-agreement
+          title: Assert Component Order Agreement
+          path: phase-03-wire-and-declare-seven-components/002-assert-component-order-agreement.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 4
       slug: verify-parity-and-tighten-gate
       title: Verify Parity And Tighten Gate
