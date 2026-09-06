@@ -399,3 +399,16 @@ items:
         Automated security review flagged 7 pre-existing command-injection-capable patterns in code migrated verbatim from liq-work: src/work/handlers/_lib/save-lib.mjs (git commit -m built via tryExec, partial escaping via replaceAll but not fully safe), src/work/handlers/_lib/work-db.mjs (git remote add with ghUser/projectBasename interpolation), src/work/handlers/resume.mjs (git checkout ${workKey}), src/work/handlers/issues/_lib/list-lib.mjs (open with ghOrg/project/number interpolation), src/work/handlers/_lib/submit-lib.mjs (open ${url} unquoted), src/work/handlers/_lib/pause-lib.mjs (git checkout ${main}), src/work/handlers/projects/_lib/list-lib.mjs (open with projectFQN interpolation). Confirmed via git log that these files' shell-out patterns predate the liq-work absorption (liq-work commits well before the absorption). Not introduced during absorption; now first-party @sdlcforge/core-server code rather than a vendored dependency. Same class of issue as the companion command-injection followup covering the projects shell-outs. Suggested remediation when next touched: replace shell-string interpolation with execFile/spawn argv-array invocation, and validate interpolated values (branch names, org/project names, URLs, issue numbers) against strict allowlist regexes before use.
 
         Originally filed against @sdlcforge/dev-core as followup AhMK; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: Command injection risk in projects shell-outs
+      id: 5F7r
+      date: "2026-09-06"
+      tags:
+        - type:security
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        Automated security review flagged 4 pre-existing command-injection-capable patterns in code migrated verbatim from liq-projects: src/projects/handlers/_lib/create-lib.mjs (shell.exec building a `hub create` command from newProjectName/githubOwner/orgKey), src/projects/handlers/_lib/rename-lib.mjs (shell.exec building `git remote set-url` from newName/projectPath), src/projects/handlers/releases/_lib/do-npm-publish.mjs (tryExec building `npm publish` with an OTP/tag), and src/projects/handlers/releases/_lib/publish-lib.mjs (tryExec building `git checkout -b` from a release-branch name). Confirmed via git log that these patterns predate the liq-projects absorption (commits 841f543/69de4e7/bacc1f0 in liq-projects, well before the absorption) — the migration carried them across with zero content-line changes, i.e. no new behavior was introduced. Not introduced during absorption; now first-party @sdlcforge/core-server code rather than a vendored dependency. Suggested remediation when next touched: replace shell-string interpolation with execFile/spawn argv-array invocation, and validate the interpolated values (project names, branch names, OTP) against strict allowlist regexes before use.
+
+        Originally filed against @sdlcforge/dev-core as followup g23a; carried across when that package was absorbed into @sdlcforge/core-server.
