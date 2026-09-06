@@ -151,6 +151,12 @@ Snapshots must be **unmoved**. `full-tier-api-spec.json` still holds 165 routes 
 - The absorbed source is expected to produce new ESLint findings. Recording them is in scope; fixing them is not — no behavior change in this phase, and Phase 5 owns the boundary rule.
 - If the failure count or the collected-suite count is materially different from the numbers above, halt and report rather than adjusting the numbers to match. The counts came from a measured inventory and a divergence is information.
 
+## Status
+
+**Outcome:** succeeded. Date: 2026-09-06. Implemented on branch `plan/sdlc-core-unification-02-004`, worktree `worktrees/plan/sdlc-core-unification-02-004` (cut from `main`, post tasks 001-003), as commit `c158ba7`. All Part 1-4 checks and all ten `## Validation` items passed, after one in-scope (category-c) fix: `src/projects/handlers/test/lib/test-calls-implied.mjs`'s shared package-identity literal updated from `'@sdlcforge/dev-core'` to `'@sdlcforge/core-server'` (6 dependent test suites). `make build` green; `make test` collected 38 suites (corrected from the doc's stale "37" — actual pre-merge suite count was 18, not 17; see flagged followups), only the documented inherited failure (`project-lifecycle.test.mjs`) red; `make lint` pre/post-merge counts identical at 236 (absorbed source contributed zero new findings, directly verified). Snapshots and route/plugin tallies confirmed byte-identical; Part 4 inertness checks all passed. Four items flagged to the manager and recorded as followups (suite-count staleness, blob-map pin-point drift — expected, ESLint-zero-findings note, and the merge-commit-message's stale "17" figure).
+
+Note: this Status section itself was applied by the manager, not the dispatched task agent — the agent's own worktree was cut from `main` before this plan's phase-02 task documents existed on that lineage, so it could not write here from inside its own worktree boundary.
+
 ## References
 
 - [`phases/absorb-dev-core.md`](../phases/absorb-dev-core.md) — goal 7 and the full Outputs list this task checks off.
