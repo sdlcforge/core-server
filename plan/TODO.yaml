@@ -87,7 +87,7 @@ phases:
           slug: refile-dev-core-followups
           title: Refile Dev-Core Followups
           path: phase-02-absorb-dev-core/002-refile-dev-core-followups.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: 'Triaged all 22 dev-core followups against the merged tree: 17 carried across into core-server''s registry with new server-generated IDs (including all 7 named star items plus 0RpG resolved to carry, reworded), 5 dropped with recorded reasons (AEsA, 0eWj, IxJv, x6x1, JFTT). Every carried item''s code paths were verified to resolve in the merged tree; two task-document defects were found and corrected in the process (a stale path for xehM, an over-length title for dsdl). No pre-existing followup was modified or removed.'
           git:
