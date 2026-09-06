@@ -376,3 +376,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Carried-forward obligations now live and unowned in-tree until their tasks run: package.json''s 32-name dependency union (task 003), 22 dev-core followups dropped by --ours resolution of plan/followups.yaml (task 002), README.md + docs/architecture.md donor content (Phase 6), src/test/index.test.mjs''s assertions (Phase 3).'
+    - title: make/55-test.mk resolved --ours drops dev-cor
+      id: 1o1M
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: make/55-test.mk resolved --ours drops dev-core's Babel --ignore flags for test-data fixture trees now in-tree; task 004's check per the doc.
