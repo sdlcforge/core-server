@@ -34,3 +34,15 @@ role_doc: plugins/flow/roles/developer-node.md
 
 - [`plan/notes/dependency-union.md`](../notes/dependency-union.md#confirmed-break-getpackageorgandbasename-no-longer-exists) — the confirmed break, exact line numbers, and the `await`/argument-contract detail.
 - [`plan/phases/pre-merge-baseline-and-drift-clearance.md`](../phases/pre-merge-baseline-and-drift-clearance.md) — this phase's goal 1, stating why this fix must land standalone and first.
+
+## Status
+
+- **Outcome:** succeeded
+- **Date:** 2026-09-06
+- **Dependencies:** `scripts/provision-local-deps.sh` (no `--refresh-lock`) was run first, per Requirements item 4, and succeeded (`bun install` resolved the two `file:.yalc/...` links, no lockfile change).
+- **Change:** `src/controls/handlers/orgs/controls/list-implied.mjs` — import and call site updated from `getPackageOrgAndBasename` to `await getPackageOrgBasenameAndVersion`, exactly per Requirements item 1. No other line changed.
+- **Manual exercise (Requirements item 3 / Validation item 3):** ran `node -e "const { getPackageOrgBasenameAndVersion } = require('./node_modules/@liquid-labs/npm-toolkit'); (async () => { const { org: orgKey } = await getPackageOrgBasenameAndVersion({ pkgDir: process.cwd() }); console.log('orgKey:', orgKey, '| typeof:', typeof orgKey); })();"` from the worktree root — output: `orgKey: sdlcforge | typeof: string`. No exception thrown; `orgKey` resolves to a real string, not `undefined`.
+- **Permanent regression test added** (not required by the task, but added): `src/controls/handlers/orgs/controls/test/list-implied.test.js`, modeled directly on the existing sibling convention at `src/controls/handlers/orgs/controls/test/list.test.js` (mocks `../_lib/list-lib`'s `doListControls` and asserts the `orgKey` it's called with). It builds a real temp package directory (`@acme/widget`) via `node:fs/promises`/`node:os.tmpdir()`, sets a mock `req.get('X-CWD')` to that directory, invokes the handler's `func`, and asserts `doListControls` is called with `orgKey === 'acme'` — this exercises the exact fixed code path (including the `await`) and would have failed pre-fix (destructuring a `Promise` would have yielded `orgKey === undefined`).
+- **Validation results:** all 6 checks passed — see `validation_results` in the structured report.
+
+
