@@ -568,3 +568,16 @@ items:
         src/orgs/handlers/_lib/get-org.mjs's header comment (lines 3-4) names the retired getOrgFromKey helper for exposition ('rather than importing the shared handlers library's getOrgFromKey helper'), even though that helper no longer exists as a shared handlers-library export. Not code-level usage — the comment is documentation, not a live reference. Worth rewording so the comment does not name a retired symbol.
 
         Originally filed against @sdlcforge/dev-core as followup xehM; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: consumer-migration.md framing is stale
+      id: KGVq
+      date: "2026-09-06"
+      tags:
+        - type:documentation
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        docs/consumer-migration.md documents a planned edit path for @sdlcforge/core-server to add @sdlcforge/dev-core as an explicit-plugin dependency and swap out its four standalone donor plugin entries (@liquid-labs/liq-work, @liquid-labs/liq-projects, @liquid-labs/liq-orgs, @liquid-labs/plugable-projects-audit) for it. Its per-section "re-verified as of this writing" claims about core-server's package.json/explicitPlugins state (e.g. lines 55, 191, 262) predate a later core-server-side merge and no longer reflect current state; the document's own underlying premise — that core-server would consume dev-core as an npm plugin dependency — may itself be superseded now that dev-core's source has been absorbed directly into core-server's own src/ tree rather than being consumed as a plugin. Whether this document should be updated, superseded, or removed is expected to be decided in a later documentation-refresh pass, at which point this item may become moot.
+
+        Originally filed against @sdlcforge/dev-core as followup hks9; carried across when that package was absorbed into @sdlcforge/core-server.
