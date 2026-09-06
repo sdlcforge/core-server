@@ -827,3 +827,13 @@ items:
         3. docs/architecture.md's "Key decisions" section has no entry recording the decision to absorb the four dev-core-donor components into the built-in in-tree tier rather than continuing to load them as a separate npm package -- worth adding a bullet naming the rationale (eliminating an unpublished-package yalc workaround, closing the startup-failure risk in item 2) and the rejected alternative (publish/keep dev-core as a separate package).
 
         Found during Phase 3's boundary-gate review (architecture-conformance + doc link-chain checks).
+    - title: strictOrder:true confirmed independently to h
+      id: VAFc
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: strictOrder:true confirmed independently to have zero order-unprovable warnings in the default run, consistent with the note's claim it's a free improvement -- not enabled here (out of this phase's scope), flagging for a future phase decision per the task doc's own instruction.
