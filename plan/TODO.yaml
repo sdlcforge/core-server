@@ -219,7 +219,8 @@ phases:
           tier: opus-med
           git:
             branch: plan/sdlc-core-unification-04-005
-            commit: []
+            commit:
+                - 9cc477a
             merge: null
     - number: 5
       slug: component-boundary-hardening
