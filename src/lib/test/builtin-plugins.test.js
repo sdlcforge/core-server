@@ -53,7 +53,8 @@ const makeTempDir = (prefix) =>
   fsPath.join(os.tmpdir(), prefix + Math.round(Math.random() * 10000000000000000))
 
 // The absorbed submodules currently wired into `builtin-plugins.mjs`' `submodules` array, in the
-// same dependency (DAG) order. All seven: `src/credentials/`, absorbed from
+// same dependency (DAG) order -- the array below is the order-bearing statement; the prose that
+// follows enumerates all seven by donor, not by array position. `src/credentials/`, absorbed from
 // `@liquid-labs/liq-credentials` by phase-05 task 002; `src/controls/`, from
 // `@liquid-labs/liq-controls` by phase-05 task 001; `src/integrations-issues-github/`, from
 // `@liquid-labs/liq-integrations-issues-github` by phase-05 task 003; and `src/projects/`,

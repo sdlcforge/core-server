@@ -5,9 +5,9 @@
 # .yalc/ and yalc.lock are gitignored, so a freshly created checkout or git worktree has
 # neither, and `bun install` fails hard on the file:.yalc/... dependencies bun.lock resolves
 # (one, direct: @liquid-labs/plugable-express; no transitive file:.yalc/... resolution
-# remains). This script copies .yalc/ in from the main checkout
-# when the current directory doesn't already have it, verifies every required package is
-# actually present under .yalc/, then runs `bun install`.
+# remains). This script copies .yalc/ in from the main checkout when the current directory
+# doesn't already have it, verifies every required package is actually present under
+# .yalc/, then runs `bun install`.
 #
 # Usage:
 #   scripts/provision-local-deps.sh [--refresh-lock]
