@@ -11,7 +11,7 @@ phases:
           slug: fix-npm-toolkit-rename-break
           title: Fix Npm-Toolkit Rename Break
           path: phase-01-pre-merge-baseline-and-drift-clearance/001-fix-npm-toolkit-rename-break.md
-          done: false
+          done: true
           tier: sonnet-med
           digest: 'Fixed pre-existing break: list-implied.mjs now imports/awaits getPackageOrgBasenameAndVersion instead of removed getPackageOrgAndBasename. Verified via direct node script and new Jest test. Lint/tests green, no new findings, commit touches only source + new test file.'
           git:
