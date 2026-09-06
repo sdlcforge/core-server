@@ -35,22 +35,26 @@ phases:
           slug: capture-pre-merge-observable-baseline
           title: Capture Pre-Merge Observable Baseline
           path: phase-01-pre-merge-baseline-and-drift-clearance/003-capture-pre-merge-observable-baseline.md
-          done: false
+          done: true
           tier: sonnet-med
+          digest: 'Captured the post-tasks-001/002 pre-merge observable baseline into plan/resources/dev-core-absorption-pre-merge-baseline.md: setup-method/app.ext restatements, a route-derived 9-entry path-variable set with two source cross-checks plus one explicitly-flagged derivation gap (newProjectName), the full 6-finding validatePluginSet() result (1 error matching current allowlist, 1 info, 4 debug), and a verbatim sole-dependent grep with false-positive annotation. No observable moved as a result of tasks 001/002.'
           git:
-            branch: null
-            commit: []
+            branch: plan/sdlc-core-unification-01-003
+            commit:
+                - 9a811f6
             merge: null
         - number: 4
           slug: author-dev-core-absorption-parity-contract
           title: Author Dev-Core Absorption Parity Contract
           path: phase-01-pre-merge-baseline-and-drift-clearance/004-author-dev-core-absorption-parity-contract.md
-          done: false
+          done: true
           tier: sonnet-high
+          digest: Authored plan/resources/dev-core-absorption-parity-contract.md enumerating all ten required categories of expected diff for the dev-core absorption. All numeric claims independently verified against live repository state. Item 4 (integrations-list re-identification) confirmed as a non-event after directly inspecting dev-core source -- none of the four absorbed submodules registers an integration provider. Task 003's baseline artifact hadn't landed yet, so items 7-8 substituted the predecessor contract's still-valid recorded tables per this task's own assumptions, flagged inline.
           git:
-            branch: null
-            commit: []
-            merge: null
+            branch: plan/sdlc-core-unification-01-004
+            commit:
+                - ede544a
+            merge: 957d0a8
         - number: 5
           slug: record-pre-merge-root-blob-map
           title: Record Pre-Merge Root Blob Map

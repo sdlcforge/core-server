@@ -43,3 +43,15 @@ Author `plan/resources/dev-core-absorption-parity-contract.md`, structured like 
 - [`plan/notes/component-order-and-manifest-mechanics.md`](../notes/component-order-and-manifest-mechanics.md) — the DAG order and its route-reordering consequence.
 - [`plan/notes/merged-manifest-graph-projection.md`](../notes/merged-manifest-graph-projection.md) — the measured post-merge finding set and candidate manifest.
 - [`plan/overview.md`](../overview.md) — the plan's "What must not change" and success criteria this contract must stay consistent with.
+
+## Status
+
+**Outcome: succeeded.** 2026-09-06.
+
+Authored `plan/resources/dev-core-absorption-parity-contract.md`, covering all ten required items. Items 1–3 and 9 were verified directly against the live repository state rather than only against the planning-time notes: `test/__snapshots__/full-tier-api-spec.json` (165 routes, 112 attributed to `@sdlcforge/dev-core`), `test/__snapshots__/full-tier-plugins-list.json` (6 entries), the current three-component `summary` string in `src/lib/builtin-plugins.mjs`, and the current (post-task-002) `ALLOWLISTED_ERROR_FINDINGS` array in `src/lib/test/plugin-graph-gate.test.js` (now exactly one entry, confirming the drift-cleared starting state item 9 describes).
+
+Item 4 (integrations-list re-identification) resolved to a confirmed non-event: a direct read of `@sdlcforge/dev-core`'s `src/` (checkout at `/Users/zane/playground/sdlcforge/dev-core`) found no `IntegrationsManager`/`integrations.register()` usage anywhere in the four absorbed submodules; the only `app.ext.integrations` usage is in `work`, and every site is a `hasHook`/`callHook` consumer call, never a `.register()` provider call.
+
+Per this task's own `## Assumptions`, task 003's baseline artifact (`plan/resources/dev-core-absorption-pre-merge-baseline.md`) had not yet landed when this task ran (it was executing concurrently in a sibling worktree). Items 7 (setup-method table) and 8 (`app.ext` key set) therefore pull their figures directly from the predecessor `plan/resources/absorption-parity-contract.md`'s own recorded tables (still accurate today, since nothing has touched those observables since capture) cross-checked against `plan/notes/merged-manifest-graph-projection.md`'s candidate manifest — noted explicitly inline at each point of substitution, per the assumption's own instruction.
+
+Validation: all five checks passed. `git diff --stat` (via `git status --porcelain`) shows only the one new file, `plan/resources/dev-core-absorption-parity-contract.md` — no source or test change. Affected file: `plan/resources/dev-core-absorption-parity-contract.md`.
