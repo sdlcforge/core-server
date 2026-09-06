@@ -326,3 +326,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Manager judgment needed: proceed with only worktree-local refresh (drift stays uncleared) vs also refresh main checkout''s .yalc snapshot first (out of this task''s stated scope, touches files outside the worktree).'
+    - title: Prior halted attempt's commit 71fccaf's messa
+      id: qRrl
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:pre-merge-baseline-and-drift-clearance
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Prior halted attempt's commit 71fccaf's message says drift is NOT cleared -- now stale since drift IS cleared as of commit dca4ec5; not rewritten per git-history norms, current task doc Status section has the up-to-date narrative.
