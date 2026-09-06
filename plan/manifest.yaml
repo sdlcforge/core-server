@@ -2,6 +2,11 @@ version: 1
 plans:
     - slug: sdlc-core-unification
       status: working
+      dependencies:
+        /Users/zane/playground/sdlcforge/core-server:
+            phase: 4 (verify-parity-and-tighten-gate)
+            task: 005-verify-parity-contract-and-green-run
+            note: dev-core's retirement work (README superseded-notice, deprecation-flagged version bump, npm deprecate/publish attempt) must not land until core-server's absorption of dev-core's functionality is merged to core-server's main and verified (Phase 4 of core-server's sdlc-core-unification plan) -- retiring dev-core before its functionality is confirmed present in core-server would be premature.
       wave:
         slug: sdlcforge-modernization
         leadProject: core-server
