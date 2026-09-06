@@ -16,41 +16,30 @@ import { resolveCoreServerPackageRoot } from './helpers/resolve-plugin-set'
 // that looks like a framework bug and is not -- see
 // 'plan/notes/build-wiring-and-dependency-refresh.md'.
 //
-// Scope decision (manager, 2026-09-03; revised phase-01 task-002, 2026-09-06): the real graph is
-// not fully clean. `validatePluginSet()` returns exactly 1 error-severity finding, inside
-// `@sdlcforge/core-server#controls` and unrelated to `core-server`'s own declarations -- already
-// triaged and scoped as a still-live pre-merge condition Phase 3/4 resolves, not this task (see
-// 'plan/notes/manifest-ownership-boundary.md'). Rather than asserting unconditional
-// `outcome === 'ok'` (which would make this gate permanently red for a condition this plan-group
-// has decided not to fix from `core-server`'s side) or silently weakening the assertion to pass
-// anything, this test asserts an EXPLICIT ALLOWLIST: exactly this 1 known error-severity finding
-// is permitted, matched by finding-type + the specific capability/component names below. Any
-// additional or different error-severity finding still fails this test -- including a future
-// change to `core-server#controls` that alters this exact finding set, which should force a
-// fresh look rather than silently continuing to pass.
+// Scope decision (manager, 2026-09-03; revised phase-01 task-002, 2026-09-06; revised
+// phase-04 task-003, 2026-09-06): the real, post-merge graph is clean of error-severity
+// findings. The merge that absorbed `@sdlcforge/dev-core`'s four components into
+// `@sdlcforge/core-server`'s own builtin manifest -- reordered per Phase 3's DAG-order fix --
+// resolves both findings this gate previously had to allowlist:
 //
-// A second entry -- `unsatisfied` / `appExt:_liqOrgs.orgSetupMethods` /
-// `@sdlcforge/dev-core#orgs` -- was allowlisted here previously, covering a yalc snapshot drift
-// in the installed `node_modules/@sdlcforge/dev-core`: the `orgSetupMethods` requirement was
-// missing `optional: true` relative to `@sdlcforge/dev-core`'s own `main` HEAD (dev-core followup
-// `x6x1`). Phase-01 task-002 refreshed the local yalc snapshot per this project's documented Bun
-// procedure (`scripts/provision-local-deps.sh --refresh-lock`), which cleared the drift: the
-// requirement's own source declaration now carries `optional: true`, so the finding downgrades
-// from `error` to `info` severity and no longer needs an allowlist entry.
-const ALLOWLISTED_ERROR_FINDINGS = [
-  {
-    kind           : 'violated-by-source-order',
-    capabilityFull : 'appExt:_liqOrgs.orgs',
-    requirerNodeId : '@sdlcforge/core-server#controls'
-  }
-]
-
-const isAllowlisted = (finding) =>
-  ALLOWLISTED_ERROR_FINDINGS.some((allowed) =>
-    allowed.kind === finding.kind
-    && allowed.capabilityFull === finding.capability?.full
-    && allowed.requirerNodeId === finding.requirer?.nodeId)
-
+// - `violated-by-source-order` / `appExt:_liqOrgs.orgs` / `@sdlcforge/core-server#controls` --
+//   resolved by Phase 3's reordering. The edge now flips to `orderVerdict:
+//   'satisfied-by-source-order'`.
+// - `unsatisfied` / `appExt:_liqOrgs.orgSetupMethods` / `@sdlcforge/dev-core#orgs` -- cleared
+//   by Phase 1's drift clearance: the merged manifest now carries `@sdlcforge/dev-core`'s own
+//   *source* declaration (which has `"optional": true` on this requirement) rather than the
+//   stale `.yalc` copy's, so the finding downgrades from `error` to `info` severity and no
+//   longer needs an allowlist entry. It also renames, with the rest of the absorbed component,
+//   to `@sdlcforge/core-server#orgs`.
+//
+// The one remaining, expected gap is this downgraded `info` finding, not an unqualified "the
+// graph is clean": `appExt:_liqOrgs.orgSetupMethods` is written only by `liq-policy`, which is
+// not installed in this graph, and `orgs`' own setup (src/orgs/setup.mjs) unconditionally
+// initializes the array empty regardless, so the requirement is genuinely optional and its
+// absence is not a defect. This gate therefore asserts the full predicted finding set below --
+// exactly 1 `info` and 4 `debug` `unmanifested-node` findings (one per undiscoverable
+// `@liquid-labs/sdlc-projects-*` explicit plugin) -- rather than merely "no errors", so a future
+// change that alters this exact shape forces a fresh look instead of silently continuing to pass.
 describe('plugin graph build gate (make test / make qa)', () => {
   // A single, shared `validatePluginSet()` call: the four tests below only read different slices
   // of one invariant result over the real, unmodified graph -- none mutates it, so one resolution
@@ -62,50 +51,75 @@ describe('plugin graph build gate (make test / make qa)', () => {
     result = await validatePluginSet({ packageRoot })
   })
 
-  test("core-server's real, full plugin graph resolves with only the allowlisted, already-triaged core-server#controls finding", () => {
+  test("core-server's real, full plugin graph resolves clean, with exactly the one predicted, genuinely-optional info finding", () => {
     const errorFindings = result.engineResult.findings.filter((finding) => finding.severity === 'error')
 
-    if (errorFindings.length !== ALLOWLISTED_ERROR_FINDINGS.length || errorFindings.some((f) => !isAllowlisted(f))) {
+    if (errorFindings.length > 0) {
       // Surface the full findings on failure -- this is the whole point of the gate.
       console.log(JSON.stringify(errorFindings, null, 2))
     }
 
-    expect(errorFindings.length).toBe(ALLOWLISTED_ERROR_FINDINGS.length)
-    expect(errorFindings.every((finding) => isAllowlisted(finding))).toBe(true)
+    expect(result.outcome).toBe('ok')
+    expect(result.exitCode).toBe(0)
 
-    // The steady-state exit code is 1 (validation-failure), not 0, precisely because the 1
-    // allowlisted finding above remains present. This is expected and recorded here explicitly
-    // so a future reader does not mistake `1` for an unexpected regression.
-    expect(result.outcome).toBe('validation-failure')
-    expect(result.exitCode).toBe(1)
+    // Individual key reads, not a deep-equal of the whole `counts` object -- its exact key set
+    // is not asserted here, only the three counts this gate cares about.
+    expect(result.engineResult.counts.error).toBe(0)
+    expect(result.engineResult.counts.warning).toBe(0)
+    expect(result.engineResult.counts.info).toBe(1)
+
+    // `debug` findings are present in `findings` but are not tallied in `counts` -- a
+    // `counts.info` of 1 alongside a `findings.length` of 5 is correct, not a contradiction.
+    expect(result.engineResult.findings.length).toBe(5)
+
+    const infoFindings = result.engineResult.findings.filter((finding) => finding.severity === 'info')
+    expect(infoFindings.length).toBe(1)
+    expect(infoFindings[0].kind).toBe('unsatisfied')
+    expect(infoFindings[0].capability?.full).toBe('appExt:_liqOrgs.orgSetupMethods')
+    expect(infoFindings[0].requirer?.nodeId).toBe('@sdlcforge/core-server#orgs')
+    expect(infoFindings[0].requirer?.phase).toBe('setup')
+    expect(infoFindings[0].requirer?.optional).toBe(true)
+
+    const debugFindings = result.engineResult.findings.filter((finding) => finding.severity === 'debug')
+    expect(debugFindings.length).toBe(4)
+    expect(debugFindings.every((finding) => finding.kind === 'unmanifested-node')).toBe(true)
+    expect(debugFindings.map((finding) => finding.nodeId).sort()).toEqual([
+      '@liquid-labs/sdlc-projects-badges-coverage',
+      '@liquid-labs/sdlc-projects-badges-github-workflows',
+      '@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd',
+      '@liquid-labs/sdlc-projects-workflow-local-node-build'
+    ])
   })
 
   test('the two edges this plan-group chartered resolve satisfied', () => {
-    // '@sdlcforge/dev-core#projects' requires 'appExt:credentialsDB @ load' from
-    // '@sdlcforge/core-server#credentials' -- Phase 3 verified this resolves
-    // 'satisfied-by-source-order' (a literal string verdict, since provider and requirer share
-    // the same phase).
+    // '@sdlcforge/core-server#projects' (absorbed from dev-core by the merge) requires
+    // 'appExt:credentialsDB @ load' from '@sdlcforge/core-server#credentials' -- both now
+    // intra-builtin nodes. Phase 3 verified this resolves 'satisfied-by-source-order' (a literal
+    // string verdict, since provider and requirer share the same phase).
     const credentialsDBEdge = result.engineResult.edges.find((edge) =>
-      edge.capability === 'appExt:credentialsDB' && edge.to === '@sdlcforge/dev-core#projects')
+      edge.capability === 'appExt:credentialsDB' && edge.to === '@sdlcforge/core-server#projects')
 
     expect(credentialsDBEdge).toBeDefined()
+    expect(credentialsDBEdge.from).toBe('@sdlcforge/core-server#credentials')
     expect(credentialsDBEdge.orderVerdict).toBe('satisfied-by-source-order')
 
-    // '@sdlcforge/dev-core#work' requires 'appExt:serverConfigRoot @ load' from the framework's
-    // own intrinsic manifest. Provider phase ('framework') unconditionally precedes every plugin
-    // phase, so `samePhase` is false and `orderVerdict` is `null` by schema design -- no
-    // order-check literal applies. Do NOT flatten this into asserting a literal `'satisfied'`
-    // string; per Phase 3's own verified verdict shape, satisfaction here is confirmed by the
-    // edge existing at all plus the absence of any failure finding naming this capability/node.
+    // '@sdlcforge/core-server#work' (absorbed from dev-core by the merge) requires
+    // 'appExt:serverConfigRoot @ load' from the framework's own intrinsic manifest. Provider
+    // phase ('framework') unconditionally precedes every plugin phase, so `samePhase` is false
+    // and `orderVerdict` is `null` by schema design -- no order-check literal applies. Do NOT
+    // flatten this into asserting a literal `'satisfied'` string; per Phase 3's own verified
+    // verdict shape, satisfaction here is confirmed by the edge existing at all plus the absence
+    // of any failure finding naming this capability/node.
     const serverConfigRootEdge = result.engineResult.edges.find((edge) =>
-      edge.capability === 'appExt:serverConfigRoot' && edge.to === '@sdlcforge/dev-core#work')
+      edge.capability === 'appExt:serverConfigRoot' && edge.to === '@sdlcforge/core-server#work')
 
     expect(serverConfigRootEdge).toBeDefined()
     expect(serverConfigRootEdge.providerPhase).toBe('framework')
+    expect(serverConfigRootEdge.samePhase).toBe(false)
     expect(serverConfigRootEdge.orderVerdict).toBe(null)
 
     const serverConfigRootFailureFindings = result.engineResult.findings.filter((finding) =>
-      finding.capability?.full === 'appExt:serverConfigRoot' || finding.requirer?.nodeId === '@sdlcforge/dev-core#work')
+      finding.capability?.full === 'appExt:serverConfigRoot' || finding.requirer?.nodeId === '@sdlcforge/core-server#work')
 
     expect(serverConfigRootFailureFindings).toEqual([])
   })
@@ -127,11 +141,16 @@ describe('plugin graph build gate (make test / make qa)', () => {
     const nodeIds = result.engineResult.nodes.map((node) => node.nodeId)
 
     expect(nodeIds.length).toBeGreaterThan(1)
+    // The builtin block is now the whole absorbed set -- name all seven components to prove the
+    // merged aggregate resolved, not merely that some nodes did.
     expect(nodeIds).toEqual(expect.arrayContaining([
-      '@sdlcforge/core-server#controls',
       '@sdlcforge/core-server#credentials',
+      '@sdlcforge/core-server#projects',
+      '@sdlcforge/core-server#orgs',
+      '@sdlcforge/core-server#controls',
       '@sdlcforge/core-server#issues-github',
-      '@sdlcforge/dev-core#projects'
+      '@sdlcforge/core-server#work',
+      '@sdlcforge/core-server#projects-audit'
     ]))
   })
 })
