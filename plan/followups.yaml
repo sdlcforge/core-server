@@ -937,3 +937,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Phase and task documents state a non-existent URL (/server/plugins/details/<name>); real route is /server/plugins/:serverPluginName/details -- the wrong form 404s for every package and would produce a false pass on the dev-core half alone.
+    - title: Requirement 3's baseline attribution is wrong
+      id: 79J5
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Requirement 3''s baseline attribution is wrong: 233 = 230 across four test/ files + 3 under src/, not ''233 across 5 files under test/''.'
