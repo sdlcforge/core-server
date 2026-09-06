@@ -207,7 +207,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/sdlc-core-unification-04-004
-            commit: []
+            commit:
+                - 0b58a51
             merge: null
         - number: 5
           slug: verify-parity-contract-and-green-run
