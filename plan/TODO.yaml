@@ -195,7 +195,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/sdlc-core-unification-04-003
-            commit: []
+            commit:
+                - bad6451
             merge: null
         - number: 4
           slug: repoint-sibling-plugin-graph-tests
