@@ -6,3 +6,7 @@ phases:
       slug: pre-merge-baseline-and-drift-clearance
       title: Pre-Merge Baseline And Drift Clearance
       tasks: []
+    - number: 2
+      slug: absorb-dev-core
+      title: Absorb Dev-Core
+      tasks: []
