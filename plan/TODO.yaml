@@ -30,7 +30,7 @@ phases:
             branch: plan/sdlc-core-unification-01-002
             commit:
                 - dca4ec5
-            merge: null
+            merge: f40a459
         - number: 3
           slug: capture-pre-merge-observable-baseline
           title: Capture Pre-Merge Observable Baseline
