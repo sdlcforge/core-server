@@ -143,7 +143,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/sdlc-core-unification-03-002
-            commit: []
+            commit:
+                - 7966e1a
             merge: null
         - number: 3
           slug: port-donor-aggregate-assertions
