@@ -5,6 +5,7 @@ phases:
     - number: 1
       slug: pre-merge-baseline-and-drift-clearance
       title: Pre-Merge Baseline And Drift Clearance
+      diff_base: 190f273138c799699194b2b3a072a8b64cb6067f
       tasks:
         - number: 1
           slug: fix-npm-toolkit-rename-break
