@@ -438,3 +438,16 @@ items:
         PUT /orgs/:orgKey/parameters/:parameterKey/set (src/orgs/handlers/parameters-set.mjs) exposes setUndefined and setNull parameters whose value ladder produces parsedValue === undefined or parsedValue === null respectively. updateSetting's checkValue (src/orgs/resources/lib/settings.mjs) only whitelists boolean/number/string and arrays of those, so both fall through the whitelist and checkValue throws — the documented setUndefined and setNull parameters always error instead of storing the value their own parameter description promises. Pre-existing contradiction between the endpoint's declared parameters and the settings library's storage constraints; deliberately left unfixed while the lookup/persistence path itself was repaired.
 
         Originally filed against @sdlcforge/dev-core as followup X7IU; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: orgs create.mjs creates directory only
+      id: AdFn
+      date: "2026-09-06"
+      tags:
+        - type:enhancement
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        POST /orgs/create/:newOrgKey (src/orgs/handlers/create.mjs) creates only the org's data directory (fs.mkdir under &lt;localDataRoot&gt;/org); it writes no org.json or settings.yaml, constructs no Organization, and registers nothing into app.ext._liqOrgs.orgs, which is populated only by the "load orgs" setup method (src/orgs/setup.mjs) scanning the playground for a package.json carrying liq.packageType === 'org'. The endpoint's localDataRoot parameter's own description still reads "The local directory in which to save ./orgs/org.json...", which the handler never does — left inaccurate because the parameter list itself was treated as unchanged when help.description/help.summary were separately corrected to describe current behavior. A follow-on task should either complete org creation (write org.json/settings.yaml, construct an Organization, register it into the runtime registry) or correct the localDataRoot parameter description to match what the handler actually does.
+
+        Originally filed against @sdlcforge/dev-core as followup ZkAv; carried across when that package was absorbed into @sdlcforge/core-server.
