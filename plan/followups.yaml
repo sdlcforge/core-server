@@ -897,3 +897,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Scope-extension candidate (task doc''s own flag): plugin-graph-absorbed-donor-conflicts.test.js covers only the three predecessor-absorption donors; whether the four newly-absorbed dev-core components deserve their own donor-conflict cases is a scope extension not landed here.'
+    - title: Repo-wide dev-core# sweep had 7 residual matc
+      id: FNZJ
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Repo-wide dev-core# sweep had 7 residual matches confined to task 003's file at dispatch time -- task 003 has since landed (merge 00a4200), so the sweep should now be fully clean; confirm.
