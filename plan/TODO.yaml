@@ -163,6 +163,7 @@ phases:
     - number: 4
       slug: verify-parity-and-tighten-gate
       title: Verify Parity And Tighten Gate
+      diff_base: 6ad758cf030c2675ff2b346db388af01b705430d
       tasks:
         - number: 1
           slug: measure-post-merge-plugin-graph
