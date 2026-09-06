@@ -16,24 +16,28 @@ import { resolveCoreServerPackageRoot } from './helpers/resolve-plugin-set'
 // that looks like a framework bug and is not -- see
 // 'plan/notes/build-wiring-and-dependency-refresh.md'.
 //
-// Scope decision (manager, 2026-09-03): the real graph is not fully clean. `validatePluginSet()`
-// returns exactly 2 error-severity findings, both inside `@sdlcforge/dev-core#orgs` and unrelated
-// to `core-server`'s own declarations -- already triaged and scoped as `@sdlcforge/dev-core`'s
-// own concern, outside this plan-group's `plans: {core-server: ...}` participant set (see
+// Scope decision (manager, 2026-09-03; revised phase-01 task-002, 2026-09-06): the real graph is
+// not fully clean. `validatePluginSet()` returns exactly 1 error-severity finding, inside
+// `@sdlcforge/core-server#controls` and unrelated to `core-server`'s own declarations -- already
+// triaged and scoped as a still-live pre-merge condition Phase 3/4 resolves, not this task (see
 // 'plan/notes/manifest-ownership-boundary.md'). Rather than asserting unconditional
 // `outcome === 'ok'` (which would make this gate permanently red for a condition this plan-group
 // has decided not to fix from `core-server`'s side) or silently weakening the assertion to pass
-// anything, this test asserts an EXPLICIT ALLOWLIST: exactly these 2 known error-severity
-// findings are permitted, matched by finding-type + the specific capability/component names
-// below. Any additional or different error-severity finding still fails this test -- including a
-// future change to `dev-core#orgs` that alters this exact finding set, which should force a
+// anything, this test asserts an EXPLICIT ALLOWLIST: exactly this 1 known error-severity finding
+// is permitted, matched by finding-type + the specific capability/component names below. Any
+// additional or different error-severity finding still fails this test -- including a future
+// change to `core-server#controls` that alters this exact finding set, which should force a
 // fresh look rather than silently continuing to pass.
+//
+// A second entry -- `unsatisfied` / `appExt:_liqOrgs.orgSetupMethods` /
+// `@sdlcforge/dev-core#orgs` -- was allowlisted here previously, covering a yalc snapshot drift
+// in the installed `node_modules/@sdlcforge/dev-core`: the `orgSetupMethods` requirement was
+// missing `optional: true` relative to `@sdlcforge/dev-core`'s own `main` HEAD (dev-core followup
+// `x6x1`). Phase-01 task-002 refreshed the local yalc snapshot per this project's documented Bun
+// procedure (`scripts/provision-local-deps.sh --refresh-lock`), which cleared the drift: the
+// requirement's own source declaration now carries `optional: true`, so the finding downgrades
+// from `error` to `info` severity and no longer needs an allowlist entry.
 const ALLOWLISTED_ERROR_FINDINGS = [
-  {
-    kind           : 'unsatisfied',
-    capabilityFull : 'appExt:_liqOrgs.orgSetupMethods',
-    requirerNodeId : '@sdlcforge/dev-core#orgs'
-  },
   {
     kind           : 'violated-by-source-order',
     capabilityFull : 'appExt:_liqOrgs.orgs',
@@ -58,7 +62,7 @@ describe('plugin graph build gate (make test / make qa)', () => {
     result = await validatePluginSet({ packageRoot })
   })
 
-  test("core-server's real, full plugin graph resolves with only the allowlisted, already-triaged dev-core#orgs findings", () => {
+  test("core-server's real, full plugin graph resolves with only the allowlisted, already-triaged core-server#controls finding", () => {
     const errorFindings = result.engineResult.findings.filter((finding) => finding.severity === 'error')
 
     if (errorFindings.length !== ALLOWLISTED_ERROR_FINDINGS.length || errorFindings.some((f) => !isAllowlisted(f))) {
@@ -69,8 +73,8 @@ describe('plugin graph build gate (make test / make qa)', () => {
     expect(errorFindings.length).toBe(ALLOWLISTED_ERROR_FINDINGS.length)
     expect(errorFindings.every((finding) => isAllowlisted(finding))).toBe(true)
 
-    // The steady-state exit code is 1 (validation-failure), not 0, precisely because the 2
-    // allowlisted findings above remain present. This is expected and recorded here explicitly
+    // The steady-state exit code is 1 (validation-failure), not 0, precisely because the 1
+    // allowlisted finding above remains present. This is expected and recorded here explicitly
     // so a future reader does not mistake `1` for an unexpected regression.
     expect(result.outcome).toBe('validation-failure')
     expect(result.exitCode).toBe(1)
