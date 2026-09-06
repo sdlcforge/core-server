@@ -100,6 +100,7 @@ phases:
           path: phase-02-absorb-dev-core/003-union-runtime-dependencies.md
           done: false
           tier: sonnet-high
+          digest: 'Applied the exact 33-entry dependencies union to package.json (verified byte-for-byte), refreshed bun.lock via scripts/provision-local-deps.sh --refresh-lock as its own commit, and wrote plan/resources/dev-core-absorption-dependency-union.md covering the full table, the zero-new-resolved-versions justification, the _npm-check-plus drop decision, the lockfile diff findings, what was deliberately not carried across, the two-entry file: expectation, and the inherited shelljs liability (followup hwbY). All 10 validation checks passed.'
           git:
             branch: plan/sdlc-core-unification-02-003
             commit:
