@@ -41,3 +41,26 @@ role_doc: plugins/flow/roles/developer-node.md
 - [`plan/resources/validate-check.mjs`](../resources/validate-check.mjs) — a prior ad hoc script in the same invocation style, usable as a starting point for the direct `validatePluginSet()` check in Requirements item 4.
 - `../../scripts/provision-local-deps.sh` — the documented refresh procedure and its `--refresh-lock` flag.
 - `plan/followups.yaml` items `Z2Ar`, `xsRt`, `K3cL` — the `bun.lock` manual-commit precedent.
+
+## Status
+
+**Outcome: contradiction (halted before editing `plugin-graph-gate.test.js`). Date: 2026-09-06.**
+
+Confirmed task 001's commit (`f7f5b79`, "fix npm-toolkit `getPackageOrgAndBasename` rename break") is present on this branch's ancestry before starting.
+
+Ran `scripts/provision-local-deps.sh --refresh-lock` (Requirement 2) — it completed successfully: it copied `.yalc/` from the main checkout (`/Users/zane/playground/sdlcforge/core-server`), removed `bun.lock`, and ran `bun install` cleanly (7 packages installed, lockfile regenerated). The resulting `bun.lock` diff is limited to ordinary transitive-dependency version bumps (`baseline-browser-mapping`, `browserslist`, `electron-to-chromium`, `postcss`, `undici`) — no `@sdlcforge/dev-core` content changed, because the *source* snapshot itself hadn't changed (see below).
+
+**Requirement 3/4 could not be satisfied: the drift is not cleared.** Direct inspection of the refreshed `node_modules/@sdlcforge/dev-core/package.json`'s `plugable.components[orgs].requires` entry for `appExt:_liqOrgs.orgSetupMethods` shows it still **lacks** `"optional": true`, byte-identical to the pre-refresh text quoted in `plan/notes/pre-merge-state.md`'s "Confirmed yalc drift" section. Running `validatePluginSet()` directly against the refreshed snapshot (mirroring `plan/resources/validate-check.mjs`) confirms this empirically: the finding `[unsatisfied] @sdlcforge/dev-core#orgs requires ... _liqOrgs.orgSetupMethods ...` is still present at **`error`** severity (2 error-severity findings total, `counts: {error: 2, warning: 0, info: 0}`), not downgraded to `info` as Requirement 4 and the referenced `merged-manifest-graph-projection.md` note both expect.
+
+**Root cause:** this task's `## Assumptions` states "`.yalc/@sdlcforge/dev-core` in the main checkout already reflects `@sdlcforge/dev-core`'s `main` HEAD (confirmed by planning-time research)". That is no longer true. Direct comparison shows:
+- The main checkout's `.yalc/@sdlcforge/dev-core/package.json` (mtime 2026-09-02) lacks `optional: true` on the `orgSetupMethods` requirement.
+- `/Users/zane/playground/sdlcforge/dev-core`'s actual `main` HEAD `package.json` (mtime 2026-09-04, commit `3cfb60a` "manifest optional:true edit + drift-guard suite update, green", further amended by `21b0926`) **does** carry `optional: true` on that same requirement.
+- The two `plugable` blocks are not byte-identical beyond that one field either (confirmed via structural diff), consistent with `dev-core` having moved on since whatever `yalc push` last populated the main checkout's `.yalc/` copy.
+
+So the main checkout's `.yalc/@sdlcforge/dev-core` snapshot is itself stale relative to `dev-core`'s current `main` — it was apparently never re-`yalc push`ed after `dev-core` commit `3cfb60a` landed the `optional: true` fix. `provision-local-deps.sh --refresh-lock` only re-copies from the main checkout's own `.yalc/`; per this task's own `## Assumptions`, refreshing `.yalc/@sdlcforge/dev-core` itself (running `yalc push` from `dev-core`) is explicitly **not** this task's job, and doing so would also mean writing into the main checkout, which is outside this worktree's boundary.
+
+**Halted rather than guessing** which of two readings to honor:
+1. Run only the documented worktree-local procedure (`provision-local-deps.sh --refresh-lock`) as literally specified — the drift is not cleared, so Requirements 3–6 / Validation checks 1–3 cannot be satisfied.
+2. Also refresh the main checkout's `.yalc/@sdlcforge/dev-core` from `dev-core`'s current `main` (e.g. a fresh `yalc push` from the `dev-core` checkout) before re-running the provisioning script — this would likely clear the drift, but is explicitly out of scope per this task's own `## Assumptions` and would require writing outside this task's worktree.
+
+No `src/` file was edited (Requirement 5/6 not attempted, per Requirement 4's own instruction to check the raw finding set before touching the allowlist). `bun.lock`'s regenerated content (harmless transitive-dependency bumps only) was committed manually per the task's documented `bun.lock` commit-note pattern, since `finalize-task-commit.sh`'s yalc-override guard excludes it from the automated commit; see the commit for that file. `node_modules` and `.yalc/` are gitignored and untouched by the commit.
