@@ -800,3 +800,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Of the three sibling plugin-graph-*.test.js suites the Assumptions section expects red, only two were actually red (plugin-graph-gate.test.js, plugin-graph-third-party-ordering.test.js); plugin-graph-serverconfigroot-rename.test.js and plugin-graph-absorbed-donor-conflicts.test.js are green -- consistent with task 001's own flagged note that Phase 4's handoff is narrower than predicted.
+    - title: Measured pre-existing lint baseline is 236, n
+      id: M21N
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Measured pre-existing lint baseline is 236, not the ~233 the task doc's Assumptions cite -- confirmed unaffected either way, informational only.
