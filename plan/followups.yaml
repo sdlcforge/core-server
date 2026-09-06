@@ -516,3 +516,16 @@ items:
         @liquid-labs/resource-model's Model.save() (src/Model.mjs:74-80, identical in the installed dist/) destructures errors off an un-awaited async validate() call, so errors.length throws and every save() call on a Model subclass rejects unconditionally. @sdlcforge/core-server's src/orgs/resources/organization.mjs works around this with its own async save() override that writes #settings directly rather than delegating to the base implementation; the upstream package itself is unfixed and remains broken for any other Model subclass, in this or any other consumer, that relies on the base save() without its own override.
 
         Originally filed against @sdlcforge/dev-core as followup Ymcf; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: create.mjs response discloses abs path
+      id: qYuq
+      date: "2026-09-06"
+      tags:
+        - type:security
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        POST /orgs/create/:newOrgKey's 2xx response body's directory field (src/orgs/handlers/create.mjs, response construction) echoes back the fully resolved absolute filesystem path (built from fsPath.resolve(localDataRoot)). When the caller supplies a relative localDataRoot, the response discloses the server's absolute directory layout (e.g. the playground root's absolute parent path) to the caller. Does not by itself enable an attack — the containment check restricts where the directory can actually be created regardless of what is echoed back — but is a minor server-filesystem-layout disclosure. If server filesystem layout is considered sensitive in this deployment context, return a playground-root-relative path instead, or omit the directory field and return only the caller-supplied newOrgKey.
+
+        Originally filed against @sdlcforge/dev-core as followup Hwdp; carried across when that package was absorbed into @sdlcforge/core-server.
