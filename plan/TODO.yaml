@@ -32,6 +32,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: add-component-boundary-drift-guard-test
+          title: Add Component Boundary Drift Guard Test
+          path: phase-05-component-boundary-hardening/002-add-component-boundary-drift-guard-test.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 6
       slug: doc-updates
       title: Documentation Updates
