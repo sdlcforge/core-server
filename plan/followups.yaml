@@ -837,3 +837,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: strictOrder:true confirmed independently to have zero order-unprovable warnings in the default run, consistent with the note's claim it's a free improvement -- not enabled here (out of this phase's scope), flagging for a future phase decision per the task doc's own instruction.
+    - title: 'src/lib/test/full-tier-baseline.test.js line '
+      id: 7LNl
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: src/lib/test/full-tier-baseline.test.js line ~162 still contains a second, separate stale dev-core comment mention (distinct from line ~263 which was already fixed) -- task doc's requirement 6 explicitly scoped only line ~263, so left untouched per scope discipline; flagging for a later comment-hygiene pass.
