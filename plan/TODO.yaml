@@ -1,0 +1,8 @@
+slug: sdlc-core-unification
+version: 1
+title: ""
+phases:
+    - number: 1
+      slug: pre-merge-baseline-and-drift-clearance
+      title: Pre-Merge Baseline And Drift Clearance
+      tasks: []
