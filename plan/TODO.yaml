@@ -37,6 +37,7 @@ phases:
           path: phase-01-pre-merge-baseline-and-drift-clearance/003-capture-pre-merge-observable-baseline.md
           done: false
           tier: sonnet-med
+          digest: 'Captured the post-tasks-001/002 pre-merge observable baseline into plan/resources/dev-core-absorption-pre-merge-baseline.md: setup-method/app.ext restatements, a route-derived 9-entry path-variable set with two source cross-checks plus one explicitly-flagged derivation gap (newProjectName), the full 6-finding validatePluginSet() result (1 error matching current allowlist, 1 info, 4 debug), and a verbatim sole-dependent grep with false-positive annotation. No observable moved as a result of tasks 001/002.'
           git:
             branch: plan/sdlc-core-unification-01-003
             commit:
