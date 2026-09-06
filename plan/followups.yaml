@@ -594,3 +594,16 @@ items:
         docs/dev-core-consolidation-contract.md:128 attributes runtime reads of app.ext._liqProjects/app.ext._liqOrgs to liq-controls (naming src/lib/resources/load-controls.mjs and src/lib/integrations/get-question-controls.mjs) and to liq-integrations-issues-github (src/create-or-update-pull-request.mjs), describing both as external consumers reading the runtime contract from outside. The liq-controls half of that attribution is stale: the named files actually live at @sdlcforge/core-server's own src/controls/resources/load-controls.mjs and src/controls/integrations/get-question-controls.mjs — one of core-server's own built-in plugin submodules, not an external package. Whether this document should be corrected, superseded, or removed is expected to be decided in a later documentation-refresh pass, at which point this item may become moot.
 
         Originally filed against @sdlcforge/dev-core as followup dsdl; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: serialize-javascript RCE via terser pin
+      id: ZK0S
+      date: "2026-09-06"
+      tags:
+        - type:security
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        bun.lock resolves serialize-javascript@6.0.2 transitively via @rollup/plugin-terser@0.4.4 (a dependency of @sdlcforge/core-server's own devDependency @liquid-labs/catalyst-resource-babel-and-rollup@1.0.0-alpha.4, declared ^1.0.0-alpha.3 in package.json). serialize-javascript@6.0.2 carries an unpatched high-severity RCE advisory (GHSA-5c6j-r48x-rmvq, CVSS 8.1) plus a moderate DoS advisory (GHSA-qj8w-gfj5-8c6v); audit tooling should report findings rooted here. Dev/CI-only — @rollup/plugin-terser and its serialize-javascript dependency are never bundled into dist/sdlcforge-server.js, dist/sdlcforge-server-exec.js, or the published tarball — and core-server does not control @rollup/plugin-terser's own pin directly; a fix requires an upstream bump in either @rollup/plugin-terser or @liquid-labs/catalyst-resource-babel-and-rollup. Track rather than patch directly; worth re-checking whenever bun.lock is regenerated, since the same toolchain package resolves the pin again each time.
+
+        Originally filed against @sdlcforge/dev-core as followup 0RpG (there rooted in dev-core's own devDependency @liquid-labs/sdlc-resource-babel-and-rollup, which core-server does not carry); reworded and carried across against @sdlcforge/core-server's own @liquid-labs/catalyst-resource-babel-and-rollup devDependency chain when dev-core was absorbed into core-server.
