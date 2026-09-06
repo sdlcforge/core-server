@@ -146,7 +146,7 @@ phases:
             branch: plan/sdlc-core-unification-03-002
             commit:
                 - 7966e1a
-            merge: null
+            merge: 6ad758c
         - number: 3
           slug: port-donor-aggregate-assertions
           title: Port Donor Aggregate Assertions
