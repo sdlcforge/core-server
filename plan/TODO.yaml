@@ -34,6 +34,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 3
+          slug: port-donor-aggregate-assertions
+          title: Port Donor Aggregate Assertions
+          path: phase-03-wire-and-declare-seven-components/003-port-donor-aggregate-assertions.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 4
       slug: verify-parity-and-tighten-gate
       title: Verify Parity And Tighten Gate
