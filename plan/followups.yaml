@@ -927,3 +927,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Validation item 4 fails literally on file attribution but requirement 3's substantive bar (no new lint finding) holds with a net -2; manager should decide which is authoritative.
+    - title: Phase and task documents state a non-existent
+      id: yMQe
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Phase and task documents state a non-existent URL (/server/plugins/details/<name>); real route is /server/plugins/:serverPluginName/details -- the wrong form 404s for every package and would produce a false pass on the dev-core half alone.
