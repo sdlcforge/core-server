@@ -18,7 +18,7 @@ phases:
             branch: plan/sdlc-core-unification-01-001
             commit:
                 - f7f5b79
-            merge: null
+            merge: e5c11f4
         - number: 2
           slug: refresh-dev-core-snapshot-and-clear-yalc-drift
           title: Refresh Dev-Core Snapshot And Clear Yalc Drift
