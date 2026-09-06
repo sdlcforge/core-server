@@ -425,3 +425,16 @@ items:
         Four pre-existing defects inherited as-is (no behavior change during the projects-audit absorption) from @liquid-labs/plugable-projects-audit into @sdlcforge/core-server's src/projects-audit/ submodule: (1) the two implied endpoints advertise a projectName parameter they cannot use — getAuditEndpointParameters/getAuditFixEndpointParameters spread commonAuditPathParameters for both the named and implied variants, but the implied paths carry no :projectName; the project comes from the X-CWD header instead. (2) A typo drops one parameter's help text from the API spec: audit-fix-lib.mjs's removePackages parameter object spells its key "dascription" rather than "description". (3) An unknown project name yields a 500, not a 404 — both libs immediately destructure the result of getProjectData(projectName), which returns undefined for an unknown name, so the destructuring throws a TypeError. (4) Four prose typos are published in user-facing help text: "Auidts" (audit-lib.mjs's summary), and "reomved", "pacagkes", "specificatinos" (audit-fix-lib.mjs's description/parameter help), plus a double space in "${workDesc} project  security". A fifth, purely internal item: all four handlers assign reporter = reporter.isolate() and never read it — dead code, no user-visible effect. Fixing (1) or (2) changes the generated API spec, which is why these were left unfixed during absorption.
 
         Originally filed against @sdlcforge/dev-core as followup bTGn; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: parameters-set setUndefined/setNull error
+      id: bL7q
+      date: "2026-09-06"
+      tags:
+        - type:bug
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        PUT /orgs/:orgKey/parameters/:parameterKey/set (src/orgs/handlers/parameters-set.mjs) exposes setUndefined and setNull parameters whose value ladder produces parsedValue === undefined or parsedValue === null respectively. updateSetting's checkValue (src/orgs/resources/lib/settings.mjs) only whitelists boolean/number/string and arrays of those, so both fall through the whitelist and checkValue throws — the documented setUndefined and setNull parameters always error instead of storing the value their own parameter description promises. Pre-existing contradiction between the endpoint's declared parameters and the settings library's storage constraints; deliberately left unfixed while the lookup/persistence path itself was repaired.
+
+        Originally filed against @sdlcforge/dev-core as followup X7IU; carried across when that package was absorbed into @sdlcforge/core-server.
