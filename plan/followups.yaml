@@ -917,3 +917,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'N7cz needs a manager decision: join it as a fifth fenced-off inherited defect (making green-apart-from-N7cz this phase''s bar) or schedule as its own repair task. Requirement 2 and requirement 6 as literally written cannot both be satisfied.'
+    - title: Validation item 4 fails literally on file att
+      id: R29f
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Validation item 4 fails literally on file attribution but requirement 3's substantive bar (no new lint finding) holds with a net -2; manager should decide which is authoritative.
