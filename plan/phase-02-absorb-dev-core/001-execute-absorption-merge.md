@@ -2,7 +2,9 @@
 
 ## Purpose and scope
 
-Perform the git-history-preserving merge of `@sdlcforge/dev-core`'s `main` into `@sdlcforge/core-server`, resolve all **13** `add/add` conflicts in `core-server`'s favor, remove the **8** arriving paths that have no `core-server` counterpart, and land the result as a single merge commit whose history reaches the donor's original commits.
+Perform the git-history-preserving merge of `@sdlcforge/dev-core`'s `main` into `@sdlcforge/core-server`, resolve all **14** `add/add` conflicts in `core-server`'s favor, remove the **8** arriving paths that have no `core-server` counterpart, and land the result as a single merge commit whose history reaches the donor's original commits.
+
+**Correction (2026-09-06, applied after a real dispatch measured the live donor tip):** the donor's `main` advanced one commit past this document's originally-measured tip `5d5c2a3` to **`914f951`** ("plan(sdlc-core-unification): patch manifest entry"), whose sole change adds a `dependencies` block to dev-core's own `plan/manifest.yaml` entry for the `sdlc-core-unification` plan-group (recording that dev-core's own retirement task must not run until core-server's Phase 4 verification lands — a scheduling note for dev-core's own execution, tracked independently in dev-core's own live repository and plan/manifest.yaml, both entirely untouched by this merge). This turns `plan/manifest.yaml` from a silent identical merge into a **14th `add/add` conflict**. It carries no substance `core-server` needs to preserve — see the updated conflict table and Step 4 below — and every other measured count in this document (the 162-path donor shape, the 169 clean arrivals, the 8-path removal set, the untouched trio) is confirmed unaffected and unchanged.
 
 Scope is the git operation and nothing else. This task does **not** wire anything (`src/lib/builtin-plugins.mjs` and `explicitPlugins` are untouched — that is Phase 3), does **not** change `package.json`'s `dependencies` (task 003), does **not** re-file dev-core's followups (task 002), and does **not** own the build/test/lint gate (task 004). After this task the absorbed source sits in tree and is completely inert.
 
@@ -20,16 +22,15 @@ The merge lands on this task's own worktree branch, which **must be cut from `co
 
 These are the failure modes that cannot be undone by a re-run, so they are stated before the procedure rather than inside it:
 
-1. **Never `git rm -r plan/`, and never `git rm plan/followups.yaml` or `git rm plan/manifest.yaml`.** `core-server`'s own `main` tracks **14** `plan/` paths. `plan/followups.yaml` is a conflict resolved `--ours`; `plan/manifest.yaml` merges silently because it is byte-identical on both sides and is *not* residue. The `plan/` removal set is exactly the two `plan-summary-*.md` files named in step 5.
-2. **Never hand-edit inside a conflict marker.** All 13 conflicts are resolved by taking `core-server`'s side wholesale. The substance `--ours` discards from four of them is carried forward by other tasks and phases, recorded in the commit message (step 7), not merged by hand here.
+1. **Never `git rm -r plan/`, and never `git rm plan/followups.yaml` or `git rm plan/manifest.yaml`.** `core-server`'s own `main` tracks **14** `plan/` paths. `plan/followups.yaml` and `plan/manifest.yaml` are both conflicts resolved `--ours` — `plan/manifest.yaml` is *not* a silent identical merge (donor tip `914f951` added a `dependencies` block to its own entry; see the Purpose-and-scope correction) but it is still not residue, and `--ours` is still the correct, lossless-for-`core-server` resolution. The `plan/` removal set is exactly the two `plan-summary-*.md` files named in step 5.
+2. **Never hand-edit inside a conflict marker.** All 14 conflicts are resolved by taking `core-server`'s side wholesale. The substance `--ours` discards from four of them is carried forward by other tasks and phases, recorded in the commit message (step 7), not merged by hand here.
 3. **Never remove `docs/dev-core-consolidation-contract.md` or `docs/consumer-migration.md`.** Both arrive clean and are deliberately kept through this phase; their disposition is Phase 6's. Deleting the absorption recipe in the commit that follows it is self-defeating.
 
 ### The measured arrival map this task must reproduce
 
 | Disposition | Count | Handling |
 |---|---|---|
-| `add/add` conflict | 13 | `git checkout --ours` (step 4) |
-| Identical silent merge (`plan/manifest.yaml`) | 1 | none — no-op |
+| `add/add` conflict | 14 | `git checkout --ours` (step 4) |
 | Clean arrival, needs a decision | 10 | 8 removed (step 5), 2 kept |
 | Clean arrival, absorbed component tree | 159 | none — this is the merge working |
 | Untouched `core-server`-only paths | 110 | none |
@@ -57,7 +58,7 @@ git fetch dev-core-source main
 git rev-parse dev-core-source/main
 ```
 
-If the remote already exists, use `git remote set-url dev-core-source /Users/zane/playground/sdlcforge/dev-core` instead of `add`. Expected donor tip: **`5d5c2a3`** (`wave(sdlcforge-modernization): record wave back-pointer`). If the tip differs, the arrival map may be stale — re-run the verification in steps 2 and 3 and report any divergence from the counts in this document before proceeding.
+If the remote already exists, use `git remote set-url dev-core-source /Users/zane/playground/sdlcforge/dev-core` instead of `add`. Expected donor tip: **`914f951`** (`plan(sdlc-core-unification): patch manifest entry`) — updated 2026-09-06; the tip previously recorded here, `5d5c2a3`, has already advanced past by exactly this one commit, whose only effect is documented in the Purpose-and-scope correction above. If the tip differs from `914f951`, the arrival map may be stale again — re-run the verification in steps 2 and 3 and report any divergence from the counts in this document before proceeding.
 
 Leave the remote in place afterwards; do **not** `git remote remove` it. This matches the `liq-controls` / `liq-credentials` / `liq-integrations-issues-github` remotes the predecessor absorptions left behind.
 
@@ -94,13 +95,13 @@ Halt if a `src/handlers/` directory or any layout other than the above appears.
 git merge --allow-unrelated-histories --no-commit dev-core-source/main
 ```
 
-Expect 13 `CONFLICT (add/add)` lines and `Automatic merge failed; fix conflicts and then commit the result.` Then:
+Expect 14 `CONFLICT (add/add)` lines and `Automatic merge failed; fix conflicts and then commit the result.` Then:
 
 ```bash
 git diff --name-only --diff-filter=U | sort
 ```
 
-Must print exactly these 13 paths and no others:
+Must print exactly these 14 paths and no others:
 
 ```text
 .gitignore
@@ -116,11 +117,12 @@ make/55-test.mk
 make/95-final-targets.mk
 package.json
 plan/followups.yaml
+plan/manifest.yaml
 ```
 
 Any extra or missing path means the donor tip or `core-server`'s `main` moved since the inventory was measured. Halt and report the difference rather than improvising a resolution.
 
-### Step 4 — resolve all 13 conflicts `--ours`
+### Step 4 — resolve all 14 conflicts `--ours`
 
 `git checkout --ours` does not stage, so the `git add` is required:
 
@@ -128,7 +130,7 @@ Any extra or missing path means the donor tip or `core-server`'s `main` moved si
 CONFLICTS=".gitignore Makefile README.md docs/architecture.md \
 make/10-locations.mk make/10-resources.mk make/15-data-finder.mk \
 make/20-js-src-finder.mk make/55-lint.mk make/55-test.mk make/95-final-targets.mk \
-package.json plan/followups.yaml"
+package.json plan/followups.yaml plan/manifest.yaml"
 
 git checkout --ours -- $CONFLICTS
 git add -- $CONFLICTS
@@ -154,7 +156,7 @@ Four of these carry substance `--ours` silently discards. They are handed forwar
 | `README.md` | dev-core's per-submodule route tables, the `projects-audit` → `projects` dependency section | Phase 6 (`doc-updates`) |
 | `docs/architecture.md` | dev-core's submodule decomposition, composite-`setup` ordering contract, `app.ext` service contracts | Phase 6 (`doc-updates`) |
 
-The remaining nine are `--ours` with nothing to carry forward. `.gitignore` was verified lossless (`core-server`'s 10 entries are a strict superset of dev-core's 6). One resolution has a plausible functional consequence and is checked by task 004, not here: `make/55-test.mk`'s Babel invocation carries `--ignore='**/test/data/**' --ignore='**/test-data/**'` on dev-core's side and not on `core-server`'s, and dev-core brings test-data fixture trees.
+The remaining ten are `--ours` with nothing to carry forward. `.gitignore` was verified lossless (`core-server`'s 10 entries are a strict superset of dev-core's 6). `plan/manifest.yaml` discards dev-core's own `dependencies` annotation on its own plan-registry entry (a scheduling note for dev-core's own retirement task, tracked independently and authoritatively in dev-core's separate, un-merged repository — not information `core-server` needs to hold). One resolution has a plausible functional consequence and is checked by task 004, not here: `make/55-test.mk`'s Babel invocation carries `--ignore='**/test/data/**' --ignore='**/test-data/**'` on dev-core's side and not on `core-server`'s, and dev-core brings test-data fixture trees.
 
 ### Step 5 — apply the exact eight-path removal set
 
@@ -218,7 +220,7 @@ Halt and report on any mismatch. Do not commit a merge whose staged delta is not
 git commit -F - <<'EOF'
 merge(dev-core): absorb @sdlcforge/dev-core with history preserved
 
-Merges dev-core-source/main (5d5c2a3) into core-server with
+Merges dev-core-source/main (914f951) into core-server with
 --allow-unrelated-histories, bringing src/{projects,orgs,work,projects-audit}/
 into the tree with the donor's full history reachable under the absorbed paths.
 
@@ -226,14 +228,21 @@ Nothing is wired: src/lib/builtin-plugins.mjs still aggregates three components
 and @sdlcforge/dev-core is still an explicit npm plugin, so the absorbed source
 is inert and server behavior is unchanged.
 
-Conflicts (13, all add/add) resolved --ours, byte-identical to core-server's
+Conflicts (14, all add/add) resolved --ours, byte-identical to core-server's
 pre-merge blobs: .gitignore, Makefile, README.md, docs/architecture.md,
 make/{10-locations,10-resources,15-data-finder,20-js-src-finder,55-lint,
-55-test,95-final-targets}.mk, package.json, plan/followups.yaml.
+55-test,95-final-targets}.mk, package.json, plan/followups.yaml,
+plan/manifest.yaml.
 
-plan/manifest.yaml merged silently (byte-identical on both sides); it is not
-residue and was not removed. core-server's own 14 tracked plan/ paths are
-unchanged.
+plan/manifest.yaml is not a silent identical merge here: the donor's main
+advanced past this plan's originally-measured tip (5d5c2a3) to 914f951, whose
+sole change added a `dependencies` block to dev-core's own plan/manifest.yaml
+entry for this same sdlc-core-unification plan-group, recording that dev-core's
+own retirement task must not run until this plan's Phase 4 verification lands.
+That is a scheduling note for dev-core's own execution, tracked independently
+and authoritatively in dev-core's separate, un-merged repository -- nothing
+core-server needs to hold, so --ours (discarding it here) loses nothing.
+core-server's own 14 tracked plan/ paths are unchanged.
 
 Removed (8 clean arrivals with no core-server counterpart):
   .sdlc-data.yaml                                 dev-core generator inventory
@@ -293,14 +302,14 @@ All four must report `OK` with `n` greater than 1. A single-commit history means
 
 1. Step 0's pre-flight passed: the branch is not `plan/sdlc-core-unification`, the tree was clean, and `plan/` held 14 tracked paths.
 2. Step 2's donor tree shape matched exactly (162 `src/` paths in the `{projects: 58, orgs: 20, work: 71, projects-audit: 10, index.mjs: 1, test: 2}` shape; 21 non-`src/` paths).
-3. `git diff --name-only --diff-filter=U | sort` produced exactly the 13 listed conflict paths, and after resolution produced nothing.
-4. Every one of the 13 resolved paths' staged blob equals its `HEAD` blob (step 4's loop prints `OK` 13 times); `grep -l '^<<<<<<< '` over the 13 prints nothing.
+3. `git diff --name-only --diff-filter=U | sort` produced exactly the 14 listed conflict paths, and after resolution produced nothing.
+4. Every one of the 14 resolved paths' staged blob equals its `HEAD` blob (step 4's loop prints `OK` 14 times); `grep -l '^<<<<<<< '` over the 14 prints nothing.
 5. `git diff --cached --name-status HEAD -- plan` printed nothing, and `git ls-tree -r --name-only HEAD -- plan | wc -l` is 14 before the commit.
 6. `src/lib/index.js`, `bun.lock`, and `.catalyst-data.yaml` are byte-identical to `HEAD` (`e8791e8`, `901e082`, `41b9a23` as measured pre-Phase-1; the `HEAD` comparison, not the literal SHA, is the check).
 7. `git diff --cached --name-status HEAD | wc -l` is **161** and every line begins with `A`; the non-`src/` additions are exactly `docs/consumer-migration.md` and `docs/dev-core-consolidation-contract.md`.
 8. All eight removal-set paths are absent from the working tree and from `git ls-files` after the commit; `src/test/` no longer exists.
 9. `git ls-files | grep -c '^src/'` equals the pre-merge `src/` count plus 159.
-10. The merge commit has two parents (`git rev-list --parents -n 1 HEAD` prints three SHAs), and its commit message enumerates the 13 resolutions, the 8 removals, the 2 deliberate keeps, and all four carried-forward items.
+10. The merge commit has two parents (`git rev-list --parents -n 1 HEAD` prints three SHAs), and its commit message enumerates the 14 resolutions, the 8 removals, the 2 deliberate keeps, and all four carried-forward items.
 11. Step 8's `git log --follow` check reports `OK` for all four sampled absorbed files.
 12. `git status --porcelain` is empty after the commit.
 
@@ -313,7 +322,7 @@ architectural_impact: true
 - Phase 1 has landed on `main`: the `list-implied.mjs` `npm-toolkit` fix, the cleared yalc drift, the one-entry `ALLOWLISTED_ERROR_FINDINGS`, the parity contract, and the pre-merge blob map. This task's worktree branch is cut from that `main`.
 - `node_modules` is **not** provisioned in this worktree and does not need to be. This task runs no build, no test, and no lint — that gate is task 004's, deliberately, because the dependency union has not landed yet and 20 newly-collected test suites make an intermediate run uninformative. Do not run `bun install` or `make` here.
 - `src/projects/handlers/_lib/test/project-lifecycle.test.mjs` is a known-failing suite in the donor (dev-core followup `2aMD`: its `appMock` supplies `app.ext.serverHome` while `create-lib.mjs` reads `app.ext.serverConfigRoot`). It arrives with the merge and is expected to fail once tests run. That is an inherited pre-existing defect, not merge-induced, and it is task 004's to characterize — not this task's to fix.
-- The donor is at `5d5c2a3`; `core-server`'s `main` was at `4ded354` when the arrival map was measured. Phase 1's commits advance `main` past `4ded354`, which does not affect any count in this document (Phase 1 touches `src/controls/…`, `src/lib/test/…`, and `plan/resources/`, none of which collide with an arriving path).
+- The donor is at `914f951` (updated 2026-09-06 after a real dispatch measured the live tip; see the Purpose-and-scope correction). `core-server`'s `main` was at `4ded354` when the arrival map was first measured, then at `08e5ee1` (a mid-plan checkpoint commit landing Phase 1's actual source/test/lockfile changes onto `main`, per operator decision, ahead of this task) when this task's own worktree was cut. Neither move affects any count in this document (Phase 1 touches `src/controls/…`, `src/lib/test/…`, `test/__snapshots__/…`, and `bun.lock`; the donor's one new commit touches only `plan/manifest.yaml`; none collide with any arriving path).
 
 ## References
 
