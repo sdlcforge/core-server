@@ -181,6 +181,7 @@ phases:
           path: phase-04-verify-parity-and-tighten-gate/002-rebaseline-full-tier-snapshots.md
           done: false
           tier: sonnet-high
+          digest: 'Ran the scripted rebaseline and mechanically justified every line of the diff against the parity contract: route count held at 165, npmName-stripped/sorted identity diff empty (no route path/method/matcher/help/parameters moved), route block order traced exactly to predicted DAG order. full-tier-plugins-list.json dropped 6->5 as predicted. full-tier-integrations-list.json and both golden-* snapshots confirmed byte-identical to Phase 1''s pre-merge blobs. None of the halt-and-report regression triggers fired. Only the two snapshot files changed -- the one comment-fix requirement had already landed in an earlier commit.'
           git:
             branch: plan/sdlc-core-unification-04-002
             commit:
