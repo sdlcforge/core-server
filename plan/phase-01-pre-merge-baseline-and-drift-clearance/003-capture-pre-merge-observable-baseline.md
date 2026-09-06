@@ -44,3 +44,21 @@ role_doc: plugins/flow/roles/developer-node.md
 - [`plan/resources/validate-check.mjs`](../resources/validate-check.mjs) — a prior ad hoc script in the same style, usable as a starting point.
 - [`plan/notes/dependency-union.md`](../notes/dependency-union.md) — records the sole-dependent fact from planning-time research, for cross-checking Requirements item 5's fresh grep.
 - [`plan/notes/merged-manifest-graph-projection.md`](../notes/merged-manifest-graph-projection.md) — the post-merge finding-set projection this task's pre-merge capture is the counterpart to.
+
+## Status
+
+**Outcome:** succeeded. Date: 2026-09-06.
+
+Provisioned the worktree via `scripts/provision-local-deps.sh` (no `--refresh-lock`); `.yalc/` populated correctly on first run and was confirmed byte-identical to the main checkout's `.yalc/@sdlcforge/dev-core`.
+
+Validation summary:
+1. `bun run test` — green, 18/18 suites, 56/56 tests, including `full-tier-baseline.test.js` and `plugin-graph-gate.test.js`. `git status`/`git diff` confirm zero changes under `test/__snapshots__/` and no diff in the `EXPECTED_*` arrays — none of the observables moved as a result of tasks 001/002.
+2. `plan/resources/dev-core-absorption-pre-merge-baseline.md` authored, containing all six required items, each traceable to a concrete command or file read during this task.
+3. The path-variable set (9 entries, derived from `test/__snapshots__/full-tier-api-spec.json` route paths) was cross-checked against the two named call sites (`credential`, `serverPluginName`) plus an exhaustive `registerPathVar(` source sweep across core-server and the installed `@sdlcforge/dev-core` — the sweep surfaced one entry (`newProjectName`) that the route-derived proxy misses because it is used only as a body-parameter name, never as a URL path segment. Recorded explicitly as a caveat per the task's own Assumptions section, not silently absorbed into the reported set.
+4. `validatePluginSet()`'s full finding set captured via `plan/resources/validate-check.mjs`: `counts: { error: 1, warning: 0, info: 1 }` plus 4 `debug`-severity `unmanifested-node` findings (6 total). The single error-severity finding matches `plugin-graph-gate.test.js`'s current one-entry `ALLOWLISTED_ERROR_FINDINGS` exactly (kind, capability, requirer).
+5. Sole-dependent grep quoted verbatim in the resource file; annotated to distinguish the four genuine `core-server` dependency-declaration hits (one repo, four worktree checkouts) from the two `@sdlcforge/dev-core` self-identity-field false positives (`name` / `plugable.npmName`) in dev-core's own `package.json`.
+6. `git diff --stat` / `git status --porcelain` show only the new `plan/resources/dev-core-absorption-pre-merge-baseline.md` file.
+
+Assumptions applied: tasks 001/002 already landed on this branch (confirmed via `git log`); the route-`:paramName`-segment derivation is an accepted, but not unconditionally authoritative, proxy for the private `registerPathVar()` registry — the one known gap (`newProjectName`) is recorded rather than silently dropped.
+
+Affected files: `plan/resources/dev-core-absorption-pre-merge-baseline.md` (new); this task document (Status section only).
