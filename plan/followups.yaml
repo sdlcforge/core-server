@@ -627,3 +627,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Task document defect: dsdl''s suggested title ("consolidation-contract.md:128 stale attribution", 47 chars) exceeds the 45-char title limit; used a shortened 43-char title instead.'
+    - title: hks9 and dsdl's carried text was substantiall
+      id: iFJD
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: hks9 and dsdl's carried text was substantially rewritten per the task doc's own explicit instruction, going beyond the donor's original fragment with directly-verified findings -- diverges from the donor more than the other 15 items; sanity-checked against the standards' 'substantially the donor's original text' expectation and judged acceptable given the explicit instruction to make them stand alone.
