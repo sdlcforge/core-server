@@ -464,3 +464,16 @@ items:
         src/orgs/handlers/list.mjs's mdFormatter renders `* ${o.name}` while the handler's defaultFields is ['key', 'commonName', 'legalName'], and the JSON/terminal/text formatters for the same endpoint all render commonName/key. The Markdown rendering disagrees with every other format for the same endpoint. Low severity: name is still a defined Organization property so the output is not broken, only inconsistent across formats.
 
         Originally filed against @sdlcforge/dev-core as followup 2Zug; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: parameters-list.mjs mdFormatter arg shape
+      id: RuIZ
+      date: "2026-09-06"
+      tags:
+        - type:bug
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        src/orgs/handlers/parameters-list.mjs's mdFormatter/terminalFormatter/textFormatter use positional args (parameters, title) but formatOutput invokes non-JSON formatters with a single {data, title, fields} object — the same category of pre-existing inconsistency as src/orgs/handlers/list.mjs's analogous mdFormatter (see the sibling list.mjs mdFormatter field-mismatch followup). Left untouched (JSON-path-only test coverage exercised it) but is a real bug if parameters-list is ever requested with format=md/txt/terminal.
+
+        Originally filed against @sdlcforge/dev-core as followup Jbaz; carried across when that package was absorbed into @sdlcforge/core-server.
