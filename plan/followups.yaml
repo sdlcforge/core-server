@@ -780,3 +780,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Assertion 4's 'setup absent'/'handlers length 4' checks, written at the source per the task doc's own instruction, do not turn red under the task doc's own named mutation ('remove projectsAudit from submodules') -- only assertion 3 and the pre-existing aggregation test do. The suite still goes red as the Validation section actually requires ('every mutation must turn the suite red'), just via a different assertion than the doc's per-mutation mapping predicted. No corrective action needed; flagging in case the manager wants the task doc's Validation wording corrected.
+    - title: project-lifecycle.test.js fails in this workt
+      id: WdhE
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: project-lifecycle.test.js fails in this worktree (7/7 tests), confirmed via A/B stash testing to be identical with/without this task's diff -- pre-existing, unrelated to component ordering, same root cause already flagged by task 001 (app.ext.serverConfigRoot). Not pre-declared in this task's own Assumptions section (unlike the plugin-graph-*/full-tier-baseline suites) -- may already be covered by task 001's flagged followup.
