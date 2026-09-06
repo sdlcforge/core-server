@@ -56,3 +56,13 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: update-project-onboarding-docs
+          title: Update Project Onboarding Docs
+          path: phase-06-doc-updates/002-update-project-onboarding-docs.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
