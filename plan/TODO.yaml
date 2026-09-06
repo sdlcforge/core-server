@@ -105,7 +105,7 @@ phases:
             branch: plan/sdlc-core-unification-02-003
             commit:
                 - f7099c2
-            merge: null
+            merge: c4b5ab9
         - number: 4
           slug: verify-merge-and-restore-green-build
           title: Verify Merge And Restore Green Build
