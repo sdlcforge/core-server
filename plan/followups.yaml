@@ -677,3 +677,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Assumptions section expected absorbed source to produce new ESLint findings; directly verified it does not (148 files, 0 findings) -- a pleasant surprise worth noting for Phase 5's component-boundary lint work.
+    - title: The task-001 merge commit message also carrie
+      id: KWV0
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: The task-001 merge commit message also carries the stale '17' suite-count figure forward.
