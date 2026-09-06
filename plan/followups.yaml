@@ -810,3 +810,20 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Measured pre-existing lint baseline is 236, not the ~233 the task doc's Assumptions cite -- confirmed unaffected either way, informational only.
+    - title: Phase 6 doc scope refinements
+      id: LipN
+      date: "2026-09-06"
+      tags:
+        - type:documentation
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:wire-and-declare-seven-components
+      text: |-
+        Phase 3's boundary-gate architecture-conformance and documentation link-chain checks confirmed docs/architecture.md and docs/architecture/plugin-loading-tiers.md are now stale (still describe 3 built-in components and 5 npm-dependency packages including @sdlcforge/dev-core) -- this drift is expected and already scoped to plan/phase-06-doc-updates/001-update-architecture-docs.md. Three refinements surfaced that go beyond that task doc's current scope, worth folding in when Phase 6 runs:
+
+        1. test/README.md (not currently named in Phase 6's document list) independently repeats the same stale @sdlcforge/dev-core-as-explicit-plugin claim ("Explicit Plugins Integration" section) -- add it to the doc-update sweep.
+        2. docs/architecture/plugin-loading-tiers.md's Tier 2 section (around line 59) currently frames controls' dependency on orgs/projects as a latent startup-failure risk contingent on dev-core being loaded as an npm package ("nothing enforces the _liqProjects half at startup; it fails... if dev-core was never loaded"). Since orgs and projects are now built-in components ordered ahead of controls in the same submodules array (shipped inside core-server's own package), this risk is mechanically closed by the migration, not merely relocated -- the rewrite should credit this as a resolved risk rather than restating it under the new component names.
+        3. docs/architecture.md's "Key decisions" section has no entry recording the decision to absorb the four dev-core-donor components into the built-in in-tree tier rather than continuing to load them as a separate npm package -- worth adding a bullet naming the rationale (eliminating an unpublished-package yalc workaround, closing the startup-failure risk in item 2) and the rejected alternative (publish/keep dev-core as a separate package).
+
+        Found during Phase 3's boundary-gate review (architecture-conformance + doc link-chain checks).
