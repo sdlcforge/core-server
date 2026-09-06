@@ -153,7 +153,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/sdlc-core-unification-03-003
-            commit: []
+            commit:
+                - 6dc5bad
             merge: null
     - number: 4
       slug: verify-parity-and-tighten-gate
