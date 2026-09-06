@@ -907,3 +907,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Repo-wide dev-core# sweep had 7 residual matches confined to task 003's file at dispatch time -- task 003 has since landed (merge 00a4200), so the sweep should now be fully clean; confirm.
+    - title: 'N7cz needs a manager decision: join it as a f'
+      id: g94K
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'N7cz needs a manager decision: join it as a fifth fenced-off inherited defect (making green-apart-from-N7cz this phase''s bar) or schedule as its own repair task. Requirement 2 and requirement 6 as literally written cannot both be satisfied.'
