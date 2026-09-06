@@ -58,6 +58,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: rebaseline-full-tier-snapshots
+          title: Rebaseline Full-Tier Snapshots
+          path: phase-04-verify-parity-and-tighten-gate/002-rebaseline-full-tier-snapshots.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 5
       slug: component-boundary-hardening
       title: Component Boundary Hardening
