@@ -542,3 +542,16 @@ items:
         The liq-projects absorption's dependency union added @liquid-labs/octocache (^1.0.0-alpha.4, now @sdlcforge/core-server's own runtime dependency), which pins an octokit chain resolving to octokit&lt;=3.1.1. npm audit --package-lock-only confirmed an unpatched high-severity advisory GHSA-pwfr-8pq7-x9qv ("Unauthenticated Denial of Service in the octokit/webhooks library", CVSS 8.2) plus two moderate ReDoS advisories (GHSA-rmvr-2pp2-xj38 in @octokit/request, GHSA-xx4v-prfh-6cgc in @octokit/request-error). Also affects @liquid-labs/github-toolkit, @liquid-labs/credentials-db-plugin-github, and @liquid-labs/liq-credentials-db via the same root cause. Distinct from the separate serialize-javascript/rollup-terser RCE advisory, the sdlc-resource-babel-and-rollup deprecation note, and the command-injection followups covering the projects/work shell-outs — do not conflate. @liquid-labs/octocache does not control its own octokit pin directly; a fix requires a semver-major bump upstream. Reachability of the specific webhook-DoS code path from actual GitHub-integration usage (authenticated API calls, not inbound webhook processing) is unconfirmed and worth checking before prioritizing.
 
         Originally filed against @sdlcforge/dev-core as followup pWxw; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: condition-eval Function() eval pattern
+      id: VgqT
+      date: "2026-09-06"
+      tags:
+        - type:security
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        The dependency @liquid-labs/condition-eval (resolving to 1.0.0-alpha.19) evaluates expressions via Function(e(o))() gated by a regex allowlist (numeric literals, true/false, a fixed operator/paren set) — a regex-then-Function() pattern with a history of allowlist-bypass issues in other libraries, though this allowlist looks reasonably tight. It is imported at src/work/handlers/_lib/prepare-questions-from-controls.mjs. Reachability from externally-influenced input (issue title/body, GitHub label, user-supplied work parameter) has not been confirmed. Low confidence, minor severity. When src/work/'s handler source is next reviewed, grep for condition-eval/Evaluator/evalTruth/evalNumber call sites and confirm every expression string is either a fixed developer-authored template or built only from already-validated/typed values, never a raw external string concatenated into the expression shape.
+
+        Originally filed against @sdlcforge/dev-core as followup 7ZF2; carried across when that package was absorbed into @sdlcforge/core-server.
