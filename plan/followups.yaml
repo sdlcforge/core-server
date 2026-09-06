@@ -386,3 +386,16 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: make/55-test.mk resolved --ours drops dev-core's Babel --ignore flags for test-data fixture trees now in-tree; task 004's check per the doc.
+    - title: Command injection risk in work shell-outs
+      id: li0t
+      date: "2026-09-06"
+      tags:
+        - type:security
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        Automated security review flagged 7 pre-existing command-injection-capable patterns in code migrated verbatim from liq-work: src/work/handlers/_lib/save-lib.mjs (git commit -m built via tryExec, partial escaping via replaceAll but not fully safe), src/work/handlers/_lib/work-db.mjs (git remote add with ghUser/projectBasename interpolation), src/work/handlers/resume.mjs (git checkout ${workKey}), src/work/handlers/issues/_lib/list-lib.mjs (open with ghOrg/project/number interpolation), src/work/handlers/_lib/submit-lib.mjs (open ${url} unquoted), src/work/handlers/_lib/pause-lib.mjs (git checkout ${main}), src/work/handlers/projects/_lib/list-lib.mjs (open with projectFQN interpolation). Confirmed via git log that these files' shell-out patterns predate the liq-work absorption (liq-work commits well before the absorption). Not introduced during absorption; now first-party @sdlcforge/core-server code rather than a vendored dependency. Same class of issue as the companion command-injection followup covering the projects shell-outs. Suggested remediation when next touched: replace shell-string interpolation with execFile/spawn argv-array invocation, and validate interpolated values (branch names, org/project names, URLs, issue numbers) against strict allowlist regexes before use.
+
+        Originally filed against @sdlcforge/dev-core as followup AhMK; carried across when that package was absorbed into @sdlcforge/core-server.
