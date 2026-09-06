@@ -27,7 +27,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/sdlc-core-unification-01-002
-            commit: []
+            commit:
+                - dca4ec5
             merge: null
         - number: 3
           slug: capture-pre-merge-observable-baseline
