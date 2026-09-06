@@ -503,3 +503,16 @@ items:
         src/work/handlers/_lib/answer-set-to-md.mjs:74 calls app.ext.integrations with providerFor: 'pull requests' (plural), while every other call site in the codebase uses the singular 'pull request'. IntegrationsManager.callHook/hasHook match on exact providerFor string, so this mismatched entry throws "No provider found" at request time instead of resolving the registered provider — a live, reachable defect, not merely cosmetic. Independent corroboration: @liquid-labs/plugable-express's own diff-manifest.js header cites this exact typo as its motivating example for why manifest-derivation tooling matters. Fix: change 'pull requests' to 'pull request' at that call site, plus a regression test asserting the hook resolves.
 
         Originally filed against @sdlcforge/dev-core as followup OmUC; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: resource-model Model.save() always rejects
+      id: 8UB8
+      date: "2026-09-06"
+      tags:
+        - type:bug
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        @liquid-labs/resource-model's Model.save() (src/Model.mjs:74-80, identical in the installed dist/) destructures errors off an un-awaited async validate() call, so errors.length throws and every save() call on a Model subclass rejects unconditionally. @sdlcforge/core-server's src/orgs/resources/organization.mjs works around this with its own async save() override that writes #settings directly rather than delegating to the base implementation; the upstream package itself is unfixed and remains broken for any other Model subclass, in this or any other consumer, that relies on the base save() without its own override.
+
+        Originally filed against @sdlcforge/dev-core as followup Ymcf; carried across when that package was absorbed into @sdlcforge/core-server.
