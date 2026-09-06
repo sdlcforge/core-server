@@ -10,3 +10,7 @@ phases:
       slug: absorb-dev-core
       title: Absorb Dev-Core
       tasks: []
+    - number: 3
+      slug: wire-and-declare-seven-components
+      title: Wire And Declare Seven Components
+      tasks: []
