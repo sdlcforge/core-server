@@ -70,6 +70,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: refile-dev-core-followups
+          title: Refile Dev-Core Followups
+          path: phase-02-absorb-dev-core/002-refile-dev-core-followups.md
+          done: false
+          tier: sonnet-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 3
       slug: wire-and-declare-seven-components
       title: Wire And Declare Seven Components
