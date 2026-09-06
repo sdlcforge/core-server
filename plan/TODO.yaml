@@ -117,7 +117,7 @@ phases:
             branch: plan/sdlc-core-unification-02-004
             commit:
                 - c158ba7
-            merge: null
+            merge: 3bb1c25
     - number: 3
       slug: wire-and-declare-seven-components
       title: Wire And Declare Seven Components
