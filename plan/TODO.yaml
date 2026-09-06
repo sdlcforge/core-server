@@ -5,7 +5,17 @@ phases:
     - number: 1
       slug: pre-merge-baseline-and-drift-clearance
       title: Pre-Merge Baseline And Drift Clearance
-      tasks: []
+      tasks:
+        - number: 1
+          slug: fix-npm-toolkit-rename-break
+          title: Fix Npm-Toolkit Rename Break
+          path: phase-01-pre-merge-baseline-and-drift-clearance/001-fix-npm-toolkit-rename-break.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 2
       slug: absorb-dev-core
       title: Absorb Dev-Core
