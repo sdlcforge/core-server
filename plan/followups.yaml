@@ -760,3 +760,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: .yalc/@sdlcforge/dev-core and node_modules/@sdlcforge/dev-core still physically present, deliberately left per task doc (optional/untracked), harmless per the 0-dev-core-route measurement.
+    - title: strictOptional must stay at default false for
+      id: bz9g
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: strictOptional must stay at default false for Phase 4 (surviving appExt:_liqOrgs.orgSetupMethods info promotes to error under strictOptional:true); conversely strictOrder:true is now free (ok, same counts) if Phase 4 wants to opt in.
