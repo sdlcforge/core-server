@@ -215,7 +215,7 @@ phases:
           slug: verify-parity-contract-and-green-run
           title: Verify Parity Contract And Green Run
           path: phase-04-verify-parity-and-tighten-gate/005-verify-parity-contract-and-green-run.md
-          done: false
+          done: true
           tier: opus-med
           digest: 'Every parity-contract item held, verified end-to-end against a live running server: 165 routes/118 core-server/0 dev-core, plugins list 5 entries, integrations-list confirmed non-event, plugin-details resolves correctly for both packages, golden snapshots byte-identical at every checkpoint across the whole plan, all negative-space observables unchanged, all five inherited defects (uROI/b3hk/mLm3/NEJt/N7cz) confirmed still present and unrepaired. make test is green apart from N7cz (a fifth genuinely pre-existing inherited defect the task document''s original enumeration omitted, now corrected and independently confirmed absorption-unrelated three times). make lint introduces zero new findings (net -2). No source file was changed; nothing was fixed, everything was recorded per the task''s own verify-not-fix mandate. Full record at plan/resources/dev-core-absorption-parity-verification.md.'
           git:
