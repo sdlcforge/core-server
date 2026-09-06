@@ -205,6 +205,7 @@ phases:
           path: phase-04-verify-parity-and-tighten-gate/004-repoint-sibling-plugin-graph-tests.md
           done: false
           tier: sonnet-med
+          digest: Repointed the two dev-core-referencing sibling plugin-graph test files onto their in-tree core-server successor node IDs and rewrote the stale third-party framing. Third file verified unchanged and correct. Also self-fixed a pre-existing beforeAll no-undef lint error in the two touched files. Diff scoped to exactly the two owned files.
           git:
             branch: plan/sdlc-core-unification-04-004
             commit:
