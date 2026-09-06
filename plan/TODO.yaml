@@ -183,7 +183,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/sdlc-core-unification-04-002
-            commit: []
+            commit:
+                - deef90e
             merge: null
         - number: 3
           slug: delete-error-allowlist-and-tighten-gate
