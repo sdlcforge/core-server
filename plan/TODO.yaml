@@ -62,7 +62,7 @@ phases:
           done: false
           tier: haiku-med
           git:
-            branch: null
+            branch: plan/sdlc-core-unification-01-005
             commit: []
             merge: null
     - number: 2
