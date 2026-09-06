@@ -1,4 +1,4 @@
-/* global describe expect test */
+/* global beforeAll describe expect test */
 import { validatePluginSet } from '@liquid-labs/plugable-express'
 
 import { resolveCoreServerPackageRoot } from './helpers/resolve-plugin-set'
@@ -7,10 +7,13 @@ import { resolveCoreServerPackageRoot } from './helpers/resolve-plugin-set'
 // 'plan/phases/validation-gate-and-regression.md' (Goals, third bullet, 2026-09-01 update).
 // Phase 3's one-off verification
 // ('plan/phase-03-third-party-coupling-coverage/001-verify-third-party-requiring-edges-satisfied.md')
-// confirmed, against the real, unmodified plugin graph, that `@sdlcforge/dev-core`'s own shipped
-// manifest closes both of this plan-group's headline bugs. This file turns that one-off
-// confirmation into permanent regression coverage over the real graph -- not a synthetic one --
-// via the same full, real `validatePluginSet()` composition task 001's gate test
+// originally confirmed these two couplings against `@sdlcforge/dev-core` as a separate,
+// third-party package. `@sdlcforge/dev-core` has since been merged in-tree into
+// `@sdlcforge/core-server`'s own builtin manifest (see
+// 'plan/notes/merged-manifest-graph-projection.md'), so both edges below are now intra-builtin
+// (`appExt:credentialsDB`) or framework-to-builtin (`appExt:serverConfigRoot`) rather than
+// cross-package. This file keeps the regression coverage over the real graph -- not a synthetic
+// one -- via the same full, real `validatePluginSet()` composition task 001's gate test
 // (`plugin-graph-gate.test.js`) uses. It asserts the full edge (both provider and requirer) for
 // both couplings, per this phase document's 2026-09-01 update.
 //
@@ -19,7 +22,7 @@ import { resolveCoreServerPackageRoot } from './helpers/resolve-plugin-set'
 // (make/55-test.mk), not from `src/`, so `process.cwd()` at test time is `test-staging/`, not the
 // real package root. Passing the wrong root yields a `resolution-failure` (exit code `2`) that
 // looks like a framework bug and is not -- see 'plan/notes/build-wiring-and-dependency-refresh.md'.
-describe('plugin graph third-party ordering regression (appExt:credentialsDB / appExt:serverConfigRoot)', () => {
+describe('plugin graph ordering regression (appExt:credentialsDB / appExt:serverConfigRoot, now intra-builtin)', () => {
   // A single, shared `validatePluginSet()` call: all three tests below only read different slices
   // of one invariant result over the real, unmodified graph -- none mutates it, so one resolution
   // serves all three assertions rather than repeating the real filesystem/graph work three times.
@@ -30,15 +33,17 @@ describe('plugin graph third-party ordering regression (appExt:credentialsDB / a
     result = await validatePluginSet({ packageRoot })
   })
 
-  test("dev-core#projects' appExt:credentialsDB @ load requirement resolves satisfied-by-source-order", () => {
+  test("core-server#projects' appExt:credentialsDB @ load requirement resolves satisfied-by-source-order", () => {
     // Confirmed against the real result (not assumed): the provider-side node is the builtin
     // `@sdlcforge/core-server#credentials` component ('from'); the consumer/requirer-side node
-    // is `@sdlcforge/dev-core#projects` ('to'). Both sit at the 'load' phase, so this is a
-    // same-phase edge and earns a literal order verdict.
+    // is `@sdlcforge/core-server#projects` ('to'). Both sit at the 'load' phase, so this is a
+    // same-phase edge and earns a literal order verdict -- now provable because both nodes sit
+    // in the same builtin block at comparable `loadIndex` positions, rather than across a
+    // builtin/explicit-plugin boundary as before the `@sdlcforge/dev-core` merge.
     const edge = result.engineResult.edges.find((e) =>
       e.capability === 'appExt:credentialsDB'
       && e.from === '@sdlcforge/core-server#credentials'
-      && e.to === '@sdlcforge/dev-core#projects')
+      && e.to === '@sdlcforge/core-server#projects')
 
     expect(edge).toBeDefined()
     expect(edge.samePhase).toBe(true)
@@ -50,10 +55,10 @@ describe('plugin graph third-party ordering regression (appExt:credentialsDB / a
     expect(edge.orderVerdict).toBe('satisfied-by-source-order')
   })
 
-  test("dev-core#work's appExt:serverConfigRoot @ load requirement resolves satisfied against the framework's own intrinsic manifest", () => {
+  test("core-server#work's appExt:serverConfigRoot @ load requirement resolves satisfied against the framework's own intrinsic manifest", () => {
     // Confirmed against the real result (not assumed): the provider-side node is the
     // framework's own intrinsic manifest ('@liquid-labs/plugable-express', 'from'); the
-    // consumer/requirer-side node is `@sdlcforge/dev-core#work` ('to'). The provider's phase is
+    // consumer/requirer-side node is `@sdlcforge/core-server#work` ('to'). The provider's phase is
     // 'framework', which unconditionally precedes every plugin phase in the lattice (including
     // 'load', the requirer's phase) -- so this is a cross-phase edge: `samePhase` is `false` and
     // `orderVerdict` is `null` by schema design, since the load-order model only produces a
@@ -64,7 +69,7 @@ describe('plugin graph third-party ordering regression (appExt:credentialsDB / a
     const edge = result.engineResult.edges.find((e) =>
       e.capability === 'appExt:serverConfigRoot'
       && e.from === '@liquid-labs/plugable-express'
-      && e.to === '@sdlcforge/dev-core#work')
+      && e.to === '@sdlcforge/core-server#work')
 
     expect(edge).toBeDefined()
     expect(edge.samePhase).toBe(false)
@@ -79,8 +84,8 @@ describe('plugin graph third-party ordering regression (appExt:credentialsDB / a
     // this plan-group's two chartered {capability, nodeId, phase} triples at the 'load' phase.
     const FAILURE_KINDS = ['unsatisfied', 'unsatisfied-phase', 'order-unprovable', 'violated-by-source-order']
     const TARGET_TRIPLES = [
-      { capability : 'appExt:credentialsDB', nodeId : '@sdlcforge/dev-core#projects', phase : 'load' },
-      { capability : 'appExt:serverConfigRoot', nodeId : '@sdlcforge/dev-core#work', phase : 'load' }
+      { capability : 'appExt:credentialsDB', nodeId : '@sdlcforge/core-server#projects', phase : 'load' },
+      { capability : 'appExt:serverConfigRoot', nodeId : '@sdlcforge/core-server#work', phase : 'load' }
     ]
 
     const matchingFailures = result.engineResult.findings.filter((finding) =>
@@ -90,9 +95,9 @@ describe('plugin graph third-party ordering regression (appExt:credentialsDB / a
         && finding.requirer?.nodeId === triple.nodeId
         && finding.requirer?.phase === triple.phase))
 
-    // Confirmed against the real result: the run's only 2 error-severity findings are both
-    // inside `@sdlcforge/dev-core#orgs` (an already-triaged, out-of-plan-group concern -- see
-    // `plugin-graph-gate.test.js`) and name neither of this task's two target triples.
+    // Confirmed against the real result: the merged run has zero error-severity findings, so
+    // `matchingFailures` is trivially empty here -- the check remains meaningful as insurance
+    // against a future regression that produces a failure finding naming either target triple.
     expect(matchingFailures).toEqual([])
   })
 })

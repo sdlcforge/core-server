@@ -1,4 +1,4 @@
-/* global describe expect test */
+/* global beforeAll describe expect test */
 import { FRAMEWORK_MANIFEST, readHostDeclaration, validatePluginGraph } from '@liquid-labs/plugable-express'
 
 import { readCoreServerPackageJSON, resolveCoreServerPackageRoot } from './helpers/resolve-plugin-set'
@@ -13,8 +13,8 @@ import { readCoreServerPackageJSON, resolveCoreServerPackageRoot } from './helpe
 // `### supersedes` section) firing correctly, rather than the framework silently returning `undefined`.
 //
 // This is deliberately scoped to the in-tree (`hostDeclaration.builtins`) half of the graph only. The
-// third-party (`@sdlcforge/dev-core`) half of this same rename shape is covered separately by task 004
-// (`004-assert-third-party-ordering-regression.md`) against the real, unmodified graph.
+// other half of this same rename shape is covered separately by
+// `src/lib/test/plugin-graph-third-party-ordering.test.js` against the real, unmodified graph.
 const CREDENTIALS_NODE_ID = '@sdlcforge/core-server#credentials'
 
 // The two capabilities the real, landed `credentials` component declaration requires that name
