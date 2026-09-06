@@ -26,6 +26,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 3
+          slug: capture-pre-merge-observable-baseline
+          title: Capture Pre-Merge Observable Baseline
+          path: phase-01-pre-merge-baseline-and-drift-clearance/003-capture-pre-merge-observable-baseline.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 2
       slug: absorb-dev-core
       title: Absorb Dev-Core
