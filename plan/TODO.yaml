@@ -23,7 +23,7 @@ phases:
           slug: refresh-dev-core-snapshot-and-clear-yalc-drift
           title: Refresh Dev-Core Snapshot And Clear Yalc Drift
           path: phase-01-pre-merge-baseline-and-drift-clearance/002-refresh-dev-core-snapshot-and-clear-yalc-drift.md
-          done: false
+          done: true
           tier: sonnet-med
           digest: Re-refreshed the worktree's yalc snapshot against dev-core's now-corrected main (after removing the worktree's own stale .yalc/), confirmed via direct validatePluginSet() inspection that the orgSetupMethods finding downgraded from error to info, then trimmed plugin-graph-gate.test.js's allowlist from two entries to one. The same refresh pulled in two unrelated sibling dev-core fixes that broke and required regenerating the full-tier-baseline.test.js golden snapshot via its own official opt-in regen path -- confined to exactly those two route matchers and one help-text pair. bun.lock needed no new commit (unchanged from 71fccaf). Full test suite (18/18) and lint (236 pre-existing, unchanged) confirmed clean.
           git:
