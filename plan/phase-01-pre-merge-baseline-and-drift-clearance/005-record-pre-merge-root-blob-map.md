@@ -28,3 +28,19 @@ role_doc: plugins/flow/roles/developer.md
 
 - [`plan/notes/merge-arrival-inventory.md`](../notes/merge-arrival-inventory.md) — the three call-out paths and why they matter; the broader per-path arrival map this blob map supports.
 - [`plan/phases/pre-merge-baseline-and-drift-clearance.md`](../phases/pre-merge-baseline-and-drift-clearance.md) — this phase's goal 5.
+
+## Status
+
+**Implementation outcome**: succeeded
+
+**Date**: 2026-09-06
+
+**Validation summary**:
+- All four validation checks passed.
+- `plan/resources/pre-merge-root-blob-map.md` created with 17 root-level paths and their blob/tree SHAs.
+- Three critical paths (`src/lib/index.js`, `bun.lock`, `.catalyst-data.yaml`) recorded with verified blob SHAs matching `git rev-parse HEAD:<path>` checks.
+- Recorded commit SHA `cbd19fd820183e3ef7b1a98aa7434ef431d2f7d9` is valid and matches the branch HEAD at task start.
+- Verified that only the new blob map file was created; no source, test, or dependency changes made.
+
+**Files created**:
+- `plan/resources/pre-merge-root-blob-map.md` — recorded pre-merge root blob/tree map with commit SHA and all 17 top-level paths.
