@@ -31,7 +31,6 @@
         "@liquid-labs/semver-plus": "^1.0.0-alpha.11",
         "@liquid-labs/shell-toolkit": "^1.0.0-alpha.10",
         "@liquid-labs/versioning": "^1.0.0-alpha.4",
-        "@sdlcforge/dev-core": "file:.yalc/@sdlcforge/dev-core",
         "highlight.js": "^11.9.0",
         "http-errors": "^2.0.0",
         "js-yaml": "^4.1.0",
@@ -535,8 +534,6 @@
     "@rollup/rollup-win32-x64-msvc": ["@rollup/rollup-win32-x64-msvc@4.63.1", "", { "os": "win32", "cpu": "x64" }, "sha512-at8QVep6S3h5Y6gSbdGU06bRY5WJkf6WUduM9YtvYMbYhB1MOFfUgc6kehitQXzOtMSaT70q7f9ydPhpqu821w=="],
 
     "@rtsao/scc": ["@rtsao/scc@1.1.0", "", {}, "sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g=="],
-
-    "@sdlcforge/dev-core": ["@sdlcforge/dev-core@file:.yalc/@sdlcforge/dev-core", { "dependencies": { "@liquid-labs/condition-eval": "^1.0.0-alpha.17", "@liquid-labs/credentials-db-plugin-github": "^1.0.0-alpha.5", "@liquid-labs/dependency-runner": "^1.0.0-alpha.8", "@liquid-labs/federated-json": "^1.0.0-alpha.34", "@liquid-labs/git-toolkit": "^1.0.0-alpha.16", "@liquid-labs/github-toolkit": "^1.0.0-alpha.25", "@liquid-labs/http-smart-response": "^1.0.0-alpha.6", "@liquid-labs/liq-credentials-db": "^1.0.0-alpha.7", "@liquid-labs/liq-handlers-lib": "^1.0.0-alpha.17", "@liquid-labs/liq-qa-lib": "^1.0.0-alpha.9", "@liquid-labs/npm-toolkit": "^1.0.0-alpha.21", "@liquid-labs/octocache": "^1.0.0-alpha.4", "@liquid-labs/playground-monitor": "^1.0.0-beta.4", "@liquid-labs/plugable-defaults": "^1.0.0-alpha.4", "@liquid-labs/resource-model": "^1.0.0-alpha.10", "@liquid-labs/semver-plus": "^1.0.0-alpha.11", "@liquid-labs/shell-toolkit": "^1.0.0-alpha.10", "highlight.js": "^11.9.0", "http-errors": "^2.0.0", "js-yaml": "^4.1.0", "natural-sort": "^1.0.0", "npm-check-plus": "^1.0.0-alpha.5", "shelljs": "^0.8.5" } }],
 
     "@sinclair/typebox": ["@sinclair/typebox@0.27.12", "", {}, "sha512-hhyNJ+nbR6ZR7pToHvllEFun9TL0sbL+tk/ON75lo+Xas054uez98qRbsuNt7MBCyZKK4+8Yli/OAGZhmfBZ/g=="],
 

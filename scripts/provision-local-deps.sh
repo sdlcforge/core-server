@@ -4,10 +4,10 @@
 #
 # .yalc/ and yalc.lock are gitignored, so a freshly created checkout or git worktree has
 # neither, and `bun install` fails hard on the file:.yalc/... dependencies bun.lock resolves
-# (two, both direct: @liquid-labs/plugable-express and @sdlcforge/dev-core; no transitive
-# file:.yalc/... resolution remains). This script copies .yalc/ in from the main checkout
-# when the current directory doesn't already have it, verifies every required package is
-# actually present under .yalc/, then runs `bun install`.
+# (one, direct: @liquid-labs/plugable-express; no transitive file:.yalc/... resolution
+# remains). This script copies .yalc/ in from the main checkout when the current directory
+# doesn't already have it, verifies every required package is actually present under
+# .yalc/, then runs `bun install`.
 #
 # Usage:
 #   scripts/provision-local-deps.sh [--refresh-lock]
@@ -29,7 +29,6 @@ set -e
 # link).
 REQUIRED_YALC_PACKAGES=(
     "@liquid-labs/plugable-express"
-    "@sdlcforge/dev-core"
 )
 
 REFRESH_LOCK=0
@@ -73,9 +72,8 @@ else
     cat >&2 <<EOF
 provision-local-deps.sh: no .yalc/ directory found here or in the main checkout ($MAIN_CHECKOUT).
 
-This project depends on the following packages via yalc (both direct):
+This project depends on the following packages via yalc (direct):
   - @liquid-labs/plugable-express
-  - @sdlcforge/dev-core
 
 To populate .yalc/, run \`yalc push\` from each of those packages' own checkouts (yalc is a
 globally-installed developer tool, not a project dependency of this repo, so it is not
