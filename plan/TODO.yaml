@@ -63,7 +63,8 @@ phases:
           tier: haiku-med
           git:
             branch: plan/sdlc-core-unification-01-005
-            commit: []
+            commit:
+                - 55e5151
             merge: null
     - number: 2
       slug: absorb-dev-core
