@@ -306,3 +306,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: The main checkout's .yalc/@sdlcforge/dev-core snapshot needs a fresh yalc push from /Users/zane/playground/sdlcforge/dev-core's current main before this task can be re-attempted successfully — outside any task worktree's boundary, needs to happen in/via the main checkout.
+    - title: This task's Assumptions section (.yalc/@sdlcf
+      id: RxGk
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:pre-merge-baseline-and-drift-clearance
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: This task's Assumptions section (.yalc/@sdlcforge/dev-core already reflects dev-core main HEAD) is now factually false and should be corrected before re-dispatch.
