@@ -3986,8 +3986,8 @@
     "routablePath": "/^\\/orgs\\/create\\/((?:@|%40)[a-z][a-zA-Z0-9-]*)[/#?]?$/",
     "help": {
       "name": "Organization create",
-      "summary": "Creates a organization new organization locally.",
-      "description": "Creates a new, empty organization. An organization may or may tied to a legal entity, a club, department, etc. Organizations have an organization structure based on roles, staff associated to roles, projects, contracts, relationships with third-party vendors, etc.\n\n    The root data element (<code>org.json<rst>) is saved to <code>localDataRoot<rst> with sub-components saved in federated-json. It is expected (though not currently verified) that <code>localDataRoot<rst> is located in a git repository."
+      "summary": "Creates a new organization locally.",
+      "description": "Creates a new, empty organization. An organization may or may not be tied to a legal entity, a club, department, etc. Organizations have an organization structure based on roles, staff associated to roles, projects, contracts, relationships with third-party vendors, etc.\n\n    This currently creates only the organization's <code>org<rst> data directory under <code>localDataRoot<rst>; it does not yet write <code>org.json<rst> or otherwise register the organization for discovery."
     },
     "method": "POST",
     "parameters": [
@@ -4120,7 +4120,7 @@
   },
   {
     "npmName": "@sdlcforge/dev-core",
-    "routablePath": "/^\\/orgs\\/((?:@|%40)[a-z][a-zA-Z0-9-]*)\\/parameters\\/((?:[.][_a-zA-Z][_a-zA-Z0-9-]*)+)\\/detail[/#?]?$/",
+    "routablePath": "/^\\/orgs\\/((?:@|%40)[a-z][a-zA-Z0-9-]*)\\/parameters\\/((?:[.](?!(?:__proto__|constructor|prototype)(?![_a-zA-Z0-9-]))[_a-zA-Z][_a-zA-Z0-9-]*)+)\\/detail[/#?]?$/",
     "method": "GET",
     "parameters": [],
     "path": [
@@ -4130,7 +4130,7 @@
       ":parameterKey",
       "detail"
     ],
-    "matcher": "^\\/orgs\\/((?:@|%40)[a-z][a-zA-Z0-9-]*)\\/parameters\\/((?:[.][_a-zA-Z][_a-zA-Z0-9-]*)+)\\/detail[/#?]?$"
+    "matcher": "^\\/orgs\\/((?:@|%40)[a-z][a-zA-Z0-9-]*)\\/parameters\\/((?:[.](?!(?:__proto__|constructor|prototype)(?![_a-zA-Z0-9-]))[_a-zA-Z][_a-zA-Z0-9-]*)+)\\/detail[/#?]?$"
   },
   {
     "npmName": "@sdlcforge/dev-core",
@@ -4186,7 +4186,7 @@
   },
   {
     "npmName": "@sdlcforge/dev-core",
-    "routablePath": "/^\\/orgs\\/((?:@|%40)[a-z][a-zA-Z0-9-]*)\\/parameters\\/((?:[.][_a-zA-Z][_a-zA-Z0-9-]*)+)\\/set[/#?]?$/",
+    "routablePath": "/^\\/orgs\\/((?:@|%40)[a-z][a-zA-Z0-9-]*)\\/parameters\\/((?:[.](?!(?:__proto__|constructor|prototype)(?![_a-zA-Z0-9-]))[_a-zA-Z][_a-zA-Z0-9-]*)+)\\/set[/#?]?$/",
     "method": "PUT",
     "parameters": [
       {
@@ -4238,7 +4238,7 @@
       ":parameterKey",
       "set"
     ],
-    "matcher": "^\\/orgs\\/((?:@|%40)[a-z][a-zA-Z0-9-]*)\\/parameters\\/((?:[.][_a-zA-Z][_a-zA-Z0-9-]*)+)\\/set[/#?]?$"
+    "matcher": "^\\/orgs\\/((?:@|%40)[a-z][a-zA-Z0-9-]*)\\/parameters\\/((?:[.](?!(?:__proto__|constructor|prototype)(?![_a-zA-Z0-9-]))[_a-zA-Z][_a-zA-Z0-9-]*)+)\\/set[/#?]?$"
   },
   {
     "npmName": "@sdlcforge/dev-core",
