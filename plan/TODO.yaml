@@ -13,7 +13,17 @@ phases:
     - number: 3
       slug: wire-and-declare-seven-components
       title: Wire And Declare Seven Components
-      tasks: []
+      tasks:
+        - number: 1
+          slug: wire-seven-components-and-retire-dev-core
+          title: Wire Seven Components And Retire Dev-Core
+          path: phase-03-wire-and-declare-seven-components/001-wire-seven-components-and-retire-dev-core.md
+          done: false
+          tier: opus-high
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 4
       slug: verify-parity-and-tighten-gate
       title: Verify Parity And Tighten Gate
