@@ -210,7 +210,7 @@ phases:
             branch: plan/sdlc-core-unification-04-004
             commit:
                 - 0b58a51
-            merge: null
+            merge: 9cc477a
         - number: 5
           slug: verify-parity-contract-and-green-run
           title: Verify Parity Contract And Green Run
