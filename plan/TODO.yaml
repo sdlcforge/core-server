@@ -18,3 +18,7 @@ phases:
       slug: verify-parity-and-tighten-gate
       title: Verify Parity And Tighten Gate
       tasks: []
+    - number: 5
+      slug: component-boundary-hardening
+      title: Component Boundary Hardening
+      tasks: []
