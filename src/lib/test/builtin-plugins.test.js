@@ -88,6 +88,54 @@ describe('builtin-plugins aggregator', () => {
     }
   })
 
+  test('`handlers` is a fresh array, not an alias of any submodule`s own handlers array', () => {
+    // `builtin-plugins.mjs`' fact-1 comment names this exact hazard: two submodules pushing into
+    // a shared array would corrupt each other. The `toEqual` aggregation assertion above covers
+    // the merged-content half; this covers the identity half it does not.
+    for (const submodule of ABSORBED_SUBMODULES) {
+      expect(builtinHandlers).not.toBe(submodule.handlers)
+    }
+  })
+
+  test('no `(method, path)` pair is registered twice across the merged handlers array', () => {
+    // A duplicate is a hard startup crash, not a silent shadow: `plugable-express`'s
+    // `processCommandPath` throws `Non-unique command path: <path>`. This is strictly more
+    // valuable at seven components than it was at dev-core's four: the merged surface is larger,
+    // and it now spans components that used to be separated by a package boundary.
+    const pairs = builtinHandlers.flatMap(({ method, path, paths }) =>
+      (paths || [path]).map((p) => `${(method || 'GET').toUpperCase()} ${JSON.stringify(p)}`))
+    expect(pairs).toHaveLength(builtinHandlers.length)
+    expect(new Set(pairs).size).toBe(pairs.length)
+  })
+
+  test('the four `projects-audit` routes are registered, with their exact paths', () => {
+    // The `projects-audit` suite (`audit-lib.test.js`) is a single placeholder assertion over one
+    // pure function and cannot detect a handler regression, so the route surface is asserted here
+    // instead. These routes mount under `/projects` alongside the `projects` submodule's own,
+    // which is why the no-duplicate-pair test above is this assertion's companion rather than a
+    // duplicate of it.
+    const auditRoutes = builtinHandlers
+      .filter(({ path }) => path?.[0] === 'projects' && /^audit/.test(path[path.length - 1]))
+      .map(({ method, path }) => `${method.toUpperCase()} ${JSON.stringify(path)}`)
+      .sort()
+    expect(auditRoutes).toEqual([
+      'GET ["projects",":projectName","audit"]',
+      'GET ["projects","audit"]',
+      'PUT ["projects",":projectName","audit-fix"]',
+      'PUT ["projects","audit-fix"]'
+    ])
+  })
+
+  test('`projects-audit` contributes handlers but no `setup`', () => {
+    // `projects-audit` is the only one of the seven with no `setup` at all, and nothing may be
+    // added to the composite setup list on its behalf -- not a placeholder, not a no-op. Assert
+    // the absence at the source rather than inferring it from the composite `setup`'s behavior;
+    // this is also what makes the aggregator's `submodule.setup?.(setupArgs)` optional call
+    // load-bearing rather than defensive.
+    expect(projectsAudit.setup).toBeUndefined()
+    expect(projectsAudit.handlers).toHaveLength(4)
+  })
+
   test('`builtinPluginsFor` produces exactly one entry carrying the supplied identity', () => {
     const entries = builtinPluginsFor({ npmName : '@example/host', version : '9.9.9' })
 
@@ -180,7 +228,13 @@ describe('builtin-plugins aggregator', () => {
 
       // The registration sequence, which is what pins the runtime component order: `credential`
       // from `credentials`, then `newProjectName`/`projectName` from `projects`, then
-      // `newOrgKey`/`orgKey` from `orgs`, then `workKey` from `work`.
+      // `newOrgKey`/`orgKey` from `orgs`, then `workKey` from `work`. This ordered array is the
+      // ONLY artifact in the suite that pins `credentials -> projects -> orgs -> work` at runtime
+      // -- `projects` before `orgs` in particular is invisible to the compile-time validator,
+      // which scores it as a cross-phase edge with no order verdict at all. Do not "simplify" this
+      // back into a set or a `{name: opts}` map: `Object.keys()` over a map silently absorbs a
+      // duplicate registration (the second write just overwrites the first), which is exactly what
+      // the dedupe check just below this one exists to catch.
       expect(registeredPathVarOrder).toEqual([
         'credential',
         'newProjectName',
@@ -194,6 +248,28 @@ describe('builtin-plugins aggregator', () => {
       for (const name of registeredPathVarOrder) {
         expect(typeof registeredPathVarOptions[name].validationRe).toBe('string')
       }
+
+      // `app.ext` contract-freeze checks, ported from the donor suite nearly verbatim.
+      // `_liqProjects` is the exact key name external consumers (`controls`,
+      // `integrations-issues-github`) read; it is frozen by the consolidation contract.
+      expect(app.ext._liqProjects).toBeDefined()
+      expect(app.ext._liqProjects.playgroundPath).toBe(playgroundHome)
+      expect(app.ext._liqProjects.playgroundMonitor).toBeDefined()
+
+      // Invoking the first enqueued setup method the way the server's `DependencyRunner` would
+      // asserts the exact `_liqOrgs` key name and its initial shape, and confirms `orgs` defers
+      // its real work onto `app.ext.setupMethods` rather than running it inline.
+      app.ext.setupMethods[0].func({ app })
+      expect(app.ext._liqOrgs).toEqual({ orgSetupMethods : [] })
+
+      // `work`'s setup contract: the exact `app.ext.constants.WORK_DB_PATH` key path, and the
+      // `workKey` path var's `validationRe`. `optionsFetcher` is a lazily-invoked closure that
+      // constructs a `WorkDB` only when the framework calls it, so it reads nothing at setup time.
+      expect(app.ext.constants.WORK_DB_PATH)
+        .toBe(fsPath.join(serverConfigRoot, 'work', 'work-db.yaml'))
+      expect(registeredPathVarOptions.workKey.validationRe)
+        .toBe('work-[^/]+(?:/|%2[Ff])[^/]+(?:/|%2[Ff])[0-9]+')
+      expect(typeof registeredPathVarOptions.workKey.optionsFetcher).toBe('function')
     }
     finally {
       await fs.rm(serverConfigRoot, { recursive : true, force : true })
