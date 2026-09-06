@@ -114,7 +114,8 @@ phases:
           tier: sonnet-high
           git:
             branch: plan/sdlc-core-unification-02-004
-            commit: []
+            commit:
+                - c158ba7
             merge: null
     - number: 3
       slug: wire-and-declare-seven-components
