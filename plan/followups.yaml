@@ -967,3 +967,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Candidate followup: test:local portability -- test/test-server.js spawns bare ''sdlcforge-server'' from PATH, requiring an ad-hoc shim in any bare worktree; scripts/start.sh already resolves the binary correctly from package.json''s bin.'
+    - title: 'Observation: parameterKey is registered twice'
+      id: 09Qe
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Observation: parameterKey is registered twice (two different orgs handlers), tolerated by the framework, unchanged donor behavior, no action needed.'
