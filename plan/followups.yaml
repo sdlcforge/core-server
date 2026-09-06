@@ -987,3 +987,16 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: NEJt could not be reproduced by 11 probe variants under current dependency versions -- recorded as not-repaired-not-reproduced, not resolved.
+    - title: Task 004 validation bar vs task 003 comment
+      id: nxD5
+      date: "2026-09-06"
+      tags:
+        - type:documentation
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:verify-parity-and-tighten-gate
+      text: |-
+        Phase 4's boundary-gate correctness check found: task 004's Validation item 1 states a repo-wide bar ("grep -rn '@sdlcforge/dev-core#' src/ returns nothing", with no carve-out for a comment). Task 003's own comment in src/lib/test/plugin-graph-gate.test.js:28 ("unsatisfied / ... @sdlcforge/dev-core#orgs -- cleared by Phase 1's drift clearance...") is a deliberate historical explanation of why a finding cleared, and is exactly the kind of "deliberate historical mention" task 003's own Validation item 2 explicitly carves out ("returns nothing -- including in comments, except a deliberate historical mention of the retired package"). Task 004's stricter, carve-out-free wording is inconsistent with task 003's own already-established and correct precedent. Both tasks are complete and merged; this is a documentation-precision nit, not a functional defect -- the comment itself is fine and intentional. If task 004's document is ever revisited, either reword its Validation item 1 to add the same carve-out task 003 already has, or reword the plugin-graph-gate.test.js comment to avoid the literal #-suffixed node ID.
+
+        Found during Phase 4's boundary-gate correctness review.
