@@ -59,7 +59,17 @@ phases:
     - number: 2
       slug: absorb-dev-core
       title: Absorb Dev-Core
-      tasks: []
+      tasks:
+        - number: 1
+          slug: execute-absorption-merge
+          title: Execute Absorption Merge
+          path: phase-02-absorb-dev-core/001-execute-absorption-merge.md
+          done: false
+          tier: opus-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 3
       slug: wire-and-declare-seven-components
       title: Wire And Declare Seven Components
