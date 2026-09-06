@@ -555,3 +555,16 @@ items:
         The dependency @liquid-labs/condition-eval (resolving to 1.0.0-alpha.19) evaluates expressions via Function(e(o))() gated by a regex allowlist (numeric literals, true/false, a fixed operator/paren set) — a regex-then-Function() pattern with a history of allowlist-bypass issues in other libraries, though this allowlist looks reasonably tight. It is imported at src/work/handlers/_lib/prepare-questions-from-controls.mjs. Reachability from externally-influenced input (issue title/body, GitHub label, user-supplied work parameter) has not been confirmed. Low confidence, minor severity. When src/work/'s handler source is next reviewed, grep for condition-eval/Evaluator/evalTruth/evalNumber call sites and confirm every expression string is either a fixed developer-authored template or built only from already-validated/typed values, never a raw external string concatenated into the expression shape.
 
         Originally filed against @sdlcforge/dev-core as followup 7ZF2; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: get-org.mjs comment names retired helper
+      id: Yi1Y
+      date: "2026-09-06"
+      tags:
+        - type:documentation
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        src/orgs/handlers/_lib/get-org.mjs's header comment (lines 3-4) names the retired getOrgFromKey helper for exposition ('rather than importing the shared handlers library's getOrgFromKey helper'), even though that helper no longer exists as a shared handlers-library export. Not code-level usage — the comment is documentation, not a live reference. Worth rewording so the comment does not name a retired symbol.
+
+        Originally filed against @sdlcforge/dev-core as followup xehM; carried across when that package was absorbed into @sdlcforge/core-server.
