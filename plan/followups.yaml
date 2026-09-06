@@ -957,3 +957,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Phase 6 tasks 001 and 002 both carry a Validation item asserting 'make lint is green against the standing 233-finding baseline' -- lint is not green by construction and the comparable-scope figure is now 231 after task 004 cleared two findings. Not edited since those belong to Phase 6.
+    - title: 'Candidate followup: test:local portability --'
+      id: 7OZa
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Candidate followup: test:local portability -- test/test-server.js spawns bare ''sdlcforge-server'' from PATH, requiring an ad-hoc shim in any bare worktree; scripts/start.sh already resolves the binary correctly from package.json''s bin.'
