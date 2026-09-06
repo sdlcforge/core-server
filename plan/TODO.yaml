@@ -45,7 +45,7 @@ phases:
           slug: author-dev-core-absorption-parity-contract
           title: Author Dev-Core Absorption Parity Contract
           path: phase-01-pre-merge-baseline-and-drift-clearance/004-author-dev-core-absorption-parity-contract.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: Authored plan/resources/dev-core-absorption-parity-contract.md enumerating all ten required categories of expected diff for the dev-core absorption. All numeric claims independently verified against live repository state. Item 4 (integrations-list re-identification) confirmed as a non-event after directly inspecting dev-core source -- none of the four absorbed submodules registers an integration provider. Task 003's baseline artifact hadn't landed yet, so items 7-8 substituted the predecessor contract's still-valid recorded tables per this task's own assumptions, flagged inline.
           git:
