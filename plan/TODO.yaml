@@ -149,7 +149,7 @@ phases:
           slug: port-donor-aggregate-assertions
           title: Port Donor Aggregate Assertions
           path: phase-03-wire-and-declare-seven-components/003-port-donor-aggregate-assertions.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: Ported the five categories of donor aggregate assertions (handler-array identity freshness, no-duplicate-(method,path), the four projects-audit routes, projects-audit's absent setup, app.ext contract-freeze checks) into the existing builtin-plugins.test.js, plus a comment recording the registered path-var sequence pins runtime order. All new assertions proved non-vacuous by mutation. No production code changes; make test and make lint both clean relative to baseline.
           git:
