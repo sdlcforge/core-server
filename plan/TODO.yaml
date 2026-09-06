@@ -134,7 +134,7 @@ phases:
             branch: plan/sdlc-core-unification-03-001
             commit:
                 - a4cd7ab
-            merge: null
+            merge: "0e83876"
         - number: 2
           slug: assert-component-order-agreement
           title: Assert Component Order Agreement
