@@ -617,3 +617,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Task document defect: the roster table and Validation section 5''s script both cite src/orgs/handlers/get-org.mjs for xehM; real path is src/orgs/handlers/_lib/get-org.mjs. Running Validation 5 literally will spuriously report MISSING for that one path -- not a merge defect.'
+    - title: 'Task document defect: dsdl''s suggested title '
+      id: Hqj8
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Task document defect: dsdl''s suggested title ("consolidation-contract.md:128 stale attribution", 47 chars) exceeds the 45-char title limit; used a shortened 43-char title instead.'
