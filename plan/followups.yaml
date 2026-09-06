@@ -847,3 +847,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: src/lib/test/full-tier-baseline.test.js line ~162 still contains a second, separate stale dev-core comment mention (distinct from line ~263 which was already fixed) -- task doc's requirement 6 explicitly scoped only line ~263, so left untouched per scope discipline; flagging for a later comment-hygiene pass.
+    - title: 'Explicit confirmation: none of the ''not predi'
+      id: c5lf
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Explicit confirmation: none of the ''not predicted'' regression triggers (integrations-list diff, golden-snapshot diff, EXPECTED_* constant failure) fired -- reporting the absence explicitly per the dispatch''s halt condition.'
