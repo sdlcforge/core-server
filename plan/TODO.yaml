@@ -88,6 +88,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 5
+          slug: verify-parity-contract-and-green-run
+          title: Verify Parity Contract And Green Run
+          path: phase-04-verify-parity-and-tighten-gate/005-verify-parity-contract-and-green-run.md
+          done: false
+          tier: opus-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 5
       slug: component-boundary-hardening
       title: Component Boundary Hardening
