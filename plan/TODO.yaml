@@ -186,7 +186,7 @@ phases:
             branch: plan/sdlc-core-unification-04-002
             commit:
                 - deef90e
-            merge: null
+            merge: 99c04f7
         - number: 3
           slug: delete-error-allowlist-and-tighten-gate
           title: Delete Error Allowlist And Tighten Gate
