@@ -191,7 +191,7 @@ phases:
           slug: delete-error-allowlist-and-tighten-gate
           title: Delete Error Allowlist And Tighten Gate
           path: phase-04-verify-parity-and-tighten-gate/003-delete-error-allowlist-and-tighten-gate.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: Deleted ALLOWLISTED_ERROR_FINDINGS/isAllowlisted outright and replaced the two validation-failure/exitCode:1 assertions with unconditional outcome==='ok', exitCode===0, and explicit counts/full-finding-set assertions matching task 001's measured record exactly. Repointed the two chartered edges onto their core-server successors while preserving orderVerdict===null/providerPhase==='framework' for the cross-phase edge. Extended non-trivial-graph test to all seven components. No error findings survived. All 4 tests pass, exactly one file changed.
           git:
