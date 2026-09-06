@@ -15,7 +15,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/sdlc-core-unification-01-001
-            commit: []
+            commit:
+                - f7f5b79
             merge: null
         - number: 2
           slug: refresh-dev-core-snapshot-and-clear-yalc-drift
