@@ -22,3 +22,7 @@ phases:
       slug: component-boundary-hardening
       title: Component Boundary Hardening
       tasks: []
+    - number: 6
+      slug: doc-updates
+      title: Documentation Updates
+      tasks: []
