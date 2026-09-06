@@ -61,8 +61,8 @@ import * as work from '../work'
 // Absorbed from `@liquid-labs/liq-controls` (phase-05 task 001),
 // `@liquid-labs/liq-credentials` (phase-05 task 002),
 // `@liquid-labs/liq-integrations-issues-github` (phase-05 task 003), and -- `projects`, `orgs`,
-// `work`, `projects-audit` -- from `@sdlcforge/dev-core`. Dependency (DAG) order, per fact 2; the
-// positions that are load-bearing rather than conventional:
+// `work`, `projects-audit` -- from the `sdlcforge` `dev-core` package. Dependency (DAG) order,
+// per fact 2; the positions that are load-bearing rather than conventional:
 //
 // - `credentials` before `projects`: `projects`' `setup()` eagerly calls
 //   `setupCredentials({ credentialsDB : app.ext.credentialsDB })`, and `credentials`' `setup()` is

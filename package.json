@@ -65,7 +65,6 @@
     "@liquid-labs/semver-plus": "^1.0.0-alpha.11",
     "@liquid-labs/shell-toolkit": "^1.0.0-alpha.10",
     "@liquid-labs/versioning": "^1.0.0-alpha.4",
-    "@sdlcforge/dev-core": "file:.yalc/@sdlcforge/dev-core",
     "highlight.js": "^11.9.0",
     "http-errors": "^2.0.0",
     "js-yaml": "^4.1.0",
@@ -83,8 +82,7 @@
         "@liquid-labs/sdlc-projects-badges-coverage",
         "@liquid-labs/sdlc-projects-badges-github-workflows",
         "@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd",
-        "@liquid-labs/sdlc-projects-workflow-local-node-build",
-        "@sdlcforge/dev-core"
+        "@liquid-labs/sdlc-projects-workflow-local-node-build"
       ],
       "builtins": [
         {
