@@ -740,3 +740,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Phase 4''s handoff is narrower than the task doc predicted: plugin-graph-absorbed-donor-conflicts.test.js, plugin-graph-serverconfigroot-rename.test.js, and full-tier-baseline.test.js''s full-tier-integrations-list.json snapshot all pass unchanged. Phase 4 should re-scope rather than assume those need repointing.'
+    - title: Stale dev-core references left in place per t
+      id: MXGO
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Stale dev-core references left in place per task doc''s own instruction: test/test-basic.js:52, test/test-integration-quick.js:59,83, test/README.md:109, plus AGENTS.md/CLAUDE.md/docs/architecture.md/docs/architecture/plugin-loading-tiers.md/docs/consumer-migration.md/docs/project-structure.md/docs/dev-core-consolidation-contract.md all still describe dev-core as an explicit npm plugin -- Phase 6''s.'
