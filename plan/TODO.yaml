@@ -113,7 +113,7 @@ phases:
           done: false
           tier: sonnet-high
           git:
-            branch: null
+            branch: plan/sdlc-core-unification-02-004
             commit: []
             merge: null
     - number: 3
