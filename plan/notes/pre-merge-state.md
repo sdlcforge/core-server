@@ -4,6 +4,13 @@
 
 The measured, verified state of `@sdlcforge/core-server` and `@sdlcforge/dev-core` as of 2026-09-05, captured during plan authoring so that later phases compare against a recorded fact rather than re-deriving one. Every figure below was read from the live checkouts, not inferred. Phase 1 mechanizes these into a durable, re-runnable baseline; this note is the planning-time snapshot that justifies the phase structure.
 
+## Corrections
+
+Two claims below were superseded by research that ran the operations this note only read the inputs to. They are left in place rather than rewritten, so the reasoning that produced the phase structure stays legible — but the corrected figures govern.
+
+- **"An identical generated fragment merges silently with no conflict at all"** (in [`@sdlcforge/dev-core`'s tree, as it stands on `main`](#sdlcforgedev-cores-tree-as-it-stands-on-main)) is **false**. The two repositories sit on different toolchain generations — `core-server` on `@liquid-labs/catalyst-*` (`CATALYST_*`), `dev-core` on `@liquid-labs/sdlc-projects-workflow-local-node-build` (`SDLC_*`) — so every shared build file differs and every one produces an `add/add` conflict git surfaces. Exactly one path in the whole merge merges silently, `plan/manifest.yaml`, and it is a byte-identical no-op. The measured per-path map is in [`merge-arrival-inventory.md`](./merge-arrival-inventory.md#2-makefile-makemk-gitignore-are-not-byte-identical); the unreviewed-arrival hazard is real but lives in the clean-add set, not the build files.
+- **The dependency counts "21 runtime dependencies" and "24"** (in [Dependency shape](#dependency-shape)) are each off by one, in opposite directions. The counted values are **22** and **23**, unioning to **32** after `@sdlcforge/dev-core` is dropped, per [`dependency-union.md`](./dependency-union.md#counts-and-shape). That note also resolves the two entries this one flagged for a second look: `npm-check-plus` is genuinely imported from `projects-audit` runtime handler code and belongs in `dependencies`; `shelljs` remains the inherited liability recorded here.
+
 ## Route and plugin surface
 
 `test/__snapshots__/full-tier-api-spec.json` holds **165 routes**. Provenance tally by `npmName`:
