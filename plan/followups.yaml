@@ -581,3 +581,16 @@ items:
         docs/consumer-migration.md documents a planned edit path for @sdlcforge/core-server to add @sdlcforge/dev-core as an explicit-plugin dependency and swap out its four standalone donor plugin entries (@liquid-labs/liq-work, @liquid-labs/liq-projects, @liquid-labs/liq-orgs, @liquid-labs/plugable-projects-audit) for it. Its per-section "re-verified as of this writing" claims about core-server's package.json/explicitPlugins state (e.g. lines 55, 191, 262) predate a later core-server-side merge and no longer reflect current state; the document's own underlying premise — that core-server would consume dev-core as an npm plugin dependency — may itself be superseded now that dev-core's source has been absorbed directly into core-server's own src/ tree rather than being consumed as a plugin. Whether this document should be updated, superseded, or removed is expected to be decided in a later documentation-refresh pass, at which point this item may become moot.
 
         Originally filed against @sdlcforge/dev-core as followup hks9; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: consolidation-contract.md stale attribution
+      id: HGBd
+      date: "2026-09-06"
+      tags:
+        - type:documentation
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        docs/dev-core-consolidation-contract.md:128 attributes runtime reads of app.ext._liqProjects/app.ext._liqOrgs to liq-controls (naming src/lib/resources/load-controls.mjs and src/lib/integrations/get-question-controls.mjs) and to liq-integrations-issues-github (src/create-or-update-pull-request.mjs), describing both as external consumers reading the runtime contract from outside. The liq-controls half of that attribution is stale: the named files actually live at @sdlcforge/core-server's own src/controls/resources/load-controls.mjs and src/controls/integrations/get-question-controls.mjs — one of core-server's own built-in plugin submodules, not an external package. Whether this document should be corrected, superseded, or removed is expected to be decided in a later documentation-refresh pass, at which point this item may become moot.
+
+        Originally filed against @sdlcforge/dev-core as followup dsdl; carried across when that package was absorbed into @sdlcforge/core-server.
