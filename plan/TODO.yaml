@@ -158,7 +158,7 @@ phases:
             branch: plan/sdlc-core-unification-03-003
             commit:
                 - 6dc5bad
-            merge: null
+            merge: 2faac43
     - number: 4
       slug: verify-parity-and-tighten-gate
       title: Verify Parity And Tighten Gate
