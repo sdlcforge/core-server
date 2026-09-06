@@ -46,6 +46,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 5
+          slug: record-pre-merge-root-blob-map
+          title: Record Pre-Merge Root Blob Map
+          path: phase-01-pre-merge-baseline-and-drift-clearance/005-record-pre-merge-root-blob-map.md
+          done: false
+          tier: haiku-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 2
       slug: absorb-dev-core
       title: Absorb Dev-Core
