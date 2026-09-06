@@ -110,7 +110,7 @@ phases:
           slug: verify-merge-and-restore-green-build
           title: Verify Merge And Restore Green Build
           path: phase-02-absorb-dev-core/004-verify-merge-and-restore-green-build.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: 'Verified the dev-core absorption merge changed source layout and dependency declarations and nothing else observable: all Part 1-4 checks passed exactly as specified. make test needed one in-scope fix (a shared test literal tied to package identity) after which only the documented inherited failure (project-lifecycle.test.mjs) remained red. make lint pre/post-merge counts identical (236/236) -- absorbed source introduces zero new lint findings.'
           git:
