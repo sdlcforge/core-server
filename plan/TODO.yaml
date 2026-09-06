@@ -52,7 +52,7 @@ phases:
             branch: plan/sdlc-core-unification-01-004
             commit:
                 - ede544a
-            merge: null
+            merge: 957d0a8
         - number: 5
           slug: record-pre-merge-root-blob-map
           title: Record Pre-Merge Root Blob Map
