@@ -16,6 +16,16 @@ phases:
             branch: null
             commit: []
             merge: null
+        - number: 2
+          slug: refresh-dev-core-snapshot-and-clear-yalc-drift
+          title: Refresh Dev-Core Snapshot And Clear Yalc Drift
+          path: phase-01-pre-merge-baseline-and-drift-clearance/002-refresh-dev-core-snapshot-and-clear-yalc-drift.md
+          done: false
+          tier: sonnet-med
+          git:
+            branch: null
+            commit: []
+            merge: null
     - number: 2
       slug: absorb-dev-core
       title: Absorb Dev-Core
