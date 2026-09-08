@@ -667,16 +667,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Scope-extension candidate (task doc''s own flag): plugin-graph-absorbed-donor-conflicts.test.js covers only the three predecessor-absorption donors; whether the four newly-absorbed dev-core components deserve their own donor-conflict cases is a scope extension not landed here.'
-    - title: Phase and task documents state a non-existent
-      id: yMQe
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:verify-parity-and-tighten-gate
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: Phase and task documents state a non-existent URL (/server/plugins/details/<name>); real route is /server/plugins/:serverPluginName/details -- the wrong form 404s for every package and would produce a false pass on the dev-core half alone.
     - title: Requirement 3's baseline attribution is wrong
       id: 79J5
       date: "2026-09-06"
