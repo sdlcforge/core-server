@@ -236,7 +236,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/sdlc-core-unification-05-001
-            commit: []
+            commit:
+                - 5cc9c64
             merge: null
         - number: 2
           slug: add-component-boundary-drift-guard-test
