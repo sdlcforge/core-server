@@ -251,7 +251,7 @@ phases:
             branch: plan/sdlc-core-unification-05-002
             commit:
                 - d1ff6db
-            merge: null
+            merge: 655b308
     - number: 6
       slug: doc-updates
       title: Documentation Updates
