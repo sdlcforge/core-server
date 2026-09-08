@@ -61,7 +61,7 @@ Both are arrivals Phase 2 deliberately kept rather than deciding at merge time:
    ```
 
    Both must return no non-historical hits for whichever file(s) were removed.
-7. `make lint` is green against the standing 233-finding baseline; no code change was made by this task.
+7. `make lint`'s finding set is unchanged by this task (no code change was made) — **correction (2026-09-08): the standing baseline is 231, not 233** (Phase 4 task 004 cleared 2 of the original 3 `src/` findings; see `plan/resources/dev-core-absorption-parity-verification.md`). `make lint` is never literally "green" — `make/55-lint.mk` runs under `set -e` and the baseline itself is nonzero — the bar is zero *new* findings, reproduced against 231.
 
 ## Metadata
 

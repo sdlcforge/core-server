@@ -26,7 +26,7 @@ No dedicated skill covers updating `README.md`/`AGENTS.md`/`CLAUDE.md` prose in 
 4. All seven built-in components are named, in the declared order, everywhere the three files enumerate the built-in aggregate, and that order matches `docs/architecture.md`'s.
 5. The explicit-plugin tier is described as four `@liquid-labs/sdlc-projects-*` packages everywhere it is enumerated across the three files.
 6. `README.md` names each absorbed submodule's route surface, or explicitly states where the full route inventory lives instead (e.g. `docs/core-server-spec.md`), if a literal route table is judged not to belong in `README.md`. Record which choice was made and why in the task report.
-7. `make lint` is green against the standing 233-finding baseline; no code change was made by this task.
+7. `make lint`'s finding set is unchanged by this task (no code change was made) — **correction (2026-09-08): the standing baseline is 231, not 233** (Phase 4 task 004 cleared 2 of the original 3 `src/` findings; see `plan/resources/dev-core-absorption-parity-verification.md`). `make lint` is never literally "green" — the bar is zero *new* findings, reproduced against 231.
 
 ## Procedure
 
