@@ -306,16 +306,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: provision-local-deps.sh's leave-.yalc-as-is-if-present behavior means a worktree with an already-stale .yalc copy will silently keep it on a bare --refresh-lock rerun unless .yalc is removed first -- informational, could affect a future retry in this repo if not recognized.
-    - title: 'STALE PLAN DOC (not edited, manager-owned): p'
-      id: UlYf
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:absorb-dev-core
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: 'STALE PLAN DOC (not edited, manager-owned): plan/notes/merge-arrival-inventory.md still records 13 conflicts and classifies plan/manifest.yaml as a silent identical merge needing no handling -- now contradicts the corrected task doc and the merge that actually ran. Suggest the same 5d5c2a3->914f951 correction header.'
     - title: 'Cosmetic, already in permanent history: commi'
       id: mWgu
       date: "2026-09-06"
