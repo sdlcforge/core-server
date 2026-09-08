@@ -600,16 +600,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: strictOptional must stay at default false for Phase 4 (surviving appExt:_liqOrgs.orgSetupMethods info promotes to error under strictOptional:true); conversely strictOrder:true is now free (ok, same counts) if Phase 4 wants to opt in.
-    - title: Assertion 4's 'setup absent'/'handlers length
-      id: UqSX
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:wire-and-declare-seven-components
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: Assertion 4's 'setup absent'/'handlers length 4' checks, written at the source per the task doc's own instruction, do not turn red under the task doc's own named mutation ('remove projectsAudit from submodules') -- only assertion 3 and the pre-existing aggregation test do. The suite still goes red as the Validation section actually requires ('every mutation must turn the suite red'), just via a different assertion than the doc's per-mutation mapping predicted. No corrective action needed; flagging in case the manager wants the task doc's Validation wording corrected.
     - title: project-lifecycle.test.js fails in this workt
       id: WdhE
       date: "2026-09-06"
