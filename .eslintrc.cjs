@@ -74,3 +74,13 @@ module.exports = {
     'import/no-restricted-paths' : ['error', { basePath : __dirname, zones }]
   }
 }
+
+// Named export, alongside the default eslintrc-shaped `module.exports` above. ESLint's own
+// eslintrc-mode config loader (`@eslint/eslintrc`'s `ConfigValidator`) schema-validates
+// `require(...)`'s whole-module return value with `additionalProperties: false`, via
+// `Object.keys()` -- which only visits ENUMERABLE own properties -- so a non-enumerable property
+// is invisible to that validation and does not change the config shape ESLint sees, while
+// `require('../../../.eslintrc.cjs').COMPONENT_DIRS` in a plain Node context (no schema
+// validation involved) still reads it directly. Verified: a plain enumerable assignment here
+// makes ESLint reject the file with "Unexpected top-level property \"COMPONENT_DIRS\"".
+Object.defineProperty(module.exports, 'COMPONENT_DIRS', { value : COMPONENT_DIRS, enumerable : false })
