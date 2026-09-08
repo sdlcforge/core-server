@@ -600,16 +600,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: strictOptional must stay at default false for Phase 4 (surviving appExt:_liqOrgs.orgSetupMethods info promotes to error under strictOptional:true); conversely strictOrder:true is now free (ok, same counts) if Phase 4 wants to opt in.
-    - title: project-lifecycle.test.js fails in this workt
-      id: WdhE
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:wire-and-declare-seven-components
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: project-lifecycle.test.js fails in this worktree (7/7 tests), confirmed via A/B stash testing to be identical with/without this task's diff -- pre-existing, unrelated to component ordering, same root cause already flagged by task 001 (app.ext.serverConfigRoot). Not pre-declared in this task's own Assumptions section (unlike the plugin-graph-*/full-tier-baseline suites) -- may already be covered by task 001's flagged followup.
     - title: Of the three sibling plugin-graph-*.test.js s
       id: f6AA
       date: "2026-09-06"
