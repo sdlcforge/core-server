@@ -527,16 +527,6 @@ items:
         bun.lock resolves serialize-javascript@6.0.2 transitively via @rollup/plugin-terser@0.4.4 (a dependency of @sdlcforge/core-server's own devDependency @liquid-labs/catalyst-resource-babel-and-rollup@1.0.0-alpha.4, declared ^1.0.0-alpha.3 in package.json). serialize-javascript@6.0.2 carries an unpatched high-severity RCE advisory (GHSA-5c6j-r48x-rmvq, CVSS 8.1) plus a moderate DoS advisory (GHSA-qj8w-gfj5-8c6v); audit tooling should report findings rooted here. Dev/CI-only — @rollup/plugin-terser and its serialize-javascript dependency are never bundled into dist/sdlcforge-server.js, dist/sdlcforge-server-exec.js, or the published tarball — and core-server does not control @rollup/plugin-terser's own pin directly; a fix requires an upstream bump in either @rollup/plugin-terser or @liquid-labs/catalyst-resource-babel-and-rollup. Track rather than patch directly; worth re-checking whenever bun.lock is regenerated, since the same toolchain package resolves the pin again each time.
 
         Originally filed against @sdlcforge/dev-core as followup 0RpG (there rooted in dev-core's own devDependency @liquid-labs/sdlc-resource-babel-and-rollup, which core-server does not carry); reworded and carried across against @sdlcforge/core-server's own @liquid-labs/catalyst-resource-babel-and-rollup devDependency chain when dev-core was absorbed into core-server.
-    - title: Task document update could not be performed i
-      id: ACYM
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:absorb-dev-core
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: Task document update could not be performed inside this task's own worktree since the assigned task doc does not exist there (branch cut from main, before this plan's phase-02 docs existed on that lineage) -- only at plan_worktree_path. Manager should apply the Status section to plan/phase-02-absorb-dev-core/003-union-runtime-dependencies.md directly.
     - title: 'Suite-count baseline stale by one (same root '
       id: pO8X
       date: "2026-09-06"
