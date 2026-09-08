@@ -235,7 +235,7 @@ phases:
           done: false
           tier: sonnet-med
           git:
-            branch: null
+            branch: plan/sdlc-core-unification-05-001
             commit: []
             merge: null
         - number: 2
