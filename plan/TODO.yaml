@@ -248,7 +248,8 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/sdlc-core-unification-05-002
-            commit: []
+            commit:
+                - d1ff6db
             merge: null
     - number: 6
       slug: doc-updates
