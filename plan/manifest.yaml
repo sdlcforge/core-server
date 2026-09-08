@@ -1,7 +1,2 @@
 version: 1
-plans:
-    - slug: sdlc-core-unification
-      status: working
-      wave:
-        slug: sdlcforge-modernization
-        leadProject: core-server
+plans: []
