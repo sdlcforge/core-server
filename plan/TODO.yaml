@@ -268,7 +268,7 @@ phases:
             branch: plan/sdlc-core-unification-06-001
             commit:
                 - db29166
-            merge: null
+            merge: fa7b33c
         - number: 2
           slug: update-project-onboarding-docs
           title: Update Project Onboarding Docs
