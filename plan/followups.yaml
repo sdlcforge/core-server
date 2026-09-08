@@ -306,16 +306,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: provision-local-deps.sh's leave-.yalc-as-is-if-present behavior means a worktree with an already-stale .yalc copy will silently keep it on a bare --refresh-lock rerun unless .yalc is removed first -- informational, could affect a future retry in this repo if not recognized.
-    - title: 'Cosmetic, already in permanent history: commi'
-      id: mWgu
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:absorb-dev-core
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: 'Cosmetic, already in permanent history: commit message says 20 absorbed suites land ''on top of core-server''s existing 17'' but measured at the actual merge base 08e5ee1 the pre-existing count is 18 (Phase 1 added a suite). Task 004 should expect 38 suites total, not 37.'
     - title: Carried-forward obligations now live and unow
       id: 2qB6
       date: "2026-09-06"
