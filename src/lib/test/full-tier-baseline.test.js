@@ -260,9 +260,10 @@ describe('Full-tier baseline characterization', () => {
   })
 
   // `app.ext.credentialsDB`'s load-ordering contract: the builtin `src/credentials/` component
-  // provides `appExt:credentialsDB @ load`, and `@sdlcforge/dev-core`'s `projects` component
-  // requires it at the same phase -- provable only because `builtinPlugins` is always load
-  // source #1. This runtime characterization test only proves the method set exists once
+  // provides `appExt:credentialsDB @ load`, and the builtin `src/projects/` component requires it
+  // at the same phase. Both are now components of this package's own single `builtinPlugins`
+  // entry, so the ordering rests on their relative positions in `builtin-plugins.mjs`'
+  // `submodules` array. This runtime characterization test only proves the method set exists once
   // `appInit()` has already succeeded; it says nothing about *why* the ordering holds. The
   // build-time-enforced form of that same contract -- asserted statically against the real
   // graph, before any test in this file ever runs `appInit()` -- lives in

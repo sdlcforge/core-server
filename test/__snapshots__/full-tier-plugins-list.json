@@ -22,11 +22,6 @@
   {
     "npmName": "@sdlcforge/core-server",
     "installed": true,
-    "summary": "Built-in SDLC controls, credentials, and GitHub issues integration."
-  },
-  {
-    "npmName": "@sdlcforge/dev-core",
-    "installed": true,
-    "summary": "Plugable-express plugin for core-server consolidating the liq project lifecycle, work orchestration, org settings, and project audit capabilities into a single package."
+    "summary": "Built-in SDLC credentials, projects, orgs, controls, GitHub issues integration, work, and project audit components."
   }
 ]

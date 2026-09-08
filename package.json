@@ -40,15 +40,21 @@
   },
   "dependencies": {
     "@liquid-labs/comply-defaults": "^1.0.0-alpha.8",
+    "@liquid-labs/condition-eval": "^1.0.0-alpha.17",
+    "@liquid-labs/credentials-db-plugin-github": "^1.0.0-alpha.5",
+    "@liquid-labs/dependency-runner": "^1.0.0-alpha.8",
+    "@liquid-labs/federated-json": "^1.0.0-alpha.34",
     "@liquid-labs/find-plus": "^1.0.1",
-    "@liquid-labs/git-toolkit": "^1.0.0-alpha.15",
-    "@liquid-labs/github-toolkit": "^1.0.0-alpha.16",
+    "@liquid-labs/git-toolkit": "^1.0.0-alpha.16",
+    "@liquid-labs/github-toolkit": "^1.0.0-alpha.25",
     "@liquid-labs/http-smart-response": "^1.0.0-alpha.6",
     "@liquid-labs/liq-credentials-db": "^1.0.0-alpha.9",
-    "@liquid-labs/liq-handlers-lib": "^1.0.0-alpha.16",
-    "@liquid-labs/liq-qa-lib": "^1.0.0-alpha.8",
-    "@liquid-labs/npm-toolkit": "^1.0.0-alpha.15",
+    "@liquid-labs/liq-handlers-lib": "^1.0.0-alpha.17",
+    "@liquid-labs/liq-qa-lib": "^1.0.0-alpha.9",
+    "@liquid-labs/npm-toolkit": "^1.0.0-alpha.21",
     "@liquid-labs/octocache": "^1.0.0-alpha.4",
+    "@liquid-labs/playground-monitor": "^1.0.0-beta.4",
+    "@liquid-labs/plugable-defaults": "^1.0.0-alpha.4",
     "@liquid-labs/plugable-express": "file:.yalc/@liquid-labs/plugable-express",
     "@liquid-labs/resource-item": "^1.0.0-alpha.4",
     "@liquid-labs/resource-model": "^1.0.0-alpha.10",
@@ -56,11 +62,15 @@
     "@liquid-labs/sdlc-projects-badges-github-workflows": "^1.0.0-alpha.2",
     "@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd": "^1.0.0-alpha.2",
     "@liquid-labs/sdlc-projects-workflow-local-node-build": "^1.0.0-alpha.7",
-    "@liquid-labs/shell-toolkit": "^1.0.0-alpha.7",
+    "@liquid-labs/semver-plus": "^1.0.0-alpha.11",
+    "@liquid-labs/shell-toolkit": "^1.0.0-alpha.10",
     "@liquid-labs/versioning": "^1.0.0-alpha.4",
-    "@sdlcforge/dev-core": "file:.yalc/@sdlcforge/dev-core",
+    "highlight.js": "^11.9.0",
     "http-errors": "^2.0.0",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "natural-sort": "^1.0.0",
+    "npm-check-plus": "^1.0.0-alpha.5",
+    "shelljs": "^0.8.5"
   },
   "_comply": {
     "orgKey": "@liquid-labs"
@@ -72,13 +82,157 @@
         "@liquid-labs/sdlc-projects-badges-coverage",
         "@liquid-labs/sdlc-projects-badges-github-workflows",
         "@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd",
-        "@liquid-labs/sdlc-projects-workflow-local-node-build",
-        "@sdlcforge/dev-core"
+        "@liquid-labs/sdlc-projects-workflow-local-node-build"
       ],
       "builtins": [
         {
           "npmName": "@sdlcforge/core-server",
           "components": [
+            {
+              "component": "credentials",
+              "provides": [
+                { "capability": "appExt:credentialsDB", "phase": "load", "via": "src/credentials/setup.mjs — app.ext.credentialsDB = <bare assignment>" },
+                { "capability": "pathVar:credential", "phase": "load", "via": "src/credentials/setup.mjs — registerPathVar('credential')" }
+              ],
+              "requires": [
+                "setupArg:app",
+                "setupArg:cache",
+                "setupArg:registerPathVar",
+                "setupArg:serverConfigRoot",
+                { "capability": "appExt:serverConfigRoot", "phase": "runtime", "reason": "handlers/credentials/import.mjs reads it" }
+              ]
+            },
+            {
+              "component": "projects",
+              "provides": [
+                {
+                  "capability": "appExt:_liqProjects",
+                  "phase": "load",
+                  "via": "src/projects/setup.mjs setupPlayground(): app.ext._liqProjects = Object.assign(...)"
+                },
+                {
+                  "capability": "appExt:_liqProjects.playgroundMonitor",
+                  "phase": "load",
+                  "via": "src/projects/setup.mjs:33, a new PlaygroundMonitor({ root: playgroundPath })"
+                },
+                {
+                  "capability": "appExt:_liqProjects.playgroundPath",
+                  "phase": "load",
+                  "via": "src/projects/setup.mjs:33, PLUGABLE_PLAYGROUND or $HOME/playground"
+                },
+                {
+                  "capability": "pathVar:newProjectName",
+                  "phase": "load",
+                  "via": "registerPathVar('newProjectName') from src/projects/setup.mjs:16"
+                },
+                {
+                  "capability": "pathVar:projectName",
+                  "phase": "load",
+                  "via": "registerPathVar('projectName') from src/projects/setup.mjs:21"
+                },
+                {
+                  "capability": "credential:GITHUB_API",
+                  "phase": "load",
+                  "via": "setupCredentials() from @liquid-labs/credentials-db-plugin-github, called at src/projects/setup.mjs:8; registers the GITHUB_API credential type onto the shared app.ext.credentialsDB"
+                }
+              ],
+              "requires": [
+                {
+                  "capability": "appExt:credentialsDB",
+                  "phase": "load",
+                  "reason": "src/projects/setup.mjs:8 passes it to setupCredentials() during plugin setup; it is also read at runtime by four handler libs, and the earlier load-phase claim subsumes those"
+                },
+                {
+                  "capability": "appExt:serverConfigRoot",
+                  "phase": "runtime",
+                  "reason": "src/projects/handlers/_lib/create-lib.mjs:91"
+                },
+                {
+                  "capability": "credential:GITHUB_API",
+                  "phase": "runtime",
+                  "reason": "task 003 reconciliation: credentialsDB.getToken('GITHUB_API') at handlers/_lib/archive-lib.mjs:33, destroy-lib.mjs:48, rename-lib.mjs:121, releases/_lib/do-github-release.mjs:11 -- resolves against this same component's own credential:GITHUB_API provides"
+                },
+                "setupArg:registerPathVar",
+                "setupArg:app",
+                "setupArg:reporter"
+              ]
+            },
+            {
+              "component": "orgs",
+              "provides": [
+                {
+                  "capability": "setupMethod:prepare org dependencies",
+                  "order": "first",
+                  "via": "app.ext.setupMethods.push at src/orgs/setup.mjs:6-10 (deps: ['!'])"
+                },
+                {
+                  "capability": "setupMethod:load orgs",
+                  "via": "app.ext.setupMethods.push at src/orgs/setup.mjs:11-14"
+                },
+                {
+                  "capability": "setupMethod:process org setup",
+                  "order": "last",
+                  "via": "app.ext.setupMethods.push at src/orgs/setup.mjs:15-19 (deps: ['*'])"
+                },
+                {
+                  "capability": "appExt:_liqOrgs",
+                  "phase": "setup",
+                  "via": "setup method 'prepare org dependencies' (src/orgs/setup.mjs:9) -- created by the DependencyRunner pass, not by orgs' own setup()"
+                },
+                {
+                  "capability": "appExt:_liqOrgs.orgs",
+                  "phase": "setup",
+                  "via": "setup method 'load orgs' (src/orgs/setup.mjs:26)"
+                },
+                {
+                  "capability": "pathVar:newOrgKey",
+                  "phase": "load",
+                  "via": "registerPathVar('newOrgKey') from src/orgs/setup.mjs:59"
+                },
+                {
+                  "capability": "pathVar:orgKey",
+                  "phase": "load",
+                  "via": "registerPathVar('orgKey') from src/orgs/setup.mjs:64"
+                },
+                {
+                  "capability": "pathVar:parameterKey",
+                  "phase": "handlers",
+                  "via": "registerPathVar('parameterKey') from the handler func at src/orgs/handlers/parameters-detail.mjs:10"
+                }
+              ],
+              "requires": [
+                {
+                  "capability": "appExt:setupMethods",
+                  "phase": "load",
+                  "reason": "src/orgs/setup.mjs:6 pushes three entries onto it from orgs' own setup()"
+                },
+                {
+                  "capability": "appExt:_liqProjects.playgroundMonitor",
+                  "phase": "setup",
+                  "reason": "src/orgs/setup.mjs:29, inside the deferred 'load orgs' setup method"
+                },
+                {
+                  "capability": "appExt:_liqOrgs.orgSetupMethods",
+                  "phase": "setup",
+                  "optional": true,
+                  "reason": "src/orgs/setup.mjs:6-10 unconditionally initializes the array empty, and 'process org setup' (src/orgs/setup.mjs:43-54) iterates it as a no-op enqueue when liq-policy -- the array's only writer, external to this package -- is not installed"
+                },
+                {
+                  "capability": "appExt:_liqProjects.playgroundPath",
+                  "phase": "runtime",
+                  "reason": "src/orgs/handlers/create.mjs, containment check anchored on the playground root before fs.mkdir"
+                },
+                {
+                  "capability": "appExt:_liqOrgs.orgs",
+                  "phase": "runtime",
+                  "reason": "src/orgs/handlers/list.mjs and _lib/get-org.mjs (consumed by parameters-{detail,list,set}.mjs) - resolves against this same component's own appExt:_liqOrgs.orgs provides"
+                },
+                "pathVar:parameterKey",
+                "setupArg:registerPathVar",
+                "setupArg:app",
+                "setupArg:reporter"
+              ]
+            },
             {
               "component": "controls",
               "provides": [
@@ -117,20 +271,6 @@
               ]
             },
             {
-              "component": "credentials",
-              "provides": [
-                { "capability": "appExt:credentialsDB", "phase": "load", "via": "src/credentials/setup.mjs — app.ext.credentialsDB = <bare assignment>" },
-                { "capability": "pathVar:credential", "phase": "load", "via": "src/credentials/setup.mjs — registerPathVar('credential')" }
-              ],
-              "requires": [
-                "setupArg:app",
-                "setupArg:cache",
-                "setupArg:registerPathVar",
-                "setupArg:serverConfigRoot",
-                { "capability": "appExt:serverConfigRoot", "phase": "runtime", "reason": "handlers/credentials/import.mjs reads it" }
-              ]
-            },
-            {
               "component": "issues-github",
               "provides": [
                 "setupMethod:register github issues integrations",
@@ -151,6 +291,73 @@
                 { "capability": "appExt:credentialsDB", "phase": "runtime" },
                 { "capability": "credential:GITHUB_API", "phase": "runtime", "optional": true, "reason": "GitHub hooks fail at call time without it; the server is otherwise healthy" },
                 { "capability": "appExt:_liqProjects.playgroundMonitor", "phase": "runtime" }
+              ]
+            },
+            {
+              "component": "work",
+              "provides": [
+                {
+                  "capability": "appExt:constants.WORK_DB_PATH",
+                  "phase": "load",
+                  "via": "src/work/setup.mjs:6"
+                },
+                {
+                  "capability": "pathVar:workKey",
+                  "phase": "load",
+                  "via": "registerPathVar('workKey') from src/work/setup.mjs:8"
+                }
+              ],
+              "requires": [
+                {
+                  "capability": "appExt:serverConfigRoot",
+                  "phase": "load",
+                  "reason": "src/work/setup.mjs:6 joins it into WORK_DB_PATH during plugin setup"
+                },
+                {
+                  "capability": "appExt:constants",
+                  "phase": "load",
+                  "reason": "src/work/setup.mjs:6 writes a member into the container"
+                },
+                {
+                  "capability": "appExt:_liqProjects.playgroundMonitor",
+                  "phase": "runtime",
+                  "reason": "24 unguarded reads across 12 request-path modules under src/work/handlers/"
+                },
+                {
+                  "capability": "appExt:credentialsDB",
+                  "phase": "runtime",
+                  "reason": "9 reads, all in src/work/handlers/**/_lib/; work's own setup.mjs never touches it"
+                },
+                {
+                  "capability": "appExt:integrations",
+                  "phase": "runtime",
+                  "reason": "9 callHook/hasHook sites in src/work/handlers/_lib/submit-lib.mjs and answer-set-to-md.mjs"
+                },
+                "setupArg:registerPathVar",
+                "setupArg:app",
+                "setupArg:reporter",
+                {
+                  "capability": "credential:GITHUB_API",
+                  "phase": "runtime",
+                  "reason": "task 003 reconciliation: credentialsDB.getToken('GITHUB_API') at handlers/_lib/clean-lib.mjs:25, close-lib.mjs:17, start-lib.mjs:74, status-lib.mjs:11, issues/_lib/add-lib.mjs:14,59, issues/_lib/remove-lib.mjs:25, projects/_lib/add-lib.mjs:13,38 -- resolves against the projects component's credential:GITHUB_API provides"
+                },
+                {
+                  "capability": "integrationHook:controls/getQuestionControls",
+                  "phase": "runtime",
+                  "optional": true,
+                  "reason": "src/work/handlers/_lib/submit-lib.mjs:94 gates the call behind hasHook and skips the submitter-attestation step when no controls provider is registered"
+                }
+              ]
+            },
+            {
+              "component": "projects-audit",
+              "requires": [
+                {
+                  "capability": "appExt:_liqProjects.playgroundMonitor",
+                  "phase": "runtime",
+                  "reason": "src/projects-audit/handlers/_lib/audit-lib.mjs:7 and audit-fix-lib.mjs:9"
+                },
+                "pathVar:projectName"
               ]
             }
           ]

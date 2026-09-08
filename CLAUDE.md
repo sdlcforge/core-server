@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**@sdlcforge/core-server** is an Express-based HTTP server with a plugin system. It works as a companion to `@sdlcforge/core-cli`, managing SDLC tools, integrations, and workflow automation. The codebase is intentionally minimal (66 source lines) and delegates heavily to `@liquid-labs/plugable-express`.
+**@sdlcforge/core-server** is an Express-based HTTP server with a plugin system. It works as a companion to `@sdlcforge/core-cli`, managing SDLC tools, integrations, and workflow automation. The codebase delegates heavily to `@liquid-labs/plugable-express`; its own capability is delivered through a seven-component built-in (in-tree) plugin aggregate (see Architecture below) plus four explicit npm-dependency plugins.
 
 ## Common Commands
 
@@ -45,10 +45,12 @@ bun run stop             # Stop server (via scripts/stop.sh)
 ### Plugin System
 The server uses a layered plugin architecture:
 
-1. **Core Server** (`src/lib/app-init.mjs`) configures a built-in (in-tree) plugin aggregate plus 5 explicit npm-dependency plugins, and delegates initialization to `@liquid-labs/plugable-express`
-2. **Built-in Plugins** (in-tree, aggregated by `src/lib/builtin-plugins.mjs` and registered under `@sdlcforge/core-server`'s own package identity via `plugable-express`'s `builtinPlugins` option): `src/controls/`, `src/credentials/`, `src/integrations-issues-github/`
-3. **Explicit Plugins** (installed as npm dependencies): dev-core, and the sdlc-projects-* workflow/badges family
+1. **Core Server** (`src/lib/app-init.mjs`) configures a built-in (in-tree) plugin aggregate plus 4 explicit npm-dependency plugins, and delegates initialization to `@liquid-labs/plugable-express`
+2. **Built-in Plugins** (in-tree, aggregated by `src/lib/builtin-plugins.mjs` and registered under `@sdlcforge/core-server`'s own package identity via `plugable-express`'s `builtinPlugins` option): seven components, in DAG (dependency) load order — `credentials`, `projects`, `orgs`, `controls`, `issues-github` (directory `src/integrations-issues-github/`), `work`, `projects-audit`. The order is load-bearing: it fixes absorbed routes' positions in the API spec and satisfies same-phase `app.ext` dependencies between components (e.g. `controls` requires `orgs` to have run first). `package.json`'s `plugable.host.builtins[0].components` must declare the identical order; `src/lib/test/host-declaration.test.js` asserts the two agree element-for-element. `projects`, `orgs`, `work`, and `projects-audit` were absorbed from the former `@sdlcforge/dev-core` package.
+3. **Explicit Plugins** (installed as npm dependencies): the four `@liquid-labs/sdlc-projects-*` workflow/badges packages. `@sdlcforge/dev-core` is no longer a dependency — its four submodules are now built-in components (row 2).
 4. **User Plugins** loaded from `${COMPLY_HOME}/plugins/server/`
+
+A root `.eslintrc.cjs` enforces the component boundary: `import/no-restricted-paths` forbids a direct import from one of the seven `src/<component>/` directories into another (cross-component coordination is `app.ext`-only), and `src/lib/test/component-boundary.test.js` guards against that rule going silently inert.
 
 **Important**: During test runs with `NODE_ENV=test`, consider whether explicit plugin loading should be skipped to avoid network dependencies and timeouts.
 
@@ -107,8 +109,8 @@ Configuration via `@liquid-labs/comply-defaults`:
 
 - `src/cli/index.js` - CLI entry point (starts server)
 - `src/lib/app-init.mjs` - Core initialization, delegates to plugable-express with builtinPlugins and explicitPlugins configuration
-- `src/lib/builtin-plugins.mjs` - Aggregates the built-in (in-tree) controls/credentials/integrations-issues-github submodules into one plugin
-- `src/controls/`, `src/credentials/`, `src/integrations-issues-github/` - Built-in (in-tree) plugin submodules, siblings of `src/lib/` and `src/cli/`
+- `src/lib/builtin-plugins.mjs` - Aggregates all seven built-in (in-tree) submodules, in DAG order, into one plugin; exports `componentNames` so the order can be asserted against `package.json`'s declared component list
+- `src/controls/`, `src/credentials/`, `src/integrations-issues-github/`, `src/orgs/`, `src/projects/`, `src/projects-audit/`, `src/work/` - Built-in (in-tree) plugin submodules, siblings of `src/lib/` and `src/cli/`; cross-imports between them are lint-forbidden (`import/no-restricted-paths` in the root `.eslintrc.cjs`)
 - `src/lib/index.js` - Library exports (appInit, explicitPlugins, Reporter, name, summary)
 
 ## Important Development Notes

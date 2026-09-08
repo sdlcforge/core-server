@@ -296,3 +296,757 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: docs/architecture/plugin-loading-tiers.md:61 states the compile-time plugin manifest is "expected to eventually supersede the runtime explicitPlugins array" — this plan-group has now landed and enforced that manifest (package.json's plugable.host block, validated by make/56-plugin-graph.mk), but it coexists with explicitPlugins rather than superseding it. The "expected to eventually" framing is stale. Needs a decision on how to update this doc's status language (landed-and-enforced, not-yet-scheduled-to-supersede) — flagged by the Phase 4 gate reviewer as a plan-closeout judgment call, not a mechanical fix.
+    - title: The main checkout's .yalc/@sdlcforge/dev-core
+      id: M3sG
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:pre-merge-baseline-and-drift-clearance
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: The main checkout's .yalc/@sdlcforge/dev-core snapshot needs a fresh yalc push from /Users/zane/playground/sdlcforge/dev-core's current main before this task can be re-attempted successfully — outside any task worktree's boundary, needs to happen in/via the main checkout.
+    - title: This task's Assumptions section (.yalc/@sdlcf
+      id: RxGk
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:pre-merge-baseline-and-drift-clearance
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: This task's Assumptions section (.yalc/@sdlcforge/dev-core already reflects dev-core main HEAD) is now factually false and should be corrected before re-dispatch.
+    - title: 'Manager judgment needed: proceed with only wo'
+      id: bsRs
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:pre-merge-baseline-and-drift-clearance
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Manager judgment needed: proceed with only worktree-local refresh (drift stays uncleared) vs also refresh main checkout''s .yalc snapshot first (out of this task''s stated scope, touches files outside the worktree).'
+    - title: Prior halted attempt's commit 71fccaf's messa
+      id: qRrl
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:pre-merge-baseline-and-drift-clearance
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Prior halted attempt's commit 71fccaf's message says drift is NOT cleared -- now stale since drift IS cleared as of commit dca4ec5; not rewritten per git-history norms, current task doc Status section has the up-to-date narrative.
+    - title: provision-local-deps.sh's leave-.yalc-as-is-i
+      id: TEO9
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:pre-merge-baseline-and-drift-clearance
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: provision-local-deps.sh's leave-.yalc-as-is-if-present behavior means a worktree with an already-stale .yalc copy will silently keep it on a bare --refresh-lock rerun unless .yalc is removed first -- informational, could affect a future retry in this repo if not recognized.
+    - title: 'STALE PLAN DOC (not edited, manager-owned): p'
+      id: UlYf
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'STALE PLAN DOC (not edited, manager-owned): plan/notes/merge-arrival-inventory.md still records 13 conflicts and classifies plan/manifest.yaml as a silent identical merge needing no handling -- now contradicts the corrected task doc and the merge that actually ran. Suggest the same 5d5c2a3->914f951 correction header.'
+    - title: 'Cosmetic, already in permanent history: commi'
+      id: mWgu
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Cosmetic, already in permanent history: commit message says 20 absorbed suites land ''on top of core-server''s existing 17'' but measured at the actual merge base 08e5ee1 the pre-existing count is 18 (Phase 1 added a suite). Task 004 should expect 38 suites total, not 37.'
+    - title: Carried-forward obligations now live and unow
+      id: 2qB6
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Carried-forward obligations now live and unowned in-tree until their tasks run: package.json''s 32-name dependency union (task 003), 22 dev-core followups dropped by --ours resolution of plan/followups.yaml (task 002), README.md + docs/architecture.md donor content (Phase 6), src/test/index.test.mjs''s assertions (Phase 3).'
+    - title: make/55-test.mk resolved --ours drops dev-cor
+      id: 1o1M
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: make/55-test.mk resolved --ours drops dev-core's Babel --ignore flags for test-data fixture trees now in-tree; task 004's check per the doc.
+    - title: Command injection risk in work shell-outs
+      id: li0t
+      date: "2026-09-06"
+      tags:
+        - type:security
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        Automated security review flagged 7 pre-existing command-injection-capable patterns in code migrated verbatim from liq-work: src/work/handlers/_lib/save-lib.mjs (git commit -m built via tryExec, partial escaping via replaceAll but not fully safe), src/work/handlers/_lib/work-db.mjs (git remote add with ghUser/projectBasename interpolation), src/work/handlers/resume.mjs (git checkout ${workKey}), src/work/handlers/issues/_lib/list-lib.mjs (open with ghOrg/project/number interpolation), src/work/handlers/_lib/submit-lib.mjs (open ${url} unquoted), src/work/handlers/_lib/pause-lib.mjs (git checkout ${main}), src/work/handlers/projects/_lib/list-lib.mjs (open with projectFQN interpolation). Confirmed via git log that these files' shell-out patterns predate the liq-work absorption (liq-work commits well before the absorption). Not introduced during absorption; now first-party @sdlcforge/core-server code rather than a vendored dependency. Same class of issue as the companion command-injection followup covering the projects shell-outs. Suggested remediation when next touched: replace shell-string interpolation with execFile/spawn argv-array invocation, and validate interpolated values (branch names, org/project names, URLs, issue numbers) against strict allowlist regexes before use.
+
+        Originally filed against @sdlcforge/dev-core as followup AhMK; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: Command injection risk in projects shell-outs
+      id: 5F7r
+      date: "2026-09-06"
+      tags:
+        - type:security
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        Automated security review flagged 4 pre-existing command-injection-capable patterns in code migrated verbatim from liq-projects: src/projects/handlers/_lib/create-lib.mjs (shell.exec building a `hub create` command from newProjectName/githubOwner/orgKey), src/projects/handlers/_lib/rename-lib.mjs (shell.exec building `git remote set-url` from newName/projectPath), src/projects/handlers/releases/_lib/do-npm-publish.mjs (tryExec building `npm publish` with an OTP/tag), and src/projects/handlers/releases/_lib/publish-lib.mjs (tryExec building `git checkout -b` from a release-branch name). Confirmed via git log that these patterns predate the liq-projects absorption (commits 841f543/69de4e7/bacc1f0 in liq-projects, well before the absorption) — the migration carried them across with zero content-line changes, i.e. no new behavior was introduced. Not introduced during absorption; now first-party @sdlcforge/core-server code rather than a vendored dependency. Suggested remediation when next touched: replace shell-string interpolation with execFile/spawn argv-array invocation, and validate the interpolated values (project names, branch names, OTP) against strict allowlist regexes before use.
+
+        Originally filed against @sdlcforge/dev-core as followup g23a; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: Fix inherited projects-audit defects
+      id: CUZK
+      date: "2026-09-06"
+      tags:
+        - type:bug
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        Four pre-existing defects inherited as-is (no behavior change during the projects-audit absorption) from @liquid-labs/plugable-projects-audit into @sdlcforge/core-server's src/projects-audit/ submodule: (1) the two implied endpoints advertise a projectName parameter they cannot use — getAuditEndpointParameters/getAuditFixEndpointParameters spread commonAuditPathParameters for both the named and implied variants, but the implied paths carry no :projectName; the project comes from the X-CWD header instead. (2) A typo drops one parameter's help text from the API spec: audit-fix-lib.mjs's removePackages parameter object spells its key "dascription" rather than "description". (3) An unknown project name yields a 500, not a 404 — both libs immediately destructure the result of getProjectData(projectName), which returns undefined for an unknown name, so the destructuring throws a TypeError. (4) Four prose typos are published in user-facing help text: "Auidts" (audit-lib.mjs's summary), and "reomved", "pacagkes", "specificatinos" (audit-fix-lib.mjs's description/parameter help), plus a double space in "${workDesc} project  security". A fifth, purely internal item: all four handlers assign reporter = reporter.isolate() and never read it — dead code, no user-visible effect. Fixing (1) or (2) changes the generated API spec, which is why these were left unfixed during absorption.
+
+        Originally filed against @sdlcforge/dev-core as followup bTGn; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: parameters-set setUndefined/setNull error
+      id: bL7q
+      date: "2026-09-06"
+      tags:
+        - type:bug
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        PUT /orgs/:orgKey/parameters/:parameterKey/set (src/orgs/handlers/parameters-set.mjs) exposes setUndefined and setNull parameters whose value ladder produces parsedValue === undefined or parsedValue === null respectively. updateSetting's checkValue (src/orgs/resources/lib/settings.mjs) only whitelists boolean/number/string and arrays of those, so both fall through the whitelist and checkValue throws — the documented setUndefined and setNull parameters always error instead of storing the value their own parameter description promises. Pre-existing contradiction between the endpoint's declared parameters and the settings library's storage constraints; deliberately left unfixed while the lookup/persistence path itself was repaired.
+
+        Originally filed against @sdlcforge/dev-core as followup X7IU; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: orgs create.mjs creates directory only
+      id: AdFn
+      date: "2026-09-06"
+      tags:
+        - type:enhancement
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        POST /orgs/create/:newOrgKey (src/orgs/handlers/create.mjs) creates only the org's data directory (fs.mkdir under &lt;localDataRoot&gt;/org); it writes no org.json or settings.yaml, constructs no Organization, and registers nothing into app.ext._liqOrgs.orgs, which is populated only by the "load orgs" setup method (src/orgs/setup.mjs) scanning the playground for a package.json carrying liq.packageType === 'org'. The endpoint's localDataRoot parameter's own description still reads "The local directory in which to save ./orgs/org.json...", which the handler never does — left inaccurate because the parameter list itself was treated as unchanged when help.description/help.summary were separately corrected to describe current behavior. A follow-on task should either complete org creation (write org.json/settings.yaml, construct an Organization, register it into the runtime registry) or correct the localDataRoot parameter description to match what the handler actually does.
+
+        Originally filed against @sdlcforge/dev-core as followup ZkAv; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: orgs list.mjs mdFormatter field mismatch
+      id: rI6P
+      date: "2026-09-06"
+      tags:
+        - type:bug
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        src/orgs/handlers/list.mjs's mdFormatter renders `* ${o.name}` while the handler's defaultFields is ['key', 'commonName', 'legalName'], and the JSON/terminal/text formatters for the same endpoint all render commonName/key. The Markdown rendering disagrees with every other format for the same endpoint. Low severity: name is still a defined Organization property so the output is not broken, only inconsistent across formats.
+
+        Originally filed against @sdlcforge/dev-core as followup 2Zug; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: parameters-list.mjs mdFormatter arg shape
+      id: RuIZ
+      date: "2026-09-06"
+      tags:
+        - type:bug
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        src/orgs/handlers/parameters-list.mjs's mdFormatter/terminalFormatter/textFormatter use positional args (parameters, title) but formatOutput invokes non-JSON formatters with a single {data, title, fields} object — the same category of pre-existing inconsistency as src/orgs/handlers/list.mjs's analogous mdFormatter (see the sibling list.mjs mdFormatter field-mismatch followup). Left untouched (JSON-path-only test coverage exercised it) but is a real bug if parameters-list is ever requested with format=md/txt/terminal.
+
+        Originally filed against @sdlcforge/dev-core as followup Jbaz; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: project-lifecycle test pre-existing failure
+      id: N7cz
+      date: "2026-09-06"
+      tags:
+        - type:bug
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        src/projects/handlers/_lib/test/project-lifecycle.test.mjs fails independently of credentials/network: its appMock supplies app.ext.serverHome while create-lib.mjs reads app.ext.serverConfigRoot (both files byte-identical to the liq-projects donor's blobs). A real pre-existing donor defect, not a regression from absorption. Keeps make test/make qa red in @sdlcforge/core-server until fixed; a future full-test-suite run should not expect a fully-green make qa because of this one suite. Also note: src/projects/handlers/test/close-implied.mjs is a misnamed test file (missing the .test infix) that Jest never collects — dead in both directions, migrated verbatim from liq-projects.
+
+        Originally filed against @sdlcforge/dev-core as followup 2aMD; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: providerFor typo breaks pull-request hook
+      id: L5cp
+      date: "2026-09-06"
+      tags:
+        - type:bug
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        src/work/handlers/_lib/answer-set-to-md.mjs:74 calls app.ext.integrations with providerFor: 'pull requests' (plural), while every other call site in the codebase uses the singular 'pull request'. IntegrationsManager.callHook/hasHook match on exact providerFor string, so this mismatched entry throws "No provider found" at request time instead of resolving the registered provider — a live, reachable defect, not merely cosmetic. Independent corroboration: @liquid-labs/plugable-express's own diff-manifest.js header cites this exact typo as its motivating example for why manifest-derivation tooling matters. Fix: change 'pull requests' to 'pull request' at that call site, plus a regression test asserting the hook resolves.
+
+        Originally filed against @sdlcforge/dev-core as followup OmUC; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: resource-model Model.save() always rejects
+      id: 8UB8
+      date: "2026-09-06"
+      tags:
+        - type:bug
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        @liquid-labs/resource-model's Model.save() (src/Model.mjs:74-80, identical in the installed dist/) destructures errors off an un-awaited async validate() call, so errors.length throws and every save() call on a Model subclass rejects unconditionally. @sdlcforge/core-server's src/orgs/resources/organization.mjs works around this with its own async save() override that writes #settings directly rather than delegating to the base implementation; the upstream package itself is unfixed and remains broken for any other Model subclass, in this or any other consumer, that relies on the base save() without its own override.
+
+        Originally filed against @sdlcforge/dev-core as followup Ymcf; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: create.mjs response discloses abs path
+      id: qYuq
+      date: "2026-09-06"
+      tags:
+        - type:security
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        POST /orgs/create/:newOrgKey's 2xx response body's directory field (src/orgs/handlers/create.mjs, response construction) echoes back the fully resolved absolute filesystem path (built from fsPath.resolve(localDataRoot)). When the caller supplies a relative localDataRoot, the response discloses the server's absolute directory layout (e.g. the playground root's absolute parent path) to the caller. Does not by itself enable an attack — the containment check restricts where the directory can actually be created regardless of what is echoed back — but is a minor server-filesystem-layout disclosure. If server filesystem layout is considered sensitive in this deployment context, return a playground-root-relative path instead, or omit the directory field and return only the caller-supplied newOrgKey.
+
+        Originally filed against @sdlcforge/dev-core as followup Hwdp; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: octocache/octokit chain high-sev advisory
+      id: l2Ly
+      date: "2026-09-06"
+      tags:
+        - type:security
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        The liq-projects absorption's dependency union added @liquid-labs/octocache (^1.0.0-alpha.4, now @sdlcforge/core-server's own runtime dependency), which pins an octokit chain resolving to octokit&lt;=3.1.1. npm audit --package-lock-only confirmed an unpatched high-severity advisory GHSA-pwfr-8pq7-x9qv ("Unauthenticated Denial of Service in the octokit/webhooks library", CVSS 8.2) plus two moderate ReDoS advisories (GHSA-rmvr-2pp2-xj38 in @octokit/request, GHSA-xx4v-prfh-6cgc in @octokit/request-error). Also affects @liquid-labs/github-toolkit, @liquid-labs/credentials-db-plugin-github, and @liquid-labs/liq-credentials-db via the same root cause. Distinct from the separate serialize-javascript/rollup-terser RCE advisory, the sdlc-resource-babel-and-rollup deprecation note, and the command-injection followups covering the projects/work shell-outs — do not conflate. @liquid-labs/octocache does not control its own octokit pin directly; a fix requires a semver-major bump upstream. Reachability of the specific webhook-DoS code path from actual GitHub-integration usage (authenticated API calls, not inbound webhook processing) is unconfirmed and worth checking before prioritizing.
+
+        Originally filed against @sdlcforge/dev-core as followup pWxw; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: condition-eval Function() eval pattern
+      id: VgqT
+      date: "2026-09-06"
+      tags:
+        - type:security
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        The dependency @liquid-labs/condition-eval (resolving to 1.0.0-alpha.19) evaluates expressions via Function(e(o))() gated by a regex allowlist (numeric literals, true/false, a fixed operator/paren set) — a regex-then-Function() pattern with a history of allowlist-bypass issues in other libraries, though this allowlist looks reasonably tight. It is imported at src/work/handlers/_lib/prepare-questions-from-controls.mjs. Reachability from externally-influenced input (issue title/body, GitHub label, user-supplied work parameter) has not been confirmed. Low confidence, minor severity. When src/work/'s handler source is next reviewed, grep for condition-eval/Evaluator/evalTruth/evalNumber call sites and confirm every expression string is either a fixed developer-authored template or built only from already-validated/typed values, never a raw external string concatenated into the expression shape.
+
+        Originally filed against @sdlcforge/dev-core as followup 7ZF2; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: get-org.mjs comment names retired helper
+      id: Yi1Y
+      date: "2026-09-06"
+      tags:
+        - type:documentation
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        src/orgs/handlers/_lib/get-org.mjs's header comment (lines 3-4) names the retired getOrgFromKey helper for exposition ('rather than importing the shared handlers library's getOrgFromKey helper'), even though that helper no longer exists as a shared handlers-library export. Not code-level usage — the comment is documentation, not a live reference. Worth rewording so the comment does not name a retired symbol.
+
+        Originally filed against @sdlcforge/dev-core as followup xehM; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: consumer-migration.md framing is stale
+      id: KGVq
+      date: "2026-09-06"
+      tags:
+        - type:documentation
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        docs/consumer-migration.md documents a planned edit path for @sdlcforge/core-server to add @sdlcforge/dev-core as an explicit-plugin dependency and swap out its four standalone donor plugin entries (@liquid-labs/liq-work, @liquid-labs/liq-projects, @liquid-labs/liq-orgs, @liquid-labs/plugable-projects-audit) for it. Its per-section "re-verified as of this writing" claims about core-server's package.json/explicitPlugins state (e.g. lines 55, 191, 262) predate a later core-server-side merge and no longer reflect current state; the document's own underlying premise — that core-server would consume dev-core as an npm plugin dependency — may itself be superseded now that dev-core's source has been absorbed directly into core-server's own src/ tree rather than being consumed as a plugin. Whether this document should be updated, superseded, or removed is expected to be decided in a later documentation-refresh pass, at which point this item may become moot.
+
+        Originally filed against @sdlcforge/dev-core as followup hks9; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: consolidation-contract.md stale attribution
+      id: HGBd
+      date: "2026-09-06"
+      tags:
+        - type:documentation
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        docs/dev-core-consolidation-contract.md:128 attributes runtime reads of app.ext._liqProjects/app.ext._liqOrgs to liq-controls (naming src/lib/resources/load-controls.mjs and src/lib/integrations/get-question-controls.mjs) and to liq-integrations-issues-github (src/create-or-update-pull-request.mjs), describing both as external consumers reading the runtime contract from outside. The liq-controls half of that attribution is stale: the named files actually live at @sdlcforge/core-server's own src/controls/resources/load-controls.mjs and src/controls/integrations/get-question-controls.mjs — one of core-server's own built-in plugin submodules, not an external package. Whether this document should be corrected, superseded, or removed is expected to be decided in a later documentation-refresh pass, at which point this item may become moot.
+
+        Originally filed against @sdlcforge/dev-core as followup dsdl; carried across when that package was absorbed into @sdlcforge/core-server.
+    - title: serialize-javascript RCE via terser pin
+      id: ZK0S
+      date: "2026-09-06"
+      tags:
+        - type:security
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        bun.lock resolves serialize-javascript@6.0.2 transitively via @rollup/plugin-terser@0.4.4 (a dependency of @sdlcforge/core-server's own devDependency @liquid-labs/catalyst-resource-babel-and-rollup@1.0.0-alpha.4, declared ^1.0.0-alpha.3 in package.json). serialize-javascript@6.0.2 carries an unpatched high-severity RCE advisory (GHSA-5c6j-r48x-rmvq, CVSS 8.1) plus a moderate DoS advisory (GHSA-qj8w-gfj5-8c6v); audit tooling should report findings rooted here. Dev/CI-only — @rollup/plugin-terser and its serialize-javascript dependency are never bundled into dist/sdlcforge-server.js, dist/sdlcforge-server-exec.js, or the published tarball — and core-server does not control @rollup/plugin-terser's own pin directly; a fix requires an upstream bump in either @rollup/plugin-terser or @liquid-labs/catalyst-resource-babel-and-rollup. Track rather than patch directly; worth re-checking whenever bun.lock is regenerated, since the same toolchain package resolves the pin again each time.
+
+        Originally filed against @sdlcforge/dev-core as followup 0RpG (there rooted in dev-core's own devDependency @liquid-labs/sdlc-resource-babel-and-rollup, which core-server does not carry); reworded and carried across against @sdlcforge/core-server's own @liquid-labs/catalyst-resource-babel-and-rollup devDependency chain when dev-core was absorbed into core-server.
+    - title: 'Task document defect: the roster table and Va'
+      id: RiTB
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Task document defect: the roster table and Validation section 5''s script both cite src/orgs/handlers/get-org.mjs for xehM; real path is src/orgs/handlers/_lib/get-org.mjs. Running Validation 5 literally will spuriously report MISSING for that one path -- not a merge defect.'
+    - title: 'Task document defect: dsdl''s suggested title '
+      id: Hqj8
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Task document defect: dsdl''s suggested title ("consolidation-contract.md:128 stale attribution", 47 chars) exceeds the 45-char title limit; used a shortened 43-char title instead.'
+    - title: hks9 and dsdl's carried text was substantiall
+      id: iFJD
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: hks9 and dsdl's carried text was substantially rewritten per the task doc's own explicit instruction, going beyond the donor's original fragment with directly-verified findings -- diverges from the donor more than the other 15 items; sanity-checked against the standards' 'substantially the donor's original text' expectation and judged acceptable given the explicit instruction to make them stand alone.
+    - title: Task document update could not be performed i
+      id: ACYM
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Task document update could not be performed inside this task's own worktree since the assigned task doc does not exist there (branch cut from main, before this plan's phase-02 docs existed on that lineage) -- only at plan_worktree_path. Manager should apply the Status section to plan/phase-02-absorb-dev-core/003-union-runtime-dependencies.md directly.
+    - title: 'Suite-count baseline stale by one (same root '
+      id: pO8X
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Suite-count baseline stale by one (same root cause as the already-flagged conflict-count staleness): task doc says core-server ran 17 suites pre-merge, but direct measurement at $PRE shows 18 (three suites added by earlier phase-1/plan work after merge-arrival-inventory''s ''17'' figure was captured). Net collected suites is 38, not 37 -- documentation staleness, not a merge defect.'
+    - title: plan/resources/pre-merge-root-blob-map.md cro
+      id: Hbhh
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'plan/resources/pre-merge-root-blob-map.md cross-check disagreement resolved per the task doc''s own tie-break rule: map pinned at cbd19fd8, actual $PRE is 08e5ee10 (task 003''s work landed in between). Only the plan tree SHA differs (followups.yaml legitimately grew); all guarded critical paths matched exactly. Expected drift, not a hazard.'
+    - title: 'Assumptions section expected absorbed source '
+      id: s3T1
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Assumptions section expected absorbed source to produce new ESLint findings; directly verified it does not (148 files, 0 findings) -- a pleasant surprise worth noting for Phase 5's component-boundary lint work.
+    - title: The task-001 merge commit message also carrie
+      id: KWV0
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:absorb-dev-core
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: The task-001 merge commit message also carries the stale '17' suite-count figure forward.
+    - title: Stale README anchors in kept dev-core docs
+      id: O9g2
+      date: "2026-09-06"
+      tags:
+        - type:documentation
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:absorb-dev-core
+      text: |-
+        docs/consumer-migration.md (lines 247, 343) and docs/dev-core-consolidation-contract.md (lines 128, 157) contain ../README.md#<anchor> links (#repaired-defects-orgs-submodule, #projects-audit-submodule, #the-plugin-manifest) that resolve to core-server's own README.md, which has no such sections -- these anchors match sections that exist only in the donor @sdlcforge/dev-core's own README.md and were never repointed when the merge landed both files ('--ours' kept them verbatim per task 001). The link target file exists (not a dangling forward-link), but the fragments are broken. Both docs' disposition is already deferred to the doc-updates phase; when that phase touches these files, repoint the anchors to wherever the referenced content lands in core-server's docs, or drop the anchors if the content isn't carried over.
+
+        Found during Phase 2's boundary-gate documentation link-chain check.
+    - title: 'Unexpected pre-existing test failure, out of '
+      id: X1KA
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Unexpected pre-existing test failure, out of scope and not fixed: src/projects/handlers/_lib/test/project-lifecycle.test.mjs (7 tests) -- proven independent of this task''s diff. Root cause: appMock.ext.serverHome vs create-lib.mjs''s app.ext.serverConfigRoot read, an inherited defect from Phase 2''s absorption. Makes make test permanently red independent of Phase 4''s work -- needs a followup and probably a phase assignment.'
+    - title: 'make test''s pass marker is filter-blind: TEST'
+      id: uMj8
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'make test''s pass marker is filter-blind: TEST=builtin-plugins make test touches qa/.unit-test.passed, and a subsequent unfiltered make test then reports Nothing to be done and exits 0 -- a filtered green run masquerading as a full green run. Worth a followup on make/55-test.mk.'
+    - title: bun run test:local cannot run in a bare workt
+      id: yipP
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'bun run test:local cannot run in a bare worktree without a PATH shim: test/test-server.js spawns the bare binary name sdlcforge-server, not resolvable via node_modules/.bin or global install. Validation 6 is not reproducible in a fresh worktree as written.'
+    - title: Phase 4's handoff is narrower than the task d
+      id: YQ8P
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Phase 4''s handoff is narrower than the task doc predicted: plugin-graph-absorbed-donor-conflicts.test.js, plugin-graph-serverconfigroot-rename.test.js, and full-tier-baseline.test.js''s full-tier-integrations-list.json snapshot all pass unchanged. Phase 4 should re-scope rather than assume those need repointing.'
+    - title: Stale dev-core references left in place per t
+      id: MXGO
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Stale dev-core references left in place per task doc''s own instruction: test/test-basic.js:52, test/test-integration-quick.js:59,83, test/README.md:109, plus AGENTS.md/CLAUDE.md/docs/architecture.md/docs/architecture/plugin-loading-tiers.md/docs/consumer-migration.md/docs/project-structure.md/docs/dev-core-consolidation-contract.md all still describe dev-core as an explicit npm plugin -- Phase 6''s.'
+    - title: .yalc/@sdlcforge/dev-core and node_modules/@s
+      id: phtr
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: .yalc/@sdlcforge/dev-core and node_modules/@sdlcforge/dev-core still physically present, deliberately left per task doc (optional/untracked), harmless per the 0-dev-core-route measurement.
+    - title: strictOptional must stay at default false for
+      id: bz9g
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: strictOptional must stay at default false for Phase 4 (surviving appExt:_liqOrgs.orgSetupMethods info promotes to error under strictOptional:true); conversely strictOrder:true is now free (ok, same counts) if Phase 4 wants to opt in.
+    - title: Assertion 4's 'setup absent'/'handlers length
+      id: UqSX
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Assertion 4's 'setup absent'/'handlers length 4' checks, written at the source per the task doc's own instruction, do not turn red under the task doc's own named mutation ('remove projectsAudit from submodules') -- only assertion 3 and the pre-existing aggregation test do. The suite still goes red as the Validation section actually requires ('every mutation must turn the suite red'), just via a different assertion than the doc's per-mutation mapping predicted. No corrective action needed; flagging in case the manager wants the task doc's Validation wording corrected.
+    - title: project-lifecycle.test.js fails in this workt
+      id: WdhE
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: project-lifecycle.test.js fails in this worktree (7/7 tests), confirmed via A/B stash testing to be identical with/without this task's diff -- pre-existing, unrelated to component ordering, same root cause already flagged by task 001 (app.ext.serverConfigRoot). Not pre-declared in this task's own Assumptions section (unlike the plugin-graph-*/full-tier-baseline suites) -- may already be covered by task 001's flagged followup.
+    - title: Of the three sibling plugin-graph-*.test.js s
+      id: f6AA
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Of the three sibling plugin-graph-*.test.js suites the Assumptions section expects red, only two were actually red (plugin-graph-gate.test.js, plugin-graph-third-party-ordering.test.js); plugin-graph-serverconfigroot-rename.test.js and plugin-graph-absorbed-donor-conflicts.test.js are green -- consistent with task 001's own flagged note that Phase 4's handoff is narrower than predicted.
+    - title: Measured pre-existing lint baseline is 236, n
+      id: M21N
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:wire-and-declare-seven-components
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Measured pre-existing lint baseline is 236, not the ~233 the task doc's Assumptions cite -- confirmed unaffected either way, informational only.
+    - title: Phase 6 doc scope refinements
+      id: LipN
+      date: "2026-09-06"
+      tags:
+        - type:documentation
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:wire-and-declare-seven-components
+      text: |-
+        Phase 3's boundary-gate architecture-conformance and documentation link-chain checks confirmed docs/architecture.md and docs/architecture/plugin-loading-tiers.md are now stale (still describe 3 built-in components and 5 npm-dependency packages including @sdlcforge/dev-core) -- this drift is expected and already scoped to plan/phase-06-doc-updates/001-update-architecture-docs.md. Three refinements surfaced that go beyond that task doc's current scope, worth folding in when Phase 6 runs:
+
+        1. test/README.md (not currently named in Phase 6's document list) independently repeats the same stale @sdlcforge/dev-core-as-explicit-plugin claim ("Explicit Plugins Integration" section) -- add it to the doc-update sweep.
+        2. docs/architecture/plugin-loading-tiers.md's Tier 2 section (around line 59) currently frames controls' dependency on orgs/projects as a latent startup-failure risk contingent on dev-core being loaded as an npm package ("nothing enforces the _liqProjects half at startup; it fails... if dev-core was never loaded"). Since orgs and projects are now built-in components ordered ahead of controls in the same submodules array (shipped inside core-server's own package), this risk is mechanically closed by the migration, not merely relocated -- the rewrite should credit this as a resolved risk rather than restating it under the new component names.
+        3. docs/architecture.md's "Key decisions" section has no entry recording the decision to absorb the four dev-core-donor components into the built-in in-tree tier rather than continuing to load them as a separate npm package -- worth adding a bullet naming the rationale (eliminating an unpublished-package yalc workaround, closing the startup-failure risk in item 2) and the rejected alternative (publish/keep dev-core as a separate package).
+
+        Found during Phase 3's boundary-gate review (architecture-conformance + doc link-chain checks).
+    - title: strictOrder:true confirmed independently to h
+      id: VAFc
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: strictOrder:true confirmed independently to have zero order-unprovable warnings in the default run, consistent with the note's claim it's a free improvement -- not enabled here (out of this phase's scope), flagging for a future phase decision per the task doc's own instruction.
+    - title: 'src/lib/test/full-tier-baseline.test.js line '
+      id: 7LNl
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: src/lib/test/full-tier-baseline.test.js line ~162 still contains a second, separate stale dev-core comment mention (distinct from line ~263 which was already fixed) -- task doc's requirement 6 explicitly scoped only line ~263, so left untouched per scope discipline; flagging for a later comment-hygiene pass.
+    - title: 'Explicit confirmation: none of the ''not predi'
+      id: c5lf
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Explicit confirmation: none of the ''not predicted'' regression triggers (integrations-list diff, golden-snapshot diff, EXPECTED_* constant failure) fired -- reporting the absence explicitly per the dispatch''s halt condition.'
+    - title: make lint (whole-repo, read-only investigatio
+      id: fgaF
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: make lint (whole-repo, read-only investigation) reports 236 pre-existing errors including an identical pre-existing 'beforeAll is not defined (no-undef)' finding on this task's file plus task 004's two sibling files -- a repo-wide eslint-config gap (jest globals not recognized for plugin-graph test files) predating this task, reproduced identically against pre-change content via git show HEAD, unrelated to and unaffected by this task's edits. Worth a follow-up to add jest globals recognition for src/lib/test/**.
+    - title: 'Per Requirement 6, strictOrder:true measured '
+      id: PokV
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Per Requirement 6, strictOrder:true measured as a genuine free improvement (ok, zero order-unprovable edges) but deliberately not adopted here -- flagging per task doc's own instruction as a follow-up candidate.
+    - title: Filename mismatch (task doc's own flagged dec
+      id: 6bMp
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Filename mismatch (task doc''s own flagged decision): plugin-graph-third-party-ordering.test.js''s filename still says third-party though content no longer describes cross-package coupling. Renaming outside this task''s sweep, left as-is per task doc instruction.'
+    - title: Scope-extension candidate (task doc's own fla
+      id: U0Uc
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Scope-extension candidate (task doc''s own flag): plugin-graph-absorbed-donor-conflicts.test.js covers only the three predecessor-absorption donors; whether the four newly-absorbed dev-core components deserve their own donor-conflict cases is a scope extension not landed here.'
+    - title: Repo-wide dev-core# sweep had 7 residual matc
+      id: FNZJ
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Repo-wide dev-core# sweep had 7 residual matches confined to task 003's file at dispatch time -- task 003 has since landed (merge 00a4200), so the sweep should now be fully clean; confirm.
+    - title: 'N7cz needs a manager decision: join it as a f'
+      id: g94K
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'N7cz needs a manager decision: join it as a fifth fenced-off inherited defect (making green-apart-from-N7cz this phase''s bar) or schedule as its own repair task. Requirement 2 and requirement 6 as literally written cannot both be satisfied.'
+    - title: Validation item 4 fails literally on file att
+      id: R29f
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Validation item 4 fails literally on file attribution but requirement 3's substantive bar (no new lint finding) holds with a net -2; manager should decide which is authoritative.
+    - title: Phase and task documents state a non-existent
+      id: yMQe
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Phase and task documents state a non-existent URL (/server/plugins/details/<name>); real route is /server/plugins/:serverPluginName/details -- the wrong form 404s for every package and would produce a false pass on the dev-core half alone.
+    - title: Requirement 3's baseline attribution is wrong
+      id: 79J5
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Requirement 3''s baseline attribution is wrong: 233 = 230 across four test/ files + 3 under src/, not ''233 across 5 files under test/''.'
+    - title: 'Candidate followup: test:local portability --'
+      id: 7OZa
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Candidate followup: test:local portability -- test/test-server.js spawns bare ''sdlcforge-server'' from PATH, requiring an ad-hoc shim in any bare worktree; scripts/start.sh already resolves the binary correctly from package.json''s bin.'
+    - title: 'Observation: parameterKey is registered twice'
+      id: 09Qe
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: 'Observation: parameterKey is registered twice (two different orgs handlers), tolerated by the framework, unchanged donor behavior, no action needed.'
+    - title: NEJt could not be reproduced by 11 probe vari
+      id: T55R
+      date: "2026-09-06"
+      tags:
+        - type:ambiguity
+        - plan/phase:verify-parity-and-tighten-gate
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: NEJt could not be reproduced by 11 probe variants under current dependency versions -- recorded as not-repaired-not-reproduced, not resolved.
+    - title: Task 004 validation bar vs task 003 comment
+      id: nxD5
+      date: "2026-09-06"
+      tags:
+        - type:documentation
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:verify-parity-and-tighten-gate
+      text: 'src/lib/test/plugin-graph-gate.test.js:28''s comment ("unsatisfied / ... @sdlcforge/dev-core#orgs -- cleared by Phase 1''s drift clearance...") is a deliberate historical explanation of why a finding cleared -- exactly the kind of historical mention a sibling test-repointing procedure''s own instructions explicitly carve out and allow to survive in a comment. A separately-authored, stricter grep-based check elsewhere in the same procedure''s instructions has no such carve-out, creating an inconsistency between two closely related sets of instructions. The comment itself is fine and intentional; not a functional defect. If either set of instructions is revisited, align the wording: either add the same carve-out, or reword the comment to avoid the literal #-suffixed node ID.'
+    - title: 'Task worktree''s baseline lint run includes 3 '
+      id: D7dK
+      date: "2026-09-08"
+      tags:
+        - type:ambiguity
+        - plan/phase:component-boundary-hardening
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Task worktree's baseline lint run includes 3 extra findings from plan/resources/validate-check.mjs beyond the 231-finding corrected baseline -- an artifact of the plan worktree living inside this checkout, not a real movement, informational only.
+    - title: 'AGENTS.md''s explicit-plugin tier still never '
+      id: Xs6I
+      date: "2026-09-08"
+      tags:
+        - type:ambiguity
+        - plan/phase:doc-updates
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: AGENTS.md's explicit-plugin tier still never enumerated by package name (pre-existing gap, not introduced by this task) -- worth a follow-up if the manager wants AGENTS.md to name the four sdlc-projects-* packages explicitly like CLAUDE.md/README.md now do.
+    - title: docs/architecture.md in this worktree was sti
+      id: ILpy
+      date: "2026-09-08"
+      tags:
+        - type:ambiguity
+        - plan/phase:doc-updates
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: docs/architecture.md in this worktree was still the pre-plan version since task 001 ran in a sibling worktree not visible here -- validation check 4 was satisfied via the shared component-order-and-manifest-mechanics.md source rather than a direct cross-check against task 001's actual output; worth confirming consistency once both branches merge.
+    - title: Validation item 6's exact grep finds one non-
+      id: gb7B
+      date: "2026-09-08"
+      tags:
+        - type:ambiguity
+        - plan/phase:doc-updates
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Validation item 6's exact grep finds one non-excluded hit for dev-core-consolidation-contract.md in plan/resources/dev-core-absorption-dependency-union.md:7 -- a Phase-2 durable plan record outside this task's edit authority, judged equivalent to the plan-summary exclusion already carved out and treated as accepted historical reference; flagging for confirmation.
+    - title: Task 002 (README/AGENTS/CLAUDE) ran concurren
+      id: 53lP
+      date: "2026-09-08"
+      tags:
+        - type:ambiguity
+        - plan/phase:doc-updates
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Task 002 (README/AGENTS/CLAUDE) ran concurrently in a sibling worktree -- confirmed no collision by grepping for references to the two removed files, none found.
+    - title: test/README.md still lists dev-core
+      id: wmDU
+      date: "2026-09-08"
+      tags:
+        - type:documentation
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:doc-updates
+      text: |-
+        test/README.md line 109 still lists @sdlcforge/dev-core among the tested explicit plugins. dev-core's four submodules are now built-in (in-tree) components rather than a separate explicit-tier npm package -- this file was not in scope for either the architecture-docs pass (docs/*.md) or the onboarding-docs pass (README.md/AGENTS.md/CLAUDE.md), so it was never updated to reflect the seven-component built-in aggregate and four-package explicit tier.
+
+        Found during the final phase-boundary gate's documentation link-chain check.
