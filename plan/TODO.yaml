@@ -271,7 +271,7 @@ phases:
           slug: update-project-onboarding-docs
           title: Update Project Onboarding Docs
           path: phase-06-doc-updates/002-update-project-onboarding-docs.md
-          done: false
+          done: true
           tier: sonnet-med
           digest: Updated README.md, AGENTS.md, CLAUDE.md to describe the seven-component built-in aggregate in DAG order and the four-package explicit-plugin tier, replacing every stale three-component/dev-core-as-dependency statement. Authored a new README.md Built-in components section folding in dev-core's per-submodule route tables as compact summaries, and documented the new component-boundary ESLint rule and its Jest drift guard. No source files touched, make lint unaffected by construction.
           git:
