@@ -57,7 +57,10 @@ This document is the repository layout reference for `@sdlcforge/core-server`: w
 │   ├── test-for-platform-binaries.sh
 │   └── provision-local-deps.sh  # Copies .yalc/ from the main checkout (if needed) and runs `bun install`
 ├── docs/                    # Project documentation (this file, the spec, architecture)
-│   └── core-server-spec.md
+│   ├── core-server-spec.md
+│   ├── architecture.md
+│   └── architecture/
+│       └── plugin-loading-tiers.md
 ├── .readme-assets/          # Static assets referenced from README.md
 │   └── coverage.svg
 ├── dist/                    # (generated, gitignored) build output — library + executable bundles
