@@ -997,3 +997,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Task worktree's baseline lint run includes 3 extra findings from plan/resources/validate-check.mjs beyond the 231-finding corrected baseline -- an artifact of the plan worktree living inside this checkout, not a real movement, informational only.
+    - title: 'AGENTS.md''s explicit-plugin tier still never '
+      id: Xs6I
+      date: "2026-09-08"
+      tags:
+        - type:ambiguity
+        - plan/phase:doc-updates
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: AGENTS.md's explicit-plugin tier still never enumerated by package name (pre-existing gap, not introduced by this task) -- worth a follow-up if the manager wants AGENTS.md to name the four sdlc-projects-* packages explicitly like CLAUDE.md/README.md now do.
