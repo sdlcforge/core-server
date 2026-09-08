@@ -956,7 +956,7 @@ items:
         - plan/slug:sdlc-core-unification
         - priority:unspecified
         - effort:unspecified
-      text: Phase 6 tasks 001 and 002 both carry a Validation item asserting 'make lint is green against the standing 233-finding baseline' -- lint is not green by construction and the comparable-scope figure is now 231 after task 004 cleared two findings. Not edited since those belong to Phase 6.
+      text: docs/phase-06-doc-updates task documents' own Validation sections assert "make lint is green against the standing 233-finding baseline". Lint is not green by construction (make/55-lint.mk runs ESLint under set -e), and the comparable-scope standing figure is now 231 (1 under src/, 230 under test/) after src/lib/test/plugin-graph-serverconfigroot-rename.test.js and plugin-graph-third-party-ordering.test.js each had a beforeAll no-undef finding cleared. Not corrected here since those documents live outside this project's own edit scope at the time this was recorded.
     - title: 'Candidate followup: test:local portability --'
       id: 7OZa
       date: "2026-09-06"
