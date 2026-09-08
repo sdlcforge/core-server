@@ -667,16 +667,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Scope-extension candidate (task doc''s own flag): plugin-graph-absorbed-donor-conflicts.test.js covers only the three predecessor-absorption donors; whether the four newly-absorbed dev-core components deserve their own donor-conflict cases is a scope extension not landed here.'
-    - title: Requirement 3's baseline attribution is wrong
-      id: 79J5
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:verify-parity-and-tighten-gate
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: 'Requirement 3''s baseline attribution is wrong: 233 = 230 across four test/ files + 3 under src/, not ''233 across 5 files under test/''.'
     - title: 'Candidate followup: test:local portability --'
       id: 7OZa
       date: "2026-09-06"
