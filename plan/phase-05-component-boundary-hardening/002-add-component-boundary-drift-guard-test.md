@@ -35,7 +35,7 @@ This is a *third* drift guard alongside Phase 3's component-order-versus-manifes
 1. `src/lib/test/component-boundary.test.js` exists and `bun run test` (or the project's Jest invocation) passes it along with the rest of the existing suite — no regressions in other test files.
 2. Temporarily break the liveness probe's premise (e.g. rename or comment out `.eslintrc.cjs` at the repo root, or point `overrideConfigFile` at only the Catalyst config with `useEslintrc: false`) and confirm the liveness assertion fails as expected; then restore and confirm it passes again. This demonstrates the guard actually guards rather than vacuously passing.
 3. Temporarily remove one entry from `.eslintrc.cjs`'s `COMPONENT_DIRS` (or temporarily create an extra throwaway directory under `src/`) and confirm the drift assertion fails; then revert and confirm it passes again.
-4. `bun run lint` findings remain at the standing baseline (233: 3 in `src/`, 230 in `test/`) after this file is added — the new test file itself introduces no lint findings.
+4. `bun run lint` findings remain at the standing baseline after this file is added — the new test file itself introduces no lint findings. **Correction (2026-09-08): the baseline is 231 (1 in `src/`, 230 in `test/`), not 233/3/230** — Phase 4 task 004 cleared 2 of the 3 `src/` findings this document originally cited; see task 001's document for the same correction. Reproduce against 231.
 5. `git diff --stat` shows exactly one new file, `src/lib/test/component-boundary.test.js` (plus any refactor to `.eslintrc.cjs` needed to export `COMPONENT_DIRS`, if that approach was chosen, and this task document's own edits under `plan/`).
 
 ## Procedure
