@@ -1017,3 +1017,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: docs/architecture.md in this worktree was still the pre-plan version since task 001 ran in a sibling worktree not visible here -- validation check 4 was satisfied via the shared component-order-and-manifest-mechanics.md source rather than a direct cross-check against task 001's actual output; worth confirming consistency once both branches merge.
+    - title: Validation item 6's exact grep finds one non-
+      id: gb7B
+      date: "2026-09-08"
+      tags:
+        - type:ambiguity
+        - plan/phase:doc-updates
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Validation item 6's exact grep finds one non-excluded hit for dev-core-consolidation-contract.md in plan/resources/dev-core-absorption-dependency-union.md:7 -- a Phase-2 durable plan record outside this task's edit authority, judged equivalent to the plan-summary exclusion already carved out and treated as accepted historical reference; flagging for confirmation.
