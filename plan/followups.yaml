@@ -697,16 +697,6 @@ items:
         - plan/slug:sdlc-core-unification
         - plan/phase:verify-parity-and-tighten-gate
       text: 'src/lib/test/plugin-graph-gate.test.js:28''s comment ("unsatisfied / ... @sdlcforge/dev-core#orgs -- cleared by Phase 1''s drift clearance...") is a deliberate historical explanation of why a finding cleared -- exactly the kind of historical mention a sibling test-repointing procedure''s own instructions explicitly carve out and allow to survive in a comment. A separately-authored, stricter grep-based check elsewhere in the same procedure''s instructions has no such carve-out, creating an inconsistency between two closely related sets of instructions. The comment itself is fine and intentional; not a functional defect. If either set of instructions is revisited, align the wording: either add the same carve-out, or reword the comment to avoid the literal #-suffixed node ID.'
-    - title: 'Task worktree''s baseline lint run includes 3 '
-      id: D7dK
-      date: "2026-09-08"
-      tags:
-        - type:ambiguity
-        - plan/phase:component-boundary-hardening
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: Task worktree's baseline lint run includes 3 extra findings from plan/resources/validate-check.mjs beyond the 231-finding corrected baseline -- an artifact of the plan worktree living inside this checkout, not a real movement, informational only.
     - title: 'AGENTS.md''s explicit-plugin tier still never '
       id: Xs6I
       date: "2026-09-08"
