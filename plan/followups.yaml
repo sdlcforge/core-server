@@ -600,16 +600,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: strictOptional must stay at default false for Phase 4 (surviving appExt:_liqOrgs.orgSetupMethods info promotes to error under strictOptional:true); conversely strictOrder:true is now free (ok, same counts) if Phase 4 wants to opt in.
-    - title: Measured pre-existing lint baseline is 236, n
-      id: M21N
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:wire-and-declare-seven-components
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: Measured pre-existing lint baseline is 236, not the ~233 the task doc's Assumptions cite -- confirmed unaffected either way, informational only.
     - title: Phase 6 doc scope refinements
       id: LipN
       date: "2026-09-06"
