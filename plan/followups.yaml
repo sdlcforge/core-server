@@ -537,16 +537,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Suite-count baseline stale by one (same root cause as the already-flagged conflict-count staleness): task doc says core-server ran 17 suites pre-merge, but direct measurement at $PRE shows 18 (three suites added by earlier phase-1/plan work after merge-arrival-inventory''s ''17'' figure was captured). Net collected suites is 38, not 37 -- documentation staleness, not a merge defect.'
-    - title: The task-001 merge commit message also carrie
-      id: KWV0
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:absorb-dev-core
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: The task-001 merge commit message also carries the stale '17' suite-count figure forward.
     - title: Stale README anchors in kept dev-core docs
       id: O9g2
       date: "2026-09-06"
