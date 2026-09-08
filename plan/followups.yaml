@@ -550,16 +550,6 @@ items:
         docs/consumer-migration.md (lines 247, 343) and docs/dev-core-consolidation-contract.md (lines 128, 157) contain ../README.md#<anchor> links (#repaired-defects-orgs-submodule, #projects-audit-submodule, #the-plugin-manifest) that resolve to core-server's own README.md, which has no such sections -- these anchors match sections that exist only in the donor @sdlcforge/dev-core's own README.md and were never repointed when the merge landed both files ('--ours' kept them verbatim per task 001). The link target file exists (not a dangling forward-link), but the fragments are broken. Both docs' disposition is already deferred to the doc-updates phase; when that phase touches these files, repoint the anchors to wherever the referenced content lands in core-server's docs, or drop the anchors if the content isn't carried over.
 
         Found during Phase 2's boundary-gate documentation link-chain check.
-    - title: 'Unexpected pre-existing test failure, out of '
-      id: X1KA
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:wire-and-declare-seven-components
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: 'Unexpected pre-existing test failure, out of scope and not fixed: src/projects/handlers/_lib/test/project-lifecycle.test.mjs (7 tests) -- proven independent of this task''s diff. Root cause: appMock.ext.serverHome vs create-lib.mjs''s app.ext.serverConfigRoot read, an inherited defect from Phase 2''s absorption. Makes make test permanently red independent of Phase 4''s work -- needs a followup and probably a phase assignment.'
     - title: 'make test''s pass marker is filter-blind: TEST'
       id: uMj8
       date: "2026-09-06"
