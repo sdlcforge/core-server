@@ -232,7 +232,7 @@ phases:
           slug: add-component-boundary-eslint-config
           title: Add Component Boundary Eslint Config
           path: phase-05-component-boundary-hardening/001-add-component-boundary-eslint-config.md
-          done: false
+          done: true
           tier: sonnet-med
           digest: Added .eslintrc.cjs at the repo root verbatim per the research note's verified file, applying both open scope decisions per their stated defaults. Confirmed zero new lint findings, confirmed the rule fires on a planted cross-component import and clears on revert, confirmed src/lib structural exemption holds, confirmed the config lints clean under the Catalyst config directly.
           git:
