@@ -239,7 +239,7 @@ phases:
             branch: plan/sdlc-core-unification-05-001
             commit:
                 - 5cc9c64
-            merge: null
+            merge: 506f959
         - number: 2
           slug: add-component-boundary-drift-guard-test
           title: Add Component Boundary Drift Guard Test
