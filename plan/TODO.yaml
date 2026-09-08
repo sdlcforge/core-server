@@ -275,5 +275,6 @@ phases:
           tier: sonnet-med
           git:
             branch: plan/sdlc-core-unification-06-002
-            commit: []
+            commit:
+                - 7f122b1
             merge: null
