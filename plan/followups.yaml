@@ -1027,3 +1027,13 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Validation item 6's exact grep finds one non-excluded hit for dev-core-consolidation-contract.md in plan/resources/dev-core-absorption-dependency-union.md:7 -- a Phase-2 durable plan record outside this task's edit authority, judged equivalent to the plan-summary exclusion already carved out and treated as accepted historical reference; flagging for confirmation.
+    - title: Task 002 (README/AGENTS/CLAUDE) ran concurren
+      id: 53lP
+      date: "2026-09-08"
+      tags:
+        - type:ambiguity
+        - plan/phase:doc-updates
+        - plan/slug:sdlc-core-unification
+        - priority:unspecified
+        - effort:unspecified
+      text: Task 002 (README/AGENTS/CLAUDE) ran concurrently in a sibling worktree -- confirmed no collision by grepping for references to the two removed files, none found.
