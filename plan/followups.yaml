@@ -667,16 +667,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Scope-extension candidate (task doc''s own flag): plugin-graph-absorbed-donor-conflicts.test.js covers only the three predecessor-absorption donors; whether the four newly-absorbed dev-core components deserve their own donor-conflict cases is a scope extension not landed here.'
-    - title: 'N7cz needs a manager decision: join it as a f'
-      id: g94K
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:verify-parity-and-tighten-gate
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: 'N7cz needs a manager decision: join it as a fifth fenced-off inherited defect (making green-apart-from-N7cz this phase''s bar) or schedule as its own repair task. Requirement 2 and requirement 6 as literally written cannot both be satisfied.'
     - title: Validation item 4 fails literally on file att
       id: R29f
       date: "2026-09-06"
