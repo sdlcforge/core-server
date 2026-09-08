@@ -42,6 +42,17 @@ No dedicated skill covers authoring a project-local ESLint config; follow the [P
 5. Add a `## Decisions` section to this task document recording both scope decisions from Requirements point 2 and a one-line rationale for each.
 6. Commit `.eslintrc.cjs` and this task document together.
 
+## Decisions
+
+- **`src/lib`/`src/cli` in every zone's `from`:** Not added. This pass enforces only "components do not import each other" (Requirements point 1); adding the host library to every zone's `from` would additionally enforce a distinct invariant ("components may not reach the host's own library") that the research note explicitly frames as an optional strengthening, not a requirement of this task's scope. Every zone's `from` array has the base 6 entries, not 8. Followed the task doc's stated default — no reason to diverge was found (no component imports `src/lib` today, and the two invariants remain genuinely separable).
+- **Sibling `index` surface imports:** Stay forbidden — no `except` clauses were added to any zone. This is the correct reading of the consolidation contract: components couple through `app.ext` runtime state and the capabilities declared in `package.json`'s `plugable.host.builtins[0].components`, never through module paths, public or not. Followed the task doc's stated default — no reason to diverge was found.
+
+## Status
+
+**Outcome:** succeeded. Date: 2026-09-08. Implemented on branch `plan/sdlc-core-unification-05-001` (cut from `main`), commit `5cc9c64`, adding `.eslintrc.cjs` at the repo root. All Validation checks passed: 7 zones each with a 6-element `from` array; zero new lint findings (234 before/after, byte-identical against the corrected 231-finding baseline plus 3 plan-worktree-only artifact findings); the rule fires on a planted cross-component import and clears cleanly on revert; `src/lib/` structural exemptions hold; the config lints clean under the Catalyst config directly. `.eslintrc.cjs`'s `## Decisions` above were applied verbatim as the task agent recorded them.
+
+Note: this Status section and the Decisions section above were applied by the manager, not the dispatched task agent — the agent's own worktree was cut from `main` before this plan's phase-05 task documents existed on that lineage, so it could not write here from inside its own worktree boundary.
+
 ## Metadata
 
 architectural_impact: false
