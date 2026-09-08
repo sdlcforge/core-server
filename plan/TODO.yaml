@@ -227,6 +227,7 @@ phases:
     - number: 5
       slug: component-boundary-hardening
       title: Component Boundary Hardening
+      diff_base: 9cc477a651465053ba3570f2036b340f4b4cb61e
       tasks:
         - number: 1
           slug: add-component-boundary-eslint-config
