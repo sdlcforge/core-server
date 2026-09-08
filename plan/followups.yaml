@@ -296,16 +296,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: docs/architecture/plugin-loading-tiers.md:61 states the compile-time plugin manifest is "expected to eventually supersede the runtime explicitPlugins array" — this plan-group has now landed and enforced that manifest (package.json's plugable.host block, validated by make/56-plugin-graph.mk), but it coexists with explicitPlugins rather than superseding it. The "expected to eventually" framing is stale. Needs a decision on how to update this doc's status language (landed-and-enforced, not-yet-scheduled-to-supersede) — flagged by the Phase 4 gate reviewer as a plan-closeout judgment call, not a mechanical fix.
-    - title: Prior halted attempt's commit 71fccaf's messa
-      id: qRrl
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:pre-merge-baseline-and-drift-clearance
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: Prior halted attempt's commit 71fccaf's message says drift is NOT cleared -- now stale since drift IS cleared as of commit dca4ec5; not rewritten per git-history norms, current task doc Status section has the up-to-date narrative.
     - title: provision-local-deps.sh's leave-.yalc-as-is-i
       id: TEO9
       date: "2026-09-06"
