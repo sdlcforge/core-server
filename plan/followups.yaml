@@ -707,16 +707,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: AGENTS.md's explicit-plugin tier still never enumerated by package name (pre-existing gap, not introduced by this task) -- worth a follow-up if the manager wants AGENTS.md to name the four sdlc-projects-* packages explicitly like CLAUDE.md/README.md now do.
-    - title: Task 002 (README/AGENTS/CLAUDE) ran concurren
-      id: 53lP
-      date: "2026-09-08"
-      tags:
-        - type:ambiguity
-        - plan/phase:doc-updates
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: Task 002 (README/AGENTS/CLAUDE) ran concurrently in a sibling worktree -- confirmed no collision by grepping for references to the two removed files, none found.
     - title: test/README.md still lists dev-core
       id: wmDU
       date: "2026-09-08"
