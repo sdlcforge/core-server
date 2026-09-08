@@ -261,7 +261,7 @@ phases:
           slug: update-architecture-docs
           title: Update Architecture Docs
           path: phase-06-doc-updates/001-update-architecture-docs.md
-          done: false
+          done: true
           tier: sonnet-high
           digest: Brought docs/architecture.md, docs/core-server-spec.md, docs/architecture/plugin-loading-tiers.md, and docs/project-structure.md in line with the seven-component in-tree builtin set, folding in dev-core's own submodule-decomposition/composite-setup-ordering/app.ext-contract substance and documenting the new mechanically-enforced component-boundary invariant. Also resolved three standing documentation followups encountered in scope. Removed the two dev-core-specific docs as deliberate dispositions -- both now describe a package that no longer exists separately. make lint confirmed byte-identical before and after.
           git:
