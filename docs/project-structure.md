@@ -25,12 +25,16 @@ This document is the repository layout reference for `@sdlcforge/core-server`: w
 │   │   └── index.js
 │   ├── lib/                 #   Core library: app init, plugin wiring, library exports
 │   │   ├── app-init.mjs     #     Configures built-in + explicit plugins, delegates to plugable-express
-│   │   ├── builtin-plugins.mjs #  Aggregates the built-in (in-tree) submodules below into one plugin
+│   │   ├── builtin-plugins.mjs #  Aggregates the 7 built-in (in-tree) components below into one plugin, DAG order
 │   │   ├── index.js         #     Library exports (appInit, explicitPlugins, Reporter, name, summary)
-│   │   └── test/            #     Jest unit tests for the lib
-│   ├── controls/            #   Built-in (in-tree) plugin: policy controls
-│   ├── credentials/         #   Built-in (in-tree) plugin: credential storage/retrieval
-│   └── integrations-issues-github/  #   Built-in (in-tree) plugin: GitHub issue-tracking integration (no routes)
+│   │   └── test/            #     Jest unit tests for the lib, incl. component-boundary.test.js and host-declaration.test.js
+│   ├── credentials/         #   Built-in (in-tree) component: credential storage/retrieval
+│   ├── projects/            #   Built-in (in-tree) component: project lifecycle management
+│   ├── orgs/                #   Built-in (in-tree) component: organization settings
+│   ├── controls/            #   Built-in (in-tree) component: policy controls
+│   ├── integrations-issues-github/  #   Built-in (in-tree) component: GitHub issue-tracking integration (no routes; manifest name `issues-github`)
+│   ├── work/                #   Built-in (in-tree) component: unit-of-work orchestration
+│   └── projects-audit/      #   Built-in (in-tree) component: project dependency auditing (handlers only, no setup)
 ├── test/                    # Local and Docker-based multi-version integration tests
 │   ├── run-integration-tests.sh
 │   ├── test-server.js
@@ -53,7 +57,10 @@ This document is the repository layout reference for `@sdlcforge/core-server`: w
 │   ├── test-for-platform-binaries.sh
 │   └── provision-local-deps.sh  # Copies .yalc/ from the main checkout (if needed) and runs `bun install`
 ├── docs/                    # Project documentation (this file, the spec, architecture)
-│   └── core-server-spec.md
+│   ├── core-server-spec.md
+│   ├── architecture.md
+│   └── architecture/
+│       └── plugin-loading-tiers.md
 ├── .readme-assets/          # Static assets referenced from README.md
 │   └── coverage.svg
 ├── dist/                    # (generated, gitignored) build output — library + executable bundles
@@ -64,16 +71,17 @@ This document is the repository layout reference for `@sdlcforge/core-server`: w
 ├── bun.lock
 ├── server-settings.yaml
 ├── .catalyst-data.yaml
+├── .eslintrc.cjs            # Cross-component import boundary (import/no-restricted-paths), hand-authored, layers over Catalyst's lint config
 ├── .gitignore
 ├── .dockerignore
 └── README.md
 ```
 
-`node_modules/` and `.yalc/` (a local yalc-linked copy of `@liquid-labs/plugable-express` and `@sdlcforge/dev-core`, used for parallel local development) are also generated and gitignored; both are omitted from the tree above as build/dependency noise. Unlike `node_modules/`, `.yalc/` is **not** reproducible from a clean clone — a fresh checkout has no `.yalc/` at all, and `bun install` fails on its two `file:.yalc/…` dependencies until it is populated by copying it from a checkout that already has it (`scripts/provision-local-deps.sh` automates this).
+`node_modules/` and `.yalc/` (a local yalc-linked copy of `@liquid-labs/plugable-express`, used for parallel local development) are also generated and gitignored; both are omitted from the tree above as build/dependency noise. Unlike `node_modules/`, `.yalc/` is **not** reproducible from a clean clone — a fresh checkout has no `.yalc/` at all, and `bun install` fails on its `file:.yalc/…` dependency until it is populated by copying it from a checkout that already has it (`scripts/provision-local-deps.sh` automates this).
 
 ## `src/`
 
-The server's own source, intentionally minimal since nearly all behavior is delegated to `@liquid-labs/plugable-express`. `src/cli/index.js` is the CLI entry point that starts the server as a standalone executable. `src/lib/app-init.mjs` is the core initialization module — it assembles the built-in-plugin aggregate, the explicit-plugin list, and configuration, and hands off to `plugable-express`. `src/lib/builtin-plugins.mjs` aggregates `core-server`'s own built-in (in-tree) plugin submodules — `src/controls/`, `src/credentials/`, and `src/integrations-issues-github/`, siblings of `src/lib/` and `src/cli/` — into the single already-imported plugin module `app-init.mjs` registers through `plugable-express`'s `builtinPlugins` option. `src/lib/index.js` is the library's public export surface (`appInit`, `explicitPlugins`, `Reporter`, `name`, `summary`). `src/lib/test/` holds the Jest unit tests for this library code. Written in ES6+ and transpiled to CommonJS at build time; the resulting dual artifacts land in `dist/`.
+The server's own source, intentionally minimal since nearly all behavior is delegated to `@liquid-labs/plugable-express`. `src/cli/index.js` is the CLI entry point that starts the server as a standalone executable. `src/lib/app-init.mjs` is the core initialization module — it assembles the built-in-plugin aggregate, the explicit-plugin list, and configuration, and hands off to `plugable-express`. `src/lib/builtin-plugins.mjs` aggregates `core-server`'s own seven built-in (in-tree) plugin components — `src/credentials/`, `src/projects/`, `src/orgs/`, `src/controls/`, `src/integrations-issues-github/`, `src/work/`, and `src/projects-audit/`, siblings of `src/lib/` and `src/cli/` — into the single already-imported plugin module `app-init.mjs` registers through `plugable-express`'s `builtinPlugins` option, in a fixed dependency order the root `.eslintrc.cjs` (see [Key root-level files](#key-root-level-files)) mechanically prevents any component from bypassing by importing a sibling directly. `src/lib/index.js` is the library's public export surface (`appInit`, `explicitPlugins`, `Reporter`, `name`, `summary`). `src/lib/test/` holds the Jest unit tests for this library code, including two drift guards described in [`docs/architecture.md`](./architecture.md#plugin-system): `host-declaration.test.js` (component-order agreement between `builtin-plugins.mjs` and `package.json`) and `component-boundary.test.js` (the import-boundary rule's own liveness). Written in ES6+ and transpiled to CommonJS at build time; the resulting dual artifacts land in `dist/`.
 
 ## `test/`
 
@@ -89,7 +97,7 @@ Small operational shell scripts invoked via `bun run` scripts rather than throug
 
 ## `docs/`
 
-Project documentation beyond `README.md` and `AGENTS.md`: this file and [`core-server-spec.md`](./core-server-spec.md), the project specification. `docs/architecture.md`, when present, covers the plugin system and build pipeline internals.
+Project documentation beyond `README.md` and `AGENTS.md`: this file; [`core-server-spec.md`](./core-server-spec.md), the project specification; [`architecture.md`](./architecture.md), covering the plugin system, build pipeline, and component-boundary internals; and `architecture/plugin-loading-tiers.md`, a deeper topic treatment of the three-tier plugin-loading model referenced from `architecture.md`.
 
 ## `.readme-assets/`
 
@@ -103,6 +111,7 @@ Static assets referenced from `README.md` — currently the coverage badge SVG s
 | `package.json` | Package manifest — scripts (`build`, `test`, `lint`, `start`/`stop`, `qa`), the three-tier plugin dependency list, and `prepack`/`preversion` publish hooks. Installed with `bun install`; still published to and installable from the npm registry. |
 | `bun.lock` | Pinned dependency graph for reproducible installs. |
 | `.catalyst-data.yaml` | Catalyst framework configuration declaring the project's build workflow — which `make/*.mk` builders run, at what priority, and their purpose. |
+| `.eslintrc.cjs` | Project-local ESLint config, hand-authored and additively layered over the Catalyst ruleset (never Catalyst-generated, never overwritten by it); its `import/no-restricted-paths` rule (seven zones) mechanically forbids imports across `src/<component>/` directories. |
 | `.gitignore` | Excludes generated and local-only directories (`dist`, `node_modules`, `qa`, `test-staging`, `.yalc`, etc.) from version control. |
 | `.dockerignore` | Controls what's copied into the integration-test Docker build context; deliberately *includes* `dist` and `node_modules` since the Docker tests need the exact built output and dependency set. |
 | `server-settings.yaml` | Server-side registry configuration — the plugin registry URL `plugable-express` uses to resolve plugin packages. |
