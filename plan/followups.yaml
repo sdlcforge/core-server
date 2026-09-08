@@ -306,16 +306,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: provision-local-deps.sh's leave-.yalc-as-is-if-present behavior means a worktree with an already-stale .yalc copy will silently keep it on a bare --refresh-lock rerun unless .yalc is removed first -- informational, could affect a future retry in this repo if not recognized.
-    - title: make/55-test.mk resolved --ours drops dev-cor
-      id: 1o1M
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:absorb-dev-core
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: make/55-test.mk resolved --ours drops dev-core's Babel --ignore flags for test-data fixture trees now in-tree; task 004's check per the doc.
     - title: Command injection risk in work shell-outs
       id: li0t
       date: "2026-09-06"
