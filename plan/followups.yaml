@@ -1037,3 +1037,16 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: Task 002 (README/AGENTS/CLAUDE) ran concurrently in a sibling worktree -- confirmed no collision by grepping for references to the two removed files, none found.
+    - title: test/README.md still lists dev-core
+      id: wmDU
+      date: "2026-09-08"
+      tags:
+        - type:documentation
+        - priority:unspecified
+        - effort:unspecified
+        - plan/slug:sdlc-core-unification
+        - plan/phase:doc-updates
+      text: |-
+        test/README.md line 109 still lists @sdlcforge/dev-core among the tested explicit plugins. dev-core's four submodules are now built-in (in-tree) components rather than a separate explicit-tier npm package -- this file was not in scope for either the architecture-docs pass (docs/*.md) or the onboarding-docs pass (README.md/AGENTS.md/CLAUDE.md), so it was never updated to reflect the seven-component built-in aggregate and four-package explicit tier.
+
+        Found during the final phase-boundary gate's documentation link-chain check.
