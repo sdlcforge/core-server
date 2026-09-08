@@ -296,16 +296,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: docs/architecture/plugin-loading-tiers.md:61 states the compile-time plugin manifest is "expected to eventually supersede the runtime explicitPlugins array" — this plan-group has now landed and enforced that manifest (package.json's plugable.host block, validated by make/56-plugin-graph.mk), but it coexists with explicitPlugins rather than superseding it. The "expected to eventually" framing is stale. Needs a decision on how to update this doc's status language (landed-and-enforced, not-yet-scheduled-to-supersede) — flagged by the Phase 4 gate reviewer as a plan-closeout judgment call, not a mechanical fix.
-    - title: This task's Assumptions section (.yalc/@sdlcf
-      id: RxGk
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:pre-merge-baseline-and-drift-clearance
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: This task's Assumptions section (.yalc/@sdlcforge/dev-core already reflects dev-core main HEAD) is now factually false and should be corrected before re-dispatch.
     - title: 'Manager judgment needed: proceed with only wo'
       id: bsRs
       date: "2026-09-06"
