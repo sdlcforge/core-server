@@ -246,6 +246,7 @@ phases:
           path: phase-05-component-boundary-hardening/002-add-component-boundary-drift-guard-test.md
           done: false
           tier: sonnet-med
+          digest: 'Added src/lib/test/component-boundary.test.js with the two required assertions: an ESLint Node API liveness probe confirming import/no-restricted-paths still fires through the real .eslintrc.cjs cascade, and a drift assertion comparing COMPONENT_DIRS against the actual src/ directory set. The preferred export approach required Object.defineProperty with enumerable:false to stay invisible to ESLint''s own config validation while remaining readable via require() in the test. All four validation steps passed with no regressions; the one pre-existing failing suite (project-lifecycle.test.js) confirmed unrelated via git stash.'
           git:
             branch: plan/sdlc-core-unification-05-002
             commit:
