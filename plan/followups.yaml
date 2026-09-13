@@ -413,16 +413,6 @@ items:
         bun.lock resolves serialize-javascript@6.0.2 transitively via @rollup/plugin-terser@0.4.4 (a dependency of @sdlcforge/core-server's own devDependency @liquid-labs/catalyst-resource-babel-and-rollup@1.0.0-alpha.4, declared ^1.0.0-alpha.3 in package.json). serialize-javascript@6.0.2 carries an unpatched high-severity RCE advisory (GHSA-5c6j-r48x-rmvq, CVSS 8.1) plus a moderate DoS advisory (GHSA-qj8w-gfj5-8c6v); audit tooling should report findings rooted here. Dev/CI-only — @rollup/plugin-terser and its serialize-javascript dependency are never bundled into dist/sdlcforge-server.js, dist/sdlcforge-server-exec.js, or the published tarball — and core-server does not control @rollup/plugin-terser's own pin directly; a fix requires an upstream bump in either @rollup/plugin-terser or @liquid-labs/catalyst-resource-babel-and-rollup. Track rather than patch directly; worth re-checking whenever bun.lock is regenerated, since the same toolchain package resolves the pin again each time.
 
         Originally filed against @sdlcforge/dev-core as followup 0RpG (there rooted in dev-core's own devDependency @liquid-labs/sdlc-resource-babel-and-rollup, which core-server does not carry); reworded and carried across against @sdlcforge/core-server's own @liquid-labs/catalyst-resource-babel-and-rollup devDependency chain when dev-core was absorbed into core-server.
-    - title: make lint (whole-repo, read-only investigatio
-      id: fgaF
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:verify-parity-and-tighten-gate
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: make lint (whole-repo, read-only investigation) reports 236 pre-existing errors including an identical pre-existing 'beforeAll is not defined (no-undef)' finding on this task's file plus task 004's two sibling files -- a repo-wide eslint-config gap (jest globals not recognized for plugin-graph test files) predating this task, reproduced identically against pre-change content via git show HEAD, unrelated to and unaffected by this task's edits. Worth a follow-up to add jest globals recognition for src/lib/test/**.
     - title: pkgJSON/packageJSON arg mismatch
       id: bAQZ
       date: "2026-09-12"
