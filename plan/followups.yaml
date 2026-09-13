@@ -597,16 +597,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Filename mismatch (task doc''s own flagged decision): plugin-graph-third-party-ordering.test.js''s filename still says third-party though content no longer describes cross-package coupling. Renaming outside this task''s sweep, left as-is per task doc instruction.'
-    - title: 'Candidate followup: test:local portability --'
-      id: 7OZa
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:verify-parity-and-tighten-gate
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: 'Candidate followup: test:local portability -- test/test-server.js spawns bare ''sdlcforge-server'' from PATH, requiring an ad-hoc shim in any bare worktree; scripts/start.sh already resolves the binary correctly from package.json''s bin.'
     - title: Task 004 validation bar vs task 003 comment
       id: nxD5
       date: "2026-09-06"
