@@ -467,3 +467,11 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'src/work/handlers/_lib/answer-set-to-md.mjs:64 (in the related-projects branch) calls getGitHubOrgAndProjectBasename({ pkgJSON: otherPkgJSON }), but that function (from @liquid-labs/github-toolkit) destructures its argument as { packageJSON }, not pkgJSON -- every other call site in the codebase uses packageJSON. Latent defect: would throw when the related-projects branch is exercised for real (not caught by existing tests, which stub the function out). Found incidentally while fixing the providerFor ''pull requests''/''pull request'' typo in the same file (followup L5cp, now resolved) -- left unfixed there as out of scope for that minimal single-issue change.'
+    - title: Pre-existing lint style debt in test/
+      id: gPpD
+      date: "2026-09-12"
+      tags:
+        - type:ambiguity
+        - priority:unspecified
+        - effort:unspecified
+      text: '`make lint` reports a large number of pre-existing ESLint style violations (trailing whitespace, key-spacing, brace-style, several unused vars) in test/test-basic.js, test/test-integration-quick.js, and other test/ files, independent of and unrelated to any recent doc-refresh edits (confirmed by diffing reported error lines against changed lines). Distinct from followup fgaF (jest globals/no-undef gap in src/lib/test/**) -- this is general style debt, not a globals-recognition gap. Worth a follow-up lint-cleanup pass.'
