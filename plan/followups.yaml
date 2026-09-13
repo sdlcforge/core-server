@@ -597,16 +597,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Filename mismatch (task doc''s own flagged decision): plugin-graph-third-party-ordering.test.js''s filename still says third-party though content no longer describes cross-package coupling. Renaming outside this task''s sweep, left as-is per task doc instruction.'
-    - title: Scope-extension candidate (task doc's own fla
-      id: U0Uc
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:verify-parity-and-tighten-gate
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: 'Scope-extension candidate (task doc''s own flag): plugin-graph-absorbed-donor-conflicts.test.js covers only the three predecessor-absorption donors; whether the four newly-absorbed dev-core components deserve their own donor-conflict cases is a scope extension not landed here.'
     - title: 'Candidate followup: test:local portability --'
       id: 7OZa
       date: "2026-09-06"
