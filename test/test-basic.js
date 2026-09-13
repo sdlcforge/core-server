@@ -49,7 +49,10 @@ async function runBasicTest() {
 
   // Check that explicitPlugins includes expected packages
   const expectedPackages = [
-    '@sdlcforge/dev-core'
+    '@liquid-labs/sdlc-projects-badges-coverage',
+    '@liquid-labs/sdlc-projects-badges-github-workflows',
+    '@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd',
+    '@liquid-labs/sdlc-projects-workflow-local-node-build'
   ]
   
   let foundPackages = 0
