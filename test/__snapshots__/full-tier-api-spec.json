@@ -6544,7 +6544,7 @@
     "help": {
       "name": "Project audit fix (named)",
       "summary": "Fixes named project audit issues.",
-      "description": "Fixes many named project  security vulnerabilities as well as outdated, missing, and extraneous package dependencies issues. See also '/projects/audit' to get an audit report. The following actions are taken:\n- `npm audit fix` is run to address any automaticaly fixable vulnerabilities\n- missing packages are installed\n- when `removePackages` is set true, extra packages are reomved (see parameter documentation)\n- outdated packages are updated; pre-release package 'minimums' are updated while production pacagkes are updated but the semver range spec is kept as is unless `updateMinimums` is set to true (see parameter documentation)."
+      "description": "Fixes many named project security vulnerabilities as well as outdated, missing, and extraneous package dependencies issues. See also '/projects/audit' to get an audit report. The following actions are taken:\n- `npm audit fix` is run to address any automaticaly fixable vulnerabilities\n- missing packages are installed\n- when `removePackages` is set true, extra packages are removed (see parameter documentation)\n- outdated packages are updated; pre-release package 'minimums' are updated while production packages are updated but the semver range spec is kept as is unless `updateMinimums` is set to true (see parameter documentation)."
     },
     "method": "PUT",
     "parameters": [
@@ -6562,13 +6562,13 @@
       {
         "name": "removePackages",
         "isBoolean": true,
-        "dascription": "By default, \"extra\" packages are not automatically removed as there are many instances in which they are used indirectly. E.g., the \"sdlc-resource\" packages used to provide Babel transpiling or Jest unit testing. Setting this parameter to true will remove these packaes. You can exclude false positives (and protect them from removal) by listing known good packages which would otherwise look unused as an array of glob patterns in '_npm-check-plus.depcheck.ignoreMatches' in the 'package.json' file.",
+        "description": "By default, \"extra\" packages are not automatically removed as there are many instances in which they are used indirectly. E.g., the \"sdlc-resource\" packages used to provide Babel transpiling or Jest unit testing. Setting this parameter to true will remove these packaes. You can exclude false positives (and protect them from removal) by listing known good packages which would otherwise look unused as an array of glob patterns in '_npm-check-plus.depcheck.ignoreMatches' in the 'package.json' file.",
         "inQuery": true
       },
       {
         "name": "updateMinimums",
         "isBoolean": true,
-        "description": "By default production package semver range specificatinos are left in place. Setting `updateMinimums` true will make the current 'wanted' package the new minimum. Note, pre-production package minimums are always updated.",
+        "description": "By default production package semver range specifications are left in place. Setting `updateMinimums` true will make the current 'wanted' package the new minimum. Note, pre-production package minimums are always updated.",
         "inQuery": true
       }
     ],
@@ -6637,7 +6637,7 @@
     "help": {
       "name": "Project audit fix (implied)",
       "summary": "Fixes implied project audit issues.",
-      "description": "Fixes many implied project  security vulnerabilities as well as outdated, missing, and extraneous package dependencies issues. See also '/projects/audit' to get an audit report. The following actions are taken:\n- `npm audit fix` is run to address any automaticaly fixable vulnerabilities\n- missing packages are installed\n- when `removePackages` is set true, extra packages are reomved (see parameter documentation)\n- outdated packages are updated; pre-release package 'minimums' are updated while production pacagkes are updated but the semver range spec is kept as is unless `updateMinimums` is set to true (see parameter documentation)."
+      "description": "Fixes many implied project security vulnerabilities as well as outdated, missing, and extraneous package dependencies issues. See also '/projects/audit' to get an audit report. The following actions are taken:\n- `npm audit fix` is run to address any automaticaly fixable vulnerabilities\n- missing packages are installed\n- when `removePackages` is set true, extra packages are removed (see parameter documentation)\n- outdated packages are updated; pre-release package 'minimums' are updated while production packages are updated but the semver range spec is kept as is unless `updateMinimums` is set to true (see parameter documentation)."
     },
     "method": "PUT",
     "parameters": [
@@ -6655,13 +6655,13 @@
       {
         "name": "removePackages",
         "isBoolean": true,
-        "dascription": "By default, \"extra\" packages are not automatically removed as there are many instances in which they are used indirectly. E.g., the \"sdlc-resource\" packages used to provide Babel transpiling or Jest unit testing. Setting this parameter to true will remove these packaes. You can exclude false positives (and protect them from removal) by listing known good packages which would otherwise look unused as an array of glob patterns in '_npm-check-plus.depcheck.ignoreMatches' in the 'package.json' file.",
+        "description": "By default, \"extra\" packages are not automatically removed as there are many instances in which they are used indirectly. E.g., the \"sdlc-resource\" packages used to provide Babel transpiling or Jest unit testing. Setting this parameter to true will remove these packaes. You can exclude false positives (and protect them from removal) by listing known good packages which would otherwise look unused as an array of glob patterns in '_npm-check-plus.depcheck.ignoreMatches' in the 'package.json' file.",
         "inQuery": true
       },
       {
         "name": "updateMinimums",
         "isBoolean": true,
-        "description": "By default production package semver range specificatinos are left in place. Setting `updateMinimums` true will make the current 'wanted' package the new minimum. Note, pre-production package minimums are always updated.",
+        "description": "By default production package semver range specifications are left in place. Setting `updateMinimums` true will make the current 'wanted' package the new minimum. Note, pre-production package minimums are always updated.",
         "inQuery": true
       }
     ],
@@ -6727,7 +6727,7 @@
     "routablePath": "/^\\/projects\\/((?:(?:@|%40)[a-zA-Z][a-zA-Z0-9-]*(?:[/]|%2F|%2f))?[a-zA-Z][a-zA-Z0-9-]*)\\/audit[/#?]?$/",
     "help": {
       "name": "Project audit (named)",
-      "summary": "Auidts the named project.",
+      "summary": "Audits the named project.",
       "description": "Audits the named project for security vulnerabilities as well as outdated, missing, or extraneous package dependencies. See also '/projects/audit-fix' to automatically address many issues."
     },
     "method": "GET",
@@ -6802,7 +6802,7 @@
     "routablePath": "/^\\/projects\\/audit[/#?]?$/",
     "help": {
       "name": "Project audit (implied)",
-      "summary": "Auidts the implied project.",
+      "summary": "Audits the implied project.",
       "description": "Audits the implied project for security vulnerabilities as well as outdated, missing, or extraneous package dependencies. See also '/projects/audit-fix' to automatically address many issues."
     },
     "method": "GET",
