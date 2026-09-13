@@ -71,7 +71,7 @@ const answerSetToMd = async({
         hookArgs     : { gitHubOrg : otherGitHubOrg, project : otherProject }
       })
       const prURL = await app.ext.integrations.callHook({
-        providerFor  : 'pull requests',
+        providerFor  : 'pull request',
         providerArgs : { pkgJSON : otherPkgJSON },
         hook         : 'getPullRequestURLsByHead',
         hookArgs     : { gitHubOrg : otherGitHubOrg, project : otherProject, head : workKey }
