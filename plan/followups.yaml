@@ -502,16 +502,6 @@ items:
         3. docs/architecture.md's "Key decisions" section has no entry recording the decision to absorb the four dev-core-donor components into the built-in in-tree tier rather than continuing to load them as a separate npm package -- worth adding a bullet naming the rationale (eliminating an unpublished-package yalc workaround, closing the startup-failure risk in item 2) and the rejected alternative (publish/keep dev-core as a separate package).
 
         Found during Phase 3's boundary-gate review (architecture-conformance + doc link-chain checks).
-    - title: 'src/lib/test/full-tier-baseline.test.js line '
-      id: 7LNl
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:verify-parity-and-tighten-gate
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: src/lib/test/full-tier-baseline.test.js line ~162 still contains a second, separate stale dev-core comment mention (distinct from line ~263 which was already fixed) -- task doc's requirement 6 explicitly scoped only line ~263, so left untouched per scope discipline; flagging for a later comment-hygiene pass.
     - title: make lint (whole-repo, read-only investigatio
       id: fgaF
       date: "2026-09-06"
