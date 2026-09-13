@@ -45,12 +45,17 @@ describe('POST /orgs/create/:newOrgKey', () => {
     expect(stat.isDirectory()).toBe(true)
 
     const body = JSON.parse(res.out)
+    const expectedRelativeDir = fsPath.join('@acme', 'acme', 'org')
     expect(body).toEqual({
       commonName : 'Acme',
       legalName  : 'Acme, Inc.',
       newOrgKey  : '@acme',
-      directory  : expectedDir
+      directory  : expectedRelativeDir
     })
+    // The response must not disclose the server's absolute filesystem layout: the 'directory'
+    // field is playground-root-relative, not the fully resolved absolute path.
+    expect(fsPath.isAbsolute(body.directory)).toBe(false)
+    expect(body.directory).not.toBe(expectedDir)
   })
 
   test('does not throw on a repeat call against an existing directory and still responds', async() => {
