@@ -14,7 +14,7 @@ import { readCoreServerPackageJSON, resolveCoreServerPackageRoot } from './helpe
 //
 // This is deliberately scoped to the in-tree (`hostDeclaration.builtins`) half of the graph only. The
 // other half of this same rename shape is covered separately by
-// `src/lib/test/plugin-graph-third-party-ordering.test.js` against the real, unmodified graph.
+// `src/lib/test/plugin-graph-intra-builtin-ordering.test.js` against the real, unmodified graph.
 const CREDENTIALS_NODE_ID = '@sdlcforge/core-server#credentials'
 
 // The two capabilities the real, landed `credentials` component declaration requires that name

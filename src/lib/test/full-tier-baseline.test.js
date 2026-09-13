@@ -159,8 +159,8 @@ describe('Full-tier baseline characterization', () => {
       fsPath.join(os.tmpdir(), 'comply-server-full-tier-playground-' + Math.round(Math.random() * 10000000000000000))
     await fs.mkdir(playgroundHome, { recursive : true })
 
-    // `PLUGABLE_PLAYGROUND` isolation is mandatory, not optional: `dev-core`'s `projects`
-    // submodule's `setupPlayground()` otherwise defaults to `${HOME}/playground`, creates it if
+    // `PLUGABLE_PLAYGROUND` isolation is mandatory, not optional: the builtin `projects`
+    // component's `setupPlayground()` otherwise defaults to `${HOME}/playground`, creates it if
     // absent, and hands it to a `PlaygroundMonitor` that scans it -- emitting roughly
     // 9,500 lines of stray console.log output on a developer host and side-effecting the
     // user's home directory. The observable surface is verified byte-identical either
@@ -267,7 +267,7 @@ describe('Full-tier baseline characterization', () => {
   // `appInit()` has already succeeded; it says nothing about *why* the ordering holds. The
   // build-time-enforced form of that same contract -- asserted statically against the real
   // graph, before any test in this file ever runs `appInit()` -- lives in
-  // `src/lib/test/plugin-graph-third-party-ordering.test.js`.
+  // `src/lib/test/plugin-graph-intra-builtin-ordering.test.js`.
   test('app.ext.credentialsDB exposes the recorded method set', () => {
     expect(app.ext.credentialsDB).toBeDefined()
     for (const method of EXPECTED_CREDENTIALS_DB_METHODS) {
