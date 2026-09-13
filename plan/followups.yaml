@@ -449,16 +449,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'make test''s pass marker is filter-blind: TEST=builtin-plugins make test touches qa/.unit-test.passed, and a subsequent unfiltered make test then reports Nothing to be done and exits 0 -- a filtered green run masquerading as a full green run. Worth a followup on make/55-test.mk.'
-    - title: Stale dev-core references left in place per t
-      id: MXGO
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:wire-and-declare-seven-components
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: 'Stale dev-core references left in place per task doc''s own instruction: test/test-basic.js:52, test/test-integration-quick.js:59,83, test/README.md:109, plus AGENTS.md/CLAUDE.md/docs/architecture.md/docs/architecture/plugin-loading-tiers.md/docs/consumer-migration.md/docs/project-structure.md/docs/dev-core-consolidation-contract.md all still describe dev-core as an explicit npm plugin -- Phase 6''s.'
     - title: make lint (whole-repo, read-only investigatio
       id: fgaF
       date: "2026-09-06"
