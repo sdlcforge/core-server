@@ -348,19 +348,6 @@ items:
         POST /orgs/create/:newOrgKey (src/orgs/handlers/create.mjs) creates only the org's data directory (fs.mkdir under &lt;localDataRoot&gt;/org); it writes no org.json or settings.yaml, constructs no Organization, and registers nothing into app.ext._liqOrgs.orgs, which is populated only by the "load orgs" setup method (src/orgs/setup.mjs) scanning the playground for a package.json carrying liq.packageType === 'org'. The endpoint's localDataRoot parameter's own description still reads "The local directory in which to save ./orgs/org.json...", which the handler never does — left inaccurate because the parameter list itself was treated as unchanged when help.description/help.summary were separately corrected to describe current behavior. A follow-on task should either complete org creation (write org.json/settings.yaml, construct an Organization, register it into the runtime registry) or correct the localDataRoot parameter description to match what the handler actually does.
 
         Originally filed against @sdlcforge/dev-core as followup ZkAv; carried across when that package was absorbed into @sdlcforge/core-server.
-    - title: parameters-list.mjs mdFormatter arg shape
-      id: RuIZ
-      date: "2026-09-06"
-      tags:
-        - type:bug
-        - priority:unspecified
-        - effort:unspecified
-        - plan/slug:sdlc-core-unification
-        - plan/phase:absorb-dev-core
-      text: |-
-        src/orgs/handlers/parameters-list.mjs's mdFormatter/terminalFormatter/textFormatter use positional args (parameters, title) but formatOutput invokes non-JSON formatters with a single {data, title, fields} object — the same category of pre-existing inconsistency as src/orgs/handlers/list.mjs's analogous mdFormatter (see the sibling list.mjs mdFormatter field-mismatch followup). Left untouched (JSON-path-only test coverage exercised it) but is a real bug if parameters-list is ever requested with format=md/txt/terminal.
-
-        Originally filed against @sdlcforge/dev-core as followup Jbaz; carried across when that package was absorbed into @sdlcforge/core-server.
     - title: project-lifecycle test pre-existing failure
       id: N7cz
       date: "2026-09-06"
