@@ -550,16 +550,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: 'Stale dev-core references left in place per task doc''s own instruction: test/test-basic.js:52, test/test-integration-quick.js:59,83, test/README.md:109, plus AGENTS.md/CLAUDE.md/docs/architecture.md/docs/architecture/plugin-loading-tiers.md/docs/consumer-migration.md/docs/project-structure.md/docs/dev-core-consolidation-contract.md all still describe dev-core as an explicit npm plugin -- Phase 6''s.'
-    - title: strictOptional must stay at default false for
-      id: bz9g
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:wire-and-declare-seven-components
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: strictOptional must stay at default false for Phase 4 (surviving appExt:_liqOrgs.orgSetupMethods info promotes to error under strictOptional:true); conversely strictOrder:true is now free (ok, same counts) if Phase 4 wants to opt in.
     - title: Phase 6 doc scope refinements
       id: LipN
       date: "2026-09-06"
