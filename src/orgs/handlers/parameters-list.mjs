@@ -11,13 +11,13 @@ const defaultFields = ['name', 'value']
 const allFields = [...defaultFields]
 parameters.find((o) => o.name === 'fields').optionsFunc = () => allFields
 
-const mdFormatter = (parameters, title) =>
+const mdFormatter = ({ data: parameters, title }) =>
   `# ${title}\n\n${parameters.map((p) => `- _${p.name}_: ${p.value}`).join('\n')}\n`
 
-const terminalFormatter = (parameters, title) =>
+const terminalFormatter = ({ data: parameters }) =>
   parameters.map((p) => `- <code>${p.name}<rst>: ${p.value}`).join('\n') + '\n'
 
-const textFormatter = (parameters, title) =>
+const textFormatter = ({ data: parameters }) =>
   parameters.map((p) => `- ${p.name}: ${p.value}`).join('\n') + '\n'
 
 const func = ({ app, reporter }) => (req, res) => {

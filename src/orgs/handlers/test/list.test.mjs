@@ -56,4 +56,46 @@ describe('GET /orgs/list', () => {
 
     expect(result).toEqual([])
   })
+
+  // The markdown formatter previously rendered `* ${o.name}` while every other formatter (JSON,
+  // terminal, text) rendered `commonName`/`key`; this exercises the non-JSON `formatOutput` path
+  // (`{ data, title, fields }`) to confirm the markdown formatter now matches.
+  test('renders the markdown format using commonName/key, consistent with the other formats', async() => {
+    const org = new Organization({ name : '@acme', pkgName : '@acme/acme', projectPath })
+    const appMock = { ext : { _liqOrgs : { orgs : { '@acme' : org } } } }
+    const reqMock = { accepts : () => 'text/markdown', vars : {} }
+    let result
+    const resMock = { type : () => resMock, send : (body) => { result = body } }
+
+    func({ app : appMock, reporter : undefined })(reqMock, resMock)
+    await flushMicrotasks()
+
+    expect(result).toContain('* Acme Corp (__@acme__)')
+  })
+
+  test('renders the terminal format using commonName/key', async() => {
+    const org = new Organization({ name : '@acme', pkgName : '@acme/acme', projectPath })
+    const appMock = { ext : { _liqOrgs : { orgs : { '@acme' : org } } } }
+    const reqMock = { accepts : () => 'text/terminal', vars : {} }
+    let result
+    const resMock = { type : () => resMock, send : (body) => { result = body } }
+
+    func({ app : appMock, reporter : undefined })(reqMock, resMock)
+    await flushMicrotasks()
+
+    expect(result).toBe('Acme Corp (<em>@acme<rst>)')
+  })
+
+  test('renders the plain text format using commonName/key', async() => {
+    const org = new Organization({ name : '@acme', pkgName : '@acme/acme', projectPath })
+    const appMock = { ext : { _liqOrgs : { orgs : { '@acme' : org } } } }
+    const reqMock = { accepts : () => 'text/plain', vars : {} }
+    let result
+    const resMock = { type : () => resMock, send : (body) => { result = body } }
+
+    func({ app : appMock, reporter : undefined })(reqMock, resMock)
+    await flushMicrotasks()
+
+    expect(result).toBe('Acme Corp (@acme)')
+  })
 })
