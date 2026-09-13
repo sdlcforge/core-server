@@ -8,9 +8,7 @@ const path = ['projects', 'audit']
 
 const { help, method, parameters } = getAuditEndpointParameters({ workDesc : 'implied' })
 
-const func = ({ app, reporter }) => async(req, res) => {
-  reporter = reporter.isolate()
-
+const func = ({ app }) => async(req, res) => {
   const cwd = req.get('X-CWD')
   if (cwd === undefined) {
     throw createError.BadRequest("Called 'project audit' with implied project, but 'X-CWD' header not found.")

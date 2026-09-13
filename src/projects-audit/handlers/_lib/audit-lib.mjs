@@ -1,10 +1,14 @@
+import createError from 'http-errors'
+
 import { httpSmartResponse } from '@liquid-labs/http-smart-response'
 import { generateReport, npmCheck } from 'npm-check-plus'
 
 import { commonAuditPathParameters } from './common-audit-path-parameters'
 
 const doAudit = async({ app, projectName, req, res }) => {
-  const { projectPath: packageRoot } = await app.ext._liqProjects.playgroundMonitor.getProjectData(projectName)
+  const projectData = await app.ext._liqProjects.playgroundMonitor.getProjectData(projectName)
+  if (projectData === undefined) throw createError.NotFound(`No such project '${projectName}'.`)
+  const { projectPath: packageRoot } = projectData
 
   const auditReport = await npmCheck({ packageRoot })
   const { report, code } = generateReport(auditReport)
@@ -17,7 +21,7 @@ const doAudit = async({ app, projectName, req, res }) => {
 const getAuditEndpointParameters = ({ workDesc }) => {
   const help = {
     name        : `Project audit (${workDesc})`,
-    summary     : `Auidts the ${workDesc} project.`,
+    summary     : `Audits the ${workDesc} project.`,
     description : `Audits the ${workDesc} project for security vulnerabilities as well as outdated, missing, or extraneous package dependencies. See also '/projects/audit-fix' to automatically address many issues.`
   }
 

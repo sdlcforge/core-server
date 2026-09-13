@@ -5,9 +5,7 @@ const path = ['projects', ':projectName', 'audit']
 
 const { help, method, parameters } = getAuditEndpointParameters({ workDesc : 'named' })
 
-const func = ({ app, reporter }) => async(req, res) => {
-  reporter = reporter.isolate()
-
+const func = ({ app }) => async(req, res) => {
   const { projectName } = req.vars
 
   await doAudit({ app, projectName, req, res })
