@@ -9,7 +9,8 @@ const defaultFields = ['key', 'commonName', 'legalName']
 const allFields = [...defaultFields]
 parameters.find((o) => o.name === 'fields').optionsFunc = () => allFields
 
-const mdFormatter = ({ data: orgs, title }) => `# ${title}\n\n${orgs.map((o) => `* ${o.name}`).join('\n')}\n`
+const mdFormatter = ({ data: orgs, title }) =>
+  `# ${title}\n\n${orgs.map((o) => `* ${o.commonName} (__${o.key}__)`).join('\n')}\n`
 
 const terminalFormatter = ({ data: orgs }) => orgs.map((o) => `${o.commonName} (<em>${o.key}<rst>)`).join('\n')
 

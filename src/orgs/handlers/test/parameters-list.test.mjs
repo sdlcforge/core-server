@@ -57,6 +57,50 @@ describe('GET /orgs/:orgKey/parameters/list', () => {
     expect(result).toHaveLength(2)
   })
 
+  // The md/terminal/text formatters previously destructured a `(parameters, title)` positional
+  // signature, but `formatOutput` invokes non-JSON formatters with a single `{ data, title,
+  // fields }` object -- so `parameters` was the whole options object and `.map` would throw.
+  // This exercises those non-JSON `formatOutput` paths directly, which the prior JSON-only
+  // coverage did not.
+  test("renders the markdown format from the org's parameters", async() => {
+    const org = new Organization({ name : '@acme', pkgName : '@acme/acme', projectPath })
+    const appMock = { ext : { _liqOrgs : { orgs : { '@acme' : org } } } }
+    const reqMock = { accepts : () => 'text/markdown', vars : { orgKey : '@acme' } }
+    let result
+    const resMock = { type : () => resMock, send : (body) => { result = body } }
+
+    func({ app : appMock, reporter : undefined })(reqMock, resMock)
+    await flushMicrotasks()
+
+    expect(result).toContain('- _.COMMON_NAME_: Acme Corp')
+  })
+
+  test("renders the terminal format from the org's parameters", async() => {
+    const org = new Organization({ name : '@acme', pkgName : '@acme/acme', projectPath })
+    const appMock = { ext : { _liqOrgs : { orgs : { '@acme' : org } } } }
+    const reqMock = { accepts : () => 'text/terminal', vars : { orgKey : '@acme' } }
+    let result
+    const resMock = { type : () => resMock, send : (body) => { result = body } }
+
+    func({ app : appMock, reporter : undefined })(reqMock, resMock)
+    await flushMicrotasks()
+
+    expect(result).toContain('- <code>.COMMON_NAME<rst>: Acme Corp')
+  })
+
+  test("renders the plain text format from the org's parameters", async() => {
+    const org = new Organization({ name : '@acme', pkgName : '@acme/acme', projectPath })
+    const appMock = { ext : { _liqOrgs : { orgs : { '@acme' : org } } } }
+    const reqMock = { accepts : () => 'text/plain', vars : { orgKey : '@acme' } }
+    let result
+    const resMock = { type : () => resMock, send : (body) => { result = body } }
+
+    func({ app : appMock, reporter : undefined })(reqMock, resMock)
+    await flushMicrotasks()
+
+    expect(result).toContain('- .COMMON_NAME: Acme Corp')
+  })
+
   test('an unknown orgKey throws a 404-bearing error', () => {
     const org = new Organization({ name : '@acme', pkgName : '@acme/acme', projectPath })
     const appMock = { ext : { _liqOrgs : { orgs : { '@acme' : org } } } }
