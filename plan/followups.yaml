@@ -522,3 +522,11 @@ items:
         test/README.md line 109 still lists @sdlcforge/dev-core among the tested explicit plugins. dev-core's four submodules are now built-in (in-tree) components rather than a separate explicit-tier npm package -- this file was not in scope for either the architecture-docs pass (docs/*.md) or the onboarding-docs pass (README.md/AGENTS.md/CLAUDE.md), so it was never updated to reflect the seven-component built-in aggregate and four-package explicit tier.
 
         Found during the final phase-boundary gate's documentation link-chain check.
+    - title: pkgJSON/packageJSON arg mismatch
+      id: bAQZ
+      date: "2026-09-12"
+      tags:
+        - type:bug
+        - priority:unspecified
+        - effort:unspecified
+      text: 'src/work/handlers/_lib/answer-set-to-md.mjs:64 (in the related-projects branch) calls getGitHubOrgAndProjectBasename({ pkgJSON: otherPkgJSON }), but that function (from @liquid-labs/github-toolkit) destructures its argument as { packageJSON }, not pkgJSON -- every other call site in the codebase uses packageJSON. Latent defect: would throw when the related-projects branch is exercised for real (not caught by existing tests, which stub the function out). Found incidentally while fixing the providerFor ''pull requests''/''pull request'' typo in the same file (followup L5cp, now resolved) -- left unfixed there as out of scope for that minimal single-issue change.'
