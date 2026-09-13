@@ -97,11 +97,18 @@ const func = ({ app }) => async(req, res) => {
 
   await fs.mkdir(localRootDir, { recursive : true })
 
-  const data = { commonName, legalName, newOrgKey, directory : localRootDir }
+  // Echo a playground-root-relative path rather than `localRootDir`'s absolute form: the caller
+  // only ever supplied a (possibly relative) `localDataRoot`, and echoing back the server's fully
+  // resolved absolute filesystem path would disclose its directory layout to the caller. This is
+  // purely a response-shaping concern -- the containment check above still operates on, and
+  // remains anchored to, the fully resolved absolute paths.
+  const relativeDirectory = fsPath.relative(fsPath.resolve(liqProjects.playgroundPath), localRootDir)
+
+  const data = { commonName, legalName, newOrgKey, directory : relativeDirectory }
 
   httpSmartResponse({
     data,
-    msg : `Created organization '${newOrgKey}' data directory at '${localRootDir}'.`,
+    msg : `Created organization '${newOrgKey}' data directory at '${relativeDirectory}'.`,
     req,
     res
   })
