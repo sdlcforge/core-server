@@ -512,16 +512,6 @@ items:
         - priority:unspecified
         - effort:unspecified
       text: make lint (whole-repo, read-only investigation) reports 236 pre-existing errors including an identical pre-existing 'beforeAll is not defined (no-undef)' finding on this task's file plus task 004's two sibling files -- a repo-wide eslint-config gap (jest globals not recognized for plugin-graph test files) predating this task, reproduced identically against pre-change content via git show HEAD, unrelated to and unaffected by this task's edits. Worth a follow-up to add jest globals recognition for src/lib/test/**.
-    - title: Filename mismatch (task doc's own flagged dec
-      id: 6bMp
-      date: "2026-09-06"
-      tags:
-        - type:ambiguity
-        - plan/phase:verify-parity-and-tighten-gate
-        - plan/slug:sdlc-core-unification
-        - priority:unspecified
-        - effort:unspecified
-      text: 'Filename mismatch (task doc''s own flagged decision): plugin-graph-third-party-ordering.test.js''s filename still says third-party though content no longer describes cross-package coupling. Renaming outside this task''s sweep, left as-is per task doc instruction.'
     - title: 'AGENTS.md''s explicit-plugin tier still never '
       id: Xs6I
       date: "2026-09-08"
