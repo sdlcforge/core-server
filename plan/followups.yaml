@@ -478,19 +478,6 @@ items:
         src/orgs/handlers/_lib/get-org.mjs's header comment (lines 3-4) names the retired getOrgFromKey helper for exposition ('rather than importing the shared handlers library's getOrgFromKey helper'), even though that helper no longer exists as a shared handlers-library export. Not code-level usage — the comment is documentation, not a live reference. Worth rewording so the comment does not name a retired symbol.
 
         Originally filed against @sdlcforge/dev-core as followup xehM; carried across when that package was absorbed into @sdlcforge/core-server.
-    - title: consolidation-contract.md stale attribution
-      id: HGBd
-      date: "2026-09-06"
-      tags:
-        - type:documentation
-        - priority:unspecified
-        - effort:unspecified
-        - plan/slug:sdlc-core-unification
-        - plan/phase:absorb-dev-core
-      text: |-
-        docs/dev-core-consolidation-contract.md:128 attributes runtime reads of app.ext._liqProjects/app.ext._liqOrgs to liq-controls (naming src/lib/resources/load-controls.mjs and src/lib/integrations/get-question-controls.mjs) and to liq-integrations-issues-github (src/create-or-update-pull-request.mjs), describing both as external consumers reading the runtime contract from outside. The liq-controls half of that attribution is stale: the named files actually live at @sdlcforge/core-server's own src/controls/resources/load-controls.mjs and src/controls/integrations/get-question-controls.mjs — one of core-server's own built-in plugin submodules, not an external package. Whether this document should be corrected, superseded, or removed is expected to be decided in a later documentation-refresh pass, at which point this item may become moot.
-
-        Originally filed against @sdlcforge/dev-core as followup dsdl; carried across when that package was absorbed into @sdlcforge/core-server.
     - title: serialize-javascript RCE via terser pin
       id: ZK0S
       date: "2026-09-06"
