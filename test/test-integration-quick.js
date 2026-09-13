@@ -56,7 +56,10 @@ async function runQuickTest() {
         
         // Check if our explicit plugins are loaded
         const explicitPlugins = [
-          '@sdlcforge/dev-core'
+          '@liquid-labs/sdlc-projects-badges-coverage',
+          '@liquid-labs/sdlc-projects-badges-github-workflows',
+          '@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd',
+          '@liquid-labs/sdlc-projects-workflow-local-node-build'
         ]
 
         let foundExplicitPlugins = 0
@@ -80,7 +83,10 @@ async function runQuickTest() {
 
         // Check if explicit plugins are mentioned in the response
         const explicitPlugins = [
-          '@sdlcforge/dev-core'
+          '@liquid-labs/sdlc-projects-badges-coverage',
+          '@liquid-labs/sdlc-projects-badges-github-workflows',
+          '@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd',
+          '@liquid-labs/sdlc-projects-workflow-local-node-build'
         ]
 
         let foundExplicitPlugins = 0

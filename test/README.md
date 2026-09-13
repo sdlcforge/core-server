@@ -106,7 +106,8 @@ The tests specifically verify that the following explicit plugins are automatica
 - `@liquid-labs/sdlc-projects-badges-github-workflows`
 - `@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd`
 - `@liquid-labs/sdlc-projects-workflow-local-node-build`
-- `@sdlcforge/dev-core`
+
+These four are the whole explicit npm-dependency tier; `core-server`'s seven built-in (in-tree) components — including the four (`projects`, `orgs`, `work`, `projects-audit`) absorbed from the former `@sdlcforge/dev-core` package — load separately, as part of the package's own `builtinPlugins` aggregate rather than as npm-dependency plugins. See [`docs/architecture/plugin-loading-tiers.md`](../docs/architecture/plugin-loading-tiers.md) for the full tier breakdown.
 
 ## Test Results
 

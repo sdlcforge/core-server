@@ -38,7 +38,7 @@ bun run start   # start the server locally, via scripts/start.sh
 bun run stop    # stop the server, via scripts/stop.sh
 ```
 
-On startup the server loads its plugin set — core plugins built into `@liquid-labs/plugable-express`, `core-server`'s own built-in (in-tree) plugin submodules, explicit npm-dependency plugins declared in `package.json`, and any user-supplied plugins from `${COMPLY_HOME}/plugins/server/` — then listens for HTTP requests.
+On startup the server loads its plugin set — core plugins built into `@liquid-labs/plugable-express`, `core-server`'s own built-in (in-tree) plugin submodules, the four explicit npm-dependency plugins declared in `package.json` (`@liquid-labs/sdlc-projects-badges-coverage`, `@liquid-labs/sdlc-projects-badges-github-workflows`, `@liquid-labs/sdlc-projects-workflow-github-node-jest-cicd`, `@liquid-labs/sdlc-projects-workflow-local-node-build`), and any user-supplied plugins from `${COMPLY_HOME}/plugins/server/` — then listens for HTTP requests.
 
 ## Code organization
 
