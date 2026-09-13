@@ -72,7 +72,20 @@ module.exports = {
     // same thing whether `eslint` is invoked from the repo root (as `make lint` does) or from a
     // subdirectory or an editor integration.
     'import/no-restricted-paths' : ['error', { basePath : __dirname, zones }]
-  }
+  },
+  overrides : [
+    {
+      // Jest globals (`describe`, `test`, `beforeAll`, `expect`, ...) for the unit-test tree.
+      // Most files here already self-document their globals via a per-file
+      // `/* global ... */` comment, but that convention is opt-in and easy to under-declare (a
+      // file can add a new `beforeAll`/`afterEach` call without updating its own comment) --
+      // `env: { jest }` (built into ESLint core, no plugin required) recognizes the whole Jest
+      // global set for this directory so a missed per-file declaration can't surface as a
+      // false-positive `no-undef` finding.
+      files : ['src/lib/test/**/*.js'],
+      env   : { jest : true }
+    }
+  ]
 }
 
 // Named export, alongside the default eslintrc-shaped `module.exports` above. ESLint's own
