@@ -400,19 +400,6 @@ items:
         src/projects/handlers/_lib/test/project-lifecycle.test.mjs fails independently of credentials/network: its appMock supplies app.ext.serverHome while create-lib.mjs reads app.ext.serverConfigRoot (both files byte-identical to the liq-projects donor's blobs). A real pre-existing donor defect, not a regression from absorption. Keeps make test/make qa red in @sdlcforge/core-server until fixed; a future full-test-suite run should not expect a fully-green make qa because of this one suite. Also note: src/projects/handlers/test/close-implied.mjs is a misnamed test file (missing the .test infix) that Jest never collects — dead in both directions, migrated verbatim from liq-projects.
 
         Originally filed against @sdlcforge/dev-core as followup 2aMD; carried across when that package was absorbed into @sdlcforge/core-server.
-    - title: providerFor typo breaks pull-request hook
-      id: L5cp
-      date: "2026-09-06"
-      tags:
-        - type:bug
-        - priority:unspecified
-        - effort:unspecified
-        - plan/slug:sdlc-core-unification
-        - plan/phase:absorb-dev-core
-      text: |-
-        src/work/handlers/_lib/answer-set-to-md.mjs:74 calls app.ext.integrations with providerFor: 'pull requests' (plural), while every other call site in the codebase uses the singular 'pull request'. IntegrationsManager.callHook/hasHook match on exact providerFor string, so this mismatched entry throws "No provider found" at request time instead of resolving the registered provider — a live, reachable defect, not merely cosmetic. Independent corroboration: @liquid-labs/plugable-express's own diff-manifest.js header cites this exact typo as its motivating example for why manifest-derivation tooling matters. Fix: change 'pull requests' to 'pull request' at that call site, plus a regression test asserting the hook resolves.
-
-        Originally filed against @sdlcforge/dev-core as followup OmUC; carried across when that package was absorbed into @sdlcforge/core-server.
     - title: resource-model Model.save() always rejects
       id: 8UB8
       date: "2026-09-06"
