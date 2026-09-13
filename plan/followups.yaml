@@ -491,19 +491,6 @@ items:
         bun.lock resolves serialize-javascript@6.0.2 transitively via @rollup/plugin-terser@0.4.4 (a dependency of @sdlcforge/core-server's own devDependency @liquid-labs/catalyst-resource-babel-and-rollup@1.0.0-alpha.4, declared ^1.0.0-alpha.3 in package.json). serialize-javascript@6.0.2 carries an unpatched high-severity RCE advisory (GHSA-5c6j-r48x-rmvq, CVSS 8.1) plus a moderate DoS advisory (GHSA-qj8w-gfj5-8c6v); audit tooling should report findings rooted here. Dev/CI-only — @rollup/plugin-terser and its serialize-javascript dependency are never bundled into dist/sdlcforge-server.js, dist/sdlcforge-server-exec.js, or the published tarball — and core-server does not control @rollup/plugin-terser's own pin directly; a fix requires an upstream bump in either @rollup/plugin-terser or @liquid-labs/catalyst-resource-babel-and-rollup. Track rather than patch directly; worth re-checking whenever bun.lock is regenerated, since the same toolchain package resolves the pin again each time.
 
         Originally filed against @sdlcforge/dev-core as followup 0RpG (there rooted in dev-core's own devDependency @liquid-labs/sdlc-resource-babel-and-rollup, which core-server does not carry); reworded and carried across against @sdlcforge/core-server's own @liquid-labs/catalyst-resource-babel-and-rollup devDependency chain when dev-core was absorbed into core-server.
-    - title: Stale README anchors in kept dev-core docs
-      id: O9g2
-      date: "2026-09-06"
-      tags:
-        - type:documentation
-        - priority:unspecified
-        - effort:unspecified
-        - plan/slug:sdlc-core-unification
-        - plan/phase:absorb-dev-core
-      text: |-
-        docs/consumer-migration.md (lines 247, 343) and docs/dev-core-consolidation-contract.md (lines 128, 157) contain ../README.md#<anchor> links (#repaired-defects-orgs-submodule, #projects-audit-submodule, #the-plugin-manifest) that resolve to core-server's own README.md, which has no such sections -- these anchors match sections that exist only in the donor @sdlcforge/dev-core's own README.md and were never repointed when the merge landed both files ('--ours' kept them verbatim per task 001). The link target file exists (not a dangling forward-link), but the fragments are broken. Both docs' disposition is already deferred to the doc-updates phase; when that phase touches these files, repoint the anchors to wherever the referenced content lands in core-server's docs, or drop the anchors if the content isn't carried over.
-
-        Found during Phase 2's boundary-gate documentation link-chain check.
     - title: 'make test''s pass marker is filter-blind: TEST'
       id: uMj8
       date: "2026-09-06"
